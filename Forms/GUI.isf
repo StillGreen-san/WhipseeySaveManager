@@ -6,6 +6,9 @@
 #include <EditConstants.au3>
 
 $GUI = GUICreate("Whipseey Save Manager",725,257,-1,-1,-1,-1)
+GUISetOnEvent($GUI_EVENT_CLOSE, "_Exit", $GUI)
+$path = GUICtrlCreateInput("%PATH_TO_SAVEGAME%",10,10,660,20,-1,$WS_EX_CLIENTEDGE)
+$select = GUICtrlCreateButton("...",675,10,40,20,-1,-1)
 GUICtrlCreateGroup("File1",10,40,225,210,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
 GUICtrlCreateLabel("Boss no Damage Progress",20,60,128,15,-1,-1)
@@ -23,12 +26,12 @@ $file1Desert = GUICtrlCreateRadio("Desert",40,193,70,20,-1,-1)
 $file1Forest = GUICtrlCreateRadio("Forest",40,213,70,20,-1,-1)
 $file1Ending = GUICtrlCreateCheckbox("Ending",150,120,70,20,-1,-1)
 $file1Intro = GUICtrlCreateCheckbox("Intro",150,140,70,20,-1,-1)
-GUICtrlCreateLabel("Lives",150,206,70,15,-1,-1)
-GUICtrlSetBkColor(-1,"-2")
-$file1Gems = GUICtrlCreateInput("0",150,180,70,20,-1,$WS_EX_CLIENTEDGE)
 GUICtrlCreateLabel("Gems",150,166,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-GUICtrlCreateInput("0",150,220,70,20,-1,$WS_EX_CLIENTEDGE)
+$file1Gems = GUICtrlCreateInput("0",150,180,70,20,-1,$WS_EX_CLIENTEDGE)
+GUICtrlCreateLabel("Lives",150,206,70,15,-1,-1)
+GUICtrlSetBkColor(-1,"-2")
+$file1Lives = GUICtrlCreateInput("0",150,220,70,20,-1,$WS_EX_CLIENTEDGE)
 GUICtrlCreateGroup("File2",250,40,225,210,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
 GUICtrlCreateLabel("Boss no Damage Progress",260,60,128,15,-1,-1)
@@ -46,10 +49,10 @@ $file2Desert = GUICtrlCreateRadio("Desert",280,193,70,20,-1,-1)
 $file2Forest = GUICtrlCreateRadio("Forest",280,213,70,20,-1,-1)
 $file2Ending = GUICtrlCreateCheckbox("Ending",390,120,70,20,-1,-1)
 $file2Intro = GUICtrlCreateCheckbox("Intro",390,140,70,20,-1,-1)
-GUICtrlCreateLabel("Lives",390,206,70,15,-1,-1)
+GUICtrlCreateLabel("Gems",390,166,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
 $file2Gems = GUICtrlCreateInput("0",390,180,70,20,-1,$WS_EX_CLIENTEDGE)
-GUICtrlCreateLabel("Gems",390,166,70,15,-1,-1)
+GUICtrlCreateLabel("Lives",390,206,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
 $file2Lives = GUICtrlCreateInput("0",390,220,70,20,-1,$WS_EX_CLIENTEDGE)
 GUICtrlCreateGroup("File3",490,40,225,210,-1,-1)
@@ -69,14 +72,12 @@ $file3Desert = GUICtrlCreateRadio("Desert",520,193,70,20,-1,-1)
 $file3Forest = GUICtrlCreateRadio("Forest",520,213,70,20,-1,-1)
 $file3Ending = GUICtrlCreateCheckbox("Ending",630,120,70,20,-1,-1)
 $file3Intro = GUICtrlCreateCheckbox("Intro",630,140,70,20,-1,-1)
-GUICtrlCreateLabel("Lives",630,206,70,15,-1,-1)
-GUICtrlSetBkColor(-1,"-2")
-$file3Gems = GUICtrlCreateInput("0",630,180,70,20,-1,$WS_EX_CLIENTEDGE)
 GUICtrlCreateLabel("Gems",630,166,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
+$file3Gems = GUICtrlCreateInput("0",630,180,70,20,-1,$WS_EX_CLIENTEDGE)
+GUICtrlCreateLabel("Lives",630,206,70,15,-1,-1)
+GUICtrlSetBkColor(-1,"-2")
 $file3Lives = GUICtrlCreateInput("0",630,220,70,20,-1,$WS_EX_CLIENTEDGE)
-$path = GUICtrlCreateInput("%PATH_TO_SAVEGAME%",10,10,660,20,-1,$WS_EX_CLIENTEDGE)
-$select = GUICtrlCreateButton("...",675,10,40,20,-1,-1)
 
 
 
@@ -104,7 +105,7 @@ only_controls_in_isf=false
 const_modus=default
 gui_code_in_function=false
 gui_code_in_function_name=
-gui_event_close=
+gui_event_close=_Exit
 gui_event_minimize=
 gui_event_restore=
 gui_event_maximize=
@@ -141,7 +142,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=0
+order=2
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -170,7 +171,7 @@ style=
 exstyle=
 bgcolour=-2
 code=
-order=2
+order=3
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -199,7 +200,7 @@ style=$ES_READONLY
 exstyle=$WS_EX_CLIENTEDGE
 bgcolour=
 code=
-order=3
+order=4
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -232,7 +233,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=4
+order=5
 [0x00122500]
 type=input
 handle=422
@@ -261,7 +262,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=5
+order=6
 [0x000424AC]
 type=group
 handle=423
@@ -286,7 +287,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=6
+order=7
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -315,7 +316,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=7
+order=8
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -344,7 +345,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=8
+order=9
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -373,7 +374,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=9
+order=10
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -402,7 +403,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=10
+order=11
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -431,7 +432,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=11
+order=12
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -460,7 +461,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=12
+order=13
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -489,7 +490,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=13
+order=14
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -522,7 +523,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=14
+order=17
 [0x000908EC]
 type=input
 handle=432
@@ -551,7 +552,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=15
+order=16
 [0x00052502]
 type=label
 handle=433
@@ -580,7 +581,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=16
+order=15
 [0x00340872]
 type=input
 handle=434
@@ -598,7 +599,7 @@ fontattribute=0
 tooltip=
 bgimage=
 textcolour=0x000000
-id=
+id=$file1Lives
 text=0
 state=$GUI_SHOW+$GUI_ENABLE
 style=
@@ -609,7 +610,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=17
+order=18
 [0x000225F2]
 type=group
 handle=435
@@ -638,7 +639,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=18
+order=19
 [0x000225F0]
 type=label
 handle=436
@@ -667,7 +668,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=19
+order=20
 [0x000225EE]
 type=input
 handle=437
@@ -696,7 +697,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=20
+order=21
 [0x000225EC]
 type=label
 handle=438
@@ -725,7 +726,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=21
+order=22
 [0x000225EA]
 type=input
 handle=439
@@ -754,7 +755,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=22
+order=23
 [0x000225E8]
 type=group
 handle=440
@@ -783,7 +784,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=23
+order=24
 [0x000225E6]
 type=radio
 handle=441
@@ -812,7 +813,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=24
+order=25
 [0x000225E4]
 type=radio
 handle=442
@@ -841,7 +842,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=25
+order=26
 [0x000225E2]
 type=radio
 handle=443
@@ -870,7 +871,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=26
+order=27
 [0x000225E0]
 type=radio
 handle=444
@@ -899,7 +900,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=27
+order=28
 [0x000225DE]
 type=radio
 handle=445
@@ -928,7 +929,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=28
+order=29
 [0x000225DC]
 type=checkbox
 handle=446
@@ -957,7 +958,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=29
+order=30
 [0x000225DA]
 type=checkbox
 handle=447
@@ -986,7 +987,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=30
+order=31
 [0x000225D8]
 type=label
 handle=448
@@ -1015,7 +1016,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=31
+order=34
 [0x000225D6]
 type=input
 handle=449
@@ -1044,7 +1045,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=32
+order=33
 [0x000225D4]
 type=label
 handle=450
@@ -1073,7 +1074,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=33
+order=32
 [0x000225D2]
 type=input
 handle=451
@@ -1102,7 +1103,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=34
+order=35
 [0x000425D0]
 type=group
 handle=452
@@ -1131,7 +1132,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=35
+order=36
 [0x000425CE]
 type=label
 handle=453
@@ -1160,7 +1161,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=36
+order=37
 [0x000425CC]
 type=input
 handle=454
@@ -1189,7 +1190,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=37
+order=38
 [0x000425CA]
 type=label
 handle=455
@@ -1218,7 +1219,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=38
+order=39
 [0x000425C8]
 type=input
 handle=456
@@ -1247,7 +1248,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=39
+order=40
 [0x000425C6]
 type=group
 handle=457
@@ -1276,7 +1277,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=40
+order=41
 [0x000425C4]
 type=radio
 handle=458
@@ -1305,7 +1306,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=41
+order=42
 [0x000425C2]
 type=radio
 handle=459
@@ -1334,7 +1335,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=42
+order=43
 [0x000425C0]
 type=radio
 handle=460
@@ -1363,7 +1364,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=43
+order=44
 [0x000425BE]
 type=radio
 handle=461
@@ -1392,7 +1393,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=44
+order=45
 [0x000425BC]
 type=radio
 handle=462
@@ -1421,7 +1422,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=45
+order=46
 [0x000425BA]
 type=checkbox
 handle=463
@@ -1450,7 +1451,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=46
+order=47
 [0x000425B8]
 type=checkbox
 handle=464
@@ -1479,7 +1480,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=47
+order=48
 [0x000425B6]
 type=label
 handle=465
@@ -1508,7 +1509,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=48
+order=51
 [0x000425B4]
 type=input
 handle=466
@@ -1537,7 +1538,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=49
+order=50
 [0x000425B2]
 type=label
 handle=467
@@ -1566,7 +1567,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=50
+order=49
 [0x000425B0]
 type=input
 handle=468
@@ -1595,7 +1596,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=51
+order=52
 [0x00142632]
 type=input
 handle=469
@@ -1620,7 +1621,7 @@ style=
 exstyle=$WS_EX_CLIENTEDGE
 bgcolour=
 code=
-order=52
+order=0
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -1649,7 +1650,7 @@ style=
 exstyle=
 bgcolour=
 code=
-order=53
+order=1
 tabpage=-1
 iconindex=
 iconlarge=0
