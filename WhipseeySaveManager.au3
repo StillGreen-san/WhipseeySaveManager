@@ -1,3 +1,7 @@
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Res_ProductVersion=0.2
+#AutoIt3Wrapper_Res_Language=1033
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 ;*****************************************
 ;WhipseeySaveManager.au3 by StillGreen-san
 ;Created with ISN AutoIt Studio v. 1.11
@@ -20,7 +24,7 @@ Global Enum $INI_KEY = 0, $INI_VALUE = 1, $INI_CASTLE = 32, $INI_MOON = 16, $INI
 Opt("GUIOnEventMode", 1)
 
 If FileExists($defaultSaveDir) Then
-	GUICtrlSetData($path, $defaultSaveDir)
+	GUICtrlSetData($path, $saveFile)
 	_LoadSave()
 Else
 	;deactivate all file controls
@@ -111,6 +115,19 @@ Func _File2Changed()
 EndFunc
 Func _File3Changed()
 	_SaveFile($file3Controls)
+EndFunc
+
+Func _OpenFile()
+	$result =  FileOpenDialog("Select Savefile", $defaultSaveDir, "Save files (*.sav)|All (*.*)",  $FD_FILEMUSTEXIST + $FD_PATHMUSTEXIST, "whipseey.sav")
+	If Not @error Then
+		GUICtrlSetData($path, $result)
+		$saveFile = $result
+		_LoadSave()
+	EndIf
+EndFunc
+
+Func _ReloadFile()
+	_LoadSave()
 EndFunc
 
 ;HELPER FUNCTIONS

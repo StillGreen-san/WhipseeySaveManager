@@ -7,8 +7,9 @@
 
 $GUI = GUICreate("Whipseey Save Manager",725,280,-1,-1,-1,-1)
 GUISetOnEvent($GUI_EVENT_CLOSE, "_Exit", $GUI)
-$path = GUICtrlCreateInput("%PATH_TO_SAVEGAME%",10,10,660,20,-1,$WS_EX_CLIENTEDGE)
-$select = GUICtrlCreateButton("...",675,10,40,20,-1,-1)
+$path = GUICtrlCreateInput("%PATH_TO_SAVEGAME%",10,10,595,20,-1,$WS_EX_CLIENTEDGE)
+$select = GUICtrlCreateButton("...",615,10,40,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_OpenFile")
 GUICtrlCreateGroup("File1",10,40,225,230,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
 GUICtrlCreateLabel("Boss no Damage Progress",20,60,128,15,-1,-1)
@@ -111,6 +112,8 @@ GUICtrlCreateLabel("Lives",630,220,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
 $file3Lives = GUICtrlCreateInput("0",630,235,70,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
 GUICtrlSetOnEvent(-1,"_File3Changed")
+GUICtrlCreateButton("reload",665,10,50,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_ReloadFile")
 
 
 
@@ -1637,7 +1640,7 @@ locked=0
 resize=
 x=10
 y=10
-width=660
+width=595
 height=20
 func=
 font=MS Sans Serif
@@ -1664,11 +1667,11 @@ type=button
 handle=478
 locked=0
 resize=
-x=675
+x=615
 y=10
 width=40
 height=20
-func=
+func=_OpenFile
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1775,4 +1778,33 @@ iconindex=
 iconlarge=0
 textmode=text
 order=49
+[0x00B7284E]
+type=button
+handle=538
+locked=0
+resize=
+x=665
+y=10
+width=50
+height=20
+func=_ReloadFile
+font=MS Sans Serif
+fontsize=8
+fontstyle=400
+fontattribute=0
+tooltip=
+bgimage=
+textcolour=0x000000
+id=
+text=reload
+state=$GUI_SHOW+$GUI_ENABLE
+style=
+exstyle=
+bgcolour=
+code=
+tabpage=-1
+iconindex=
+iconlarge=0
+textmode=text
+order=57
 #ce
