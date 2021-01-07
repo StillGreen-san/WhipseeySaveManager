@@ -73,17 +73,17 @@ EndFunc
 
 Func _SaveFile(ByRef $fileControls)
 	Local $fileData = IniReadSection($saveFile, $fileControls[0])
-	Local $levelStates[] = ['"32.000000"', '"16.000000"', '"8.000000"', '"4.000000"', '"2.000000"']
-	If GUICtrlGetState($fileControls[$CONTROL_CASTLE]) = $GUI_UNCHECKED Then
-		$levelStates[$LEVEL_CASTLE] = _IntToIni(0)
-		If GUICtrlGetState($fileControls[$CONTROL_MOON]) = $GUI_UNCHECKED Then
-			$levelStates[$LEVEL_MOON] = _IntToIni(0)
-			If GUICtrlGetState($fileControls[$CONTROL_SNOW]) = $GUI_UNCHECKED Then
-				$levelStates[$LEVEL_SNOW] = _IntToIni(0)
-				If GUICtrlGetState($fileControls[$CONTROL_DESERT]) = $GUI_UNCHECKED Then
-					$levelStates[$LEVEL_DESERT] = _IntToIni(0)
-					If GUICtrlGetState($fileControls[$CONTROL_FOREST]) = $GUI_UNCHECKED Then
-						$levelStates[$LEVEL_FOREST] = _IntToIni(0)
+	Local $levelStates[] = ['"0.000000"', '"2.000000"', '"4.000000"', '"8.000000"', '"16.000000"', '"32.000000"']
+	If GUICtrlRead($fileControls[$CONTROL_CASTLE]) = $GUI_UNCHECKED Then
+		$levelStates[$LEVEL_CASTLE] = $levelStates[0]
+		If GUICtrlRead($fileControls[$CONTROL_MOON]) = $GUI_UNCHECKED Then
+			$levelStates[$LEVEL_MOON] = $levelStates[0]
+			If GUICtrlRead($fileControls[$CONTROL_SNOW]) = $GUI_UNCHECKED Then
+				$levelStates[$LEVEL_SNOW] = $levelStates[0]
+				If GUICtrlRead($fileControls[$CONTROL_DESERT]) = $GUI_UNCHECKED Then
+					$levelStates[$LEVEL_DESERT] = $levelStates[0]
+					If GUICtrlRead($fileControls[$CONTROL_FOREST]) = $GUI_UNCHECKED Then
+						$levelStates[$LEVEL_FOREST] = $levelStates[0]
 					EndIf
 				EndIf
 			EndIf
@@ -95,8 +95,8 @@ Func _SaveFile(ByRef $fileControls)
 	$fileData[$FILE_DESERT][$INI_VALUE] = $levelStates[$LEVEL_DESERT]
 	$fileData[$FILE_FOREST][$INI_VALUE] = $levelStates[$LEVEL_FOREST]
 	
-	$fileData[$FILE_ENDING][$INI_VALUE] = _CheckStateToIni($fileControls[$CONTROL_ENDING])
-	$fileData[$FILE_INTRO][$INI_VALUE] = _CheckStateToIni($fileControls[$CONTROL_INTRO])
+	$fileData[$FILE_ENDING][$INI_VALUE] = _CheckStateToIni(GUICtrlRead($fileControls[$CONTROL_ENDING]))
+	$fileData[$FILE_INTRO][$INI_VALUE] = _CheckStateToIni(GUICtrlRead($fileControls[$CONTROL_INTRO]))
 	$fileData[$FILE_LIVES][$INI_VALUE] = _IntToIni(GUICtrlRead($fileControls[$CONTROL_LIVES]))
 	$fileData[$FILE_GEMS][$INI_VALUE] = _IntToIni(GUICtrlRead($fileControls[$CONTROL_GEMS]))
 	
