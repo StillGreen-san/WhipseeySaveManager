@@ -20,19 +20,29 @@ $file1Enemies = GUICtrlCreateInput("0",150,90,70,20,$ES_READONLY,$WS_EX_CLIENTED
 GUICtrlCreateGroup("Level Progress",20,113,105,145,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
 $file1Castle = GUICtrlCreateRadio("Castle",40,130,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Changed")
 $file1Moon = GUICtrlCreateRadio("Moon",40,150,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Changed")
 $file1Snow = GUICtrlCreateRadio("Snow",40,170,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Changed")
 $file1Desert = GUICtrlCreateRadio("Desert",40,190,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Changed")
 $file1Forest = GUICtrlCreateRadio("Forest",40,210,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Changed")
 $file1Beach = GUICtrlCreateRadio("Beach",40,230,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Changed")
 $file1Ending = GUICtrlCreateCheckbox("Ending",150,120,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Changed")
 $file1Intro = GUICtrlCreateCheckbox("Intro",150,140,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Changed")
 GUICtrlCreateLabel("Gems",150,175,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file1Gems = GUICtrlCreateInput("0",150,190,70,20,-1,$WS_EX_CLIENTEDGE)
+$file1Gems = GUICtrlCreateInput("0",150,190,70,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlSetOnEvent(-1,"_File1Changed")
 GUICtrlCreateLabel("Lives",150,220,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file1Lives = GUICtrlCreateInput("0",150,235,70,20,-1,$WS_EX_CLIENTEDGE)
+$file1Lives = GUICtrlCreateInput("0",150,235,70,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlSetOnEvent(-1,"_File1Changed")
 GUICtrlCreateGroup("File2",250,40,225,230,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
 GUICtrlCreateLabel("Boss no Damage Progress",260,60,128,15,-1,-1)
@@ -44,19 +54,29 @@ $file2Enemies = GUICtrlCreateInput("0",390,90,70,20,$ES_READONLY,$WS_EX_CLIENTED
 GUICtrlCreateGroup("Level Progress",260,113,105,145,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
 $file2Castle = GUICtrlCreateRadio("Castle",280,130,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Changed")
 $file2Moon = GUICtrlCreateRadio("Moon",280,150,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Changed")
 $file2Snow = GUICtrlCreateRadio("Snow",280,170,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Changed")
 $file2Desert = GUICtrlCreateRadio("Desert",280,190,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Changed")
 $file2Forest = GUICtrlCreateRadio("Forest",280,210,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Changed")
 $file2Beach = GUICtrlCreateRadio("Beach",280,230,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Changed")
 $file2Ending = GUICtrlCreateCheckbox("Ending",390,120,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Changed")
 $file2Intro = GUICtrlCreateCheckbox("Intro",390,140,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Changed")
 GUICtrlCreateLabel("Gems",390,175,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file2Gems = GUICtrlCreateInput("0",390,190,70,20,-1,$WS_EX_CLIENTEDGE)
+$file2Gems = GUICtrlCreateInput("0",390,190,70,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlSetOnEvent(-1,"_File2Changed")
 GUICtrlCreateLabel("Lives",390,220,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file2Lives = GUICtrlCreateInput("0",390,235,70,20,-1,$WS_EX_CLIENTEDGE)
+$file2Lives = GUICtrlCreateInput("0",390,235,70,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlSetOnEvent(-1,"_File2Changed")
 GUICtrlCreateGroup("File3",490,40,225,230,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
 GUICtrlCreateLabel("Boss no Damage Progress",500,60,128,15,-1,-1)
@@ -68,19 +88,29 @@ $file3Enemies = GUICtrlCreateInput("0",630,90,70,20,$ES_READONLY,$WS_EX_CLIENTED
 GUICtrlCreateGroup("Level Progress",500,113,105,145,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
 $file3Castle = GUICtrlCreateRadio("Castle",520,130,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Changed")
 $file3Moon = GUICtrlCreateRadio("Moon",520,150,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Changed")
 $file3Snow = GUICtrlCreateRadio("Snow",520,170,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Changed")
 $file3Desert = GUICtrlCreateRadio("Desert",520,190,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Changed")
 $file3Forest = GUICtrlCreateRadio("Forest",520,210,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Changed")
 $file3Beach = GUICtrlCreateRadio("Beach",520,230,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Changed")
 $file3Ending = GUICtrlCreateCheckbox("Ending",630,120,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Changed")
 $file3Intro = GUICtrlCreateCheckbox("Intro",630,140,70,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Changed")
 GUICtrlCreateLabel("Gems",630,175,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file3Gems = GUICtrlCreateInput("0",630,190,70,20,-1,$WS_EX_CLIENTEDGE)
+$file3Gems = GUICtrlCreateInput("0",630,190,70,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlSetOnEvent(-1,"_File3Changed")
 GUICtrlCreateLabel("Lives",630,220,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file3Lives = GUICtrlCreateInput("0",630,235,70,20,-1,$WS_EX_CLIENTEDGE)
+$file3Lives = GUICtrlCreateInput("0",630,235,70,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlSetOnEvent(-1,"_File3Changed")
 
 
 
@@ -304,7 +334,7 @@ x=40
 y=130
 width=70
 height=20
-func=
+func=_File1Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -333,7 +363,7 @@ x=40
 y=150
 width=70
 height=20
-func=
+func=_File1Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -362,7 +392,7 @@ x=40
 y=170
 width=70
 height=20
-func=
+func=_File1Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -391,7 +421,7 @@ x=40
 y=190
 width=70
 height=20
-func=
+func=_File1Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -420,7 +450,7 @@ x=40
 y=210
 width=70
 height=20
-func=
+func=_File1Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -449,7 +479,7 @@ x=150
 y=120
 width=70
 height=20
-func=
+func=_File1Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -478,7 +508,7 @@ x=150
 y=140
 width=70
 height=20
-func=
+func=_File1Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -536,7 +566,7 @@ x=150
 y=190
 width=70
 height=20
-func=
+func=_File1Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -547,7 +577,7 @@ textcolour=0x000000
 id=$file1Gems
 text=0
 state=$GUI_SHOW+$GUI_ENABLE
-style=
+style=$ES_NUMBER
 exstyle=$WS_EX_CLIENTEDGE
 bgcolour=
 code=
@@ -594,7 +624,7 @@ x=150
 y=235
 width=70
 height=20
-func=
+func=_File1Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -605,7 +635,7 @@ textcolour=0x000000
 id=$file1Lives
 text=0
 state=$GUI_SHOW+$GUI_ENABLE
-style=
+style=$ES_NUMBER
 exstyle=$WS_EX_CLIENTEDGE
 bgcolour=
 code=
@@ -797,7 +827,7 @@ x=280
 y=130
 width=70
 height=20
-func=
+func=_File2Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -826,7 +856,7 @@ x=280
 y=150
 width=70
 height=20
-func=
+func=_File2Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -855,7 +885,7 @@ x=280
 y=170
 width=70
 height=20
-func=
+func=_File2Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -884,7 +914,7 @@ x=280
 y=190
 width=70
 height=20
-func=
+func=_File2Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -913,7 +943,7 @@ x=280
 y=210
 width=70
 height=20
-func=
+func=_File2Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -942,7 +972,7 @@ x=390
 y=120
 width=70
 height=20
-func=
+func=_File2Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -971,7 +1001,7 @@ x=390
 y=140
 width=70
 height=20
-func=
+func=_File2Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1029,7 +1059,7 @@ x=390
 y=190
 width=70
 height=20
-func=
+func=_File2Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1040,7 +1070,7 @@ textcolour=0x000000
 id=$file2Gems
 text=0
 state=$GUI_SHOW+$GUI_ENABLE
-style=
+style=$ES_NUMBER
 exstyle=$WS_EX_CLIENTEDGE
 bgcolour=
 code=
@@ -1087,7 +1117,7 @@ x=390
 y=235
 width=70
 height=20
-func=
+func=_File2Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1098,7 +1128,7 @@ textcolour=0x000000
 id=$file2Lives
 text=0
 state=$GUI_SHOW+$GUI_ENABLE
-style=
+style=$ES_NUMBER
 exstyle=$WS_EX_CLIENTEDGE
 bgcolour=
 code=
@@ -1290,7 +1320,7 @@ x=520
 y=130
 width=70
 height=20
-func=
+func=_File3Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1319,7 +1349,7 @@ x=520
 y=150
 width=70
 height=20
-func=
+func=_File3Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1348,7 +1378,7 @@ x=520
 y=170
 width=70
 height=20
-func=
+func=_File3Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1377,7 +1407,7 @@ x=520
 y=190
 width=70
 height=20
-func=
+func=_File3Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1406,7 +1436,7 @@ x=520
 y=210
 width=70
 height=20
-func=
+func=_File3Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1435,7 +1465,7 @@ x=630
 y=120
 width=70
 height=20
-func=
+func=_File3Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1464,7 +1494,7 @@ x=630
 y=140
 width=70
 height=20
-func=
+func=_File3Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1522,7 +1552,7 @@ x=630
 y=190
 width=70
 height=20
-func=
+func=_File3Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1533,7 +1563,7 @@ textcolour=0x000000
 id=$file3Gems
 text=0
 state=$GUI_SHOW+$GUI_ENABLE
-style=
+style=$ES_NUMBER
 exstyle=$WS_EX_CLIENTEDGE
 bgcolour=
 code=
@@ -1580,7 +1610,7 @@ x=630
 y=235
 width=70
 height=20
-func=
+func=_File3Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1591,7 +1621,7 @@ textcolour=0x000000
 id=$file3Lives
 text=0
 state=$GUI_SHOW+$GUI_ENABLE
-style=
+style=$ES_NUMBER
 exstyle=$WS_EX_CLIENTEDGE
 bgcolour=
 code=
@@ -1667,7 +1697,7 @@ x=40
 y=230
 width=70
 height=20
-func=
+func=_File1Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1696,7 +1726,7 @@ x=280
 y=230
 width=70
 height=20
-func=
+func=_File2Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1725,7 +1755,7 @@ x=520
 y=230
 width=70
 height=20
-func=
+func=_File3Changed
 font=MS Sans Serif
 fontsize=8
 fontstyle=400

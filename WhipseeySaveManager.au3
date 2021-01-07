@@ -14,7 +14,7 @@ Global $file3Controls[] = ["file3", $file3Boss, $file3Enemies, $file3Castle, $fi
 Global Enum $LEVEL_CASTLE = 5, $LEVEL_MOON = 4, $LEVEL_SNOW = 3, $LEVEL_DESERT = 2, $LEVEL_FOREST = 1, $LEVEL_BEACH = 0
 Global Enum $CONTROL_NAME = 0, $CONTROL_BOSS = 1, $CONTROL_ENEMIES = 2, $CONTROL_CASTLE = 3, $CONTROL_MOON = 4, $CONTROL_SNOW = 5, $CONTROL_DESERT = 6, $CONTROL_FOREST = 7, $CONTROL_BEACH = 8, $CONTROL_ENDING = 9, $CONTROL_INTRO = 10, $CONTROL_LIVES = 11, $CONTROL_GEMS = 12
 Global Enum $FILE_BOSS = 1, $FILE_ENEMIES = 2, $FILE_CASTLE = 3, $FILE_MOON = 4, $FILE_SNOW = 5, $FILE_DESERT = 6, $FILE_FOREST = 7, $FILE_ENDING = 8, $FILE_INTRO = 9, $FILE_LIVES = 10, $FILE_GEMS = 11
-Global Enum $INI_KEY = 0, $INI_VALUE = 1
+Global Enum $INI_KEY = 0, $INI_VALUE = 1, $INI_CASTLE = 32, $INI_MOON = 16, $INI_SNOW = 8, $INI_DESERT = 4, $INI_FOREST = 2
 
 ;GUI INIT
 Opt("GUIOnEventMode", 1)
@@ -73,16 +73,44 @@ EndFunc
 
 Func _SaveFile(ByRef $fileControls)
 	Local $fileData = IniReadSection($saveFile, $fileControls[0])
-	GUICtrlSetData($fileControls[1], _IniToInt($fileData[1][1]))
-	GUICtrlSetData($fileControls[2], _IniToInt($fileData[2][1]))
-;~ 	$fileData[2][1] = 
+	Local $levelStates[] = ['"32.000000"', '"16.000000"', '"8.000000"', '"4.000000"', '"2.000000"']
+	If GUICtrlGetState($fileControls[$CONTROL_CASTLE]) = $GUI_UNCHECKED Then
+		$levelStates[$LEVEL_CASTLE] = _IntToIni(0)
+		If GUICtrlGetState($fileControls[$CONTROL_MOON]) = $GUI_UNCHECKED Then
+			$levelStates[$LEVEL_MOON] = _IntToIni(0)
+			If GUICtrlGetState($fileControls[$CONTROL_SNOW]) = $GUI_UNCHECKED Then
+				$levelStates[$LEVEL_SNOW] = _IntToIni(0)
+				If GUICtrlGetState($fileControls[$CONTROL_DESERT]) = $GUI_UNCHECKED Then
+					$levelStates[$LEVEL_DESERT] = _IntToIni(0)
+					If GUICtrlGetState($fileControls[$CONTROL_FOREST]) = $GUI_UNCHECKED Then
+						$levelStates[$LEVEL_FOREST] = _IntToIni(0)
+					EndIf
+				EndIf
+			EndIf
+		EndIf
+	EndIf
+	$fileData[$FILE_CASTLE][$INI_VALUE] = $levelStates[$LEVEL_CASTLE]
+	$fileData[$FILE_MOON][$INI_VALUE] = $levelStates[$LEVEL_MOON]
+	$fileData[$FILE_SNOW][$INI_VALUE] = $levelStates[$LEVEL_SNOW]
+	$fileData[$FILE_DESERT][$INI_VALUE] = $levelStates[$LEVEL_DESERT]
+	$fileData[$FILE_FOREST][$INI_VALUE] = $levelStates[$LEVEL_FOREST]
 	
-	$fileData[8][1] = _CheckStateToIni($fileControls[9])
-	$fileData[9][1] = _CheckStateToIni($fileControls[10])
-	$fileData[$FILE_LIVES][$INI_VALUE] = _IntToIni(GUICtrlRead($fileControls[11]))
-	$fileData[$FILE_GEMS][$INI_VALUE] = _IntToIni(GUICtrlRead($fileControls[12]))
+	$fileData[$FILE_ENDING][$INI_VALUE] = _CheckStateToIni($fileControls[$CONTROL_ENDING])
+	$fileData[$FILE_INTRO][$INI_VALUE] = _CheckStateToIni($fileControls[$CONTROL_INTRO])
+	$fileData[$FILE_LIVES][$INI_VALUE] = _IntToIni(GUICtrlRead($fileControls[$CONTROL_LIVES]))
+	$fileData[$FILE_GEMS][$INI_VALUE] = _IntToIni(GUICtrlRead($fileControls[$CONTROL_GEMS]))
 	
-	IniWriteSection($saveFile, $fileControls[0])
+	IniWriteSection($saveFile, $fileControls[$CONTROL_NAME], $fileData)
+EndFunc
+
+Func _File1Changed()
+	_SaveFile($file1Controls)
+EndFunc
+Func _File2Changed()
+	_SaveFile($file2Controls)
+EndFunc
+Func _File3Changed()
+	_SaveFile($file3Controls)
 EndFunc
 
 ;HELPER FUNCTIONS
