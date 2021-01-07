@@ -5,11 +5,11 @@
 #Include <GuiButton.au3>
 #include <EditConstants.au3>
 
-$GUI = GUICreate("Whipseey Save Manager",725,257,-1,-1,-1,-1)
+$GUI = GUICreate("Whipseey Save Manager",725,280,-1,-1,-1,-1)
 GUISetOnEvent($GUI_EVENT_CLOSE, "_Exit", $GUI)
 $path = GUICtrlCreateInput("%PATH_TO_SAVEGAME%",10,10,660,20,-1,$WS_EX_CLIENTEDGE)
 $select = GUICtrlCreateButton("...",675,10,40,20,-1,-1)
-GUICtrlCreateGroup("File1",10,40,225,210,-1,-1)
+GUICtrlCreateGroup("File1",10,40,225,230,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
 GUICtrlCreateLabel("Boss no Damage Progress",20,60,128,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
@@ -17,22 +17,22 @@ $file1Boss = GUICtrlCreateInput("0",150,60,70,20,$ES_READONLY,$WS_EX_CLIENTEDGE)
 GUICtrlCreateLabel("Enemies Defeated",20,90,128,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
 $file1Enemies = GUICtrlCreateInput("0",150,90,70,20,$ES_READONLY,$WS_EX_CLIENTEDGE)
-GUICtrlCreateGroup("Level Progress",20,113,105,129,-1,-1)
+GUICtrlCreateGroup("Level Progress",20,113,105,145,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-$file1Castle = GUICtrlCreateRadio("Castle",40,133,70,20,-1,-1)
-$file1Moon = GUICtrlCreateRadio("Moon",40,153,70,20,-1,-1)
-$file1Snow = GUICtrlCreateRadio("Snow",40,173,70,20,-1,-1)
-$file1Desert = GUICtrlCreateRadio("Desert",40,193,70,20,-1,-1)
-$file1Forest = GUICtrlCreateRadio("Forest",40,213,70,20,-1,-1)
+$file1Castle = GUICtrlCreateRadio("Castle",40,130,70,20,-1,-1)
+$file1Moon = GUICtrlCreateRadio("Moon",40,150,70,20,-1,-1)
+$file1Snow = GUICtrlCreateRadio("Snow",40,170,70,20,-1,-1)
+$file1Desert = GUICtrlCreateRadio("Desert",40,190,70,20,-1,-1)
+$file1Forest = GUICtrlCreateRadio("Forest",40,210,70,20,-1,-1)
 $file1Ending = GUICtrlCreateCheckbox("Ending",150,120,70,20,-1,-1)
 $file1Intro = GUICtrlCreateCheckbox("Intro",150,140,70,20,-1,-1)
-GUICtrlCreateLabel("Gems",150,166,70,15,-1,-1)
+GUICtrlCreateLabel("Gems",150,175,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file1Gems = GUICtrlCreateInput("0",150,180,70,20,-1,$WS_EX_CLIENTEDGE)
-GUICtrlCreateLabel("Lives",150,206,70,15,-1,-1)
+$file1Gems = GUICtrlCreateInput("0",150,190,70,20,-1,$WS_EX_CLIENTEDGE)
+GUICtrlCreateLabel("Lives",150,220,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file1Lives = GUICtrlCreateInput("0",150,220,70,20,-1,$WS_EX_CLIENTEDGE)
-GUICtrlCreateGroup("File2",250,40,225,210,-1,-1)
+$file1Lives = GUICtrlCreateInput("0",150,235,70,20,-1,$WS_EX_CLIENTEDGE)
+GUICtrlCreateGroup("File2",250,40,225,230,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
 GUICtrlCreateLabel("Boss no Damage Progress",260,60,128,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
@@ -40,22 +40,22 @@ $file2Boss = GUICtrlCreateInput("0",390,60,70,20,$ES_READONLY,$WS_EX_CLIENTEDGE)
 GUICtrlCreateLabel("Enemies Defeated",260,90,128,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
 $file2Enemies = GUICtrlCreateInput("0",390,90,70,20,$ES_READONLY,$WS_EX_CLIENTEDGE)
-GUICtrlCreateGroup("Level Progress",260,113,105,129,-1,-1)
+GUICtrlCreateGroup("Level Progress",260,113,105,145,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-$file2Castle = GUICtrlCreateRadio("Castle",280,133,70,20,-1,-1)
-$file2Moon = GUICtrlCreateRadio("Moon",280,153,70,20,-1,-1)
-$file2Snow = GUICtrlCreateRadio("Snow",280,173,70,20,-1,-1)
-$file2Desert = GUICtrlCreateRadio("Desert",280,193,70,20,-1,-1)
-$file2Forest = GUICtrlCreateRadio("Forest",280,213,70,20,-1,-1)
+$file2Castle = GUICtrlCreateRadio("Castle",280,130,70,20,-1,-1)
+$file2Moon = GUICtrlCreateRadio("Moon",280,150,70,20,-1,-1)
+$file2Snow = GUICtrlCreateRadio("Snow",280,170,70,20,-1,-1)
+$file2Desert = GUICtrlCreateRadio("Desert",280,190,70,20,-1,-1)
+$file2Forest = GUICtrlCreateRadio("Forest",280,210,70,20,-1,-1)
 $file2Ending = GUICtrlCreateCheckbox("Ending",390,120,70,20,-1,-1)
 $file2Intro = GUICtrlCreateCheckbox("Intro",390,140,70,20,-1,-1)
-GUICtrlCreateLabel("Gems",390,166,70,15,-1,-1)
+GUICtrlCreateLabel("Gems",390,175,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file2Gems = GUICtrlCreateInput("0",390,180,70,20,-1,$WS_EX_CLIENTEDGE)
-GUICtrlCreateLabel("Lives",390,206,70,15,-1,-1)
+$file2Gems = GUICtrlCreateInput("0",390,190,70,20,-1,$WS_EX_CLIENTEDGE)
+GUICtrlCreateLabel("Lives",390,220,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file2Lives = GUICtrlCreateInput("0",390,220,70,20,-1,$WS_EX_CLIENTEDGE)
-GUICtrlCreateGroup("File3",490,40,225,210,-1,-1)
+$file2Lives = GUICtrlCreateInput("0",390,235,70,20,-1,$WS_EX_CLIENTEDGE)
+GUICtrlCreateGroup("File3",490,40,225,230,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
 GUICtrlCreateLabel("Boss no Damage Progress",500,60,128,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
@@ -63,21 +63,24 @@ $file3Boss = GUICtrlCreateInput("0",630,60,70,20,$ES_READONLY,$WS_EX_CLIENTEDGE)
 GUICtrlCreateLabel("Enemies Defeated",500,90,128,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
 $file3Enemies = GUICtrlCreateInput("0",630,90,70,20,$ES_READONLY,$WS_EX_CLIENTEDGE)
-GUICtrlCreateGroup("Level Progress",500,113,105,129,-1,-1)
+GUICtrlCreateGroup("Level Progress",500,113,105,145,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-$file3Castle = GUICtrlCreateRadio("Castle",520,133,70,20,-1,-1)
-$file3Moon = GUICtrlCreateRadio("Moon",520,153,70,20,-1,-1)
-$file3Snow = GUICtrlCreateRadio("Snow",520,173,70,20,-1,-1)
-$file3Desert = GUICtrlCreateRadio("Desert",520,193,70,20,-1,-1)
-$file3Forest = GUICtrlCreateRadio("Forest",520,213,70,20,-1,-1)
+$file3Castle = GUICtrlCreateRadio("Castle",520,130,70,20,-1,-1)
+$file3Moon = GUICtrlCreateRadio("Moon",520,150,70,20,-1,-1)
+$file3Snow = GUICtrlCreateRadio("Snow",520,170,70,20,-1,-1)
+$file3Desert = GUICtrlCreateRadio("Desert",520,190,70,20,-1,-1)
+$file3Forest = GUICtrlCreateRadio("Forest",520,210,70,20,-1,-1)
 $file3Ending = GUICtrlCreateCheckbox("Ending",630,120,70,20,-1,-1)
 $file3Intro = GUICtrlCreateCheckbox("Intro",630,140,70,20,-1,-1)
-GUICtrlCreateLabel("Gems",630,166,70,15,-1,-1)
+GUICtrlCreateLabel("Gems",630,175,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file3Gems = GUICtrlCreateInput("0",630,180,70,20,-1,$WS_EX_CLIENTEDGE)
-GUICtrlCreateLabel("Lives",630,206,70,15,-1,-1)
+$file3Gems = GUICtrlCreateInput("0",630,190,70,20,-1,$WS_EX_CLIENTEDGE)
+GUICtrlCreateLabel("Lives",630,220,70,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file3Lives = GUICtrlCreateInput("0",630,220,70,20,-1,$WS_EX_CLIENTEDGE)
+$file3Lives = GUICtrlCreateInput("0",630,235,70,20,-1,$WS_EX_CLIENTEDGE)
+$file1Beach = GUICtrlCreateRadio("Beach",40,230,70,20,-1,-1)
+$file2Beach = GUICtrlCreateRadio("Beach",280,230,70,20,-1,-1)
+$file3Beach = GUICtrlCreateRadio("Beach",520,230,70,20,-1,-1)
 
 
 
@@ -87,7 +90,7 @@ Handle_deklaration=default
 Handle_deklaration_const=false
 title=Whipseey Save Manager
 breite=725
-hoehe=257
+hoehe=280
 style=-1
 exstyle=-1
 bgcolour=0xF0F0F0
@@ -126,7 +129,7 @@ resize=
 x=10
 y=40
 width=225
-height=210
+height=230
 func=
 font=MS Sans Serif
 fontsize=8
@@ -271,7 +274,7 @@ resize=
 x=20
 y=113
 width=105
-height=129
+height=145
 func=
 font=MS Sans Serif
 fontsize=8
@@ -298,7 +301,7 @@ handle=424
 locked=0
 resize=
 x=40
-y=133
+y=130
 width=70
 height=20
 func=
@@ -327,7 +330,7 @@ handle=425
 locked=0
 resize=
 x=40
-y=153
+y=150
 width=70
 height=20
 func=
@@ -356,7 +359,7 @@ handle=426
 locked=0
 resize=
 x=40
-y=173
+y=170
 width=70
 height=20
 func=
@@ -385,7 +388,7 @@ handle=427
 locked=0
 resize=
 x=40
-y=193
+y=190
 width=70
 height=20
 func=
@@ -414,7 +417,7 @@ handle=428
 locked=0
 resize=
 x=40
-y=213
+y=210
 width=70
 height=20
 func=
@@ -501,7 +504,7 @@ handle=431
 locked=0
 resize=
 x=150
-y=206
+y=220
 width=70
 height=15
 func=
@@ -530,7 +533,7 @@ handle=432
 locked=0
 resize=
 x=150
-y=180
+y=190
 width=70
 height=20
 func=
@@ -559,7 +562,7 @@ handle=433
 locked=0
 resize=
 x=150
-y=166
+y=175
 width=70
 height=15
 func=
@@ -588,7 +591,7 @@ handle=434
 locked=0
 resize=
 x=150
-y=220
+y=235
 width=70
 height=20
 func=
@@ -619,7 +622,7 @@ resize=
 x=250
 y=40
 width=225
-height=210
+height=230
 func=
 font=MS Sans Serif
 fontsize=8
@@ -764,7 +767,7 @@ resize=
 x=260
 y=113
 width=105
-height=129
+height=145
 func=
 font=MS Sans Serif
 fontsize=8
@@ -791,7 +794,7 @@ handle=441
 locked=0
 resize=
 x=280
-y=133
+y=130
 width=70
 height=20
 func=
@@ -820,7 +823,7 @@ handle=442
 locked=0
 resize=
 x=280
-y=153
+y=150
 width=70
 height=20
 func=
@@ -849,7 +852,7 @@ handle=443
 locked=0
 resize=
 x=280
-y=173
+y=170
 width=70
 height=20
 func=
@@ -878,7 +881,7 @@ handle=444
 locked=0
 resize=
 x=280
-y=193
+y=190
 width=70
 height=20
 func=
@@ -907,7 +910,7 @@ handle=445
 locked=0
 resize=
 x=280
-y=213
+y=210
 width=70
 height=20
 func=
@@ -994,7 +997,7 @@ handle=448
 locked=0
 resize=
 x=390
-y=206
+y=220
 width=70
 height=15
 func=
@@ -1023,7 +1026,7 @@ handle=449
 locked=0
 resize=
 x=390
-y=180
+y=190
 width=70
 height=20
 func=
@@ -1052,7 +1055,7 @@ handle=450
 locked=0
 resize=
 x=390
-y=166
+y=175
 width=70
 height=15
 func=
@@ -1081,7 +1084,7 @@ handle=451
 locked=0
 resize=
 x=390
-y=220
+y=235
 width=70
 height=20
 func=
@@ -1112,7 +1115,7 @@ resize=
 x=490
 y=40
 width=225
-height=210
+height=230
 func=
 font=MS Sans Serif
 fontsize=8
@@ -1257,7 +1260,7 @@ resize=
 x=500
 y=113
 width=105
-height=129
+height=145
 func=
 font=MS Sans Serif
 fontsize=8
@@ -1284,7 +1287,7 @@ handle=458
 locked=0
 resize=
 x=520
-y=133
+y=130
 width=70
 height=20
 func=
@@ -1313,7 +1316,7 @@ handle=459
 locked=0
 resize=
 x=520
-y=153
+y=150
 width=70
 height=20
 func=
@@ -1342,7 +1345,7 @@ handle=460
 locked=0
 resize=
 x=520
-y=173
+y=170
 width=70
 height=20
 func=
@@ -1371,7 +1374,7 @@ handle=461
 locked=0
 resize=
 x=520
-y=193
+y=190
 width=70
 height=20
 func=
@@ -1400,7 +1403,7 @@ handle=462
 locked=0
 resize=
 x=520
-y=213
+y=210
 width=70
 height=20
 func=
@@ -1487,7 +1490,7 @@ handle=465
 locked=0
 resize=
 x=630
-y=206
+y=220
 width=70
 height=15
 func=
@@ -1516,7 +1519,7 @@ handle=466
 locked=0
 resize=
 x=630
-y=180
+y=190
 width=70
 height=20
 func=
@@ -1545,7 +1548,7 @@ handle=467
 locked=0
 resize=
 x=630
-y=166
+y=175
 width=70
 height=15
 func=
@@ -1574,7 +1577,7 @@ handle=468
 locked=0
 resize=
 x=630
-y=220
+y=235
 width=70
 height=20
 func=
@@ -1655,4 +1658,91 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
+[0x00202666]
+type=radio
+handle=532
+locked=0
+resize=
+x=40
+y=230
+width=70
+height=20
+func=
+font=MS Sans Serif
+fontsize=8
+fontstyle=400
+fontattribute=0
+tooltip=
+bgimage=
+textcolour=0x000000
+id=$file1Beach
+text=Beach
+state=$GUI_SHOW+$GUI_ENABLE
+style=
+exstyle=
+bgcolour=0xF0F0F0
+code=
+tabpage=-1
+iconindex=
+iconlarge=0
+textmode=text
+order=54
+[0x002C2672]
+type=radio
+handle=533
+locked=0
+resize=
+x=280
+y=230
+width=70
+height=20
+func=
+font=MS Sans Serif
+fontsize=8
+fontstyle=400
+fontattribute=0
+tooltip=
+bgimage=
+textcolour=0x000000
+id=$file2Beach
+text=Beach
+state=$GUI_SHOW+$GUI_ENABLE
+style=
+exstyle=
+bgcolour=0xF0F0F0
+code=
+tabpage=-1
+iconindex=
+iconlarge=0
+textmode=text
+order=55
+[0x00582636]
+type=radio
+handle=534
+locked=0
+resize=
+x=520
+y=230
+width=70
+height=20
+func=
+font=MS Sans Serif
+fontsize=8
+fontstyle=400
+fontattribute=0
+tooltip=
+bgimage=
+textcolour=0x000000
+id=$file3Beach
+text=Beach
+state=$GUI_SHOW+$GUI_ENABLE
+style=
+exstyle=
+bgcolour=0xF0F0F0
+code=
+tabpage=-1
+iconindex=
+iconlarge=0
+textmode=text
+order=56
 #ce

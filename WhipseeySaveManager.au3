@@ -29,39 +29,41 @@ WEnd
 ;GUI FUNCTIONS
 Func _LoadSave()
 	Local $fileData = IniReadSection($saveFile, "file1")
-;~ 	boss_no_damage_progress="2.000000"
 	GUICtrlSetData($file1Boss, _IniToInt($fileData[1][1]))
-;~ 	enemies_defeated="195.000000"
 	GUICtrlSetData($file1Enemies, _IniToInt($fileData[2][1]))
 
-;~ 	castle="32.000000"
-;~ 	GUICtrlSetData($file1Boss, $fileData[3][1])
-;~ 	moon="16.000000"
-;~ 	GUICtrlSetData($file1Boss, $fileData[4][1])
-;~ 	snow="8.000000"
-;~ 	GUICtrlSetData($file1Boss, $fileData[5][1])
-;~ 	desert="4.000000"
-;~ 	GUICtrlSetData($file1Boss, $fileData[6][1])
-;~ 	forest="2.000000"
-;~ 	GUICtrlSetData($file1Boss, $fileData[7][1])
+	Local $levelStates[] =  [$GUI_UNCHECKED, $GUI_UNCHECKED, $GUI_UNCHECKED, $GUI_UNCHECKED, $GUI_UNCHECKED, $GUI_UNCHECKED]
+	If $fileData[3][1] = '"32.000000"' Then
+		$levelStates[5] = $GUI_CHECKED
+	ElseIf $fileData[4][1] = '"16.000000"' Then
+		$levelStates[4] = $GUI_CHECKED
+	ElseIf $fileData[5][1] = '"8.000000"' Then
+		$levelStates[3] = $GUI_CHECKED
+	ElseIf $fileData[6][1] = '"4.000000"' Then
+		$levelStates[2] = $GUI_CHECKED
+	ElseIf $fileData[7][1] = '"2.000000"' Then
+		$levelStates[1] = $GUI_CHECKED
+	Else
+		$levelStates[0] = $GUI_CHECKED
+	EndIf
+	GUICtrlSetState($file1Castle, $levelStates[5])
+	GUICtrlSetState($file1Moon, $levelStates[4])
+	GUICtrlSetState($file1Snow, $levelStates[3])
+	GUICtrlSetState($file1Desert, $levelStates[2])
+	GUICtrlSetState($file1Forest, $levelStates[1])
+	GUICtrlSetState($file1Beach, $levelStates[0])
 
-;~ 	ending="1.000000"
 	GUICtrlSetState($file1Ending, _IniToCheckState($fileData[8][1]))
-;~ 	intro="1.000000"
 	GUICtrlSetState($file1Intro, _IniToCheckState($fileData[9][1]))
-;~ 	lives="5.000000"
 	GUICtrlSetData($file1Lives, _IniToInt($fileData[10][1]))
-;~ 	gems="83.000000"
 	GUICtrlSetData($file1Gems, _IniToInt($fileData[11][1]))
 EndFunc
 
 Func _IniToCheckState(ByRef $data)
-	If $data = "1.000000" Then
+	If $data = '"1.000000"' Then
 		return $GUI_CHECKED
-	ElseIf $data = "0.000000" Then
-		return $GUI_UNCHECKED
 	EndIf
-	return $GUI_INDETERMINATE
+	return $GUI_UNCHECKED
 EndFunc
 
 Func _IniToRadioState(ByRef $data)
