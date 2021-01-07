@@ -11,6 +11,10 @@ Global $saveFile =  $defaultSaveDir &  "\whipseey.sav"
 Global $file1Controls[] = ["file1", $file1Boss, $file1Enemies, $file1Castle, $file1Moon, $file1Snow, $file1Desert, $file1Forest, $file1Beach, $file1Ending, $file1Intro, $file1Lives, $file1Gems]
 Global $file2Controls[] = ["file2", $file2Boss, $file2Enemies, $file2Castle, $file2Moon, $file2Snow, $file2Desert, $file2Forest, $file2Beach, $file2Ending, $file2Intro, $file2Lives, $file2Gems]
 Global $file3Controls[] = ["file3", $file3Boss, $file3Enemies, $file3Castle, $file3Moon, $file3Snow, $file3Desert, $file3Forest, $file3Beach, $file3Ending, $file3Intro, $file3Lives, $file3Gems]
+Global Enum $LEVEL_CASTLE = 5, $LEVEL_MOON = 4, $LEVEL_SNOW = 3, $LEVEL_DESERT = 2, $LEVEL_FOREST = 1, $LEVEL_BEACH = 0
+Global Enum $CONTROL_NAME = 0, $CONTROL_BOSS = 1, $CONTROL_ENEMIES = 2, $CONTROL_CASTLE = 3, $CONTROL_MOON = 4, $CONTROL_SNOW = 5, $CONTROL_DESERT = 6, $CONTROL_FOREST = 7, $CONTROL_BEACH = 8, $CONTROL_ENDING = 9, $CONTROL_INTRO = 10, $CONTROL_LIVES = 11, $CONTROL_GEMS = 12
+Global Enum $FILE_BOSS = 1, $FILE_ENEMIES = 2, $FILE_CASTLE = 3, $FILE_MOON = 4, $FILE_SNOW = 5, $FILE_DESERT = 6, $FILE_FOREST = 7, $FILE_ENDING = 8, $FILE_INTRO = 9, $FILE_LIVES = 10, $FILE_GEMS = 11
+Global Enum $INI_KEY = 0, $INI_VALUE = 1
 
 ;GUI INIT
 Opt("GUIOnEventMode", 1)
@@ -31,40 +35,54 @@ WEnd
 
 ;GUI FUNCTIONS
 Func _LoadFile(ByRef $fileControls)
-	Local $fileData = IniReadSection($saveFile, $fileControls[0])
-	GUICtrlSetData($fileControls[1], _IniToInt($fileData[1][1]))
-	GUICtrlSetData($fileControls[2], _IniToInt($fileData[2][1]))
+	Local $fileData = IniReadSection($saveFile, $fileControls[$CONTROL_NAME])
+	GUICtrlSetData($fileControls[$CONTROL_BOSS], _IniToInt($fileData[$FILE_BOSS][$INI_VALUE]))
+	GUICtrlSetData($fileControls[$CONTROL_ENEMIES], _IniToInt($fileData[$FILE_ENEMIES][$INI_VALUE]))
 
 	Local $levelStates[] =  [$GUI_UNCHECKED, $GUI_UNCHECKED, $GUI_UNCHECKED, $GUI_UNCHECKED, $GUI_UNCHECKED, $GUI_UNCHECKED]
-	If $fileData[3][1] = '"32.000000"' Then
-		$levelStates[5] = $GUI_CHECKED
-	ElseIf $fileData[4][1] = '"16.000000"' Then
-		$levelStates[4] = $GUI_CHECKED
-	ElseIf $fileData[5][1] = '"8.000000"' Then
-		$levelStates[3] = $GUI_CHECKED
-	ElseIf $fileData[6][1] = '"4.000000"' Then
-		$levelStates[2] = $GUI_CHECKED
-	ElseIf $fileData[7][1] = '"2.000000"' Then
-		$levelStates[1] = $GUI_CHECKED
+	If $fileData[$FILE_CASTLE][$INI_VALUE] = '"32.000000"' Then
+		$levelStates[$LEVEL_CASTLE] = $GUI_CHECKED
+	ElseIf $fileData[$FILE_MOON][$INI_VALUE] = '"16.000000"' Then
+		$levelStates[$LEVEL_MOON] = $GUI_CHECKED
+	ElseIf $fileData[$FILE_SNOW][$INI_VALUE] = '"8.000000"' Then
+		$levelStates[$LEVEL_SNOW] = $GUI_CHECKED
+	ElseIf $fileData[$FILE_DESERT][$INI_VALUE] = '"4.000000"' Then
+		$levelStates[$LEVEL_DESERT] = $GUI_CHECKED
+	ElseIf $fileData[$FILE_FOREST][$INI_VALUE] = '"2.000000"' Then
+		$levelStates[$LEVEL_FOREST] = $GUI_CHECKED
 	Else
-		$levelStates[0] = $GUI_CHECKED
+		$levelStates[$LEVEL_BEACH] = $GUI_CHECKED
 	EndIf
-	GUICtrlSetState($fileControls[3], $levelStates[5])
-	GUICtrlSetState($fileControls[4], $levelStates[4])
-	GUICtrlSetState($fileControls[5], $levelStates[3])
-	GUICtrlSetState($fileControls[6], $levelStates[2])
-	GUICtrlSetState($fileControls[7], $levelStates[1])
-	GUICtrlSetState($fileControls[8], $levelStates[0])
+	GUICtrlSetState($fileControls[$CONTROL_CASTLE], $levelStates[$LEVEL_CASTLE])
+	GUICtrlSetState($fileControls[$CONTROL_MOON], $levelStates[$LEVEL_MOON])
+	GUICtrlSetState($fileControls[$CONTROL_SNOW], $levelStates[$LEVEL_SNOW])
+	GUICtrlSetState($fileControls[$CONTROL_DESERT], $levelStates[$LEVEL_DESERT])
+	GUICtrlSetState($fileControls[$CONTROL_FOREST], $levelStates[$LEVEL_FOREST])
+	GUICtrlSetState($fileControls[$CONTROL_BEACH], $levelStates[$LEVEL_BEACH])
 
-	GUICtrlSetState($fileControls[9], _IniToCheckState($fileData[8][1]))
-	GUICtrlSetState($fileControls[10], _IniToCheckState($fileData[9][1]))
-	GUICtrlSetData($fileControls[11], _IniToInt($fileData[10][1]))
-	GUICtrlSetData($fileControls[12], _IniToInt($fileData[11][1]))
+	GUICtrlSetState($fileControls[$CONTROL_ENDING], _IniToCheckState($fileData[$FILE_ENDING][$INI_VALUE]))
+	GUICtrlSetState($fileControls[$CONTROL_INTRO], _IniToCheckState($fileData[$FILE_INTRO][$INI_VALUE]))
+	GUICtrlSetData($fileControls[$CONTROL_LIVES], _IniToInt($fileData[$FILE_LIVES][$INI_VALUE]))
+	GUICtrlSetData($fileControls[$CONTROL_GEMS], _IniToInt($fileData[$FILE_GEMS][$INI_VALUE]))
 EndFunc
 Func _LoadSave()
 	_LoadFile($file3Controls)
 	_LoadFile($file2Controls)
 	_LoadFile($file1Controls)
+EndFunc
+
+Func _SaveFile(ByRef $fileControls)
+	Local $fileData = IniReadSection($saveFile, $fileControls[0])
+	GUICtrlSetData($fileControls[1], _IniToInt($fileData[1][1]))
+	GUICtrlSetData($fileControls[2], _IniToInt($fileData[2][1]))
+;~ 	$fileData[2][1] = 
+	
+	$fileData[8][1] = _CheckStateToIni($fileControls[9])
+	$fileData[9][1] = _CheckStateToIni($fileControls[10])
+	$fileData[$FILE_LIVES][$INI_VALUE] = _IntToIni(GUICtrlRead($fileControls[11]))
+	$fileData[$FILE_GEMS][$INI_VALUE] = _IntToIni(GUICtrlRead($fileControls[12]))
+	
+	IniWriteSection($saveFile, $fileControls[0])
 EndFunc
 
 ;HELPER FUNCTIONS
@@ -73,6 +91,12 @@ Func _IniToCheckState(ByRef $data)
 		return $GUI_CHECKED
 	EndIf
 	return $GUI_UNCHECKED
+EndFunc
+Func _CheckStateToIni($state)
+	If $state = $GUI_CHECKED Then
+		return '"1.000000"'
+	EndIf
+	return '"0.000000"'
 EndFunc
 
 Func _IniToRadioState(ByRef $data)
@@ -85,6 +109,9 @@ EndFunc
 Func _IniToInt($data)
 	$data = StringReplace($data, '"', "")
 	return Int($data)
+EndFunc
+Func _IntToIni($int)
+	return String('"' & $int & '.000000"')
 EndFunc
 
 Func _Exit()
