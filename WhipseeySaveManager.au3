@@ -1,5 +1,5 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Res_ProductVersion=0.2
+#AutoIt3Wrapper_Res_ProductVersion=0.3
 #AutoIt3Wrapper_Res_Language=1033
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 ;*****************************************
@@ -107,6 +107,11 @@ Func _SaveFile(ByRef $fileControls)
 	
 	IniWriteSection($saveFile, $fileControls[$CONTROL_NAME], $fileData)
 EndFunc
+Func _SaveSave()
+	_SaveFile($file3Controls)
+	_SaveFile($file2Controls)
+	_SaveFile($file1Controls)
+EndFunc
 
 Func _File1Gems0()
 	GUICtrlSetData($file1Gems, 0)
@@ -186,6 +191,26 @@ Func _File3Default()
 	GUICtrlSetData($file3Lives, 5)
 EndFunc
 
+Func _File1Save()
+	_SaveFile($file1Controls)
+EndFunc
+Func _File1Reload()
+	_LoadFile($file1Controls)
+EndFunc
+
+Func _File2Save()
+	_SaveFile($file2Controls)
+EndFunc
+Func _File2Reload()
+	_LoadFile($file2Controls)
+EndFunc
+
+Func _File3Save()
+	_SaveFile($file3Controls)
+EndFunc
+Func _File3Reload()
+	_LoadFile($file3Controls)
+EndFunc
 
 Func _OpenFile()
 	$result =  FileOpenDialog("Select Savefile", $defaultSaveDir, "Save files (*.sav)|All (*.*)",  $FD_FILEMUSTEXIST + $FD_PATHMUSTEXIST, "whipseey.sav")
@@ -196,7 +221,7 @@ Func _OpenFile()
 	EndIf
 EndFunc
 
-Func _ReloadFile()
+Func _ReloadSave()
 	_LoadSave()
 EndFunc
 
