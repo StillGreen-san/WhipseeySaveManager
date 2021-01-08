@@ -159,6 +159,34 @@ Func _File3Lives9()
 	EndIf
 EndFunc
 
+Func _File1Max()
+	GUICtrlSetData($file1Gems, 99)
+	GUICtrlSetData($file1Lives, 9999)
+EndFunc
+Func _File1Default()
+	GUICtrlSetData($file1Gems, 0)
+	GUICtrlSetData($file1Lives, 5)
+EndFunc
+
+Func _File2Max()
+	GUICtrlSetData($file2Gems, 99)
+	GUICtrlSetData($file2Lives, 9999)
+EndFunc
+Func _File2Default()
+	GUICtrlSetData($file2Gems, 0)
+	GUICtrlSetData($file2Lives, 5)
+EndFunc
+
+Func _File3Max()
+	GUICtrlSetData($file3Gems, 99)
+	GUICtrlSetData($file3Lives, 9999)
+EndFunc
+Func _File3Default()
+	GUICtrlSetData($file3Gems, 0)
+	GUICtrlSetData($file3Lives, 5)
+EndFunc
+
+
 Func _OpenFile()
 	$result =  FileOpenDialog("Select Savefile", $defaultSaveDir, "Save files (*.sav)|All (*.*)",  $FD_FILEMUSTEXIST + $FD_PATHMUSTEXIST, "whipseey.sav")
 	If Not @error Then

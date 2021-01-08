@@ -79,7 +79,9 @@ GUICtrlSetOnEvent(-1,"_File3Gems0")
 GUICtrlCreateButton("9",599,123,16,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File3Gems9")
 GUICtrlCreateButton("deafult",630,153,50,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Default")
 GUICtrlCreateButton("max",580,153,35,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Max")
 GUICtrlCreateButton("0",119,124,16,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File1Gems0")
 GUICtrlCreateButton("9",138,124,16,20,-1,-1)
@@ -89,7 +91,9 @@ GUICtrlSetOnEvent(-1,"_File1Lives5")
 GUICtrlCreateButton("999",188,124,31,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File1Lives9")
 GUICtrlCreateButton("max",119,154,35,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Max")
 GUICtrlCreateButton("deafult",169,154,50,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Default")
 GUICtrlCreateButton("save",119,182,35,20,-1,-1)
 GUICtrlCreateButton("reload",169,182,50,20,-1,-1)
 GUICtrlCreateButton("0",350,124,16,20,-1,-1)
@@ -101,7 +105,9 @@ GUICtrlSetOnEvent(-1,"_File2Lives5")
 GUICtrlCreateButton("999",419,124,31,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File2Lives9")
 GUICtrlCreateButton("deafult",400,154,50,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Default")
 GUICtrlCreateButton("max",350,154,35,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Max")
 GUICtrlCreateButton("save",350,182,35,20,-1,-1)
 GUICtrlCreateButton("reload",400,182,50,20,-1,-1)
 
@@ -1661,7 +1667,7 @@ x=630
 y=153
 width=50
 height=20
-func=
+func=_File3Default
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1690,7 +1696,7 @@ x=580
 y=153
 width=35
 height=20
-func=
+func=_File3Max
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1835,7 +1841,7 @@ x=119
 y=154
 width=35
 height=20
-func=
+func=_File1Max
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1864,7 +1870,7 @@ x=169
 y=154
 width=50
 height=20
-func=
+func=_File1Default
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -2067,7 +2073,7 @@ x=400
 y=154
 width=50
 height=20
-func=
+func=_File2Default
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -2096,7 +2102,7 @@ x=350
 y=154
 width=35
 height=20
-func=
+func=_File2Max
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
