@@ -5,143 +5,93 @@
 #Include <GuiButton.au3>
 #include <EditConstants.au3>
 
-$GUI = GUICreate("Whipseey Save Manager",700,280,-1,-1,-1,-1)
+$GUI = GUICreate("Whipseey Save Manager",700,225,-1,-1,-1,-1)
 GUISetOnEvent($GUI_EVENT_CLOSE, "_Exit", $GUI)
 $path = GUICtrlCreateInput("%PATH_TO_SAVEGAME%",10,10,529,20,-1,$WS_EX_CLIENTEDGE)
-$select = GUICtrlCreateButton("...",545,10,40,20,-1,-1)
+GUICtrlCreateButton("...",545,10,40,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_OpenFile")
-GUICtrlCreateGroup("File1",10,40,220,230,-1,-1)
+$file1Group = GUICtrlCreateGroup("File1  [ 63-69420 ]",10,40,220,175,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-GUICtrlCreateLabel("Boss no Damage Progress",20,60,128,15,-1,-1)
-GUICtrlSetBkColor(-1,"-2")
-$file1Boss = GUICtrlCreateInput("0",150,60,70,20,$ES_READONLY,$WS_EX_CLIENTEDGE)
-GUICtrlCreateLabel("Enemies Defeated",20,90,128,15,-1,-1)
-GUICtrlSetBkColor(-1,"-2")
-$file1Enemies = GUICtrlCreateInput("0",150,90,70,20,$ES_READONLY,$WS_EX_CLIENTEDGE)
-GUICtrlCreateGroup("Level Progress",20,113,90,145,-1,-1)
+GUICtrlCreateGroup("Level Progress",20,58,90,145,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-$file1Castle = GUICtrlCreateRadio("Castle",40,130,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File1Changed")
-$file1Moon = GUICtrlCreateRadio("Moon",40,150,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File1Changed")
-$file1Snow = GUICtrlCreateRadio("Snow",40,170,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File1Changed")
-$file1Desert = GUICtrlCreateRadio("Desert",40,190,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File1Changed")
-$file1Forest = GUICtrlCreateRadio("Forest",40,210,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File1Changed")
-$file1Beach = GUICtrlCreateRadio("Beach",40,230,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File1Changed")
-$file1Ending = GUICtrlCreateCheckbox("Ending",170,117,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File1Changed")
-$file1Intro = GUICtrlCreateCheckbox("Intro",120,117,40,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File1Changed")
-GUICtrlCreateLabel("Gems",120,140,35,15,-1,-1)
+$file1Castle = GUICtrlCreateRadio("Castle",40,75,50,20,-1,-1)
+$file1Moon = GUICtrlCreateRadio("Moon",40,95,50,20,-1,-1)
+$file1Snow = GUICtrlCreateRadio("Snow",40,115,50,20,-1,-1)
+$file1Desert = GUICtrlCreateRadio("Desert",40,135,50,20,-1,-1)
+$file1Forest = GUICtrlCreateRadio("Forest",40,155,50,20,-1,-1)
+$file1Beach = GUICtrlCreateRadio("Beach",40,175,50,20,-1,-1)
+$file1Ending = GUICtrlCreateCheckbox("Ending",170,62,50,20,-1,-1)
+$file1Intro = GUICtrlCreateCheckbox("Intro",120,62,40,20,-1,-1)
+GUICtrlCreateLabel("Gems",120,85,35,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file1Gems = GUICtrlCreateInput("0",120,155,35,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
-GUICtrlSetOnEvent(-1,"_File1Changed")
-GUICtrlCreateLabel("Lives",170,140,50,15,-1,-1)
+$file1Gems = GUICtrlCreateInput("0",120,100,35,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlCreateLabel("Lives",170,85,50,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file1Lives = GUICtrlCreateInput("0",170,155,50,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
-GUICtrlSetOnEvent(-1,"_File1Changed")
-GUICtrlCreateGroup("File2",240,40,220,230,-1,-1)
+$file1Lives = GUICtrlCreateInput("9999",170,100,50,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+$file2Group = GUICtrlCreateGroup("File2  [ 63-69420 ]",240,40,220,175,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-GUICtrlCreateLabel("Boss no Damage Progress",250,60,128,15,-1,-1)
-GUICtrlSetBkColor(-1,"-2")
-$file2Boss = GUICtrlCreateInput("0",380,60,70,20,$ES_READONLY,$WS_EX_CLIENTEDGE)
-GUICtrlCreateLabel("Enemies Defeated",250,90,128,15,-1,-1)
-GUICtrlSetBkColor(-1,"-2")
-$file2Enemies = GUICtrlCreateInput("0",380,90,70,20,$ES_READONLY,$WS_EX_CLIENTEDGE)
-GUICtrlCreateGroup("Level Progress",250,113,90,145,-1,-1)
+GUICtrlCreateGroup("Level Progress",250,58,90,145,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-$file2Castle = GUICtrlCreateRadio("Castle",270,130,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File2Changed")
-$file2Moon = GUICtrlCreateRadio("Moon",270,150,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File2Changed")
-$file2Snow = GUICtrlCreateRadio("Snow",270,170,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File2Changed")
-$file2Desert = GUICtrlCreateRadio("Desert",270,190,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File2Changed")
-$file2Forest = GUICtrlCreateRadio("Forest",270,210,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File2Changed")
-$file2Beach = GUICtrlCreateRadio("Beach",270,230,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File2Changed")
-$file2Ending = GUICtrlCreateCheckbox("Ending",400,117,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File2Changed")
-$file2Intro = GUICtrlCreateCheckbox("Intro",350,117,40,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File2Changed")
-GUICtrlCreateLabel("Gems",350,140,35,15,-1,-1)
+$file2Castle = GUICtrlCreateRadio("Castle",270,75,50,20,-1,-1)
+$file2Moon = GUICtrlCreateRadio("Moon",270,95,50,20,-1,-1)
+$file2Snow = GUICtrlCreateRadio("Snow",270,115,50,20,-1,-1)
+$file2Desert = GUICtrlCreateRadio("Desert",270,135,50,20,-1,-1)
+$file2Forest = GUICtrlCreateRadio("Forest",270,155,50,20,-1,-1)
+$file2Beach = GUICtrlCreateRadio("Beach",270,175,50,20,-1,-1)
+$file2Ending = GUICtrlCreateCheckbox("Ending",400,62,50,20,-1,-1)
+$file2Intro = GUICtrlCreateCheckbox("Intro",350,62,40,20,-1,-1)
+GUICtrlCreateLabel("Gems",350,85,35,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file2Gems = GUICtrlCreateInput("0",350,155,35,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
-GUICtrlSetOnEvent(-1,"_File2Changed")
-GUICtrlCreateLabel("Lives",400,137,50,15,-1,-1)
+$file2Gems = GUICtrlCreateInput("0",350,100,35,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlCreateLabel("Lives",400,85,50,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file2Lives = GUICtrlCreateInput("0",400,155,50,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
-GUICtrlSetOnEvent(-1,"_File2Changed")
-GUICtrlCreateGroup("File3",470,40,220,230,-1,-1)
+$file2Lives = GUICtrlCreateInput("0",400,100,50,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+$file3Group = GUICtrlCreateGroup("File3  [ 63-69420 ]",470,40,220,175,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-GUICtrlCreateLabel("Boss no Damage Progress",480,60,128,15,-1,-1)
-GUICtrlSetBkColor(-1,"-2")
-$file3Boss = GUICtrlCreateInput("0",610,60,70,20,$ES_READONLY,$WS_EX_CLIENTEDGE)
-GUICtrlCreateLabel("Enemies Defeated",480,90,128,15,-1,-1)
-GUICtrlSetBkColor(-1,"-2")
-$file3Enemies = GUICtrlCreateInput("0",610,90,70,20,$ES_READONLY,$WS_EX_CLIENTEDGE)
-GUICtrlCreateGroup("Level Progress",480,113,90,145,-1,-1)
+GUICtrlCreateGroup("Level Progress",480,58,90,145,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-$file3Castle = GUICtrlCreateRadio("Castle",500,130,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File3Changed")
-$file3Moon = GUICtrlCreateRadio("Moon",500,150,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File3Changed")
-$file3Snow = GUICtrlCreateRadio("Snow",500,170,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File3Changed")
-$file3Desert = GUICtrlCreateRadio("Desert",500,190,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File3Changed")
-$file3Forest = GUICtrlCreateRadio("Forest",500,210,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File3Changed")
-$file3Beach = GUICtrlCreateRadio("Beach",500,230,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File3Changed")
-$file3Ending = GUICtrlCreateCheckbox("Ending",630,117,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File3Changed")
-$file3Intro = GUICtrlCreateCheckbox("Intro",580,117,40,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_File3Changed")
-GUICtrlCreateLabel("Gems",580,140,40,15,-1,-1)
+$file3Castle = GUICtrlCreateRadio("Castle",500,75,50,20,-1,-1)
+$file3Moon = GUICtrlCreateRadio("Moon",500,95,50,20,-1,-1)
+$file3Snow = GUICtrlCreateRadio("Snow",500,115,50,20,-1,-1)
+$file3Desert = GUICtrlCreateRadio("Desert",500,135,50,20,-1,-1)
+$file3Forest = GUICtrlCreateRadio("Forest",500,155,50,20,-1,-1)
+$file3Beach = GUICtrlCreateRadio("Beach",500,175,50,20,-1,-1)
+$file3Ending = GUICtrlCreateCheckbox("Ending",630,62,50,20,-1,-1)
+$file3Intro = GUICtrlCreateCheckbox("Intro",580,62,40,20,-1,-1)
+GUICtrlCreateLabel("Gems",580,85,40,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file3Gems = GUICtrlCreateInput("0",580,155,35,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
-GUICtrlSetOnEvent(-1,"_File3Changed")
-GUICtrlCreateLabel("Lives",630,140,45,15,-1,-1)
+$file3Gems = GUICtrlCreateInput("0",580,100,35,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlCreateLabel("Lives",630,85,45,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file3Lives = GUICtrlCreateInput("0",630,155,50,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
-GUICtrlSetOnEvent(-1,"_File3Changed")
+$file3Lives = GUICtrlCreateInput("0",630,100,50,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
 GUICtrlCreateButton("reload",640,10,50,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_ReloadFile")
-GUICtrlCreateButton("reload",630,236,50,20,-1,-1)
-GUICtrlCreateButton("save",580,236,35,20,-1,-1)
+GUICtrlCreateButton("reload",630,181,50,20,-1,-1)
+GUICtrlCreateButton("save",580,181,35,20,-1,-1)
 GUICtrlCreateButton("save",590,10,45,20,-1,-1)
-GUICtrlCreateButton("0",630,178,15,20,-1,-1)
-GUICtrlCreateButton("5",647,178,15,20,-1,-1)
-GUICtrlCreateButton("9",665,178,15,20,-1,-1)
-GUICtrlCreateButton("0",580,178,15,20,-1,-1)
-GUICtrlCreateButton("9",600,178,15,20,-1,-1)
-GUICtrlCreateButton("deafult",630,208,50,20,-1,-1)
-GUICtrlCreateButton("max",580,208,35,20,-1,-1)
-GUICtrlCreateButton("0",119,179,15,20,-1,-1)
-GUICtrlCreateButton("9",139,179,15,20,-1,-1)
-GUICtrlCreateButton("0",169,179,15,20,-1,-1)
-GUICtrlCreateButton("5",186,179,15,20,-1,-1)
-GUICtrlCreateButton("9",204,179,15,20,-1,-1)
-GUICtrlCreateButton("max",119,209,35,20,-1,-1)
-GUICtrlCreateButton("deafult",169,209,50,20,-1,-1)
-GUICtrlCreateButton("save",119,237,35,20,-1,-1)
-GUICtrlCreateButton("reload",169,237,50,20,-1,-1)
-GUICtrlCreateButton("0",350,179,15,20,-1,-1)
-GUICtrlCreateButton("9",370,179,15,20,-1,-1)
-GUICtrlCreateButton("0",400,179,15,20,-1,-1)
-GUICtrlCreateButton("5",417,179,15,20,-1,-1)
-GUICtrlCreateButton("9",435,179,15,20,-1,-1)
-GUICtrlCreateButton("deafult",400,209,50,20,-1,-1)
-GUICtrlCreateButton("max",350,209,35,20,-1,-1)
-GUICtrlCreateButton("save",350,237,35,20,-1,-1)
-GUICtrlCreateButton("reload",400,237,50,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_SaveFile")
+GUICtrlCreateButton("5",630,124,16,20,-1,-1)
+GUICtrlCreateButton("999",649,124,31,20,-1,-1)
+GUICtrlCreateButton("0",580,123,16,20,-1,-1)
+GUICtrlCreateButton("9",599,123,16,20,-1,-1)
+GUICtrlCreateButton("deafult",630,153,50,20,-1,-1)
+GUICtrlCreateButton("max",580,153,35,20,-1,-1)
+GUICtrlCreateButton("0",119,124,16,20,-1,-1)
+GUICtrlCreateButton("9",138,124,16,20,-1,-1)
+GUICtrlCreateButton("5",170,124,16,20,-1,-1)
+GUICtrlCreateButton("999",188,124,31,20,-1,-1)
+GUICtrlCreateButton("max",119,154,35,20,-1,-1)
+GUICtrlCreateButton("deafult",169,154,50,20,-1,-1)
+GUICtrlCreateButton("save",119,182,35,20,-1,-1)
+GUICtrlCreateButton("reload",169,182,50,20,-1,-1)
+GUICtrlCreateButton("0",350,124,16,20,-1,-1)
+GUICtrlCreateButton("9",369,124,16,20,-1,-1)
+GUICtrlCreateButton("5",400,124,16,20,-1,-1)
+GUICtrlCreateButton("999",419,124,31,20,-1,-1)
+GUICtrlCreateButton("deafult",400,154,50,20,-1,-1)
+GUICtrlCreateButton("max",350,154,35,20,-1,-1)
+GUICtrlCreateButton("save",350,182,35,20,-1,-1)
+GUICtrlCreateButton("reload",400,182,50,20,-1,-1)
 
 
 
@@ -151,7 +101,7 @@ Handle_deklaration=default
 Handle_deklaration_const=false
 title=Whipseey Save Manager
 breite=700
-hoehe=280
+hoehe=225
 style=-1
 exstyle=-1
 bgcolour=0xF0F0F0
@@ -190,7 +140,7 @@ resize=
 x=10
 y=40
 width=220
-height=230
+height=175
 func=
 font=MS Sans Serif
 fontsize=8
@@ -199,8 +149,8 @@ fontattribute=0
 tooltip=
 bgimage=
 textcolour=0x000000
-id=
-text=File1
+id=$file1Group
+text=File1  [ 63-69420 ]
 state=$GUI_SHOW+$GUI_ENABLE
 style=
 exstyle=
@@ -211,129 +161,13 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000421F6]
-type=label
-handle=419
-locked=0
-resize=
-x=20
-y=60
-width=128
-height=15
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=
-text=Boss no Damage Progress
-state=$GUI_SHOW+$GUI_ENABLE
-style=
-exstyle=
-bgcolour=-2
-code=
-order=3
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-[0x000421F4]
-type=input
-handle=420
-locked=0
-resize=
-x=150
-y=60
-width=70
-height=20
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=$file1Boss
-text=0
-state=$GUI_SHOW+$GUI_ENABLE
-style=$ES_READONLY
-exstyle=$WS_EX_CLIENTEDGE
-bgcolour=
-code=
-order=4
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-[0x000421F2]
-type=label
-handle=421
-locked=0
-resize=
-x=20
-y=90
-width=128
-height=15
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=
-text=Enemies Defeated
-state=$GUI_SHOW+$GUI_ENABLE
-style=
-exstyle=
-bgcolour=-2
-code=
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-order=5
-[0x000621F8]
-type=input
-handle=422
-locked=0
-resize=
-x=150
-y=90
-width=70
-height=20
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=$file1Enemies
-text=0
-state=$GUI_SHOW+$GUI_ENABLE
-style=$ES_READONLY
-exstyle=$WS_EX_CLIENTEDGE
-bgcolour=
-code=
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-order=6
 [0x000321FA]
 type=group
 handle=423
 locked=0
 resize=
 x=20
-y=113
+y=58
 width=90
 height=145
 func=
@@ -362,10 +196,10 @@ handle=424
 locked=0
 resize=
 x=40
-y=130
+y=75
 width=50
 height=20
-func=_File1Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -391,10 +225,10 @@ handle=425
 locked=0
 resize=
 x=40
-y=150
+y=95
 width=50
 height=20
-func=_File1Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -420,10 +254,10 @@ handle=426
 locked=0
 resize=
 x=40
-y=170
+y=115
 width=50
 height=20
-func=_File1Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -449,10 +283,10 @@ handle=427
 locked=0
 resize=
 x=40
-y=190
+y=135
 width=50
 height=20
-func=_File1Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -478,10 +312,10 @@ handle=428
 locked=0
 resize=
 x=40
-y=210
+y=155
 width=50
 height=20
-func=_File1Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -507,10 +341,10 @@ handle=429
 locked=0
 resize=
 x=170
-y=117
+y=62
 width=50
 height=20
-func=_File1Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -536,10 +370,10 @@ handle=430
 locked=0
 resize=
 x=120
-y=117
+y=62
 width=40
 height=20
-func=_File1Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -565,7 +399,7 @@ handle=431
 locked=0
 resize=
 x=170
-y=140
+y=85
 width=50
 height=15
 func=
@@ -594,10 +428,10 @@ handle=432
 locked=0
 resize=
 x=120
-y=155
+y=100
 width=35
 height=20
-func=_File1Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -623,7 +457,7 @@ handle=433
 locked=0
 resize=
 x=120
-y=140
+y=85
 width=35
 height=15
 func=
@@ -652,10 +486,10 @@ handle=434
 locked=0
 resize=
 x=170
-y=155
+y=100
 width=50
 height=20
-func=_File1Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -664,7 +498,7 @@ tooltip=
 bgimage=
 textcolour=0x000000
 id=$file1Lives
-text=0
+text=9999
 state=$GUI_SHOW+$GUI_ENABLE
 style=$ES_NUMBER
 exstyle=$WS_EX_CLIENTEDGE
@@ -683,7 +517,7 @@ resize=
 x=240
 y=40
 width=220
-height=230
+height=175
 func=
 font=MS Sans Serif
 fontsize=8
@@ -692,8 +526,8 @@ fontattribute=0
 tooltip=
 bgimage=
 textcolour=0x000000
-id=
-text=File2
+id=$file2Group
+text=File2  [ 63-69420 ]
 state=$GUI_SHOW+$GUI_ENABLE
 style=
 exstyle=
@@ -704,129 +538,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=20
-[0x00032270]
-type=label
-handle=436
-locked=0
-resize=
-x=250
-y=60
-width=128
-height=15
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=
-text=Boss no Damage Progress
-state=$GUI_SHOW+$GUI_ENABLE
-style=
-exstyle=
-bgcolour=-2
-code=
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-order=21
-[0x00032272]
-type=input
-handle=437
-locked=0
-resize=
-x=380
-y=60
-width=70
-height=20
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=$file2Boss
-text=0
-state=$GUI_SHOW+$GUI_ENABLE
-style=$ES_READONLY
-exstyle=$WS_EX_CLIENTEDGE
-bgcolour=
-code=
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-order=22
-[0x00032274]
-type=label
-handle=438
-locked=0
-resize=
-x=250
-y=90
-width=128
-height=15
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=
-text=Enemies Defeated
-state=$GUI_SHOW+$GUI_ENABLE
-style=
-exstyle=
-bgcolour=-2
-code=
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-order=23
-[0x00032276]
-type=input
-handle=439
-locked=0
-resize=
-x=380
-y=90
-width=70
-height=20
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=$file2Enemies
-text=0
-state=$GUI_SHOW+$GUI_ENABLE
-style=$ES_READONLY
-exstyle=$WS_EX_CLIENTEDGE
-bgcolour=
-code=
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-order=24
 [0x00032278]
 type=group
 handle=440
 locked=0
 resize=
 x=250
-y=113
+y=58
 width=90
 height=145
 func=
@@ -855,10 +573,10 @@ handle=441
 locked=0
 resize=
 x=270
-y=130
+y=75
 width=50
 height=20
-func=_File2Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -884,10 +602,10 @@ handle=442
 locked=0
 resize=
 x=270
-y=150
+y=95
 width=50
 height=20
-func=_File2Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -913,10 +631,10 @@ handle=443
 locked=0
 resize=
 x=270
-y=170
+y=115
 width=50
 height=20
-func=_File2Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -942,10 +660,10 @@ handle=444
 locked=0
 resize=
 x=270
-y=190
+y=135
 width=50
 height=20
-func=_File2Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -971,10 +689,10 @@ handle=445
 locked=0
 resize=
 x=270
-y=210
+y=155
 width=50
 height=20
-func=_File2Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1000,10 +718,10 @@ handle=446
 locked=0
 resize=
 x=400
-y=117
+y=62
 width=50
 height=20
-func=_File2Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1029,10 +747,10 @@ handle=447
 locked=0
 resize=
 x=350
-y=117
+y=62
 width=40
 height=20
-func=_File2Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1058,7 +776,7 @@ handle=448
 locked=0
 resize=
 x=400
-y=137
+y=85
 width=50
 height=15
 func=
@@ -1087,10 +805,10 @@ handle=449
 locked=0
 resize=
 x=350
-y=155
+y=100
 width=35
 height=20
-func=_File2Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1116,7 +834,7 @@ handle=450
 locked=0
 resize=
 x=350
-y=140
+y=85
 width=35
 height=15
 func=
@@ -1145,10 +863,10 @@ handle=451
 locked=0
 resize=
 x=400
-y=155
+y=100
 width=50
 height=20
-func=_File2Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1176,7 +894,7 @@ resize=
 x=470
 y=40
 width=220
-height=230
+height=175
 func=
 font=MS Sans Serif
 fontsize=8
@@ -1185,8 +903,8 @@ fontattribute=0
 tooltip=
 bgimage=
 textcolour=0x000000
-id=
-text=File3
+id=$file3Group
+text=File3  [ 63-69420 ]
 state=$GUI_SHOW+$GUI_ENABLE
 style=
 exstyle=
@@ -1197,129 +915,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=38
-[0x00032324]
-type=label
-handle=453
-locked=0
-resize=
-x=480
-y=60
-width=128
-height=15
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=
-text=Boss no Damage Progress
-state=$GUI_SHOW+$GUI_ENABLE
-style=
-exstyle=
-bgcolour=-2
-code=
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-order=39
-[0x001422E2]
-type=input
-handle=454
-locked=0
-resize=
-x=610
-y=60
-width=70
-height=20
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=$file3Boss
-text=0
-state=$GUI_SHOW+$GUI_ENABLE
-style=$ES_READONLY
-exstyle=$WS_EX_CLIENTEDGE
-bgcolour=
-code=
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-order=40
-[0x001222DC]
-type=label
-handle=455
-locked=0
-resize=
-x=480
-y=90
-width=128
-height=15
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=
-text=Enemies Defeated
-state=$GUI_SHOW+$GUI_ENABLE
-style=
-exstyle=
-bgcolour=-2
-code=
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-order=41
-[0x00042326]
-type=input
-handle=456
-locked=0
-resize=
-x=610
-y=90
-width=70
-height=20
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=$file3Enemies
-text=0
-state=$GUI_SHOW+$GUI_ENABLE
-style=$ES_READONLY
-exstyle=$WS_EX_CLIENTEDGE
-bgcolour=
-code=
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-order=42
 [0x00032328]
 type=group
 handle=457
 locked=0
 resize=
 x=480
-y=113
+y=58
 width=90
 height=145
 func=
@@ -1348,10 +950,10 @@ handle=458
 locked=0
 resize=
 x=500
-y=130
+y=75
 width=50
 height=20
-func=_File3Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1377,10 +979,10 @@ handle=459
 locked=0
 resize=
 x=500
-y=150
+y=95
 width=50
 height=20
-func=_File3Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1406,10 +1008,10 @@ handle=460
 locked=0
 resize=
 x=500
-y=170
+y=115
 width=50
 height=20
-func=_File3Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1435,10 +1037,10 @@ handle=461
 locked=0
 resize=
 x=500
-y=190
+y=135
 width=50
 height=20
-func=_File3Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1464,10 +1066,10 @@ handle=462
 locked=0
 resize=
 x=500
-y=210
+y=155
 width=50
 height=20
-func=_File3Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1493,10 +1095,10 @@ handle=463
 locked=0
 resize=
 x=630
-y=117
+y=62
 width=50
 height=20
-func=_File3Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1522,10 +1124,10 @@ handle=464
 locked=0
 resize=
 x=580
-y=117
+y=62
 width=40
 height=20
-func=_File3Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1551,7 +1153,7 @@ handle=465
 locked=0
 resize=
 x=630
-y=140
+y=85
 width=45
 height=15
 func=
@@ -1580,10 +1182,10 @@ handle=466
 locked=0
 resize=
 x=580
-y=155
+y=100
 width=35
 height=20
-func=_File3Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1609,7 +1211,7 @@ handle=467
 locked=0
 resize=
 x=580
-y=140
+y=85
 width=40
 height=15
 func=
@@ -1638,10 +1240,10 @@ handle=468
 locked=0
 resize=
 x=630
-y=155
+y=100
 width=50
 height=20
-func=_File3Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1707,7 +1309,7 @@ fontattribute=0
 tooltip=
 bgimage=
 textcolour=0x000000
-id=$select
+id=
 text=...
 state=$GUI_SHOW+$GUI_ENABLE
 style=
@@ -1725,10 +1327,10 @@ handle=471
 locked=0
 resize=
 x=40
-y=230
+y=175
 width=50
 height=20
-func=_File1Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1754,10 +1356,10 @@ handle=472
 locked=0
 resize=
 x=270
-y=230
+y=175
 width=50
 height=20
-func=_File2Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1783,10 +1385,10 @@ handle=473
 locked=0
 resize=
 x=500
-y=230
+y=175
 width=50
 height=20
-func=_File3Changed
+func=
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1841,7 +1443,7 @@ handle=483
 locked=0
 resize=
 x=630
-y=236
+y=181
 width=50
 height=20
 func=
@@ -1870,7 +1472,7 @@ handle=484
 locked=0
 resize=
 x=580
-y=236
+y=181
 width=35
 height=20
 func=
@@ -1902,7 +1504,7 @@ x=590
 y=10
 width=45
 height=20
-func=
+func=_SaveFile
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1922,43 +1524,14 @@ iconindex=
 iconlarge=0
 textmode=text
 order=60
-[0x001707C6]
-type=button
-handle=486
-locked=0
-resize=
-x=630
-y=178
-width=15
-height=20
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=
-text=0
-state=$GUI_SHOW+$GUI_ENABLE
-style=
-exstyle=
-bgcolour=
-code=
-order=61
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
 [0x001007B0]
 type=button
 handle=487
 locked=0
 resize=
-x=647
-y=178
-width=15
+x=630
+y=124
+width=16
 height=20
 func=
 font=MS Sans Serif
@@ -1985,9 +1558,9 @@ type=button
 handle=488
 locked=0
 resize=
-x=665
-y=178
-width=15
+x=649
+y=124
+width=31
 height=20
 func=
 font=MS Sans Serif
@@ -1998,7 +1571,7 @@ tooltip=
 bgimage=
 textcolour=0x000000
 id=
-text=9
+text=999
 state=$GUI_SHOW+$GUI_ENABLE
 style=
 exstyle=
@@ -2015,8 +1588,8 @@ handle=489
 locked=0
 resize=
 x=580
-y=178
-width=15
+y=123
+width=16
 height=20
 func=
 font=MS Sans Serif
@@ -2043,9 +1616,9 @@ type=button
 handle=490
 locked=0
 resize=
-x=600
-y=178
-width=15
+x=599
+y=123
+width=16
 height=20
 func=
 font=MS Sans Serif
@@ -2073,7 +1646,7 @@ handle=491
 locked=0
 resize=
 x=630
-y=208
+y=153
 width=50
 height=20
 func=
@@ -2102,7 +1675,7 @@ handle=492
 locked=0
 resize=
 x=580
-y=208
+y=153
 width=35
 height=20
 func=
@@ -2131,8 +1704,8 @@ handle=493
 locked=0
 resize=
 x=119
-y=179
-width=15
+y=124
+width=16
 height=20
 func=
 font=MS Sans Serif
@@ -2159,9 +1732,9 @@ type=button
 handle=494
 locked=0
 resize=
-x=139
-y=179
-width=15
+x=138
+y=124
+width=16
 height=20
 func=
 font=MS Sans Serif
@@ -2183,43 +1756,14 @@ iconindex=
 iconlarge=0
 textmode=text
 order=69
-[0x0004219A]
-type=button
-handle=495
-locked=0
-resize=
-x=169
-y=179
-width=15
-height=20
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=
-text=0
-state=$GUI_SHOW+$GUI_ENABLE
-style=
-exstyle=
-bgcolour=
-code=
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-order=70
 [0x00042198]
 type=button
 handle=496
 locked=0
 resize=
-x=186
-y=179
-width=15
+x=170
+y=124
+width=16
 height=20
 func=
 font=MS Sans Serif
@@ -2246,9 +1790,9 @@ type=button
 handle=497
 locked=0
 resize=
-x=204
-y=179
-width=15
+x=188
+y=124
+width=31
 height=20
 func=
 font=MS Sans Serif
@@ -2259,7 +1803,7 @@ tooltip=
 bgimage=
 textcolour=0x000000
 id=
-text=9
+text=999
 state=$GUI_SHOW+$GUI_ENABLE
 style=
 exstyle=
@@ -2276,7 +1820,7 @@ handle=498
 locked=0
 resize=
 x=119
-y=209
+y=154
 width=35
 height=20
 func=
@@ -2305,7 +1849,7 @@ handle=499
 locked=0
 resize=
 x=169
-y=209
+y=154
 width=50
 height=20
 func=
@@ -2334,7 +1878,7 @@ handle=500
 locked=0
 resize=
 x=119
-y=237
+y=182
 width=35
 height=20
 func=
@@ -2363,7 +1907,7 @@ handle=501
 locked=0
 resize=
 x=169
-y=237
+y=182
 width=50
 height=20
 func=
@@ -2392,8 +1936,8 @@ handle=566
 locked=0
 resize=
 x=350
-y=179
-width=15
+y=124
+width=16
 height=20
 func=
 font=MS Sans Serif
@@ -2420,9 +1964,9 @@ type=button
 handle=567
 locked=0
 resize=
-x=370
-y=179
-width=15
+x=369
+y=124
+width=16
 height=20
 func=
 font=MS Sans Serif
@@ -2444,43 +1988,14 @@ iconindex=
 iconlarge=0
 textmode=text
 order=78
-[0x00062268]
-type=button
-handle=568
-locked=0
-resize=
-x=400
-y=179
-width=15
-height=20
-func=
-font=MS Sans Serif
-fontsize=8
-fontstyle=400
-fontattribute=0
-tooltip=
-bgimage=
-textcolour=0x000000
-id=
-text=0
-state=$GUI_SHOW+$GUI_ENABLE
-style=
-exstyle=
-bgcolour=
-code=
-tabpage=-1
-iconindex=
-iconlarge=0
-textmode=text
-order=79
 [0x00032266]
 type=button
 handle=569
 locked=0
 resize=
-x=417
-y=179
-width=15
+x=400
+y=124
+width=16
 height=20
 func=
 font=MS Sans Serif
@@ -2507,9 +2022,9 @@ type=button
 handle=570
 locked=0
 resize=
-x=435
-y=179
-width=15
+x=419
+y=124
+width=31
 height=20
 func=
 font=MS Sans Serif
@@ -2520,7 +2035,7 @@ tooltip=
 bgimage=
 textcolour=0x000000
 id=
-text=9
+text=999
 state=$GUI_SHOW+$GUI_ENABLE
 style=
 exstyle=
@@ -2537,7 +2052,7 @@ handle=571
 locked=0
 resize=
 x=400
-y=209
+y=154
 width=50
 height=20
 func=
@@ -2566,7 +2081,7 @@ handle=572
 locked=0
 resize=
 x=350
-y=209
+y=154
 width=35
 height=20
 func=
@@ -2595,7 +2110,7 @@ handle=573
 locked=0
 resize=
 x=350
-y=237
+y=182
 width=35
 height=20
 func=
@@ -2624,7 +2139,7 @@ handle=574
 locked=0
 resize=
 x=400
-y=237
+y=182
 width=50
 height=20
 func=
