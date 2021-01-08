@@ -178,6 +178,7 @@ Func _File1Delete()
 	GUICtrlSetData($file1Lives, 5)
 	GUICtrlSetState($file1Intro, $GUI_UNCHECKED)
 	GUICtrlSetState($file1Ending, $GUI_UNCHECKED)
+	GUICtrlSetState($file1Beach, $GUI_CHECKED)
 EndFunc
 
 Func _File2Max()
@@ -191,6 +192,7 @@ Func _File2Delete()
 	GUICtrlSetData($file2Lives, 5)
 	GUICtrlSetState($file2Intro, $GUI_UNCHECKED)
 	GUICtrlSetState($file2Ending, $GUI_UNCHECKED)
+	GUICtrlSetState($file2Beach, $GUI_CHECKED)
 EndFunc
 
 Func _File3Max()
@@ -204,6 +206,7 @@ Func _File3Delete()
 	GUICtrlSetData($file3Lives, 5)
 	GUICtrlSetState($file3Intro, $GUI_UNCHECKED)
 	GUICtrlSetState($file3Ending, $GUI_UNCHECKED)
+	GUICtrlSetState($file3Beach, $GUI_CHECKED)
 EndFunc
 
 Func _File1Save()
