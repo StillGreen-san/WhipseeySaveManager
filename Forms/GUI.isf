@@ -71,23 +71,35 @@ GUICtrlCreateButton("save",580,181,35,20,-1,-1)
 GUICtrlCreateButton("save",590,10,45,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_SaveFile")
 GUICtrlCreateButton("5",630,124,16,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Lives5")
 GUICtrlCreateButton("999",649,124,31,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Lives9")
 GUICtrlCreateButton("0",580,123,16,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Gems0")
 GUICtrlCreateButton("9",599,123,16,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File3Gems9")
 GUICtrlCreateButton("deafult",630,153,50,20,-1,-1)
 GUICtrlCreateButton("max",580,153,35,20,-1,-1)
 GUICtrlCreateButton("0",119,124,16,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Gems0")
 GUICtrlCreateButton("9",138,124,16,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Gems9")
 GUICtrlCreateButton("5",170,124,16,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Lives5")
 GUICtrlCreateButton("999",188,124,31,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File1Lives9")
 GUICtrlCreateButton("max",119,154,35,20,-1,-1)
 GUICtrlCreateButton("deafult",169,154,50,20,-1,-1)
 GUICtrlCreateButton("save",119,182,35,20,-1,-1)
 GUICtrlCreateButton("reload",169,182,50,20,-1,-1)
 GUICtrlCreateButton("0",350,124,16,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Gems0")
 GUICtrlCreateButton("9",369,124,16,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Gems9")
 GUICtrlCreateButton("5",400,124,16,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Lives5")
 GUICtrlCreateButton("999",419,124,31,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_File2Lives9")
 GUICtrlCreateButton("deafult",400,154,50,20,-1,-1)
 GUICtrlCreateButton("max",350,154,35,20,-1,-1)
 GUICtrlCreateButton("save",350,182,35,20,-1,-1)
@@ -1533,7 +1545,7 @@ x=630
 y=124
 width=16
 height=20
-func=
+func=_File3Lives5
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1562,7 +1574,7 @@ x=649
 y=124
 width=31
 height=20
-func=
+func=_File3Lives9
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1591,7 +1603,7 @@ x=580
 y=123
 width=16
 height=20
-func=
+func=_File3Gems0
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1620,7 +1632,7 @@ x=599
 y=123
 width=16
 height=20
-func=
+func=_File3Gems9
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1707,7 +1719,7 @@ x=119
 y=124
 width=16
 height=20
-func=
+func=_File1Gems0
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1736,7 +1748,7 @@ x=138
 y=124
 width=16
 height=20
-func=
+func=_File1Gems9
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1765,7 +1777,7 @@ x=170
 y=124
 width=16
 height=20
-func=
+func=_File1Lives5
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1794,7 +1806,7 @@ x=188
 y=124
 width=31
 height=20
-func=
+func=_File1Lives9
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1939,7 +1951,7 @@ x=350
 y=124
 width=16
 height=20
-func=
+func=_File2Gems0
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1968,7 +1980,7 @@ x=369
 y=124
 width=16
 height=20
-func=
+func=_File2Gems9
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1997,7 +2009,7 @@ x=400
 y=124
 width=16
 height=20
-func=
+func=_File2Lives5
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -2026,7 +2038,7 @@ x=419
 y=124
 width=31
 height=20
-func=
+func=_File2Lives9
 font=MS Sans Serif
 fontsize=8
 fontstyle=400

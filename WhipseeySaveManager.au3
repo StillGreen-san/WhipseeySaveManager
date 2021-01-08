@@ -108,14 +108,55 @@ Func _SaveFile(ByRef $fileControls)
 	IniWriteSection($saveFile, $fileControls[$CONTROL_NAME], $fileData)
 EndFunc
 
-Func _File1Changed()
-	_SaveFile($file1Controls)
+Func _File1Gems0()
+	GUICtrlSetData($file1Gems, 0)
 EndFunc
-Func _File2Changed()
-	_SaveFile($file2Controls)
+Func _File1Gems9()
+	GUICtrlSetData($file1Gems, 99)
 EndFunc
-Func _File3Changed()
-	_SaveFile($file3Controls)
+Func _File1Lives5()
+	GUICtrlSetData($file1Lives, 5)
+EndFunc
+Func _File1Lives9()
+	If GUICtrlRead($file1Lives) = 99 Then
+		GUICtrlSetData($file1Lives, 9999)
+	Else 
+		GUICtrlSetData($file1Lives, 99)
+	EndIf
+EndFunc
+
+Func _File2Gems0()
+	GUICtrlSetData($file2Gems, 0)
+EndFunc
+Func _File2Gems9()
+	GUICtrlSetData($file2Gems, 99)
+EndFunc
+Func _File2Lives5()
+	GUICtrlSetData($file2Lives, 5)
+EndFunc
+Func _File2Lives9()
+	If GUICtrlRead($file2Lives) = 99 Then
+		GUICtrlSetData($file2Lives, 9999)
+	Else 
+		GUICtrlSetData($file2Lives, 99)
+	EndIf
+EndFunc
+
+Func _File3Gems0()
+	GUICtrlSetData($file3Gems, 0)
+EndFunc
+Func _File3Gems9()
+	GUICtrlSetData($file3Gems, 99)
+EndFunc
+Func _File3Lives5()
+	GUICtrlSetData($file3Lives, 5)
+EndFunc
+Func _File3Lives9()
+	If GUICtrlRead($file3Lives) = 99 Then
+		GUICtrlSetData($file3Lives, 9999)
+	Else 
+		GUICtrlSetData($file3Lives, 99)
+	EndIf
 EndFunc
 
 Func _OpenFile()
