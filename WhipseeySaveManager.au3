@@ -1,5 +1,8 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Res_ProductVersion=0.3
+#AutoIt3Wrapper_Res_ProductName=Whipseey Save Manager
+#AutoIt3Wrapper_Res_Comment=Intended for (Speedrun) practice
+#AutoIt3Wrapper_Res_Description=GUI for modifying some Values in Whipseey Savegames
 #AutoIt3Wrapper_Res_Language=1033
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 ;*****************************************
