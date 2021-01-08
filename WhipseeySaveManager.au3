@@ -12,11 +12,11 @@
 ;VARS
 Global $defaultSaveDir = @UserProfileDir &  "\AppData\Local\Whipseey\savedata"
 Global $saveFile =  $defaultSaveDir &  "\whipseey.sav"
-Global $file1Controls[] = ["file1", $file1Boss, $file1Enemies, $file1Castle, $file1Moon, $file1Snow, $file1Desert, $file1Forest, $file1Beach, $file1Ending, $file1Intro, $file1Lives, $file1Gems]
-Global $file2Controls[] = ["file2", $file2Boss, $file2Enemies, $file2Castle, $file2Moon, $file2Snow, $file2Desert, $file2Forest, $file2Beach, $file2Ending, $file2Intro, $file2Lives, $file2Gems]
-Global $file3Controls[] = ["file3", $file3Boss, $file3Enemies, $file3Castle, $file3Moon, $file3Snow, $file3Desert, $file3Forest, $file3Beach, $file3Ending, $file3Intro, $file3Lives, $file3Gems]
+Global $file1Controls[] = ["file1", $file1Castle, $file1Moon, $file1Snow, $file1Desert, $file1Forest, $file1Beach, $file1Ending, $file1Intro, $file1Lives, $file1Gems, $file1Group]
+Global $file2Controls[] = ["file2", $file2Castle, $file2Moon, $file2Snow, $file2Desert, $file2Forest, $file2Beach, $file2Ending, $file2Intro, $file2Lives, $file2Gems, $file2Group]
+Global $file3Controls[] = ["file3", $file3Castle, $file3Moon, $file3Snow, $file3Desert, $file3Forest, $file3Beach, $file3Ending, $file3Intro, $file3Lives, $file3Gems, $file3Group]
 Global Enum $LEVEL_CASTLE = 5, $LEVEL_MOON = 4, $LEVEL_SNOW = 3, $LEVEL_DESERT = 2, $LEVEL_FOREST = 1, $LEVEL_BEACH = 0
-Global Enum $CONTROL_NAME = 0, $CONTROL_BOSS = 1, $CONTROL_ENEMIES = 2, $CONTROL_CASTLE = 3, $CONTROL_MOON = 4, $CONTROL_SNOW = 5, $CONTROL_DESERT = 6, $CONTROL_FOREST = 7, $CONTROL_BEACH = 8, $CONTROL_ENDING = 9, $CONTROL_INTRO = 10, $CONTROL_LIVES = 11, $CONTROL_GEMS = 12
+Global Enum $CONTROL_NAME = 0, $CONTROL_CASTLE = 1, $CONTROL_MOON = 2, $CONTROL_SNOW = 3, $CONTROL_DESERT = 4, $CONTROL_FOREST = 5, $CONTROL_BEACH = 6, $CONTROL_ENDING = 7, $CONTROL_INTRO = 8, $CONTROL_LIVES = 9, $CONTROL_GEMS = 10,  $CONTROL_GROUP = 11
 Global Enum $FILE_BOSS = 1, $FILE_ENEMIES = 2, $FILE_CASTLE = 3, $FILE_MOON = 4, $FILE_SNOW = 5, $FILE_DESERT = 6, $FILE_FOREST = 7, $FILE_ENDING = 8, $FILE_INTRO = 9, $FILE_LIVES = 10, $FILE_GEMS = 11
 Global Enum $INI_KEY = 0, $INI_VALUE = 1, $INI_CASTLE = 32, $INI_MOON = 16, $INI_SNOW = 8, $INI_DESERT = 4, $INI_FOREST = 2
 
@@ -40,8 +40,9 @@ WEnd
 ;GUI FUNCTIONS
 Func _LoadFile(ByRef $fileControls)
 	Local $fileData = IniReadSection($saveFile, $fileControls[$CONTROL_NAME])
-	GUICtrlSetData($fileControls[$CONTROL_BOSS], _IniToInt($fileData[$FILE_BOSS][$INI_VALUE]))
-	GUICtrlSetData($fileControls[$CONTROL_ENEMIES], _IniToInt($fileData[$FILE_ENEMIES][$INI_VALUE]))
+	Local $fileName = " " & StringReplace($fileControls[$CONTROL_NAME], "f", "F", 1)
+	$fileName = $fileName & "  [ " & _IniToInt($fileData[$FILE_BOSS][$INI_VALUE]) & "-" & _IniToInt($fileData[$FILE_ENEMIES][$INI_VALUE]) & " ] "
+	GuiCtrlSetData($fileControls[$CONTROL_GROUP], $fileName)
 
 	Local $levelStates[] =  [$GUI_UNCHECKED, $GUI_UNCHECKED, $GUI_UNCHECKED, $GUI_UNCHECKED, $GUI_UNCHECKED, $GUI_UNCHECKED]
 	If $fileData[$FILE_CASTLE][$INI_VALUE] = '"32.000000"' Then
