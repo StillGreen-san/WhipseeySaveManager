@@ -170,28 +170,40 @@ EndFunc
 Func _File1Max()
 	GUICtrlSetData($file1Gems, 99)
 	GUICtrlSetData($file1Lives, 9999)
+	GUICtrlSetState($file1Intro, $GUI_CHECKED)
+	GUICtrlSetState($file1Ending, $GUI_CHECKED)
 EndFunc
-Func _File1Default()
+Func _File1Delete()
 	GUICtrlSetData($file1Gems, 0)
 	GUICtrlSetData($file1Lives, 5)
+	GUICtrlSetState($file1Intro, $GUI_UNCHECKED)
+	GUICtrlSetState($file1Ending, $GUI_UNCHECKED)
 EndFunc
 
 Func _File2Max()
 	GUICtrlSetData($file2Gems, 99)
 	GUICtrlSetData($file2Lives, 9999)
+	GUICtrlSetState($file2Intro, $GUI_CHECKED)
+	GUICtrlSetState($file2Ending, $GUI_CHECKED)
 EndFunc
-Func _File2Default()
+Func _File2Delete()
 	GUICtrlSetData($file2Gems, 0)
 	GUICtrlSetData($file2Lives, 5)
+	GUICtrlSetState($file2Intro, $GUI_UNCHECKED)
+	GUICtrlSetState($file2Ending, $GUI_UNCHECKED)
 EndFunc
 
 Func _File3Max()
 	GUICtrlSetData($file3Gems, 99)
 	GUICtrlSetData($file3Lives, 9999)
+	GUICtrlSetState($file3Intro, $GUI_CHECKED)
+	GUICtrlSetState($file3Ending, $GUI_CHECKED)
 EndFunc
-Func _File3Default()
+Func _File3Delete()
 	GUICtrlSetData($file3Gems, 0)
 	GUICtrlSetData($file3Lives, 5)
+	GUICtrlSetState($file3Intro, $GUI_UNCHECKED)
+	GUICtrlSetState($file3Ending, $GUI_UNCHECKED)
 EndFunc
 
 Func _File1Save()
