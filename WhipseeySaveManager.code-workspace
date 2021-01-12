@@ -92,7 +92,8 @@
 			"resumable": "cpp",
 			"cwctype": "cpp",
 			"strstream": "cpp",
-			"valarray": "cpp"
+			"valarray": "cpp",
+			"any": "cpp"
 		},
 		"cmake.configureOnOpen": true
 	}
