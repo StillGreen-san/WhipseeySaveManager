@@ -4,9 +4,10 @@
  */
 
 #include <SimpleIni.h>
-#include <winreg/WinReg.hpp>
+#include <vdf_parser.hpp>
 
 #include <ShlObj.h>
+#include <winreg.h>
 
 #include <iostream>
 
@@ -48,11 +49,40 @@ int main()
 	// }
 
 	//! does not work with "" double moon = ini.GetDoubleValue("file1", "moon");
-
-	using namespace winreg;
-
-	RegKey key{HKEY_LOCAL_MACHINE, LR"(SOFTWARE\WOW6432Node\Valve\Steam)"};
 	
+	std::wstring wchrBuffer;
+	DWORD bufferSizeBytes = 60 * sizeof(wchar_t);
+	wchrBuffer.reserve(bufferSizeBytes / sizeof(wchar_t));
+
+	LSTATUS st = RegGetValueW(HKEY_LOCAL_MACHINE, LR"(SOFTWARE\WOW6432Node\Valve\Steam\)", L"InstallPath", RRF_RT_REG_SZ, NULL, wchrBuffer.data(), &bufferSizeBytes);
+	if(st == ERROR_MORE_DATA)
+	{
+		wchrBuffer.reserve(bufferSizeBytes / sizeof(wchar_t));
+		st = RegGetValueW(HKEY_LOCAL_MACHINE, LR"(SOFTWARE\WOW6432Node\Valve\Steam\)", L"InstallPath", RRF_RT_REG_SZ, NULL, wchrBuffer.data(), &bufferSizeBytes);
+	}
+	if(st != ERROR_SUCCESS)
+	{
+		std::cerr << "reg read failed" << std::endl;
+		return -1;
+	}
+
+	std::wstring librariesVdf(wchrBuffer.data(), bufferSizeBytes / sizeof(wchar_t) - 1);
+
+	using namespace tyti;
+
+	librariesVdf.append(LR"(\steamapps\libraryfolders.vdf)");
+	std::ifstream vdf(librariesVdf);
+	auto root = vdf::read(vdf);
+	if(root.name == "LibraryFolders")
+	{
+		for(auto& attrib : root.attribs)
+		{
+			if(std::isdigit(attrib.first.front()))
+			{
+				std::cout << attrib.first << " : " << attrib.second << std::endl;
+			}
+		}
+	}
 
 	return 0;
 }

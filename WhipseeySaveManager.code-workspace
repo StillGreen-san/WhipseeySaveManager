@@ -93,7 +93,8 @@
 			"cwctype": "cpp",
 			"strstream": "cpp",
 			"valarray": "cpp",
-			"any": "cpp"
+			"any": "cpp",
+			"unordered_set": "cpp"
 		},
 		"cmake.configureOnOpen": true
 	}
