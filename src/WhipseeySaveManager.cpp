@@ -16,6 +16,59 @@
 
 //TODO no c cast
 
+struct FileControlData
+{
+	char* fileGrouptext = " FileX  [ 7-99999 ] ";
+	static const char* levelGroupText;
+	static const char* levelCastleText;
+	bool levelCastleState = false;
+	static const char* levelMoonText;
+	bool levelMoonState = false;
+	static const char* levelSnowText;
+	bool levelSnowState = false;
+	static const char* levelDesertName;
+	bool levelDesertState = false;
+	static const char* levelForestName;
+	bool levelForestState = false;
+	static const char* levelBeachText;
+	bool levelBeachState = false;
+	static const char* introName;
+	bool introState = false;
+	static const char* endingName;
+	bool endingState = false;
+	static const char* gemsText;
+	static const char* livesText;
+	char* gemsValue = "99";
+	char* livesValue = "9999";
+	static const char* gems0Text;
+	static const char* gems9Text;
+	static const char* lives5Text;
+	static const char* lives9Text;
+	static const char* maxText;
+	static const char* deleteText;
+	static const char* saveText;
+	static const char* reloadText;
+};
+const char* FileControlData::levelGroupText = "Level Progress";
+const char* FileControlData::levelCastleText = "Castle";
+const char* FileControlData::levelMoonText = "Moon";
+const char* FileControlData::levelSnowText = "Snow";
+const char* FileControlData::levelDesertName = "Desert";
+const char* FileControlData::levelForestName = "Forest";
+const char* FileControlData::levelBeachText = "Beach";
+const char* FileControlData::introName = "Intro";
+const char* FileControlData::endingName = "Ending";
+const char* FileControlData::gemsText = "Gems";
+const char* FileControlData::livesText = "Lives";
+const char* FileControlData::gems0Text = "0";
+const char* FileControlData::gems9Text = "9";
+const char* FileControlData::lives5Text = "5";
+const char* FileControlData::lives9Text = "999";
+const char* FileControlData::maxText = "max";
+const char* FileControlData::deleteText = "delete";
+const char* FileControlData::saveText = "save";
+const char* FileControlData::reloadText = "reload";
+
 int main()
 {
 	std::string windowTitle = "Whipseey Save Manager";
