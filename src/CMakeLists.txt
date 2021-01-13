@@ -8,7 +8,7 @@ include_directories(SYSTEM ${RAYGUI_INCLUDE_DIRS})
 
 set(TARGET_MAIN WhipseeySaveManager)
 set(SOURCES_ADDITIONAL
-	#conversionfunctions.cpp
+	filecontroldata.cpp
 )
 
 add_executable(${TARGET_MAIN} ${TARGET_MAIN}.cpp)
