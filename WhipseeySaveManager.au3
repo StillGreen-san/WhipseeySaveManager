@@ -42,7 +42,7 @@ WEnd
 
 ;GUI FUNCTIONS
 Func _LoadFile(ByRef $fileControls)
-	Local $fileData = IniReadSection($saveFile, $fileControls[$CONTROL_NAME])
+	Local $fileData = _ReadFile($saveFile, $fileControls[$CONTROL_NAME])
 	Local $fileName = " " & StringReplace($fileControls[$CONTROL_NAME], "f", "F", 1)
 	$fileName = $fileName & "  [ " & _IniToInt($fileData[$FILE_BOSS][$INI_VALUE]) & "-" & _IniToInt($fileData[$FILE_ENEMIES][$INI_VALUE]) & " ] "
 	GuiCtrlSetData($fileControls[$CONTROL_GROUP], $fileName)
@@ -77,6 +77,22 @@ Func _LoadSave()
 	_LoadFile($file3Controls)
 	_LoadFile($file2Controls)
 	_LoadFile($file1Controls)
+EndFunc
+
+Func _ReadFile($file, $section)
+	Local $fileData = IniReadSection($file, $section)
+	If $fileData[$FILE_BOSS][$INI_KEY] = "boss_no_damage_progress" Then
+		return $fileData
+	EndIf
+	Dim $fullData[12][2]
+	$fullData[0][0] = 11
+	$fullData[$FILE_BOSS][$INI_KEY] = "boss_no_damage_progress"
+	$fullData[$FILE_BOSS][$INI_VALUE] = "0.000000"
+	For $i = $FILE_ENEMIES To $FILE_GEMS
+		$fullData[$i][$INI_KEY] = $fileData[$i-1][$INI_KEY]
+		$fullData[$i][$INI_VALUE] = $fileData[$i-1][$INI_VALUE]
+	Next
+	return $fullData
 EndFunc
 
 Func _SaveFile(ByRef $fileControls)
@@ -114,6 +130,9 @@ Func _SaveSave()
 	_SaveFile($file3Controls)
 	_SaveFile($file2Controls)
 	_SaveFile($file1Controls)
+EndFunc
+Func _SaveGame()
+	
 EndFunc
 
 Func _File1Gems0()
@@ -238,9 +257,19 @@ Func _OpenFileSave()
 		_LoadSave()
 	EndIf
 EndFunc
+Func _OpenFileGame()
+	
+EndFunc
 
 Func _ReloadSave()
 	_LoadSave()
+EndFunc
+Func _ReloadGame()
+	
+EndFunc
+
+Func _ShowCheats()
+	
 EndFunc
 
 ;HELPER FUNCTIONS
