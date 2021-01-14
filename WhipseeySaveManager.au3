@@ -82,7 +82,7 @@ EndFunc
 Func _ReadFile($file, $section)
 	Local $fileData = IniReadSection($file, $section)
 	If $fileData[$FILE_BOSS][$INI_KEY] = "boss_no_damage_progress" Then
-		return $fileData
+		Return $fileData
 	EndIf
 	Dim $fullData[12][2]
 	$fullData[0][0] = 11
@@ -92,7 +92,7 @@ Func _ReadFile($file, $section)
 		$fullData[$i][$INI_KEY] = $fileData[$i-1][$INI_KEY]
 		$fullData[$i][$INI_VALUE] = $fileData[$i-1][$INI_VALUE]
 	Next
-	return $fullData
+	Return $fullData
 EndFunc
 
 Func _SaveFile(ByRef $fileControls)
@@ -269,36 +269,74 @@ Func _ReloadGame()
 EndFunc
 
 Func _ShowCheats()
-	
+	;GUISetState(@SW_LOCK, $GUI)
+	MsgBox($MB_ICONINFORMATION+$MB_SETFOREGROUND, "Cheats", "checking this will enable some key/combinations in game" & _
+		@CRLF & "R : restart room" & _
+		@CRLF & "N : next room" & _
+		@CRLF & "P : toggle fullscreen" & _
+		@CRLF & ", . , . : infinite flight" & _
+		@CRLF & ", . , , : unlock all levels" & _
+		@CRLF & ", , , . : disable hud" & _
+		@CRLF & ", , , , : invincibility", 0, $GUI)
+	;GUISetState(@SW_UNLOCK, $GUI)
 EndFunc
 
 ;HELPER FUNCTIONS
 Func _IniToCheckState(ByRef $data)
 	If $data = '"1.000000"' Then
-		return $GUI_CHECKED
+		Return $GUI_CHECKED
 	EndIf
-	return $GUI_UNCHECKED
+	Return $GUI_UNCHECKED
 EndFunc
 Func _CheckStateToIni($state)
 	If $state = $GUI_CHECKED Then
 		return '"1.000000"'
 	EndIf
-	return '"0.000000"'
+	Return '"0.000000"'
 EndFunc
 
 Func _IniToRadioState(ByRef $data)
 	If $data = "1.000000" Then
-		return $GUI_CHECKED
+		Return $GUI_CHECKED
 	EndIf
-	return $GUI_UNCHECKED
+	Return $GUI_UNCHECKED
 EndFunc
 
 Func _IniToInt($data)
 	$data = StringReplace($data, '"', "")
-	return Int($data)
+	Return Int($data)
 EndFunc
 Func _IntToIni($int)
-	return String('"' & $int & '.000000"')
+	Return String('"' & $int & '.000000"')
+EndFunc
+
+Func _FindGame()
+	Local $librariesPath = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam",  "InstallPath")
+	If @error Then Return
+	
+	Local $settingsPath = "\steamapps\common\Whipseey and the Lost Atlas\bfs_settings.ini"
+	
+	
+	
+	FileExists($librariesPath & $settingsPath)
+
+	$librariesPath = $librariesPath & "\steamapps\libraryfolders.vdf"
+	If Not FileExists($librariesPath) Then Return
+
+	Local $file = FileOpen($librariesPath, $FO_OPEN)
+	If $file = -1 Then Return
+
+	While True 
+		Local $line = FileReadLine($librariesPath)
+		If @error = -1 Then ExitLoop
+
+		Local $library = StringRegExp($line, '.*"(\d+)".*"(.*)"', $STR_REGEXPARRAYMATCH)
+		If @error Then ContinueLoop
+
+		If Not IsInt($library[0]) Then ContinueLoop
+
+		Local $settingsPath = $library[0] & ""
+	Wend
 EndFunc
 
 Func _Exit()
