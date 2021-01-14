@@ -27,7 +27,7 @@ Global Enum $INI_KEY = 0, $INI_VALUE = 1, $INI_CASTLE = 32, $INI_MOON = 16, $INI
 Opt("GUIOnEventMode", 1)
 
 If FileExists($defaultSaveDir) Then
-	GUICtrlSetData($path, $saveFile)
+	GUICtrlSetData($pathSave, $saveFile)
 	_LoadSave()
 Else
 	;deactivate all file controls
@@ -230,10 +230,10 @@ Func _File3Reload()
 	_LoadFile($file3Controls)
 EndFunc
 
-Func _OpenFile()
+Func _OpenFileSave()
 	$result =  FileOpenDialog("Select Savefile", $defaultSaveDir, "Save files (*.sav)|All (*.*)",  $FD_FILEMUSTEXIST + $FD_PATHMUSTEXIST, "whipseey.sav")
 	If Not @error Then
-		GUICtrlSetData($path, $result)
+		GUICtrlSetData($pathSave, $result)
 		$saveFile = $result
 		_LoadSave()
 	EndIf

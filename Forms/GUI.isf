@@ -5,117 +5,123 @@
 #Include <GuiButton.au3>
 #include <EditConstants.au3>
 
-$GUI = GUICreate("Whipseey Save Manager",700,225,-1,-1,-1,-1)
+$GUI = GUICreate("Whipseey Save Manager",700,255,-1,-1,-1,-1)
 GUISetOnEvent($GUI_EVENT_CLOSE, "_Exit", $GUI)
-$path = GUICtrlCreateInput("%PATH_TO_SAVEGAME%",10,10,529,20,-1,$WS_EX_CLIENTEDGE)
+$pathSave = GUICtrlCreateInput("%PATH_TO_SAVEGAME%",10,10,529,20,-1,$WS_EX_CLIENTEDGE)
 GUICtrlCreateButton("...",545,10,40,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_OpenFile")
+GUICtrlSetOnEvent(-1,"_OpenFileSave")
 GUICtrlCreateButton("save",590,10,45,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_SaveSave")
 GUICtrlCreateButton("reload",640,10,50,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_ReloadSave")
-$file1Group = GUICtrlCreateGroup("File1  [ 63-69420 ]",10,40,220,175,-1,-1)
+$file1Group = GUICtrlCreateGroup("File1  [ 63-69420 ]",10,70,220,175,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-GUICtrlCreateGroup("Level Progress",20,58,90,145,-1,-1)
+GUICtrlCreateGroup("Level Progress",20,88,90,145,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-$file1Castle = GUICtrlCreateRadio("Castle",40,75,50,20,-1,-1)
-$file1Moon = GUICtrlCreateRadio("Moon",40,95,50,20,-1,-1)
-$file1Snow = GUICtrlCreateRadio("Snow",40,115,50,20,-1,-1)
-$file1Desert = GUICtrlCreateRadio("Desert",40,135,50,20,-1,-1)
-$file1Forest = GUICtrlCreateRadio("Forest",40,155,50,20,-1,-1)
-$file1Beach = GUICtrlCreateRadio("Beach",40,175,50,20,-1,-1)
-$file1Intro = GUICtrlCreateCheckbox("Intro",120,62,40,20,-1,-1)
-$file1Ending = GUICtrlCreateCheckbox("Ending",170,62,50,20,-1,-1)
-GUICtrlCreateLabel("Gems",120,85,35,15,-1,-1)
+$file1Castle = GUICtrlCreateRadio("Castle",40,105,50,20,-1,-1)
+$file1Moon = GUICtrlCreateRadio("Moon",40,125,50,20,-1,-1)
+$file1Snow = GUICtrlCreateRadio("Snow",40,145,50,20,-1,-1)
+$file1Desert = GUICtrlCreateRadio("Desert",40,165,50,20,-1,-1)
+$file1Forest = GUICtrlCreateRadio("Forest",40,185,50,20,-1,-1)
+$file1Beach = GUICtrlCreateRadio("Beach",40,205,50,20,-1,-1)
+$file1Intro = GUICtrlCreateCheckbox("Intro",120,92,40,20,-1,-1)
+$file1Ending = GUICtrlCreateCheckbox("Ending",170,92,50,20,-1,-1)
+GUICtrlCreateLabel("Gems",120,115,35,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file1Gems = GUICtrlCreateInput("0",120,100,35,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
-GUICtrlCreateLabel("Lives",170,85,50,15,-1,-1)
+$file1Gems = GUICtrlCreateInput("0",120,130,35,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlCreateLabel("Lives",170,115,50,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file1Lives = GUICtrlCreateInput("9999",170,100,50,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
-GUICtrlCreateButton("0",119,124,16,20,-1,-1)
+$file1Lives = GUICtrlCreateInput("9999",170,130,50,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlCreateButton("0",119,154,16,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File1Gems0")
-GUICtrlCreateButton("9",138,124,16,20,-1,-1)
+GUICtrlCreateButton("9",138,154,16,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File1Gems9")
-GUICtrlCreateButton("5",170,124,16,20,-1,-1)
+GUICtrlCreateButton("5",170,154,16,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File1Lives5")
-GUICtrlCreateButton("999",188,124,31,20,-1,-1)
+GUICtrlCreateButton("999",188,154,31,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File1Lives9")
-GUICtrlCreateButton("max",119,154,35,20,-1,-1)
+GUICtrlCreateButton("max",119,184,35,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File1Max")
-GUICtrlCreateButton("delete",169,154,50,20,-1,-1)
+GUICtrlCreateButton("delete",169,184,50,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File1Delete")
-GUICtrlCreateButton("save",119,182,35,20,-1,-1)
+GUICtrlCreateButton("save",119,212,35,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File1Save")
-GUICtrlCreateButton("reload",169,182,50,20,-1,-1)
+GUICtrlCreateButton("reload",169,212,50,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File1Reload")
-$file2Group = GUICtrlCreateGroup("File2  [ 63-69420 ]",240,40,220,175,-1,-1)
+$file2Group = GUICtrlCreateGroup("File2  [ 63-69420 ]",240,70,220,175,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-GUICtrlCreateGroup("Level Progress",250,58,90,145,-1,-1)
+GUICtrlCreateGroup("Level Progress",250,88,90,145,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-$file2Castle = GUICtrlCreateRadio("Castle",270,75,50,20,-1,-1)
-$file2Moon = GUICtrlCreateRadio("Moon",270,95,50,20,-1,-1)
-$file2Snow = GUICtrlCreateRadio("Snow",270,115,50,20,-1,-1)
-$file2Desert = GUICtrlCreateRadio("Desert",270,135,50,20,-1,-1)
-$file2Forest = GUICtrlCreateRadio("Forest",270,155,50,20,-1,-1)
-$file2Beach = GUICtrlCreateRadio("Beach",270,175,50,20,-1,-1)
-$file2Intro = GUICtrlCreateCheckbox("Intro",350,62,40,20,-1,-1)
-$file2Ending = GUICtrlCreateCheckbox("Ending",400,62,50,20,-1,-1)
-GUICtrlCreateLabel("Gems",350,85,35,15,-1,-1)
+$file2Castle = GUICtrlCreateRadio("Castle",270,105,50,20,-1,-1)
+$file2Moon = GUICtrlCreateRadio("Moon",270,125,50,20,-1,-1)
+$file2Snow = GUICtrlCreateRadio("Snow",270,145,50,20,-1,-1)
+$file2Desert = GUICtrlCreateRadio("Desert",270,165,50,20,-1,-1)
+$file2Forest = GUICtrlCreateRadio("Forest",270,185,50,20,-1,-1)
+$file2Beach = GUICtrlCreateRadio("Beach",270,205,50,20,-1,-1)
+$file2Intro = GUICtrlCreateCheckbox("Intro",350,92,40,20,-1,-1)
+$file2Ending = GUICtrlCreateCheckbox("Ending",400,92,50,20,-1,-1)
+GUICtrlCreateLabel("Gems",350,115,35,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file2Gems = GUICtrlCreateInput("0",350,100,35,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
-GUICtrlCreateLabel("Lives",400,85,50,15,-1,-1)
+$file2Gems = GUICtrlCreateInput("0",350,130,35,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlCreateLabel("Lives",400,115,50,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file2Lives = GUICtrlCreateInput("0",400,100,50,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
-GUICtrlCreateButton("0",350,124,16,20,-1,-1)
+$file2Lives = GUICtrlCreateInput("0",400,130,50,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlCreateButton("0",350,154,16,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File2Gems0")
-GUICtrlCreateButton("9",369,124,16,20,-1,-1)
+GUICtrlCreateButton("9",369,154,16,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File2Gems9")
-GUICtrlCreateButton("5",400,124,16,20,-1,-1)
+GUICtrlCreateButton("5",400,154,16,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File2Lives5")
-GUICtrlCreateButton("999",419,124,31,20,-1,-1)
+GUICtrlCreateButton("999",419,154,31,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File2Lives9")
-GUICtrlCreateButton("max",350,154,35,20,-1,-1)
+GUICtrlCreateButton("max",350,184,35,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File2Max")
-GUICtrlCreateButton("delete",400,154,50,20,-1,-1)
+GUICtrlCreateButton("delete",400,184,50,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File2Delete")
-GUICtrlCreateButton("save",350,182,35,20,-1,-1)
+GUICtrlCreateButton("save",350,212,35,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File2Save")
-GUICtrlCreateButton("reload",400,182,50,20,-1,-1)
+GUICtrlCreateButton("reload",400,212,50,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File2Reload")
-$file3Group = GUICtrlCreateGroup("File3  [ 63-69420 ]",470,40,220,175,-1,-1)
+$file3Group = GUICtrlCreateGroup("File3  [ 63-69420 ]",470,70,220,175,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-GUICtrlCreateGroup("Level Progress",480,58,90,145,-1,-1)
+GUICtrlCreateGroup("Level Progress",480,88,90,145,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
-$file3Castle = GUICtrlCreateRadio("Castle",500,75,50,20,-1,-1)
-$file3Moon = GUICtrlCreateRadio("Moon",500,95,50,20,-1,-1)
-$file3Snow = GUICtrlCreateRadio("Snow",500,115,50,20,-1,-1)
-$file3Desert = GUICtrlCreateRadio("Desert",500,135,50,20,-1,-1)
-$file3Forest = GUICtrlCreateRadio("Forest",500,155,50,20,-1,-1)
-$file3Beach = GUICtrlCreateRadio("Beach",500,175,50,20,-1,-1)
-$file3Intro = GUICtrlCreateCheckbox("Intro",580,62,40,20,-1,-1)
-$file3Ending = GUICtrlCreateCheckbox("Ending",630,62,50,20,-1,-1)
-GUICtrlCreateLabel("Gems",580,85,40,15,-1,-1)
+$file3Castle = GUICtrlCreateRadio("Castle",500,105,50,20,-1,-1)
+$file3Moon = GUICtrlCreateRadio("Moon",500,125,50,20,-1,-1)
+$file3Snow = GUICtrlCreateRadio("Snow",500,145,50,20,-1,-1)
+$file3Desert = GUICtrlCreateRadio("Desert",500,165,50,20,-1,-1)
+$file3Forest = GUICtrlCreateRadio("Forest",500,185,50,20,-1,-1)
+$file3Beach = GUICtrlCreateRadio("Beach",500,205,50,20,-1,-1)
+$file3Intro = GUICtrlCreateCheckbox("Intro",580,92,40,20,-1,-1)
+$file3Ending = GUICtrlCreateCheckbox("Ending",630,92,50,20,-1,-1)
+GUICtrlCreateLabel("Gems",580,115,40,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file3Gems = GUICtrlCreateInput("0",580,100,35,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
-GUICtrlCreateLabel("Lives",630,85,45,15,-1,-1)
+$file3Gems = GUICtrlCreateInput("0",580,130,35,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlCreateLabel("Lives",630,115,45,15,-1,-1)
 GUICtrlSetBkColor(-1,"-2")
-$file3Lives = GUICtrlCreateInput("0",630,100,50,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
-GUICtrlCreateButton("0",580,123,16,20,-1,-1)
+$file3Lives = GUICtrlCreateInput("0",630,130,50,20,$ES_NUMBER,$WS_EX_CLIENTEDGE)
+GUICtrlCreateButton("0",580,153,16,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File3Gems0")
-GUICtrlCreateButton("9",599,123,16,20,-1,-1)
+GUICtrlCreateButton("9",599,153,16,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File3Gems9")
-GUICtrlCreateButton("5",630,124,16,20,-1,-1)
+GUICtrlCreateButton("5",630,154,16,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File3Lives5")
-GUICtrlCreateButton("999",649,124,31,20,-1,-1)
+GUICtrlCreateButton("999",649,154,31,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File3Lives9")
-GUICtrlCreateButton("max",580,153,35,20,-1,-1)
+GUICtrlCreateButton("max",580,183,35,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File3Max")
-GUICtrlCreateButton("delete",630,153,50,20,-1,-1)
+GUICtrlCreateButton("delete",630,183,50,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File3Delete")
-GUICtrlCreateButton("save",580,181,35,20,-1,-1)
+GUICtrlCreateButton("save",580,211,35,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File3Save")
-GUICtrlCreateButton("reload",630,181,50,20,-1,-1)
+GUICtrlCreateButton("reload",630,211,50,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File3Reload")
+$pathGame = GUICtrlCreateInput("%PATH_TO_GAME%",10,40,529,20,-1,$WS_EX_CLIENTEDGE)
+GUICtrlCreateButton("...",545,40,40,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_OpenFileGame")
+$cheats = GUICtrlCreateCheckbox("Cheats",590,40,60,20,-1,-1)
+GUICtrlCreateButton("?",650,40,40,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_ShowCheats")
 
 
 
@@ -125,7 +131,7 @@ Handle_deklaration=default
 Handle_deklaration_const=false
 title=Whipseey Save Manager
 breite=700
-hoehe=225
+hoehe=255
 style=-1
 exstyle=-1
 bgcolour=0xF0F0F0
@@ -156,13 +162,13 @@ gui_event_resized=
 gui_event_dropped=
 defaultfont=MS Sans Serif
 defaultfontsize=8
-[0x00152430]
+[0x00021608]
 type=group
 handle=418
 locked=0
 resize=
 x=10
-y=40
+y=70
 width=220
 height=175
 func=
@@ -185,13 +191,13 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000D2436]
+[0x00021600]
 type=group
 handle=419
 locked=0
 resize=
 x=20
-y=58
+y=88
 width=90
 height=145
 func=
@@ -214,13 +220,13 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x010107BE]
+[0x0002160A]
 type=radio
 handle=420
 locked=0
 resize=
 x=40
-y=75
+y=105
 width=50
 height=20
 func=
@@ -243,13 +249,13 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x019207EC]
+[0x00021604]
 type=radio
 handle=421
 locked=0
 resize=
 x=40
-y=95
+y=125
 width=50
 height=20
 func=
@@ -272,13 +278,13 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x00182270]
+[0x000825F4]
 type=radio
 handle=422
 locked=0
 resize=
 x=40
-y=115
+y=145
 width=50
 height=20
 func=
@@ -301,13 +307,13 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000D244A]
+[0x000825F6]
 type=radio
 handle=423
 locked=0
 resize=
 x=40
-y=135
+y=165
 width=50
 height=20
 func=
@@ -330,13 +336,13 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000D244C]
+[0x000125F8]
 type=radio
 handle=424
 locked=0
 resize=
 x=40
-y=155
+y=185
 width=50
 height=20
 func=
@@ -359,13 +365,13 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000D244E]
+[0x000125FA]
 type=checkbox
 handle=425
 locked=0
 resize=
 x=170
-y=62
+y=92
 width=50
 height=20
 func=
@@ -388,13 +394,13 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000D2454]
+[0x000125FC]
 type=checkbox
 handle=426
 locked=0
 resize=
 x=120
-y=62
+y=92
 width=40
 height=20
 func=
@@ -417,13 +423,13 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000D2450]
+[0x000125FE]
 type=label
 handle=427
 locked=0
 resize=
 x=170
-y=85
+y=115
 width=50
 height=15
 func=
@@ -446,13 +452,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=16
-[0x002F242A]
+[0x00012600]
 type=input
 handle=428
 locked=0
 resize=
 x=120
-y=100
+y=130
 width=35
 height=20
 func=
@@ -475,13 +481,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=15
-[0x0023237E]
+[0x00012602]
 type=label
 handle=429
 locked=0
 resize=
 x=120
-y=85
+y=115
 width=35
 height=15
 func=
@@ -504,13 +510,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=14
-[0x00722140]
+[0x00012604]
 type=input
 handle=430
 locked=0
 resize=
 x=170
-y=100
+y=130
 width=50
 height=20
 func=
@@ -533,13 +539,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=17
-[0x00122448]
+[0x00012606]
 type=group
 handle=431
 locked=0
 resize=
 x=240
-y=40
+y=70
 width=220
 height=175
 func=
@@ -562,13 +568,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=26
-[0x001B2216]
+[0x00012608]
 type=group
 handle=432
 locked=0
 resize=
 x=250
-y=58
+y=88
 width=90
 height=145
 func=
@@ -591,13 +597,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=27
-[0x002E239C]
+[0x0001260A]
 type=radio
 handle=433
 locked=0
 resize=
 x=270
-y=75
+y=105
 width=50
 height=20
 func=
@@ -620,13 +626,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=28
-[0x00CC069C]
+[0x0001260C]
 type=radio
 handle=434
 locked=0
 resize=
 x=270
-y=95
+y=125
 width=50
 height=20
 func=
@@ -649,13 +655,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=29
-[0x0011221A]
+[0x0001260E]
 type=radio
 handle=435
 locked=0
 resize=
 x=270
-y=115
+y=145
 width=50
 height=20
 func=
@@ -678,13 +684,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=30
-[0x015907D4]
+[0x00012610]
 type=radio
 handle=436
 locked=0
 resize=
 x=270
-y=135
+y=165
 width=50
 height=20
 func=
@@ -707,13 +713,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=31
-[0x00A823DA]
+[0x00012612]
 type=radio
 handle=437
 locked=0
 resize=
 x=270
-y=155
+y=185
 width=50
 height=20
 func=
@@ -736,13 +742,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=32
-[0x00192188]
+[0x00012614]
 type=checkbox
 handle=438
 locked=0
 resize=
 x=400
-y=62
+y=92
 width=50
 height=20
 func=
@@ -765,13 +771,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=35
-[0x002F2334]
+[0x00012616]
 type=checkbox
 handle=439
 locked=0
 resize=
 x=350
-y=62
+y=92
 width=40
 height=20
 func=
@@ -794,13 +800,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=34
-[0x000E23E0]
+[0x00012618]
 type=label
 handle=440
 locked=0
 resize=
 x=400
-y=85
+y=115
 width=50
 height=15
 func=
@@ -823,13 +829,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=38
-[0x00152160]
+[0x0001261A]
 type=input
 handle=441
 locked=0
 resize=
 x=350
-y=100
+y=130
 width=35
 height=20
 func=
@@ -852,13 +858,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=37
-[0x0015237C]
+[0x0001261C]
 type=label
 handle=442
 locked=0
 resize=
 x=350
-y=85
+y=115
 width=35
 height=15
 func=
@@ -881,13 +887,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=36
-[0x00152314]
+[0x0001261E]
 type=input
 handle=443
 locked=0
 resize=
 x=400
-y=100
+y=130
 width=50
 height=20
 func=
@@ -910,13 +916,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=39
-[0x00A421B8]
+[0x00012620]
 type=group
 handle=444
 locked=0
 resize=
 x=470
-y=40
+y=70
 width=220
 height=175
 func=
@@ -939,13 +945,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=48
-[0x00101EB8]
+[0x00012622]
 type=group
 handle=445
 locked=0
 resize=
 x=480
-y=58
+y=88
 width=90
 height=145
 func=
@@ -968,13 +974,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=49
-[0x000D23A6]
+[0x00012624]
 type=radio
 handle=446
 locked=0
 resize=
 x=500
-y=75
+y=105
 width=50
 height=20
 func=
@@ -997,13 +1003,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=50
-[0x002A1EBE]
+[0x00012626]
 type=radio
 handle=447
 locked=0
 resize=
 x=500
-y=95
+y=125
 width=50
 height=20
 func=
@@ -1026,13 +1032,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=51
-[0x009822DC]
+[0x00012628]
 type=radio
 handle=448
 locked=0
 resize=
 x=500
-y=115
+y=145
 width=50
 height=20
 func=
@@ -1055,13 +1061,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=52
-[0x0033223A]
+[0x0001262A]
 type=radio
 handle=449
 locked=0
 resize=
 x=500
-y=135
+y=165
 width=50
 height=20
 func=
@@ -1084,13 +1090,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=53
-[0x006E21F2]
+[0x0001262C]
 type=radio
 handle=450
 locked=0
 resize=
 x=500
-y=155
+y=185
 width=50
 height=20
 func=
@@ -1113,13 +1119,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=54
-[0x010F2268]
+[0x0001262E]
 type=checkbox
 handle=451
 locked=0
 resize=
 x=630
-y=62
+y=92
 width=50
 height=20
 func=
@@ -1142,13 +1148,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=57
-[0x00CF23A4]
+[0x00012630]
 type=checkbox
 handle=452
 locked=0
 resize=
 x=580
-y=62
+y=92
 width=40
 height=20
 func=
@@ -1171,13 +1177,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=56
-[0x00FB23AA]
+[0x00012632]
 type=label
 handle=453
 locked=0
 resize=
 x=630
-y=85
+y=115
 width=45
 height=15
 func=
@@ -1200,13 +1206,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=60
-[0x00E42346]
+[0x00012634]
 type=input
 handle=454
 locked=0
 resize=
 x=580
-y=100
+y=130
 width=35
 height=20
 func=
@@ -1229,13 +1235,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=59
-[0x0042224E]
+[0x00012636]
 type=label
 handle=455
 locked=0
 resize=
 x=580
-y=85
+y=115
 width=40
 height=15
 func=
@@ -1258,13 +1264,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=58
-[0x002D00FA]
+[0x00012638]
 type=input
 handle=456
 locked=0
 resize=
 x=630
-y=100
+y=130
 width=50
 height=20
 func=
@@ -1287,7 +1293,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=61
-[0x00542408]
+[0x0001263A]
 type=input
 handle=457
 locked=0
@@ -1304,7 +1310,7 @@ fontattribute=0
 tooltip=
 bgimage=
 textcolour=0x000000
-id=$path
+id=$pathSave
 text=%PATH_TO_SAVEGAME%
 state=$GUI_SHOW+$GUI_ENABLE
 style=
@@ -1316,7 +1322,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x0063221E]
+[0x0001263C]
 type=button
 handle=458
 locked=0
@@ -1325,7 +1331,7 @@ x=545
 y=10
 width=40
 height=20
-func=_OpenFile
+func=_OpenFileSave
 font=MS Sans Serif
 fontsize=8
 fontstyle=400
@@ -1345,13 +1351,13 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x001D2432]
+[0x0001263E]
 type=radio
 handle=459
 locked=0
 resize=
 x=40
-y=175
+y=205
 width=50
 height=20
 func=
@@ -1374,13 +1380,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=11
-[0x00122426]
+[0x00012640]
 type=radio
 handle=460
 locked=0
 resize=
 x=270
-y=175
+y=205
 width=50
 height=20
 func=
@@ -1403,13 +1409,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=33
-[0x00222388]
+[0x00012642]
 type=radio
 handle=461
 locked=0
 resize=
 x=500
-y=175
+y=205
 width=50
 height=20
 func=
@@ -1432,7 +1438,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=55
-[0x00152220]
+[0x00012644]
 type=button
 handle=462
 locked=0
@@ -1461,13 +1467,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=3
-[0x00362232]
+[0x00012646]
 type=button
 handle=463
 locked=0
 resize=
 x=630
-y=181
+y=211
 width=50
 height=20
 func=_File3Reload
@@ -1490,13 +1496,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=69
-[0x00222398]
+[0x00012648]
 type=button
 handle=464
 locked=0
 resize=
 x=580
-y=181
+y=211
 width=35
 height=20
 func=_File3Save
@@ -1519,7 +1525,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=68
-[0x003B2370]
+[0x0001264A]
 type=button
 handle=465
 locked=0
@@ -1548,13 +1554,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=2
-[0x00392212]
+[0x00022256]
 type=button
 handle=466
 locked=0
 resize=
 x=630
-y=124
+y=154
 width=16
 height=20
 func=_File3Lives5
@@ -1577,13 +1583,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=64
-[0x003B06F4]
+[0x0001264C]
 type=button
 handle=467
 locked=0
 resize=
 x=649
-y=124
+y=154
 width=31
 height=20
 func=_File3Lives9
@@ -1606,13 +1612,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=65
-[0x00122438]
+[0x0001264E]
 type=button
 handle=468
 locked=0
 resize=
 x=580
-y=123
+y=153
 width=16
 height=20
 func=_File3Gems0
@@ -1635,13 +1641,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=62
-[0x00242162]
+[0x00012650]
 type=button
 handle=469
 locked=0
 resize=
 x=599
-y=123
+y=153
 width=16
 height=20
 func=_File3Gems9
@@ -1664,13 +1670,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=63
-[0x00102236]
+[0x00012652]
 type=button
 handle=470
 locked=0
 resize=
 x=630
-y=153
+y=183
 width=50
 height=20
 func=_File3Delete
@@ -1693,13 +1699,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=67
-[0x001B2226]
+[0x00012656]
 type=button
 handle=471
 locked=0
 resize=
 x=580
-y=153
+y=183
 width=35
 height=20
 func=_File3Max
@@ -1722,13 +1728,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=66
-[0x001E222C]
+[0x00012658]
 type=button
 handle=472
 locked=0
 resize=
 x=119
-y=124
+y=154
 width=16
 height=20
 func=_File1Gems0
@@ -1751,13 +1757,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=18
-[0x004B22F6]
+[0x0001265A]
 type=button
 handle=473
 locked=0
 resize=
 x=138
-y=124
+y=154
 width=16
 height=20
 func=_File1Gems9
@@ -1780,13 +1786,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=19
-[0x002923F2]
+[0x0001265C]
 type=button
 handle=474
 locked=0
 resize=
 x=170
-y=124
+y=154
 width=16
 height=20
 func=_File1Lives5
@@ -1809,13 +1815,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=20
-[0x000723F6]
+[0x0001265E]
 type=button
 handle=475
 locked=0
 resize=
 x=188
-y=124
+y=154
 width=31
 height=20
 func=_File1Lives9
@@ -1838,13 +1844,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=21
-[0x0027223C]
+[0x00012660]
 type=button
 handle=476
 locked=0
 resize=
 x=119
-y=154
+y=184
 width=35
 height=20
 func=_File1Max
@@ -1867,13 +1873,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=22
-[0x00A504F0]
+[0x00012662]
 type=button
 handle=477
 locked=0
 resize=
 x=169
-y=154
+y=184
 width=50
 height=20
 func=_File1Delete
@@ -1896,13 +1902,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=23
-[0x0027230E]
+[0x00012664]
 type=button
 handle=478
 locked=0
 resize=
 x=119
-y=182
+y=212
 width=35
 height=20
 func=_File1Save
@@ -1925,13 +1931,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=24
-[0x00232364]
+[0x00012666]
 type=button
 handle=479
 locked=0
 resize=
 x=169
-y=182
+y=212
 width=50
 height=20
 func=_File1Reload
@@ -1954,13 +1960,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=25
-[0x0013235E]
+[0x00012668]
 type=button
 handle=480
 locked=0
 resize=
 x=350
-y=124
+y=154
 width=16
 height=20
 func=_File2Gems0
@@ -1983,13 +1989,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=40
-[0x000E225A]
+[0x0001266A]
 type=button
 handle=481
 locked=0
 resize=
 x=369
-y=124
+y=154
 width=16
 height=20
 func=_File2Gems9
@@ -2012,13 +2018,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=41
-[0x000F224A]
+[0x0001266C]
 type=button
 handle=482
 locked=0
 resize=
 x=400
-y=124
+y=154
 width=16
 height=20
 func=_File2Lives5
@@ -2041,13 +2047,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=42
-[0x00112260]
+[0x0001266E]
 type=button
 handle=483
 locked=0
 resize=
 x=419
-y=124
+y=154
 width=31
 height=20
 func=_File2Lives9
@@ -2070,13 +2076,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=43
-[0x003C213A]
+[0x00012670]
 type=button
 handle=484
 locked=0
 resize=
 x=400
-y=154
+y=184
 width=50
 height=20
 func=_File2Delete
@@ -2099,13 +2105,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=45
-[0x00102258]
+[0x00012672]
 type=button
 handle=485
 locked=0
 resize=
 x=350
-y=154
+y=184
 width=35
 height=20
 func=_File2Max
@@ -2128,13 +2134,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=44
-[0x000C23BA]
+[0x00012674]
 type=button
 handle=486
 locked=0
 resize=
 x=350
-y=182
+y=212
 width=35
 height=20
 func=_File2Save
@@ -2157,13 +2163,13 @@ iconindex=
 iconlarge=0
 textmode=text
 order=46
-[0x000D2332]
+[0x00012676]
 type=button
 handle=487
 locked=0
 resize=
 x=400
-y=182
+y=212
 width=50
 height=20
 func=_File2Reload
@@ -2186,4 +2192,120 @@ iconindex=
 iconlarge=0
 textmode=text
 order=47
+[0x00012686]
+type=input
+handle=496
+locked=0
+resize=
+x=10
+y=40
+width=529
+height=20
+func=
+font=MS Sans Serif
+fontsize=8
+fontstyle=400
+fontattribute=0
+tooltip=
+bgimage=
+textcolour=0x000000
+id=$pathGame
+text=%PATH_TO_GAME%
+state=$GUI_SHOW+$GUI_ENABLE
+style=
+exstyle=$WS_EX_CLIENTEDGE
+bgcolour=
+code=
+tabpage=-1
+iconindex=
+iconlarge=0
+textmode=text
+order=71
+[0x00260D0A]
+type=button
+handle=497
+locked=0
+resize=
+x=545
+y=40
+width=40
+height=20
+func=_OpenFileGame
+font=MS Sans Serif
+fontsize=8
+fontstyle=400
+fontattribute=0
+tooltip=
+bgimage=
+textcolour=0x000000
+id=
+text=...
+state=$GUI_SHOW+$GUI_ENABLE
+style=
+exstyle=
+bgcolour=
+code=
+tabpage=-1
+iconindex=
+iconlarge=0
+textmode=text
+order=72
+[0x0005223A]
+type=checkbox
+handle=488
+locked=0
+resize=
+x=590
+y=40
+width=60
+height=20
+func=
+font=MS Sans Serif
+fontsize=8
+fontstyle=400
+fontattribute=0
+tooltip=
+bgimage=
+textcolour=0x000000
+id=$cheats
+text=Cheats
+state=$GUI_SHOW+$GUI_ENABLE
+style=
+exstyle=
+bgcolour=0xF0F0F0
+code=
+order=73
+tabpage=-1
+iconindex=
+iconlarge=0
+textmode=text
+[0x000928C2]
+type=button
+handle=499
+locked=0
+resize=
+x=650
+y=40
+width=40
+height=20
+func=_ShowCheats
+font=MS Sans Serif
+fontsize=8
+fontstyle=400
+fontattribute=0
+tooltip=
+bgimage=
+textcolour=0x000000
+id=
+text=?
+state=$GUI_SHOW+$GUI_ENABLE
+style=
+exstyle=
+bgcolour=
+code=
+tabpage=-1
+iconindex=
+iconlarge=0
+textmode=text
+order=74
 #ce
