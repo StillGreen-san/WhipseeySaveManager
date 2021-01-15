@@ -14,6 +14,15 @@ GUICtrlCreateButton("save",590,10,45,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_SaveSave")
 GUICtrlCreateButton("reload",640,10,50,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_ReloadSave")
+$pathGame = GUICtrlCreateInput("%PATH_TO_GAME%",10,40,480,20,-1,$WS_EX_CLIENTEDGE)
+GUICtrlCreateButton("...",495,40,40,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_OpenFileGame")
+$cheats = GUICtrlCreateCheckbox("Cheats",540,40,55,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_SaveGame")
+GUICtrlCreateButton("?",595,40,40,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_ShowCheats")
+GUICtrlCreateButton("reload",640,40,50,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_ReloadGame")
 $file1Group = GUICtrlCreateGroup("File1  [ 63-69420 ]",10,70,220,175,-1,-1)
 GUICtrlSetBkColor(-1,"0xF0F0F0")
 GUICtrlCreateGroup("Level Progress",20,88,90,145,-1,-1)
@@ -116,15 +125,6 @@ GUICtrlCreateButton("save",580,211,35,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File3Save")
 GUICtrlCreateButton("reload",630,211,50,20,-1,-1)
 GUICtrlSetOnEvent(-1,"_File3Reload")
-$pathGame = GUICtrlCreateInput("%PATH_TO_GAME%",10,40,480,20,-1,$WS_EX_CLIENTEDGE)
-GUICtrlCreateButton("...",495,40,40,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_OpenFileGame")
-$cheats = GUICtrlCreateCheckbox("Cheats",540,40,55,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_SaveGame")
-GUICtrlCreateButton("?",595,40,40,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_ShowCheats")
-GUICtrlCreateButton("reload",640,40,50,20,-1,-1)
-GUICtrlSetOnEvent(-1,"_ReloadGame")
 
 
 
@@ -189,7 +189,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=4
+order=9
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -218,7 +218,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=5
+order=10
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -247,7 +247,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=6
+order=11
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -276,7 +276,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=7
+order=12
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -305,7 +305,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=8
+order=13
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -334,7 +334,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=9
+order=14
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -363,7 +363,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=10
+order=15
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -392,7 +392,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=13
+order=18
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -421,7 +421,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=12
+order=17
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -454,7 +454,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=16
+order=21
 [0x000122F2]
 type=input
 handle=428
@@ -483,7 +483,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=15
+order=20
 [0x000122F4]
 type=label
 handle=429
@@ -512,7 +512,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=14
+order=19
 [0x000122F6]
 type=input
 handle=430
@@ -541,7 +541,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=17
+order=22
 [0x000122F8]
 type=group
 handle=431
@@ -570,7 +570,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=26
+order=31
 [0x000122FA]
 type=group
 handle=432
@@ -599,7 +599,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=27
+order=32
 [0x000122FC]
 type=radio
 handle=433
@@ -628,7 +628,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=28
+order=33
 [0x000122FE]
 type=radio
 handle=434
@@ -657,7 +657,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=29
+order=34
 [0x00012300]
 type=radio
 handle=435
@@ -686,7 +686,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=30
+order=35
 [0x00012302]
 type=radio
 handle=436
@@ -715,7 +715,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=31
+order=36
 [0x00012304]
 type=radio
 handle=437
@@ -744,7 +744,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=32
+order=37
 [0x00012306]
 type=checkbox
 handle=438
@@ -773,7 +773,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=35
+order=40
 [0x00012308]
 type=checkbox
 handle=439
@@ -802,7 +802,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=34
+order=39
 [0x0001230A]
 type=label
 handle=440
@@ -831,7 +831,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=38
+order=43
 [0x0001230C]
 type=input
 handle=441
@@ -860,7 +860,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=37
+order=42
 [0x0001230E]
 type=label
 handle=442
@@ -889,7 +889,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=36
+order=41
 [0x00012310]
 type=input
 handle=443
@@ -918,7 +918,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=39
+order=44
 [0x00012312]
 type=group
 handle=444
@@ -947,7 +947,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=48
+order=53
 [0x00012314]
 type=group
 handle=445
@@ -976,7 +976,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=49
+order=54
 [0x00012316]
 type=radio
 handle=446
@@ -1005,7 +1005,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=50
+order=55
 [0x00012318]
 type=radio
 handle=447
@@ -1034,7 +1034,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=51
+order=56
 [0x0001231A]
 type=radio
 handle=448
@@ -1063,7 +1063,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=52
+order=57
 [0x0001231C]
 type=radio
 handle=449
@@ -1092,7 +1092,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=53
+order=58
 [0x0001231E]
 type=radio
 handle=450
@@ -1121,7 +1121,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=54
+order=59
 [0x00012320]
 type=checkbox
 handle=451
@@ -1150,7 +1150,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=57
+order=62
 [0x00012322]
 type=checkbox
 handle=452
@@ -1179,7 +1179,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=56
+order=61
 [0x00012324]
 type=label
 handle=453
@@ -1208,7 +1208,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=60
+order=65
 [0x00012326]
 type=input
 handle=454
@@ -1237,7 +1237,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=59
+order=64
 [0x00012328]
 type=label
 handle=455
@@ -1266,7 +1266,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=58
+order=63
 [0x0001232A]
 type=input
 handle=456
@@ -1295,7 +1295,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=61
+order=66
 [0x0001232C]
 type=input
 handle=457
@@ -1382,7 +1382,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=11
+order=16
 [0x00012332]
 type=radio
 handle=460
@@ -1411,7 +1411,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=33
+order=38
 [0x00012334]
 type=radio
 handle=461
@@ -1440,7 +1440,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=55
+order=60
 [0x00012336]
 type=button
 handle=462
@@ -1498,7 +1498,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=69
+order=74
 [0x0001233A]
 type=button
 handle=464
@@ -1527,7 +1527,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=68
+order=73
 [0x0001233C]
 type=button
 handle=465
@@ -1585,7 +1585,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=64
+order=69
 [0x00012340]
 type=button
 handle=467
@@ -1614,7 +1614,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=65
+order=70
 [0x00012342]
 type=button
 handle=468
@@ -1643,7 +1643,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=62
+order=67
 [0x00012344]
 type=button
 handle=469
@@ -1672,7 +1672,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=63
+order=68
 [0x00012346]
 type=button
 handle=470
@@ -1701,7 +1701,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=67
+order=72
 [0x00012348]
 type=button
 handle=471
@@ -1730,7 +1730,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=66
+order=71
 [0x0001234A]
 type=button
 handle=472
@@ -1759,7 +1759,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=18
+order=23
 [0x0001234C]
 type=button
 handle=473
@@ -1788,7 +1788,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=19
+order=24
 [0x0001234E]
 type=button
 handle=474
@@ -1817,7 +1817,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=20
+order=25
 [0x00012350]
 type=button
 handle=475
@@ -1846,7 +1846,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=21
+order=26
 [0x00012352]
 type=button
 handle=476
@@ -1875,7 +1875,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=22
+order=27
 [0x00012354]
 type=button
 handle=477
@@ -1904,7 +1904,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=23
+order=28
 [0x00012356]
 type=button
 handle=478
@@ -1933,7 +1933,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=24
+order=29
 [0x00012358]
 type=button
 handle=479
@@ -1962,7 +1962,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=25
+order=30
 [0x0001235A]
 type=button
 handle=480
@@ -1991,7 +1991,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=40
+order=45
 [0x0001235C]
 type=button
 handle=481
@@ -2020,7 +2020,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=41
+order=46
 [0x0001235E]
 type=button
 handle=482
@@ -2049,7 +2049,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=42
+order=47
 [0x00012360]
 type=button
 handle=483
@@ -2078,7 +2078,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=43
+order=48
 [0x00012362]
 type=button
 handle=484
@@ -2107,7 +2107,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=45
+order=50
 [0x00012364]
 type=button
 handle=485
@@ -2136,7 +2136,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=44
+order=49
 [0x00012366]
 type=button
 handle=486
@@ -2165,7 +2165,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=46
+order=51
 [0x00012368]
 type=button
 handle=487
@@ -2194,7 +2194,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=47
+order=52
 [0x0001236A]
 type=input
 handle=488
@@ -2223,7 +2223,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=71
+order=4
 [0x0001236C]
 type=button
 handle=489
@@ -2252,7 +2252,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=72
+order=5
 [0x0001236E]
 type=checkbox
 handle=490
@@ -2277,7 +2277,7 @@ style=
 exstyle=
 bgcolour=0xF0F0F0
 code=
-order=73
+order=6
 tabpage=-1
 iconindex=
 iconlarge=0
@@ -2310,7 +2310,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=74
+order=7
 [0x00012372]
 type=button
 handle=492
@@ -2339,5 +2339,5 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-order=75
+order=8
 #ce

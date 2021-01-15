@@ -145,7 +145,11 @@ Func _SaveSave()
 	_SaveFile($file1Controls)
 EndFunc
 Func _SaveGame()
-	
+	If GUICtrlRead($cheats) = $GUI_CHECKED Then
+		IniWrite($gameFile, "Cheats", "cheats_enabled", 1)
+	Else
+		IniWrite($gameFile, "Cheats", "cheats_enabled", 0)
+	EndIf
 EndFunc
 
 Func _File1Gems0()
@@ -271,27 +275,30 @@ Func _OpenFileSave()
 	EndIf
 EndFunc
 Func _OpenFileGame()
-	
+	$result =  FileOpenDialog("Select Settingsfile", StringReplace($gameFile, "bfs_settings.ini", "", 1), "Settings files (bfs_settings.ini)|All (*.*)",  $FD_FILEMUSTEXIST + $FD_PATHMUSTEXIST, "bfs_settings.ini")
+	If Not @error Then
+		GUICtrlSetData($pathGame, $result)
+		$gameFile = $result
+		_LoadGame()
+	EndIf
 EndFunc
 
 Func _ReloadSave()
 	_LoadSave()
 EndFunc
 Func _ReloadGame()
-	
+	_LoadGame()
 EndFunc
 
 Func _ShowCheats()
-	;GUISetState(@SW_LOCK, $GUI)
 	MsgBox($MB_ICONINFORMATION+$MB_SETFOREGROUND, "Cheats", "checking this will enable some key/combinations in game" & _
-		@CRLF & "R : restart room" & _
-		@CRLF & "N : next room" & _
-		@CRLF & "P : toggle fullscreen" & _
-		@CRLF & ", . , . : infinite flight" & _
-		@CRLF & ", . , , : unlock all levels" & _
-		@CRLF & ", , , . : disable hud" & _
-		@CRLF & ", , , , : invincibility", 0, $GUI)
-	;GUISetState(@SW_UNLOCK, $GUI)
+		@CRLF & "R  : restart room" & _
+		@CRLF & "N  : next room" & _
+		@CRLF & "P  : toggle fullscreen" & _
+		@CRLF & ", . , .  : infinite flight" & _
+		@CRLF & ", . , ,  : unlock all levels" & _
+		@CRLF & ", , , .  : disable hud" & _
+		@CRLF & ", , , ,  : invincibility", 0, $GUI)
 EndFunc
 
 ;HELPER FUNCTIONS
@@ -324,8 +331,11 @@ Func _IntToIni($int)
 EndFunc
 
 Func _FindGame()
-	Local $steamPath = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam",  "InstallPath")
-	If @error Then Return
+	Local $steamPath = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam", "InstallPath")
+	If @error Then
+		$steamPath = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\Valve\Steam", "InstallPath")
+		If @error Then Return
+	EndIf
 	
 	Local $settingsPath = "\steamapps\common\Whipseey and the Lost Atlas\bfs_settings.ini"
 	Local $librariesPath = "\steamapps\libraryfolders.vdf"
