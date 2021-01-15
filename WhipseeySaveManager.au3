@@ -1,5 +1,5 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Res_ProductVersion=0.4
+#AutoIt3Wrapper_Res_ProductVersion=0.6
 #AutoIt3Wrapper_Res_ProductName=Whipseey Save Manager
 #AutoIt3Wrapper_Res_Comment=Intended for (Speedrun) practice
 #AutoIt3Wrapper_Res_Description=GUI for modifying some Values in Whipseey Savegames
@@ -291,7 +291,7 @@ Func _ReloadGame()
 EndFunc
 
 Func _ShowCheats()
-	MsgBox($MB_ICONINFORMATION+$MB_SETFOREGROUND, "Cheats", "checking this will enable some key/combinations in game" & _
+	MsgBox($MB_ICONINFORMATION+$MB_SETFOREGROUND, "Cheats", "checking Cheats will enable some hotkeys in game" & _
 		@CRLF & "R  : restart room" & _
 		@CRLF & "N  : next room" & _
 		@CRLF & "P  : toggle fullscreen" & _
