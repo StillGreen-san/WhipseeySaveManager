@@ -20,7 +20,7 @@ Game needs to be restarted to load a modified Savegame. Autosaving ingame will o
 ## Warnings
 
 - Does not currently include full Error Handling
-- Generally assumes data is available / a valid one is opened
+- Generally assumes data is available / valid data is opened
 - Code is a bit messy
 - Written in AutoIT, so some Antivirus tools may complain
 - no dark mode
