@@ -165,7 +165,7 @@ gui_event_resized=
 gui_event_dropped=
 defaultfont=MS Sans Serif
 defaultfontsize=8
-[0x000924F6]
+[0x000822DE]
 type=group
 handle=418
 locked=0
@@ -194,7 +194,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000224F4]
+[0x000122E0]
 type=group
 handle=419
 locked=0
@@ -223,7 +223,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000224F2]
+[0x000122E2]
 type=radio
 handle=420
 locked=0
@@ -252,7 +252,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000224F0]
+[0x000122E4]
 type=radio
 handle=421
 locked=0
@@ -281,7 +281,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000224EE]
+[0x000122E6]
 type=radio
 handle=422
 locked=0
@@ -310,7 +310,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000224EC]
+[0x000122E8]
 type=radio
 handle=423
 locked=0
@@ -339,7 +339,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000324EA]
+[0x000122EA]
 type=radio
 handle=424
 locked=0
@@ -368,7 +368,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000224E8]
+[0x000122EC]
 type=checkbox
 handle=425
 locked=0
@@ -397,7 +397,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000324E6]
+[0x000122EE]
 type=checkbox
 handle=426
 locked=0
@@ -426,7 +426,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000224E4]
+[0x000122F0]
 type=label
 handle=427
 locked=0
@@ -455,7 +455,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=16
-[0x000324E2]
+[0x000122F2]
 type=input
 handle=428
 locked=0
@@ -484,7 +484,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=15
-[0x000224E0]
+[0x000122F4]
 type=label
 handle=429
 locked=0
@@ -513,7 +513,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=14
-[0x000324DE]
+[0x000122F6]
 type=input
 handle=430
 locked=0
@@ -542,7 +542,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=17
-[0x000224DC]
+[0x000122F8]
 type=group
 handle=431
 locked=0
@@ -571,7 +571,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=26
-[0x000224DA]
+[0x000122FA]
 type=group
 handle=432
 locked=0
@@ -600,7 +600,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=27
-[0x000224D8]
+[0x000122FC]
 type=radio
 handle=433
 locked=0
@@ -629,7 +629,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=28
-[0x000324D6]
+[0x000122FE]
 type=radio
 handle=434
 locked=0
@@ -658,7 +658,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=29
-[0x000324D4]
+[0x00012300]
 type=radio
 handle=435
 locked=0
@@ -687,7 +687,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=30
-[0x000324D2]
+[0x00012302]
 type=radio
 handle=436
 locked=0
@@ -716,7 +716,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=31
-[0x000224D0]
+[0x00012304]
 type=radio
 handle=437
 locked=0
@@ -745,7 +745,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=32
-[0x000224CE]
+[0x00012306]
 type=checkbox
 handle=438
 locked=0
@@ -774,7 +774,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=35
-[0x000324CC]
+[0x00012308]
 type=checkbox
 handle=439
 locked=0
@@ -803,7 +803,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=34
-[0x000324CA]
+[0x0001230A]
 type=label
 handle=440
 locked=0
@@ -832,7 +832,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=38
-[0x000224C8]
+[0x0001230C]
 type=input
 handle=441
 locked=0
@@ -861,7 +861,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=37
-[0x000324C6]
+[0x0001230E]
 type=label
 handle=442
 locked=0
@@ -890,7 +890,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=36
-[0x000424C4]
+[0x00012310]
 type=input
 handle=443
 locked=0
@@ -919,7 +919,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=39
-[0x000324C2]
+[0x00012312]
 type=group
 handle=444
 locked=0
@@ -948,7 +948,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=48
-[0x000224C0]
+[0x00012314]
 type=group
 handle=445
 locked=0
@@ -977,7 +977,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=49
-[0x000224FE]
+[0x00012316]
 type=radio
 handle=446
 locked=0
@@ -1006,7 +1006,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=50
-[0x000225EA]
+[0x00012318]
 type=radio
 handle=447
 locked=0
@@ -1035,7 +1035,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=51
-[0x000225EC]
+[0x0001231A]
 type=radio
 handle=448
 locked=0
@@ -1064,7 +1064,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=52
-[0x000325EE]
+[0x0001231C]
 type=radio
 handle=449
 locked=0
@@ -1093,7 +1093,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=53
-[0x000225E8]
+[0x0001231E]
 type=radio
 handle=450
 locked=0
@@ -1122,7 +1122,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=54
-[0x000225E6]
+[0x00012320]
 type=checkbox
 handle=451
 locked=0
@@ -1151,7 +1151,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=57
-[0x000225E4]
+[0x00012322]
 type=checkbox
 handle=452
 locked=0
@@ -1180,7 +1180,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=56
-[0x000225E2]
+[0x00012324]
 type=label
 handle=453
 locked=0
@@ -1209,7 +1209,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=60
-[0x000225E0]
+[0x00012326]
 type=input
 handle=454
 locked=0
@@ -1238,7 +1238,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=59
-[0x000225DE]
+[0x00012328]
 type=label
 handle=455
 locked=0
@@ -1267,7 +1267,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=58
-[0x000425DC]
+[0x0001232A]
 type=input
 handle=456
 locked=0
@@ -1296,7 +1296,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=61
-[0x000225D6]
+[0x0001232C]
 type=input
 handle=457
 locked=0
@@ -1325,7 +1325,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000225D8]
+[0x0001232E]
 type=button
 handle=458
 locked=0
@@ -1354,7 +1354,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x000325DA]
+[0x00012330]
 type=radio
 handle=459
 locked=0
@@ -1383,7 +1383,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=11
-[0x000225D4]
+[0x00012332]
 type=radio
 handle=460
 locked=0
@@ -1412,7 +1412,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=33
-[0x000425D2]
+[0x00012334]
 type=radio
 handle=461
 locked=0
@@ -1441,7 +1441,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=55
-[0x000225CC]
+[0x00012336]
 type=button
 handle=462
 locked=0
@@ -1470,7 +1470,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=3
-[0x000225CE]
+[0x00012338]
 type=button
 handle=463
 locked=0
@@ -1499,7 +1499,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=69
-[0x000325D0]
+[0x0001233A]
 type=button
 handle=464
 locked=0
@@ -1528,7 +1528,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=68
-[0x000225CA]
+[0x0001233C]
 type=button
 handle=465
 locked=0
@@ -1557,7 +1557,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=2
-[0x000425C8]
+[0x0001233E]
 type=button
 handle=466
 locked=0
@@ -1586,7 +1586,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=64
-[0x000225C2]
+[0x00012340]
 type=button
 handle=467
 locked=0
@@ -1615,7 +1615,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=65
-[0x000225C4]
+[0x00012342]
 type=button
 handle=468
 locked=0
@@ -1644,7 +1644,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=62
-[0x000325C6]
+[0x00012344]
 type=button
 handle=469
 locked=0
@@ -1673,7 +1673,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=63
-[0x000325C0]
+[0x00012346]
 type=button
 handle=470
 locked=0
@@ -1702,7 +1702,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=67
-[0x000225BE]
+[0x00012348]
 type=button
 handle=471
 locked=0
@@ -1731,7 +1731,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=66
-[0x000225BC]
+[0x0001234A]
 type=button
 handle=472
 locked=0
@@ -1760,7 +1760,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=18
-[0x000225BA]
+[0x0001234C]
 type=button
 handle=473
 locked=0
@@ -1789,7 +1789,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=19
-[0x000225B8]
+[0x0001234E]
 type=button
 handle=474
 locked=0
@@ -1818,7 +1818,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=20
-[0x000225B6]
+[0x00012350]
 type=button
 handle=475
 locked=0
@@ -1847,7 +1847,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=21
-[0x000225B4]
+[0x00012352]
 type=button
 handle=476
 locked=0
@@ -1876,7 +1876,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=22
-[0x000225B2]
+[0x00012354]
 type=button
 handle=477
 locked=0
@@ -1905,7 +1905,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=23
-[0x000225B0]
+[0x00012356]
 type=button
 handle=478
 locked=0
@@ -1934,7 +1934,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=24
-[0x000225AE]
+[0x00012358]
 type=button
 handle=479
 locked=0
@@ -1963,7 +1963,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=25
-[0x000225AC]
+[0x0001235A]
 type=button
 handle=480
 locked=0
@@ -1992,7 +1992,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=40
-[0x000225AA]
+[0x0001235C]
 type=button
 handle=481
 locked=0
@@ -2021,7 +2021,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=41
-[0x000225A8]
+[0x0001235E]
 type=button
 handle=482
 locked=0
@@ -2050,7 +2050,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=42
-[0x000225A6]
+[0x00012360]
 type=button
 handle=483
 locked=0
@@ -2079,7 +2079,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=43
-[0x000225A4]
+[0x00012362]
 type=button
 handle=484
 locked=0
@@ -2108,7 +2108,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=45
-[0x000225A2]
+[0x00012364]
 type=button
 handle=485
 locked=0
@@ -2137,7 +2137,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=44
-[0x000225A0]
+[0x00012366]
 type=button
 handle=486
 locked=0
@@ -2166,7 +2166,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=46
-[0x0002259E]
+[0x00012368]
 type=button
 handle=487
 locked=0
@@ -2195,7 +2195,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=47
-[0x0002259C]
+[0x0001236A]
 type=input
 handle=488
 locked=0
@@ -2224,7 +2224,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=71
-[0x0002259A]
+[0x0001236C]
 type=button
 handle=489
 locked=0
@@ -2253,7 +2253,7 @@ iconindex=
 iconlarge=0
 textmode=text
 order=72
-[0x00022598]
+[0x0001236E]
 type=checkbox
 handle=490
 locked=0
@@ -2282,7 +2282,7 @@ tabpage=-1
 iconindex=
 iconlarge=0
 textmode=text
-[0x00022596]
+[0x00012370]
 type=button
 handle=491
 locked=0
@@ -2311,9 +2311,9 @@ iconindex=
 iconlarge=0
 textmode=text
 order=74
-[0x001F0C3A]
+[0x00012372]
 type=button
-handle=500
+handle=492
 locked=0
 resize=
 x=640

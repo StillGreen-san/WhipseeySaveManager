@@ -15,6 +15,7 @@
 ;VARS
 Global $defaultSaveDir = @UserProfileDir &  "\AppData\Local\Whipseey\savedata"
 Global $saveFile =  $defaultSaveDir &  "\whipseey.sav"
+Global $gameFile = ""
 Global $file1Controls[] = ["file1", $file1Castle, $file1Moon, $file1Snow, $file1Desert, $file1Forest, $file1Beach, $file1Ending, $file1Intro, $file1Lives, $file1Gems, $file1Group]
 Global $file2Controls[] = ["file2", $file2Castle, $file2Moon, $file2Snow, $file2Desert, $file2Forest, $file2Beach, $file2Ending, $file2Intro, $file2Lives, $file2Gems, $file2Group]
 Global $file3Controls[] = ["file3", $file3Castle, $file3Moon, $file3Snow, $file3Desert, $file3Forest, $file3Beach, $file3Ending, $file3Intro, $file3Lives, $file3Gems, $file3Group]
@@ -29,6 +30,9 @@ Opt("GUIOnEventMode", 1)
 If FileExists($defaultSaveDir) Then
 	GUICtrlSetData($pathSave, $saveFile)
 	_LoadSave()
+	_FindGame()
+	GUICtrlSetData($pathGame, $gameFile)
+	_LoadGame()
 Else
 	;deactivate all file controls
 EndIf
@@ -77,6 +81,15 @@ Func _LoadSave()
 	_LoadFile($file3Controls)
 	_LoadFile($file2Controls)
 	_LoadFile($file1Controls)
+EndFunc
+
+Func _LoadGame()
+	$cheatState = IniRead($gameFile, "Cheats", "cheats_enabled", "0")
+	If $cheatState = 1 Then
+		GUICtrlSetState($cheats, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($cheats, $GUI_UNCHECKED)
+	EndIf
 EndFunc
 
 Func _ReadFile($file, $section)
@@ -311,32 +324,41 @@ Func _IntToIni($int)
 EndFunc
 
 Func _FindGame()
-	Local $librariesPath = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam",  "InstallPath")
+	Local $steamPath = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam",  "InstallPath")
 	If @error Then Return
 	
 	Local $settingsPath = "\steamapps\common\Whipseey and the Lost Atlas\bfs_settings.ini"
+	Local $librariesPath = "\steamapps\libraryfolders.vdf"
+	Local Enum $LIB_NUM = 0, $LIB_PATH = 1
 	
-	
-	
-	FileExists($librariesPath & $settingsPath)
+	If FileExists($steamPath & $settingsPath) Then
+		$gameFile = $steamPath & $settingsPath
+		Return
+	EndIf
 
-	$librariesPath = $librariesPath & "\steamapps\libraryfolders.vdf"
-	If Not FileExists($librariesPath) Then Return
-
-	Local $file = FileOpen($librariesPath, $FO_OPEN)
-	If $file = -1 Then Return
+	Local $file = FileOpen($steamPath & $librariesPath, $FO_READ)
+	If $file = -1 Then
+		$gameFile = ""
+		Return
+	EndIf
 
 	While True 
-		Local $line = FileReadLine($librariesPath)
+		Local $line = FileReadLine($file)
 		If @error = -1 Then ExitLoop
 
 		Local $library = StringRegExp($line, '.*"(\d+)".*"(.*)"', $STR_REGEXPARRAYMATCH)
 		If @error Then ContinueLoop
 
-		If Not IsInt($library[0]) Then ContinueLoop
+		If Number($library[$LIB_NUM]) = 0 Then ContinueLoop
+		$library[$LIB_PATH] = StringReplace($library[$LIB_PATH], "\\", "\", 1)
 
-		Local $settingsPath = $library[0] & ""
-	Wend
+		If FileExists($library[$LIB_PATH] & $settingsPath) Then
+			$gameFile = $library[$LIB_PATH] & $settingsPath
+			Return
+		EndIf
+	WEnd
+
+	$gameFile = ""
 EndFunc
 
 Func _Exit()
