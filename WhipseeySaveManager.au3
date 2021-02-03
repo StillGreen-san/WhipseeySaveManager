@@ -1,5 +1,5 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Res_ProductVersion=0.4
+#AutoIt3Wrapper_Res_ProductVersion=0.6
 #AutoIt3Wrapper_Res_ProductName=Whipseey Save Manager
 #AutoIt3Wrapper_Res_Comment=Intended for (Speedrun) practice
 #AutoIt3Wrapper_Res_Description=GUI for modifying some Values in Whipseey Savegames
@@ -15,6 +15,7 @@
 ;VARS
 Global $defaultSaveDir = @UserProfileDir &  "\AppData\Local\Whipseey\savedata"
 Global $saveFile =  $defaultSaveDir &  "\whipseey.sav"
+Global $gameFile = ""
 Global $file1Controls[] = ["file1", $file1Castle, $file1Moon, $file1Snow, $file1Desert, $file1Forest, $file1Beach, $file1Ending, $file1Intro, $file1Lives, $file1Gems, $file1Group]
 Global $file2Controls[] = ["file2", $file2Castle, $file2Moon, $file2Snow, $file2Desert, $file2Forest, $file2Beach, $file2Ending, $file2Intro, $file2Lives, $file2Gems, $file2Group]
 Global $file3Controls[] = ["file3", $file3Castle, $file3Moon, $file3Snow, $file3Desert, $file3Forest, $file3Beach, $file3Ending, $file3Intro, $file3Lives, $file3Gems, $file3Group]
@@ -27,8 +28,11 @@ Global Enum $INI_KEY = 0, $INI_VALUE = 1, $INI_CASTLE = 32, $INI_MOON = 16, $INI
 Opt("GUIOnEventMode", 1)
 
 If FileExists($defaultSaveDir) Then
-	GUICtrlSetData($path, $saveFile)
+	GUICtrlSetData($pathSave, $saveFile)
 	_LoadSave()
+	_FindGame()
+	GUICtrlSetData($pathGame, $gameFile)
+	_LoadGame()
 Else
 	;deactivate all file controls
 EndIf
@@ -42,7 +46,7 @@ WEnd
 
 ;GUI FUNCTIONS
 Func _LoadFile(ByRef $fileControls)
-	Local $fileData = IniReadSection($saveFile, $fileControls[$CONTROL_NAME])
+	Local $fileData = _ReadFile($saveFile, $fileControls[$CONTROL_NAME])
 	Local $fileName = " " & StringReplace($fileControls[$CONTROL_NAME], "f", "F", 1)
 	$fileName = $fileName & "  [ " & _IniToInt($fileData[$FILE_BOSS][$INI_VALUE]) & "-" & _IniToInt($fileData[$FILE_ENEMIES][$INI_VALUE]) & " ] "
 	GuiCtrlSetData($fileControls[$CONTROL_GROUP], $fileName)
@@ -77,6 +81,31 @@ Func _LoadSave()
 	_LoadFile($file3Controls)
 	_LoadFile($file2Controls)
 	_LoadFile($file1Controls)
+EndFunc
+
+Func _LoadGame()
+	$cheatState = IniRead($gameFile, "Cheats", "cheats_enabled", "0")
+	If $cheatState = 1 Then
+		GUICtrlSetState($cheats, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($cheats, $GUI_UNCHECKED)
+	EndIf
+EndFunc
+
+Func _ReadFile($file, $section)
+	Local $fileData = IniReadSection($file, $section)
+	If $fileData[$FILE_BOSS][$INI_KEY] = "boss_no_damage_progress" Then
+		Return $fileData
+	EndIf
+	Dim $fullData[12][2]
+	$fullData[0][0] = 11
+	$fullData[$FILE_BOSS][$INI_KEY] = "boss_no_damage_progress"
+	$fullData[$FILE_BOSS][$INI_VALUE] = "0.000000"
+	For $i = $FILE_ENEMIES To $FILE_GEMS
+		$fullData[$i][$INI_KEY] = $fileData[$i-1][$INI_KEY]
+		$fullData[$i][$INI_VALUE] = $fileData[$i-1][$INI_VALUE]
+	Next
+	Return $fullData
 EndFunc
 
 Func _SaveFile(ByRef $fileControls)
@@ -114,6 +143,13 @@ Func _SaveSave()
 	_SaveFile($file3Controls)
 	_SaveFile($file2Controls)
 	_SaveFile($file1Controls)
+EndFunc
+Func _SaveGame()
+	If GUICtrlRead($cheats) = $GUI_CHECKED Then
+		IniWrite($gameFile, "Cheats", "cheats_enabled", 1)
+	Else
+		IniWrite($gameFile, "Cheats", "cheats_enabled", 0)
+	EndIf
 EndFunc
 
 Func _File1Gems0()
@@ -230,46 +266,109 @@ Func _File3Reload()
 	_LoadFile($file3Controls)
 EndFunc
 
-Func _OpenFile()
+Func _OpenFileSave()
 	$result =  FileOpenDialog("Select Savefile", $defaultSaveDir, "Save files (*.sav)|All (*.*)",  $FD_FILEMUSTEXIST + $FD_PATHMUSTEXIST, "whipseey.sav")
 	If Not @error Then
-		GUICtrlSetData($path, $result)
+		GUICtrlSetData($pathSave, $result)
 		$saveFile = $result
 		_LoadSave()
+	EndIf
+EndFunc
+Func _OpenFileGame()
+	$result =  FileOpenDialog("Select Settingsfile", StringReplace($gameFile, "bfs_settings.ini", "", 1), "Settings files (bfs_settings.ini)|All (*.*)",  $FD_FILEMUSTEXIST + $FD_PATHMUSTEXIST, "bfs_settings.ini")
+	If Not @error Then
+		GUICtrlSetData($pathGame, $result)
+		$gameFile = $result
+		_LoadGame()
 	EndIf
 EndFunc
 
 Func _ReloadSave()
 	_LoadSave()
 EndFunc
+Func _ReloadGame()
+	_LoadGame()
+EndFunc
+
+Func _ShowCheats()
+	MsgBox($MB_ICONINFORMATION+$MB_SETFOREGROUND, "Cheats", "checking Cheats will enable some hotkeys in game" & _
+		@CRLF & "R  : restart room" & _
+		@CRLF & "N  : next room" & _
+		@CRLF & "P  : toggle fullscreen" & _
+		@CRLF & ", . , .  : infinite flight" & _
+		@CRLF & ", . , ,  : unlock all levels" & _
+		@CRLF & ", , , .  : disable hud" & _
+		@CRLF & ", , , ,  : invincibility", 0, $GUI)
+EndFunc
 
 ;HELPER FUNCTIONS
 Func _IniToCheckState(ByRef $data)
 	If $data = '"1.000000"' Then
-		return $GUI_CHECKED
+		Return $GUI_CHECKED
 	EndIf
-	return $GUI_UNCHECKED
+	Return $GUI_UNCHECKED
 EndFunc
 Func _CheckStateToIni($state)
 	If $state = $GUI_CHECKED Then
 		return '"1.000000"'
 	EndIf
-	return '"0.000000"'
+	Return '"0.000000"'
 EndFunc
 
 Func _IniToRadioState(ByRef $data)
 	If $data = "1.000000" Then
-		return $GUI_CHECKED
+		Return $GUI_CHECKED
 	EndIf
-	return $GUI_UNCHECKED
+	Return $GUI_UNCHECKED
 EndFunc
 
 Func _IniToInt($data)
 	$data = StringReplace($data, '"', "")
-	return Int($data)
+	Return Int($data)
 EndFunc
 Func _IntToIni($int)
-	return String('"' & $int & '.000000"')
+	Return String('"' & $int & '.000000"')
+EndFunc
+
+Func _FindGame()
+	Local $steamPath = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam", "InstallPath")
+	If @error Then
+		$steamPath = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\Valve\Steam", "InstallPath")
+		If @error Then Return
+	EndIf
+	
+	Local $settingsPath = "\steamapps\common\Whipseey and the Lost Atlas\bfs_settings.ini"
+	Local $librariesPath = "\steamapps\libraryfolders.vdf"
+	Local Enum $LIB_NUM = 0, $LIB_PATH = 1
+	
+	If FileExists($steamPath & $settingsPath) Then
+		$gameFile = $steamPath & $settingsPath
+		Return
+	EndIf
+
+	Local $file = FileOpen($steamPath & $librariesPath, $FO_READ)
+	If $file = -1 Then
+		$gameFile = ""
+		Return
+	EndIf
+
+	While True 
+		Local $line = FileReadLine($file)
+		If @error = -1 Then ExitLoop
+
+		Local $library = StringRegExp($line, '.*"(\d+)".*"(.*)"', $STR_REGEXPARRAYMATCH)
+		If @error Then ContinueLoop
+
+		If Number($library[$LIB_NUM]) = 0 Then ContinueLoop
+		$library[$LIB_PATH] = StringReplace($library[$LIB_PATH], "\\", "\", 1)
+
+		If FileExists($library[$LIB_PATH] & $settingsPath) Then
+			$gameFile = $library[$LIB_PATH] & $settingsPath
+			Return
+		EndIf
+	WEnd
+
+	$gameFile = ""
 EndFunc
 
 Func _Exit()
