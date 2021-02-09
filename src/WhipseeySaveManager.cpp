@@ -12,7 +12,7 @@
 
 int WinMain()
 {
-	nana::form fm(nana::api::make_center(715, 255));
+	nana::form fm(nana::api::make_center(625, 255));
 	fm.caption("Whipseey Save Manager");
 
 	nana::textbox tbs(fm, "save file location");
@@ -26,7 +26,7 @@ int WinMain()
 	nana::button btie(fm, "reload");
 
 	nana::group grf1(fm, "File1 7-42069");
-	nana::group grf1p(grf1, "Level Progress");
+	nana::group grf1p(grf1, "Progress");
 	grf1p.radio_mode(true);
 	grf1p.add_option("Castle");
 	grf1p.add_option("Moon");
@@ -48,7 +48,7 @@ int WinMain()
 	nana::button grf1rbr(grf1, "reload");
 	
 	grf1.div(
-		"<progress margin=[5,5,5,5] weight=110 gap=5>"
+		"<progress margin=[5,5,5,5] weight=80 gap=5>"
 		"<vert gems margin=[10,0,5,0] weight=45 gap=5>"
 		"<vert life margin=[10,5,5,5] weight=70 gap=5>");
 	grf1["progress"] << grf1p;
