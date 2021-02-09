@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include <filesystem>
 
 namespace WhipseeySaveManager
 {
@@ -110,5 +110,13 @@ namespace Data
 		Toggle cheats = Toggle::Disabled;
 	};
 	
+	class Data
+	{
+	public:
+		
+	private:
+		Save mSave;
+		Settings mSettings;
+	};
 } // namespace Data
 } // namespace WhipseeySaveManager

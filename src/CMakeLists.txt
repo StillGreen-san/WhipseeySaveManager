@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.15.0)
 find_package( unofficial-nana 1.8 CONFIG REQUIRED )#vcpkg specific
 
 set(SOURCES_ADDITIONAL
-	# filecontroldata.cpp
+	error.cpp
 )
 
 add_executable( ${CMAKE_PROJECT_NAME} WIN32 ${CMAKE_PROJECT_NAME}.cpp )
