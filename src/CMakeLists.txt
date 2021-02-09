@@ -4,6 +4,7 @@ find_package( unofficial-nana 1.8 CONFIG REQUIRED )#vcpkg specific
 
 set(SOURCES_ADDITIONAL
 	error.cpp
+	data.cpp
 )
 
 add_executable( ${CMAKE_PROJECT_NAME} WIN32 ${CMAKE_PROJECT_NAME}.cpp )

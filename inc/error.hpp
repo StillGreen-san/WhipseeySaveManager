@@ -6,26 +6,33 @@ namespace WhipseeySaveManager
 {
 namespace Error
 {
-	enum class Code
+	enum class Where
 	{
-		Unknown
+		Nowhere,
+		Unknown,
+		Save,
+		Settings,
+		File,
+		Data
 	};
 
-	enum class Category
+	enum class What
 	{
-		Unknown
+		Nothing,
+		Unknown,
+		IO,
+		Syntax,
+		Value
 	};
 
 	struct Error
 	{
-		Code code = Code::Unknown;
-		Category category = Category::Unknown;
-		std::string toString() const;
-		static std::string toString(Code code);
-		static std::string toString(Category category);
+		Where where = Where::Unknown;
+		What what = What::Unknown;
+		operator bool() const;
 	};
 
-	Error makeError(Code code, Category category);
+	Error makeError(Where where = Where::Nowhere, What what = What::Nothing);
 } // namespace Error
 } // namespace WhipseeySaveManager
 

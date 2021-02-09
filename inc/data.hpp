@@ -1,5 +1,7 @@
 #pragma once
 
+#include "error.hpp"
+
 #include <filesystem>
 
 namespace WhipseeySaveManager
@@ -97,12 +99,18 @@ namespace Data
 		uint8_t gems = 0;
 	};
 
+	enum class FileIndex
+	{
+		File1,
+		File2,
+		File3,
+		Size
+	};
+
 	struct Save
 	{
 		Options mOptions;
-		File mFile1;
-		File mFile2;
-		File mFile3;
+		File mFiles[static_cast<size_t>(FileIndex::Size)];
 	};
 
 	struct Settings
@@ -113,8 +121,20 @@ namespace Data
 	class Data
 	{
 	public:
-		
+		Error::Error readSave(const std::filesystem::path& path);
+		Error::Error writeSave(const std::filesystem::path& path) const;
+		Error::Error writeSave() const;
+		Error::Error readSettings(const std::filesystem::path& path);
+		Error::Error writeSettings(const std::filesystem::path& path) const;
+		Error::Error writeSettings() const;
+		const Save& getSave() const;
+		const Settings& getSettings() const;
+		const File& getFile(FileIndex index) const;
+		Error::Error setSave(Save save);
+		Error::Error setSettings(Settings settings);
+		Error::Error setFile(FileIndex index, File file);
 	private:
+		std::filesystem::path mPath;
 		Save mSave;
 		Settings mSettings;
 	};
