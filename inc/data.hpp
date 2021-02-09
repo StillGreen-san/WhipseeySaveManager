@@ -6,6 +6,12 @@ namespace WhipseeySaveManager
 {
 namespace Data
 {
+	enum class Toggle : bool
+	{
+		Disabled = false,
+		Enabled = true
+	};
+
 	enum class Language : uint8_t
 	{
 		English = 0,
@@ -25,18 +31,6 @@ namespace Data
 		R768x432 = 2,
 		R1152x648 = 3,
 		R1536x864 = 4
-	};
-
-	enum class Screen : uint8_t
-	{
-		Windowed = 0,
-		Fullscreen = 1
-	};
-
-	enum class Handed : uint8_t
-	{
-		Right = 0,
-		Left = 1
 	};
 
 	enum class Volume : uint8_t
@@ -76,16 +70,20 @@ namespace Data
 		Castle = 32
 	};
 
+	struct Noise
+	{
+		Volume volume = Volume::V100;
+		Toggle toggle = Toggle::Enabled;
+	};
+
 	struct Options
 	{
 		Language language = Language::English;
 		Scale scale = Scale::R768x432;
-		Screen screen = Screen::Fullscreen;
-		Handed handed = Handed::Right;
-		Volume sound = Volume::V100;
-		bool soundToggle = true;
-		Volume music = Volume::V100;
-		bool musicToggle = true;
+		Toggle fullScreen = Toggle::Enabled;
+		Toggle leftHanded = Toggle::Disabled;
+		Noise sound;
+		Noise music;
 	};
 
 	struct File
@@ -93,18 +91,23 @@ namespace Data
 		BossNoDamage noDamage = BossNoDamage::None;
 		uint32_t defeated = 0;
 		Level progress = Level::Beach;
-		bool ending = false;
-		bool intro = false;
+		Toggle ending = Toggle::Disabled;
+		Toggle intro = Toggle::Disabled;
 		uint16_t lives = 5;
 		uint8_t gems = 0;
 	};
 
-	struct Data
+	struct Save
 	{
 		Options mOptions;
 		File mFile1;
 		File mFile2;
 		File mFile3;
+	};
+
+	struct Settings
+	{
+		Toggle cheats = Toggle::Disabled;
 	};
 	
 } // namespace Data
