@@ -176,5 +176,62 @@ TEST_CASE("Data::setSettings")
 
 TEST_CASE("Data::setFile")
 {
-	FAIL("TEST NOT IMPLEMENTED");
+	Data::Data data;
+	Data::File file;
+
+	SECTION("default file")
+	{
+		Error::Error error = data.setFile(Data::FileIndex::File1, file);
+		REQUIRE_FALSE(error);
+	}
+
+	SECTION("valid file")
+	{
+		file = makeValidFile();
+		Error::Error error = data.setFile(Data::FileIndex::File1, file);
+		REQUIRE_FALSE(error);
+	}
+
+	SECTION("invalid file")
+	{
+		file = makeInvalidFile();
+		Error::Error expected = Error::makeError(Error::Where::File, Error::What::Value);
+		Error::Error error = data.setFile(Data::FileIndex::File1, file);
+		REQUIRE(error == expected);
+	}
+
+	SECTION("invalid file fields")
+	{
+		Data::File invalid = makeInvalidFile();
+		Error::Error expected = Error::makeError(Error::Where::File, Error::What::Value);
+
+		std::swap(file.noDamage, invalid.noDamage);
+		Error::Error error = data.setFile(Data::FileIndex::File1, file);
+		REQUIRE(error == expected);
+		std::swap(file.noDamage, invalid.noDamage);
+
+		std::swap(file.progress, invalid.progress);
+		error = data.setFile(Data::FileIndex::File1, file);
+		REQUIRE(error == expected);
+		std::swap(file.progress, invalid.progress);
+
+		std::swap(file.ending, invalid.ending);
+		error = data.setFile(Data::FileIndex::File1, file);
+		REQUIRE(error == expected);
+		std::swap(file.ending, invalid.ending);
+
+		std::swap(file.intro, invalid.intro);
+		error = data.setFile(Data::FileIndex::File1, file);
+		REQUIRE(error == expected);
+		std::swap(file.intro, invalid.intro);
+
+		std::swap(file.lives, invalid.lives);
+		error = data.setFile(Data::FileIndex::File1, file);
+		REQUIRE(error == expected);
+		std::swap(file.lives, invalid.lives);
+
+		std::swap(file.gems, invalid.gems);
+		error = data.setFile(Data::FileIndex::File1, file);
+		REQUIRE(error == expected);
+	}
 }
