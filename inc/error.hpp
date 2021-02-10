@@ -12,6 +12,7 @@ namespace Error
 		Unknown,
 		Save,
 		Settings,
+		Options,
 		File,
 		Data
 	};
