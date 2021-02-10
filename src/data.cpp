@@ -46,7 +46,7 @@ namespace Data
 	
 	const File& Data::getFile(FileIndex index) const
 	{
-		return mSave.mFiles[static_cast<size_t>(index)];
+		return mSave.files[static_cast<size_t>(index)];
 	}
 	
 	Error::Error Data::setSave(Save save) 

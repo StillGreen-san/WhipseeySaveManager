@@ -31,7 +31,7 @@ target_sources( ${MAIN_TARGET} PRIVATE ${MAIN_SOURCES} )
 set_property( TARGET ${MAIN_TARGET} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" )
 
 set( TEST_SOURCES
-	#${WSM_TEST_DIR}/converter_test.cpp
+	${WSM_TEST_DIR}/data-test.cpp
 )
 
 add_executable( ${TEST_TARGET} ${WSM_TEST_DIR}/${TEST_TARGET}.cpp )

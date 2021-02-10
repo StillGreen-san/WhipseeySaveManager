@@ -109,8 +109,8 @@ namespace Data
 
 	struct Save
 	{
-		Options mOptions;
-		File mFiles[static_cast<size_t>(FileIndex::Size)];
+		Options options;
+		File files[static_cast<size_t>(FileIndex::Size)];
 	};
 
 	struct Settings
