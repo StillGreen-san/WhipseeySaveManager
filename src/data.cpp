@@ -46,7 +46,12 @@ namespace Data
 	
 	const File& Data::getFile(FileIndex index) const
 	{
-		return mSave.files[static_cast<size_t>(index)];
+		switch(index)
+		{
+		case FileIndex::File1 : return mSave.file1;
+		case FileIndex::File2 : return mSave.file2;
+		case FileIndex::File3 : return mSave.file3;
+		}
 	}
 	
 	Error::Error Data::setSave(Save save) 

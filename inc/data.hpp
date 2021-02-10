@@ -101,16 +101,17 @@ namespace Data
 
 	enum class FileIndex
 	{
-		File1,
-		File2,
-		File3,
-		Size
+		File1 = 0,
+		File2 = 1,
+		File3 = 2
 	};
 
 	struct Save
 	{
 		Options options;
-		File files[static_cast<size_t>(FileIndex::Size)];
+		File file1;
+		File file2;
+		File file3;
 	};
 
 	struct Settings
