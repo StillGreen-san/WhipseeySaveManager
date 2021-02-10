@@ -1,5 +1,8 @@
 #include "data.hpp"
 
+//TODO remove warning pragma
+#pragma warning(disable:4100)
+
 namespace WhipseeySaveManager
 {
 namespace Data
@@ -52,6 +55,8 @@ namespace Data
 		case FileIndex::File2 : return mSave.file2;
 		case FileIndex::File3 : return mSave.file3;
 		}
+
+		throw Error::makeError(Error::Where::Data, Error::What::Value);
 	}
 	
 	Error::Error Data::setSave(Save save) 
@@ -70,3 +75,6 @@ namespace Data
 	}
 }
 }
+
+//TODO remove warning pragma
+#pragma warning(default:4100)

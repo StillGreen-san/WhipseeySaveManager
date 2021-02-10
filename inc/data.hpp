@@ -53,14 +53,14 @@ namespace Data
 	enum class BossNoDamage : uint8_t
 	{
 		None = 0,
-		BossA = 1,
-		BossB = 2,
-		BossAB = 3,
-		BossC = 4,
-		BossAC = 5,
-		BossBC = 6,
+		Forest = 1,
+		Desert = 2,
+		ForestDesert = 3,
+		Castle = 4,
+		ForestCastle = 5,
+		DesertCastle = 6,
 		All = 7
-	};//TODO find correct values
+	};
 
 	enum class Level : uint8_t
 	{
