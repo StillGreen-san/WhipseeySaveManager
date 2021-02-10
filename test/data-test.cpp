@@ -90,6 +90,20 @@ Data::Save makeValidSave()
 	return save;
 }
 
+Data::Settings makeInvalidSettings()
+{
+	Data::Settings settings;
+	settings.cheats = maxEnumVal<Data::Toggle>();
+	return settings;
+}
+
+Data::Settings makeValidSettings()
+{
+	Data::Settings settings;
+	settings.cheats = Data::Toggle::Enabled;
+	return settings;
+}
+
 TEST_CASE("Data::readSave", "[IO]")
 {
 	FAIL("TEST NOT IMPLEMENTED");
@@ -171,24 +185,47 @@ TEST_CASE("Data::setSave")
 
 TEST_CASE("Data::setSettings")
 {
-	FAIL("TEST NOT IMPLEMENTED");
+	Data::Data data;
+	Data::Settings settings;
+
+	SECTION("default file")
+	{
+		Error::Error error = data.setSettings(settings);
+		REQUIRE_FALSE(error);
+	}
+
+	SECTION("valid file")
+	{
+		settings = makeValidSettings();
+		Error::Error error = data.setSettings(settings);
+		REQUIRE_FALSE(error);
+	}
+
+	SECTION("invalid file")
+	{
+		settings = makeInvalidSettings();
+		Error::Error expected = Error::makeError(Error::Where::Settings, Error::What::Value);
+		Error::Error error = data.setSettings(settings);
+		REQUIRE(error == expected);
+	}
 }
 
 TEST_CASE("Data::setFile")
 {
 	Data::Data data;
 	Data::File file;
+	Data::FileIndex index;
 
 	SECTION("default file")
 	{
-		Error::Error error = data.setFile(Data::FileIndex::File1, file);
+		Error::Error error = data.setFile(index, file);
 		REQUIRE_FALSE(error);
 	}
 
 	SECTION("valid file")
 	{
 		file = makeValidFile();
-		Error::Error error = data.setFile(Data::FileIndex::File1, file);
+		Error::Error error = data.setFile(index, file);
 		REQUIRE_FALSE(error);
 	}
 
@@ -196,7 +233,7 @@ TEST_CASE("Data::setFile")
 	{
 		file = makeInvalidFile();
 		Error::Error expected = Error::makeError(Error::Where::File, Error::What::Value);
-		Error::Error error = data.setFile(Data::FileIndex::File1, file);
+		Error::Error error = data.setFile(index, file);
 		REQUIRE(error == expected);
 	}
 
@@ -206,32 +243,32 @@ TEST_CASE("Data::setFile")
 		Error::Error expected = Error::makeError(Error::Where::File, Error::What::Value);
 
 		std::swap(file.noDamage, invalid.noDamage);
-		Error::Error error = data.setFile(Data::FileIndex::File1, file);
+		Error::Error error = data.setFile(index, file);
 		REQUIRE(error == expected);
 		std::swap(file.noDamage, invalid.noDamage);
 
 		std::swap(file.progress, invalid.progress);
-		error = data.setFile(Data::FileIndex::File1, file);
+		error = data.setFile(index, file);
 		REQUIRE(error == expected);
 		std::swap(file.progress, invalid.progress);
 
 		std::swap(file.ending, invalid.ending);
-		error = data.setFile(Data::FileIndex::File1, file);
+		error = data.setFile(index, file);
 		REQUIRE(error == expected);
 		std::swap(file.ending, invalid.ending);
 
 		std::swap(file.intro, invalid.intro);
-		error = data.setFile(Data::FileIndex::File1, file);
+		error = data.setFile(index, file);
 		REQUIRE(error == expected);
 		std::swap(file.intro, invalid.intro);
 
 		std::swap(file.lives, invalid.lives);
-		error = data.setFile(Data::FileIndex::File1, file);
+		error = data.setFile(index, file);
 		REQUIRE(error == expected);
 		std::swap(file.lives, invalid.lives);
 
 		std::swap(file.gems, invalid.gems);
-		error = data.setFile(Data::FileIndex::File1, file);
+		error = data.setFile(index, file);
 		REQUIRE(error == expected);
 	}
 }
