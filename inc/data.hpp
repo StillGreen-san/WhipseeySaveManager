@@ -8,7 +8,7 @@ namespace WhipseeySaveManager
 {
 namespace Data
 {
-	enum class Toggle : bool
+	enum class Toggle : uint8_t
 	{
 		Disabled = false,
 		Enabled = true

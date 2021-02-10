@@ -37,6 +37,7 @@ set_property( TARGET ${MAIN_TARGET} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded
 
 set( TEST_SOURCES
 	${WSM_TEST_DIR}/data-test.cpp
+	${WSM_TEST_DIR}/testhelper.cpp
 )
 
 add_executable( ${TEST_TARGET} ${WSM_TEST_DIR}/${TEST_TARGET}.cpp )
@@ -45,3 +46,6 @@ target_include_directories( ${TEST_TARGET} SYSTEM PRIVATE ${Catch2_INCLUDE_DIRS}
 target_sources( ${TEST_TARGET} PRIVATE ${TEST_SOURCES} ${MAIN_SOURCES} )
 target_link_libraries( ${TEST_TARGET} PRIVATE Catch2::Catch2 )
 set_property( TARGET ${TEST_TARGET} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" )
+add_custom_command( TARGET ${TEST_TARGET} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${WSM_TEST_DIR}/data/ $<TARGET_FILE_DIR:${TEST_TARGET}>/data
+)
