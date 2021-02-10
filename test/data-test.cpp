@@ -149,6 +149,7 @@ TEST_CASE("Data::setSave")
 	{
 		Error::Error error = data.setSave(save);
 		REQUIRE_FALSE(error);
+		REQUIRE(save == data.getSave());
 	}
 
 	SECTION("valid save")
@@ -156,6 +157,7 @@ TEST_CASE("Data::setSave")
 		save = makeValidSave();
 		Error::Error error = data.setSave(save);
 		REQUIRE_FALSE(error);
+		REQUIRE(save == data.getSave());
 	}
 
 	SECTION("invalid save")
@@ -164,6 +166,7 @@ TEST_CASE("Data::setSave")
 		Error::Error expected = Error::makeError(Error::Where::Save, Error::What::Value);
 		Error::Error error = data.setSave(save);
 		REQUIRE(error == expected);
+		REQUIRE(Data::Save() == data.getSave());
 	}
 
 	SECTION("invalid options")
@@ -172,6 +175,7 @@ TEST_CASE("Data::setSave")
 		Error::Error expected = Error::makeError(Error::Where::Options, Error::What::Value);
 		Error::Error error = data.setSave(save);
 		REQUIRE(error == expected);
+		REQUIRE(Data::Save() == data.getSave());
 	}
 
 	SECTION("invalid file")
@@ -180,6 +184,7 @@ TEST_CASE("Data::setSave")
 		Error::Error expected = Error::makeError(Error::Where::File, Error::What::Value);
 		Error::Error error = data.setSave(save);
 		REQUIRE(error == expected);
+		REQUIRE(Data::Save() == data.getSave());
 	}
 }
 
@@ -188,25 +193,28 @@ TEST_CASE("Data::setSettings")
 	Data::Data data;
 	Data::Settings settings;
 
-	SECTION("default file")
+	SECTION("default settings")
 	{
 		Error::Error error = data.setSettings(settings);
 		REQUIRE_FALSE(error);
+		REQUIRE(settings == data.getSettings());
 	}
 
-	SECTION("valid file")
+	SECTION("valid settings")
 	{
 		settings = makeValidSettings();
 		Error::Error error = data.setSettings(settings);
 		REQUIRE_FALSE(error);
+		REQUIRE(settings == data.getSettings());
 	}
 
-	SECTION("invalid file")
+	SECTION("invalid settings")
 	{
 		settings = makeInvalidSettings();
 		Error::Error expected = Error::makeError(Error::Where::Settings, Error::What::Value);
 		Error::Error error = data.setSettings(settings);
 		REQUIRE(error == expected);
+		REQUIRE(Data::Settings() == data.getSettings());
 	}
 }
 
@@ -220,6 +228,7 @@ TEST_CASE("Data::setFile")
 	{
 		Error::Error error = data.setFile(index, file);
 		REQUIRE_FALSE(error);
+		REQUIRE(file == data.getFile(index));
 	}
 
 	SECTION("valid file")
@@ -227,6 +236,7 @@ TEST_CASE("Data::setFile")
 		file = makeValidFile();
 		Error::Error error = data.setFile(index, file);
 		REQUIRE_FALSE(error);
+		REQUIRE(file == data.getFile(index));
 	}
 
 	SECTION("invalid file")
@@ -235,6 +245,7 @@ TEST_CASE("Data::setFile")
 		Error::Error expected = Error::makeError(Error::Where::File, Error::What::Value);
 		Error::Error error = data.setFile(index, file);
 		REQUIRE(error == expected);
+		REQUIRE(Data::File() == data.getFile(index));
 	}
 
 	SECTION("invalid file fields")
@@ -246,29 +257,36 @@ TEST_CASE("Data::setFile")
 		Error::Error error = data.setFile(index, file);
 		REQUIRE(error == expected);
 		std::swap(file.noDamage, invalid.noDamage);
+		REQUIRE(file == data.getFile(index));
 
 		std::swap(file.progress, invalid.progress);
 		error = data.setFile(index, file);
 		REQUIRE(error == expected);
 		std::swap(file.progress, invalid.progress);
+		REQUIRE(file == data.getFile(index));
 
 		std::swap(file.ending, invalid.ending);
 		error = data.setFile(index, file);
 		REQUIRE(error == expected);
 		std::swap(file.ending, invalid.ending);
+		REQUIRE(file == data.getFile(index));
 
 		std::swap(file.intro, invalid.intro);
 		error = data.setFile(index, file);
 		REQUIRE(error == expected);
 		std::swap(file.intro, invalid.intro);
+		REQUIRE(file == data.getFile(index));
 
 		std::swap(file.lives, invalid.lives);
 		error = data.setFile(index, file);
 		REQUIRE(error == expected);
 		std::swap(file.lives, invalid.lives);
+		REQUIRE(file == data.getFile(index));
 
 		std::swap(file.gems, invalid.gems);
 		error = data.setFile(index, file);
 		REQUIRE(error == expected);
+		std::swap(file.gems, invalid.gems);
+		REQUIRE(file == data.getFile(index));
 	}
 }

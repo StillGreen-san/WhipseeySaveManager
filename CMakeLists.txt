@@ -26,7 +26,6 @@ set( MAIN_TARGET ${CMAKE_PROJECT_NAME} )
 set( TEST_TARGET ${CMAKE_PROJECT_NAME}-Tests )
 
 set( MAIN_SOURCES
-	${WSM_SRC_DIR}/error.cpp
 	${WSM_SRC_DIR}/data.cpp
 )
 

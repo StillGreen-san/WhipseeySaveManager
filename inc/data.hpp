@@ -76,6 +76,11 @@ namespace Data
 	{
 		Volume volume = Volume::V100;
 		Toggle toggle = Toggle::Enabled;
+		bool operator==(const Noise& other)
+		{
+			return volume == other.volume
+				&& toggle == other.toggle;
+		}
 	};
 
 	struct Options
@@ -86,6 +91,15 @@ namespace Data
 		Toggle leftHanded = Toggle::Disabled;
 		Noise sound;
 		Noise music;
+		bool operator==(const Options& other)
+		{
+			return language == other.language
+				&& scale == other.scale
+				&& fullScreen == other.fullScreen
+				&& leftHanded == other.leftHanded
+				&& sound == other.sound
+				&& music == other.music;
+		}
 	};
 
 	struct File
@@ -97,6 +111,16 @@ namespace Data
 		Toggle intro = Toggle::Disabled;
 		uint16_t lives = 5;
 		uint8_t gems = 0;
+		bool operator==(const File& other)
+		{
+			return noDamage == other.noDamage
+				&& defeated == other.defeated
+				&& progress == other.progress
+				&& ending == other.ending
+				&& intro == other.intro
+				&& lives == other.lives
+				&& gems == other.gems;
+		}
 	};
 
 	enum class FileIndex
@@ -112,11 +136,22 @@ namespace Data
 		File file1;
 		File file2;
 		File file3;
+		bool operator==(const Save& other)
+		{
+			return options == other.options
+				&& file1 == other.file1
+				&& file2 == other.file2
+				&& file3 == other.file3;
+		}
 	};
 
 	struct Settings
 	{
 		Toggle cheats = Toggle::Disabled;
+		bool operator==(const Settings& other)
+		{
+			return cheats == other.cheats;
+		}
 	};
 	
 	class Data
