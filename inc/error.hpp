@@ -14,7 +14,8 @@ namespace Error
 		Settings,
 		Options,
 		File,
-		Data
+		Data,
+		GUI
 	};
 
 	enum class What
