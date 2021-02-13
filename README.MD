@@ -1,5 +1,10 @@
 # Whipseey Save Manager
 
+-------------------------
+**! OUTDATED !**
+-------------------------
+-------------------------
+
 **GUI for modifying *some* Values in 'Whipseey and the Lost Atlas' Savegames**
 
 ![Picture](WhipseeySaveManager.png)
