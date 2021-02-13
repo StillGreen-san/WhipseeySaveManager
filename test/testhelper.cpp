@@ -91,18 +91,5 @@ namespace Test
 		settings.cheats = Data::Toggle::Enabled;
 		return settings;
 	}
-
-	bool prepareTetstdata()
-	{
-		std::filesystem::path dataPath("/data");
-		std::error_code error;
-		bool exists = std::filesystem::exists(dataPath, error);
-		if(error || !exists) return false;
-		
-		return false;
-
-		// std::filesystem::perms permissions;
-		// std::filesystem::permissions(dataPath, , error);
-	}
 } // namespace Test
 } // namespace WhipseeySaveManager

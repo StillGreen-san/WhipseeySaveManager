@@ -161,17 +161,22 @@ namespace Data
 		Error::Error writeSave(const std::filesystem::path& path) const;
 		Error::Error writeSave() const;
 		Error::Error readSettings(const std::filesystem::path& path);
+		Error::Error readSettings();
 		Error::Error writeSettings(const std::filesystem::path& path) const;
 		Error::Error writeSettings() const;
 		const Save& getSave() const;
 		const Settings& getSettings() const;
 		const File& getFile(FileIndex index) const;
+		const Options& getOptions() const;
 		Error::Error setSave(Save save);
+		Error::Error setSave(const std::filesystem::path& path);
 		Error::Error setSettings(Settings settings);
+		Error::Error setSettings(const std::filesystem::path& path);
 		Error::Error setFile(FileIndex index, File file);
 	private:
-		std::filesystem::path mPath;
+		std::filesystem::path mSavePath;
 		Save mSave;
+		std::filesystem::path mSettingsPath;
 		Settings mSettings;
 	};
 } // namespace Data

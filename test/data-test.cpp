@@ -24,7 +24,11 @@ TEST_CASE("Data::writeSave", "[IO]")
 
 TEST_CASE("Data::readSettings", "[IO]")
 {
-	FAIL("TEST NOT IMPLEMENTED");
+	Data::Data data;
+	const std::filesystem::path default("data/settings-default.ini");
+	const std::filesystem::path valid("data/settings-valid.ini");
+	const std::filesystem::path invalid("data/settings-invalid.ini");
+	const std::filesystem::path missing("data/settings-missing.ini");
 }
 
 TEST_CASE("Data::writeSettings", "[IO]")

@@ -35,7 +35,5 @@ namespace Test
 	Data::Settings makeInvalidSettings();
 
 	Data::Settings makeValidSettings();
-
-	bool prepareTetstdata();
 } // namespace Test
 } // namespace WhipseeySaveManager
