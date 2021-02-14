@@ -2,16 +2,32 @@
 
 #include <filesystem>
 
+/**
+ * @brief General Project Namespace
+ * 
+ */
 namespace WhipseeySaveManager
 {
+/**
+ * @brief Contains all Types used in WhipseeySaveManager
+ * 
+ */
 namespace Types
 {
+	/**
+	 * @brief named boolean associated with there savegame values
+	 * 
+	 */
 	enum class Toggle : uint8_t
 	{
-		Disabled = false,
-		Enabled = true
+		Disabled = 0,
+		Enabled = 1
 	};
 
+	/**
+	 * @brief selectable languages associated with there savegame values
+	 * 
+	 */
 	enum class Language : uint8_t
 	{
 		English = 0,
@@ -26,6 +42,10 @@ namespace Types
 		Portogese = 9
 	};
 
+	/**
+	 * @brief resolutions in windowed mode associated with there savegame values
+	 * 
+	 */
 	enum class Scale : uint8_t
 	{
 		R768x432 = 2,
@@ -33,6 +53,10 @@ namespace Types
 		R1536x864 = 4
 	};
 
+	/**
+	 * @brief selectable volume steps roughly associated with there savegame values (div by 10.f to get real)
+	 * 
+	 */
 	enum class Volume : uint8_t
 	{
 		V0 = 0,
@@ -48,6 +72,10 @@ namespace Types
 		V100 = 10
 	};
 
+	/**
+	 * @brief boss no damage progress bitmap associated with there savegame values
+	 * 
+	 */
 	enum class BossNoDamage : uint8_t
 	{
 		None = 0,
@@ -57,6 +85,10 @@ namespace Types
 		All = 7
 	};
 
+	/**
+	 * @brief level progress bitmap represents multiple savegame values
+	 * 
+	 */
 	enum class Level : uint8_t
 	{
 		Beach = 1,
@@ -67,6 +99,10 @@ namespace Types
 		Castle = 32
 	};
 
+	/**
+	 * @brief wrapper struct for Volume and Toggle
+	 * 
+	 */
 	struct Noise
 	{
 		Volume volume = Volume::V100;
@@ -78,6 +114,10 @@ namespace Types
 		}
 	};
 
+	/**
+	 * @brief holds all values of the options section in the savegame
+	 * 
+	 */
 	struct Options
 	{
 		Language language = Language::English;
@@ -97,6 +137,13 @@ namespace Types
 		}
 	};
 
+	/**
+	 * @brief a number of type Base automatically clamped between Min and Max
+	 * 
+	 * @tparam Base the type to store internally
+	 * @tparam Min the minimum value to clamp to
+	 * @tparam Max the maximum value to clamp to
+	 */
 	template<typename Base, size_t Min, size_t Max>
 	struct ClampedNumber
 	{
@@ -121,10 +168,26 @@ namespace Types
 			return value == other.value;
 		}
 	};
+	/**
+	 * @brief enemies, killed holds positive numbers <= 16777216
+	 * 
+	 */
 	using Enemies = ClampedNumber<uint32_t, 0, 16777216>;
+	/**
+	 * @brief lives, holds positive numbers <= 16777216
+	 * 
+	 */
 	using Lives = ClampedNumber<uint32_t, 0, 16777216>;
+	/**
+	 * @brief gems, holds positive numbers <= 99
+	 * 
+	 */
 	using Gems = ClampedNumber<uint8_t, 0, 99>;
 
+	/**
+	 * @brief holds all values of a file section in the savegame
+	 * 
+	 */
 	struct File
 	{
 		BossNoDamage noDamage = BossNoDamage::None;
@@ -146,6 +209,10 @@ namespace Types
 		}
 	};
 
+	/**
+	 * @brief identifies a file section in a savegame
+	 * 
+	 */
 	enum class FileIndex
 	{
 		File1 = 0,
@@ -153,6 +220,10 @@ namespace Types
 		File3 = 2
 	};
 
+	/**
+	 * @brief holds all sections of a savegame
+	 * 
+	 */
 	struct Save
 	{
 		Options options;
@@ -168,6 +239,10 @@ namespace Types
 		}
 	};
 
+	/**
+	 * @brief holds all sections of a settings file
+	 * 
+	 */
 	struct Settings
 	{
 		Toggle cheats = Toggle::Disabled;
@@ -177,8 +252,16 @@ namespace Types
 		}
 	};
 
+	/**
+	 * @brief contains Where & What info of an error, converts to true if an error occurred
+	 * 
+	 */
 	struct Error
 	{
+		/**
+		 * @brief where an error occurred
+		 * 
+		 */
 		enum class Where
 		{
 			Nowhere,
@@ -189,7 +272,11 @@ namespace Types
 			File,
 			Data,
 			GUI
-		} where = Where::Unknown;
+		} where = Where::Unknown;//TODO update for new structure
+		/**
+		 * @brief what an error occurred
+		 * 
+		 */
 		enum class What
 		{
 			Nothing,
@@ -198,6 +285,11 @@ namespace Types
 			Syntax,
 			Value
 		} what = What::Unknown;
+		/**
+		 * @brief conversion to bool
+		 * 
+		 * @return true if an error occurred, false if == Nowhere && Nothing
+		 */
 		operator bool() const
 		{
 			return where != Where::Nowhere || what != What::Nothing;
@@ -209,6 +301,11 @@ namespace Types
 		}
 	};
 
+	/**
+	 * @brief holds Error and Data
+	 * 
+	 * @tparam Data the second type
+	 */
 	template<typename Data>
 	struct Return
 	{
@@ -216,35 +313,59 @@ namespace Types
 		Data data;
 	};
 
+	/**
+	 * @brief holds only Error
+	 * 
+	 */
 	struct Return<void>
 	{
 		Error error;
 	};
 
+	/**
+	 * @brief holds Error and Save
+	 * 
+	 */
 	struct Return<Save>
 	{
 		Error error;
 		Save save;
 	};
 
+	/**
+	 * @brief holds Error and Settings
+	 * 
+	 */
 	struct Return<Settings>
 	{
 		Error error;
 		Settings settings;
 	};
 
+	/**
+	 * @brief holds Error and std::filesystem::pat
+	 * 
+	 */
 	struct Return<std::filesystem::path>
 	{
 		Error error;
 		std::filesystem::path path;
 	};
 
+	/**
+	 * @brief holds Error and File
+	 * 
+	 */
 	struct Return<File>
 	{
 		Error error;
 		File file;
 	};
 
+	/**
+	 * @brief holds Error and Options
+	 * 
+	 */
 	struct Return<Options>
 	{
 		Error error;
