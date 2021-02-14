@@ -71,3 +71,25 @@ int WinMain()
 	fm.show();
 	nana::exec();
 }
+
+#include "system.hpp"
+#include "gui.hpp"
+
+void testings()
+{
+	using namespace WhipseeySaveManager;
+	GUI::GUI gui;
+	gui.connectOnDefaultSavePath(System::defaultSavePath);
+	gui.connectOnDefaultSettingsPath(System::defaultSettingsPath);
+	gui.connectOnReadFile(System::readFile);
+	gui.connectOnReadOptions(System::readOptions);
+	gui.connectOnReadSave(System::readSave);
+	gui.connectOnReadSettings(System::readSettings);
+	gui.connectOnSelectSavePath(System::selectSavePath);
+	gui.connectOnSelectSettingsPath(System::selectSettingsPath);
+	gui.connectOnWriteFile(System::writeFile);
+	gui.connectOnWriteOptions(System::writeOptions);
+	gui.connectOnWriteSave(System::writeSave);
+	gui.connectOnWriteSettings(System::writeSettings);
+	gui.run();
+}

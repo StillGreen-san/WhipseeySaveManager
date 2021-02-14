@@ -1,12 +1,10 @@
 #pragma once
 
-#include "error.hpp"
-
 #include <filesystem>
 
 namespace WhipseeySaveManager
 {
-namespace Data
+namespace Types
 {
 	enum class Toggle : uint8_t
 	{
@@ -55,10 +53,7 @@ namespace Data
 		None = 0,
 		Forest = 1,
 		Desert = 2,
-		ForestDesert = 3,
 		Castle = 4,
-		ForestCastle = 5,
-		DesertCastle = 6,
 		All = 7
 	};
 
@@ -102,15 +97,43 @@ namespace Data
 		}
 	};
 
+	template<typename Base, size_t Min, size_t Max>
+	struct ClampedNumber
+	{
+		Base value;
+		ClampedNumber(Base number)
+		{
+			value = number;
+		}
+		operator Base()
+		{
+			return value;
+		}
+		ClampedNumber& operator=(size_t number)
+		{
+			if(number > Max) value = Max;
+			else if(number < Min) value = Min;
+			else value = number;
+			return *this;
+		}
+		bool operator==(ClampedNumber other)
+		{
+			return value == other.value;
+		}
+	};
+	using Enemies = ClampedNumber<uint32_t, 0, 16777216>;
+	using Lives = ClampedNumber<uint32_t, 0, 16777216>;
+	using Gems = ClampedNumber<uint8_t, 0, 99>;
+
 	struct File
 	{
 		BossNoDamage noDamage = BossNoDamage::None;
-		uint32_t defeated = 0;
+		Enemies defeated = 0;
 		Level progress = Level::Beach;
 		Toggle ending = Toggle::Disabled;
 		Toggle intro = Toggle::Disabled;
-		uint16_t lives = 5;
-		uint8_t gems = 0;
+		Lives lives = 5;
+		Gems gems = 0;
 		bool operator==(const File& other)
 		{
 			return noDamage == other.noDamage
@@ -153,31 +176,79 @@ namespace Data
 			return cheats == other.cheats;
 		}
 	};
-	
-	class Data
+
+	struct Error
 	{
-	public:
-		Error::Error readSave(const std::filesystem::path& path);
-		Error::Error writeSave(const std::filesystem::path& path) const;
-		Error::Error writeSave() const;
-		Error::Error readSettings(const std::filesystem::path& path);
-		Error::Error readSettings();
-		Error::Error writeSettings(const std::filesystem::path& path) const;
-		Error::Error writeSettings() const;
-		const Save& getSave() const;
-		const Settings& getSettings() const;
-		const File& getFile(FileIndex index) const;
-		const Options& getOptions() const;
-		Error::Error setSave(Save save);
-		Error::Error setSave(const std::filesystem::path& path);
-		Error::Error setSettings(Settings settings);
-		Error::Error setSettings(const std::filesystem::path& path);
-		Error::Error setFile(FileIndex index, File file);
-	private:
-		std::filesystem::path mSavePath;
-		Save mSave;
-		std::filesystem::path mSettingsPath;
-		Settings mSettings;
+		enum class Where
+		{
+			Nowhere,
+			Unknown,
+			Save,
+			Settings,
+			Options,
+			File,
+			Data,
+			GUI
+		} where = Where::Unknown;
+		enum class What
+		{
+			Nothing,
+			Unknown,
+			IO,
+			Syntax,
+			Value
+		} what = What::Unknown;
+		operator bool() const
+		{
+			return where != Where::Nowhere || what != What::Nothing;
+		}
+		bool operator==(const Error& other)
+		{
+			return where == other.where
+				&& what == other.what;
+		}
 	};
-} // namespace Data
+
+	template<typename Data>
+	struct Return
+	{
+		Error error;
+		Data data;
+	};
+
+	struct Return<void>
+	{
+		Error error;
+	};
+
+	struct Return<Save>
+	{
+		Error error;
+		Save save;
+	};
+
+	struct Return<Settings>
+	{
+		Error error;
+		Settings settings;
+	};
+
+	struct Return<std::filesystem::path>
+	{
+		Error error;
+		std::filesystem::path path;
+	};
+
+	struct Return<File>
+	{
+		Error error;
+		File file;
+	};
+
+	struct Return<Options>
+	{
+		Error error;
+		Options options;
+	};
+} // namespace Types
 } // namespace WhipseeySaveManager

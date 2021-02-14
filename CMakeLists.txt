@@ -26,7 +26,7 @@ set( MAIN_TARGET ${CMAKE_PROJECT_NAME} )
 set( TEST_TARGET ${CMAKE_PROJECT_NAME}-Tests )
 
 set( MAIN_SOURCES
-	${WSM_SRC_DIR}/data.cpp
+	# ${WSM_SRC_DIR}/data.cpp
 )
 
 add_executable( ${MAIN_TARGET} WIN32 ${WSM_SRC_DIR}/${MAIN_TARGET}.cpp )
@@ -36,7 +36,7 @@ target_sources( ${MAIN_TARGET} PRIVATE ${MAIN_SOURCES} )
 set_property( TARGET ${MAIN_TARGET} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" )
 
 set( TEST_SOURCES
-	${WSM_TEST_DIR}/data-test.cpp
+	# ${WSM_TEST_DIR}/data-test.cpp
 	${WSM_TEST_DIR}/testhelper.cpp
 )
 
