@@ -265,7 +265,8 @@ namespace Types
 		enum class Where
 		{
 			Nowhere,
-			Unknown
+			Unknown,
+			System
 		} where = Where::Unknown;
 		/**
 		 * @brief what an error occurred
@@ -274,7 +275,8 @@ namespace Types
 		enum class What
 		{
 			Nothing,
-			Unknown
+			Unknown,
+			Registry
 		} what = What::Unknown;
 		/**
 		 * @brief conversion to bool
