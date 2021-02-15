@@ -4,8 +4,13 @@
 
 namespace WhipseeySaveManager
 {
+/**
+ * @brief contain functions that interact with the OS
+ * 
+ */
 namespace System
 {
+	Types::ErrDat<Types::Toggle> darkmodeEnabled();
 	Types::ErrDat<std::filesystem::path> defaultSavePath();
 	Types::ErrDat<std::filesystem::path> defaultSettingsPath();
 	Types::ErrDat<std::filesystem::path> selectSavePath();

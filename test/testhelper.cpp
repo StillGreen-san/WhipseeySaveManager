@@ -4,36 +4,36 @@ namespace WhipseeySaveManager
 {
 namespace Test
 {
-	Data::Options makeInvalidOptions()
+	Types::Options makeInvalidOptions()
 	{
-		Data::Options options;
-		options.language = maxEnumVal<Data::Language>();
-		options.scale = maxEnumVal<Data::Scale>();
-		options.fullScreen = maxEnumVal<Data::Toggle>();
-		options.leftHanded = maxEnumVal<Data::Toggle>();
-		options.sound.toggle = maxEnumVal<Data::Toggle>();
-		options.sound.volume = maxEnumVal<Data::Volume>();
-		options.music.toggle = maxEnumVal<Data::Toggle>();
-		options.music.volume = maxEnumVal<Data::Volume>();
+		Types::Options options;
+		options.language = maxEnumVal<Types::Language>();
+		options.scale = maxEnumVal<Types::Scale>();
+		options.fullScreen = maxEnumVal<Types::Toggle>();
+		options.leftHanded = maxEnumVal<Types::Toggle>();
+		options.sound.toggle = maxEnumVal<Types::Toggle>();
+		options.sound.volume = maxEnumVal<Types::Volume>();
+		options.music.toggle = maxEnumVal<Types::Toggle>();
+		options.music.volume = maxEnumVal<Types::Volume>();
 		return options;
 	}
 
-	Data::File makeInvalidFile()
+	Types::File makeInvalidFile()
 	{
-		Data::File file;
-		file.noDamage = maxEnumVal<Data::BossNoDamage>();
+		Types::File file;
+		file.noDamage = maxEnumVal<Types::BossNoDamage>();
 		file.defeated = maxTypeVal(file.defeated);
-		file.progress = maxEnumVal<Data::Level>();
-		file.ending = maxEnumVal<Data::Toggle>();
-		file.intro = maxEnumVal<Data::Toggle>();
+		file.progress = maxEnumVal<Types::Level>();
+		file.ending = maxEnumVal<Types::Toggle>();
+		file.intro = maxEnumVal<Types::Toggle>();
 		file.lives = maxTypeVal(file.lives);
 		file.gems = maxTypeVal(file.gems);
 		return file;
 	}
 
-	Data::Save makeInvalidSave()
+	Types::Save makeInvalidSave()
 	{
-		Data::Save save;
+		Types::Save save;
 		save.options = makeInvalidOptions();
 		save.file1 = makeInvalidFile();
 		save.file2 = makeInvalidFile();
@@ -41,36 +41,36 @@ namespace Test
 		return save;
 	}
 
-	Data::Options makeValidOptions()
+	Types::Options makeValidOptions()
 	{
-		Data::Options options;
-		options.language = Data::Language::Japanese;
-		options.scale = Data::Scale::R1152x648;
-		options.fullScreen = Data::Toggle::Disabled;
-		options.leftHanded = Data::Toggle::Enabled;
-		options.sound.toggle = Data::Toggle::Disabled;
-		options.sound.volume = Data::Volume::V30;
-		options.music.toggle = Data::Toggle::Disabled;
-		options.music.volume = Data::Volume::V70;
+		Types::Options options;
+		options.language = Types::Language::Japanese;
+		options.scale = Types::Scale::R1152x648;
+		options.fullScreen = Types::Toggle::Disabled;
+		options.leftHanded = Types::Toggle::Enabled;
+		options.sound.toggle = Types::Toggle::Disabled;
+		options.sound.volume = Types::Volume::V30;
+		options.music.toggle = Types::Toggle::Disabled;
+		options.music.volume = Types::Volume::V70;
 		return options;
 	}
 
-	Data::File makeValidFile()
+	Types::File makeValidFile()
 	{
-		Data::File file;
-		file.noDamage = Data::BossNoDamage::All;
+		Types::File file;
+		file.noDamage = Types::BossNoDamage::All;
 		file.defeated = maxTypeVal(file.defeated);
-		file.progress = Data::Level::Castle;
-		file.ending = Data::Toggle::Enabled;
-		file.intro = Data::Toggle::Enabled;
+		file.progress = Types::Level::Castle;
+		file.ending = Types::Toggle::Enabled;
+		file.intro = Types::Toggle::Enabled;
 		file.lives = 9999;
 		file.gems = 99;//TODO use named constants
 		return file;
 	}
 
-	Data::Save makeValidSave()
+	Types::Save makeValidSave()
 	{
-		Data::Save save;
+		Types::Save save;
 		save.options = makeValidOptions();
 		save.file1 = makeValidFile();
 		save.file2 = makeValidFile();
@@ -78,17 +78,17 @@ namespace Test
 		return save;
 	}
 
-	Data::Settings makeInvalidSettings()
+	Types::Settings makeInvalidSettings()
 	{
-		Data::Settings settings;
-		settings.cheats = maxEnumVal<Data::Toggle>();
+		Types::Settings settings;
+		settings.cheats = maxEnumVal<Types::Toggle>();
 		return settings;
 	}
 
-	Data::Settings makeValidSettings()
+	Types::Settings makeValidSettings()
 	{
-		Data::Settings settings;
-		settings.cheats = Data::Toggle::Enabled;
+		Types::Settings settings;
+		settings.cheats = Types::Toggle::Enabled;
 		return settings;
 	}
 } // namespace Test

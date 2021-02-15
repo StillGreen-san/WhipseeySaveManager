@@ -10,9 +10,16 @@
 #include <nana/gui/widgets/group.hpp>
 #include <nana/gui/widgets/label.hpp>
 
+namespace Darkmode
+{
+	constexpr nana::colors Background{0x202020};
+	constexpr nana::colors Foreground{0xffffff};
+}
+
 int WinMain()
 {
 	nana::form fm(nana::api::make_center(625, 255));
+	fm.bgcolor(Darkmode::Background);
 	fm.caption("Whipseey Save Manager");
 
 	nana::textbox tbs(fm, "save file location");
@@ -72,24 +79,24 @@ int WinMain()
 	nana::exec();
 }
 
-#include "system.hpp"
-#include "gui.hpp"
+// #include "system.hpp"
+// #include "gui.hpp"
 
-void testings()
-{
-	using namespace WhipseeySaveManager;
-	GUI::GUI gui;
-	gui.connectOnDefaultSavePath(System::defaultSavePath);
-	gui.connectOnDefaultSettingsPath(System::defaultSettingsPath);
-	gui.connectOnReadFile(System::readFile);
-	gui.connectOnReadOptions(System::readOptions);
-	gui.connectOnReadSave(System::readSave);
-	gui.connectOnReadSettings(System::readSettings);
-	gui.connectOnSelectSavePath(System::selectSavePath);
-	gui.connectOnSelectSettingsPath(System::selectSettingsPath);
-	gui.connectOnWriteFile(System::writeFile);
-	gui.connectOnWriteOptions(System::writeOptions);
-	gui.connectOnWriteSave(System::writeSave);
-	gui.connectOnWriteSettings(System::writeSettings);
-	gui.run();
-}
+// void testings()
+// {
+// 	using namespace WhipseeySaveManager;
+// 	GUI::GUI gui;
+// 	gui.connectOnDefaultSavePath(System::defaultSavePath);
+// 	gui.connectOnDefaultSettingsPath(System::defaultSettingsPath);
+// 	gui.connectOnReadFile(System::readFile);
+// 	gui.connectOnReadOptions(System::readOptions);
+// 	gui.connectOnReadSave(System::readSave);
+// 	gui.connectOnReadSettings(System::readSettings);
+// 	gui.connectOnSelectSavePath(System::selectSavePath);
+// 	gui.connectOnSelectSettingsPath(System::selectSettingsPath);
+// 	gui.connectOnWriteFile(System::writeFile);
+// 	gui.connectOnWriteOptions(System::writeOptions);
+// 	gui.connectOnWriteSave(System::writeSave);
+// 	gui.connectOnWriteSettings(System::writeSettings);
+// 	gui.run();
+// }

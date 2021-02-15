@@ -144,7 +144,7 @@ namespace Types
 	 * @tparam Min the minimum value to clamp to
 	 * @tparam Max the maximum value to clamp to
 	 */
-	template<typename Base, size_t Min, size_t Max>
+	template<typename Base, Base Min, Base Max>
 	struct ClampedNumber
 	{
 		Base value;
@@ -156,7 +156,7 @@ namespace Types
 		{
 			return value;
 		}
-		ClampedNumber& operator=(size_t number)
+		ClampedNumber& operator=(Base number)
 		{
 			if(number > Max) value = Max;
 			else if(number < Min) value = Min;
@@ -308,6 +308,7 @@ namespace Types
 	 * @brief holds only Error
 	 * 
 	 */
+	template<>
 	struct ErrDat<void>
 	{
 		Error error;
@@ -317,6 +318,7 @@ namespace Types
 	 * @brief holds Error and Save
 	 * 
 	 */
+	template<>
 	struct ErrDat<Save>
 	{
 		Error error;
@@ -327,6 +329,7 @@ namespace Types
 	 * @brief holds Error and Settings
 	 * 
 	 */
+	template<>
 	struct ErrDat<Settings>
 	{
 		Error error;
@@ -337,6 +340,7 @@ namespace Types
 	 * @brief holds Error and std::filesystem::pat
 	 * 
 	 */
+	template<>
 	struct ErrDat<std::filesystem::path>
 	{
 		Error error;
@@ -347,6 +351,7 @@ namespace Types
 	 * @brief holds Error and File
 	 * 
 	 */
+	template<>
 	struct ErrDat<File>
 	{
 		Error error;
@@ -357,10 +362,22 @@ namespace Types
 	 * @brief holds Error and Options
 	 * 
 	 */
+	template<>
 	struct ErrDat<Options>
 	{
 		Error error;
 		Options options;
+	};
+
+	/**
+	 * @brief holds Error and Toggle
+	 * 
+	 */
+	template<>
+	struct ErrDat<Toggle>
+	{
+		Error error;
+		Toggle toggle;
 	};
 } // namespace Types
 } // namespace WhipseeySaveManager

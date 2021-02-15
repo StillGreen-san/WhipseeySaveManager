@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-#include "data.hpp"
+#include "types.hpp"
 
 namespace WhipseeySaveManager
 {
@@ -20,20 +20,26 @@ namespace Test
 		return std::numeric_limits<TYPE>::max();
 	}
 
-	Data::Options makeInvalidOptions();
+	template<typename Base, Base Min, Base Max>
+	constexpr Types::ClampedNumber<Base, Min, Max> maxTypeVal(const Types::ClampedNumber<Base, Min, Max>&)
+	{
+		return std::numeric_limits<Base>::max();
+	}
 
-	Data::File makeInvalidFile();
+	Types::Options makeInvalidOptions();
 
-	Data::Save makeInvalidSave();
+	Types::File makeInvalidFile();
 
-	Data::Options makeValidOptions();
+	Types::Save makeInvalidSave();
 
-	Data::File makeValidFile();
+	Types::Options makeValidOptions();
 
-	Data::Save makeValidSave();
+	Types::File makeValidFile();
 
-	Data::Settings makeInvalidSettings();
+	Types::Save makeValidSave();
 
-	Data::Settings makeValidSettings();
+	Types::Settings makeInvalidSettings();
+
+	Types::Settings makeValidSettings();
 } // namespace Test
 } // namespace WhipseeySaveManager
