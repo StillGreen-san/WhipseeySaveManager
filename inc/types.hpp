@@ -73,7 +73,7 @@ namespace Types
 	};
 
 	/**
-	 * @brief boss no damage progress bitmap associated with there savegame values
+	 * @brief boss no damage progress bitfield associated with there savegame values
 	 * 
 	 */
 	enum class BossNoDamage : uint8_t
@@ -86,7 +86,7 @@ namespace Types
 	};
 
 	/**
-	 * @brief level progress bitmap represents multiple savegame values
+	 * @brief level progress bitfield represents multiple savegame values
 	 * 
 	 */
 	enum class Level : uint8_t
@@ -265,14 +265,8 @@ namespace Types
 		enum class Where
 		{
 			Nowhere,
-			Unknown,
-			Save,
-			Settings,
-			Options,
-			File,
-			Data,
-			GUI
-		} where = Where::Unknown;//TODO update for new structure
+			Unknown
+		} where = Where::Unknown;
 		/**
 		 * @brief what an error occurred
 		 * 
@@ -280,10 +274,7 @@ namespace Types
 		enum class What
 		{
 			Nothing,
-			Unknown,
-			IO,
-			Syntax,
-			Value
+			Unknown
 		} what = What::Unknown;
 		/**
 		 * @brief conversion to bool
@@ -307,7 +298,7 @@ namespace Types
 	 * @tparam Data the second type
 	 */
 	template<typename Data>
-	struct Return
+	struct ErrDat
 	{
 		Error error;
 		Data data;
@@ -317,7 +308,7 @@ namespace Types
 	 * @brief holds only Error
 	 * 
 	 */
-	struct Return<void>
+	struct ErrDat<void>
 	{
 		Error error;
 	};
@@ -326,7 +317,7 @@ namespace Types
 	 * @brief holds Error and Save
 	 * 
 	 */
-	struct Return<Save>
+	struct ErrDat<Save>
 	{
 		Error error;
 		Save save;
@@ -336,7 +327,7 @@ namespace Types
 	 * @brief holds Error and Settings
 	 * 
 	 */
-	struct Return<Settings>
+	struct ErrDat<Settings>
 	{
 		Error error;
 		Settings settings;
@@ -346,7 +337,7 @@ namespace Types
 	 * @brief holds Error and std::filesystem::pat
 	 * 
 	 */
-	struct Return<std::filesystem::path>
+	struct ErrDat<std::filesystem::path>
 	{
 		Error error;
 		std::filesystem::path path;
@@ -356,7 +347,7 @@ namespace Types
 	 * @brief holds Error and File
 	 * 
 	 */
-	struct Return<File>
+	struct ErrDat<File>
 	{
 		Error error;
 		File file;
@@ -366,7 +357,7 @@ namespace Types
 	 * @brief holds Error and Options
 	 * 
 	 */
-	struct Return<Options>
+	struct ErrDat<Options>
 	{
 		Error error;
 		Options options;
