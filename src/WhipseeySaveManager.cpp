@@ -10,16 +10,9 @@
 #include <nana/gui/widgets/group.hpp>
 #include <nana/gui/widgets/label.hpp>
 
-namespace Darkmode
-{
-	constexpr nana::colors Background{0x202020};
-	constexpr nana::colors Foreground{0xffffff};
-}
-
 int WinMain()
 {
 	nana::form fm(nana::api::make_center(625, 255));
-	fm.bgcolor(Darkmode::Background);
 	fm.caption("Whipseey Save Manager");
 
 	nana::textbox tbs(fm, "save file location");
