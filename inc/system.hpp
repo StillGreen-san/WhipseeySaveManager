@@ -10,8 +10,21 @@ namespace WhipseeySaveManager
  */
 namespace System
 {
+	/**
+	 * @brief queries the os for theme info
+	 * 
+	 * @return Types::ErrDat<Types::Theme>: theme always valid, 
+	 * on error: code = ColorDwordNotFound, ColorKeyNotFound, ThemeDwordNotFound or ThemeKeyNotFound
+	 */
 	Types::ErrDat<Types::Theme> systemTheme();
+
+	/**
+	 * @brief finds the default save path
+	 * 
+	 * @return Types::ErrDat<std::filesystem::path> if error path is empty and code = DefaultSaveNotFound
+	 */
 	Types::ErrDat<std::filesystem::path> defaultSavePath();
+
 	Types::ErrDat<std::filesystem::path> defaultSettingsPath();
 	Types::ErrDat<std::filesystem::path> selectSavePath();
 	Types::ErrDat<std::filesystem::path> selectSettingsPath();

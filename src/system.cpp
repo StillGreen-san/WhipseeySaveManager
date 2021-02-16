@@ -2,6 +2,7 @@
 
 #define UNICODE
 #include <winreg/WinReg.hpp>
+#include <ShlObj.h>
 
 namespace WhipseeySaveManager
 {
@@ -53,5 +54,40 @@ namespace System
 
 		return errTheme;
 	}
+	
+	Types::ErrDat<std::filesystem::path> defaultSavePath() 
+	{
+		Types::ErrDat<std::filesystem::path> errPath;
+		PWSTR szPath = nullptr;
+		HRESULT result = SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_DEFAULT, NULL, &szPath);
+		if(result == S_OK)
+		{
+			errPath.data.assign(szPath);
+			CoTaskMemFree(szPath);
+		}
+		else
+		{
+			errPath.error.code = Types::Error::Code::DefaultSaveNotFound;
+			CoTaskMemFree(szPath);
+			return errPath;
+		}
+
+		errPath.data += R"(\Whipseey\savedata\whipseey.sav)";
+		if(std::filesystem::exists(errPath.data) == false)
+		{
+			errPath.error.code = Types::Error::Code::DefaultSaveNotFound;
+			errPath.data.clear();
+		}
+
+		return errPath;
+	}
 }
 }
+
+// $steamPath = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam", "InstallPath")
+// $settingsPath = "\steamapps\common\Whipseey and the Lost Atlas\bfs_settings.ini"
+// $librariesPath = "\steamapps\libraryfolders.vdf"
+// FileExists($steamPath & $settingsPath) -> $gameFile = $steamPath & $settingsPath
+// $file = FileOpen($steamPath & $librariesPath, $FO_READ)
+// $library = StringRegExp($line, '.*"(\d+)".*"(.*)"', $STR_REGEXPARRAYMATCH)
+// FileExists($library[$LIB_PATH] & $settingsPath) -> $gameFile = $library[$LIB_PATH] & $settingsPath

@@ -279,7 +279,8 @@ namespace Types
 			ThemeDwordNotFound,
 			ThemeKeyNotFound,
 			ColorDwordNotFound,
-			ColorKeyNotFound
+			ColorKeyNotFound,
+			DefaultSaveNotFound
 		} code = Code::Nothing;
 		/**
 		 * @brief conversion to bool
