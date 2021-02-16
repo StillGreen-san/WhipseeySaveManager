@@ -10,7 +10,7 @@ namespace WhipseeySaveManager
  */
 namespace System
 {
-	Types::ErrDat<Types::Toggle> darkmodeEnabled();
+	Types::ErrDat<Types::Theme> systemTheme();
 	Types::ErrDat<std::filesystem::path> defaultSavePath();
 	Types::ErrDat<std::filesystem::path> defaultSettingsPath();
 	Types::ErrDat<std::filesystem::path> selectSavePath();

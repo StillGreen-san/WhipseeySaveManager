@@ -253,29 +253,34 @@ namespace Types
 	};
 
 	/**
+	 * @brief contains basic info on a color theme (accent = argb)
+	 * 
+	 */
+	struct Theme
+	{
+		Toggle darkmode = Toggle::Disabled;
+		uint32_t accent = 0x0078d7;
+	};
+
+	/**
 	 * @brief contains Where & What info of an error, converts to true if an error occurred
 	 * 
 	 */
 	struct Error
 	{
 		/**
-		 * @brief where an error occurred
-		 * 
-		 */
-		enum class Where
-		{
-			Nowhere,
-			Unknown
-		} where = Where::Unknown;
-		/**
 		 * @brief what an error occurred
 		 * 
 		 */
-		enum class What
+		enum class Code
 		{
 			Nothing,
-			Unknown
-		} what = What::Unknown;
+			Unknown,
+			ThemeDwordNotFound,
+			ThemeKeyNotFound,
+			ColorDwordNotFound,
+			ColorKeyNotFound
+		} code = Code::Nothing;
 		/**
 		 * @brief conversion to bool
 		 * 
@@ -283,12 +288,11 @@ namespace Types
 		 */
 		operator bool() const
 		{
-			return where != Where::Nowhere || what != What::Nothing;
+			return code != Code::Nothing;
 		}
 		bool operator==(const Error& other)
 		{
-			return where == other.where
-				&& what == other.what;
+			return code == other.code;
 		}
 	};
 
@@ -302,7 +306,7 @@ namespace Types
 	{
 		Error error;
 		Data data;
-	};
+	};//TODO operator bool?
 
 	/**
 	 * @brief holds only Error
@@ -378,6 +382,17 @@ namespace Types
 	{
 		Error error;
 		Toggle toggle;
+	};
+
+	/**
+	 * @brief holds Error and Theme
+	 * 
+	 */
+	template<>
+	struct ErrDat<Theme>
+	{
+		Error error;
+		Theme theme;
 	};
 } // namespace Types
 } // namespace WhipseeySaveManager
