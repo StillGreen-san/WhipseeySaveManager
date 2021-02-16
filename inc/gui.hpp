@@ -27,7 +27,7 @@ namespace GUI
 		 * @return Types::Error 
 		 */
 		Types::Error run();
-
+		void connectOnDarkmodeEnabled(std::function<Types::ErrDat<Types::Toggle>()> func);
 		void connectOnDefaultSavePath(std::function<Types::ErrDat<std::filesystem::path>()> func);
 		void connectOnDefaultSettingsPath(std::function<Types::ErrDat<std::filesystem::path>()> func);
 		void connectOnSelectSavePath(std::function<Types::ErrDat<std::filesystem::path>()> func);
