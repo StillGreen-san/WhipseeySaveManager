@@ -253,7 +253,7 @@ namespace Types
 	};
 
 	/**
-	 * @brief contains basic info on a color theme (accent = argb)
+	 * @brief contains basic info on a color theme (accent = rgb)
 	 * 
 	 */
 	struct Theme
@@ -269,7 +269,7 @@ namespace Types
 	struct Error
 	{
 		/**
-		 * @brief what an error occurred
+		 * @brief the type of error
 		 * 
 		 */
 		enum class Code
@@ -306,93 +306,15 @@ namespace Types
 	{
 		Error error;
 		Data data;
-	};//TODO operator bool?
-
-	/**
-	 * @brief holds only Error
-	 * 
-	 */
-	template<>
-	struct ErrDat<void>
-	{
-		Error error;
-	};
-
-	/**
-	 * @brief holds Error and Save
-	 * 
-	 */
-	template<>
-	struct ErrDat<Save>
-	{
-		Error error;
-		Save save;
-	};
-
-	/**
-	 * @brief holds Error and Settings
-	 * 
-	 */
-	template<>
-	struct ErrDat<Settings>
-	{
-		Error error;
-		Settings settings;
-	};
-
-	/**
-	 * @brief holds Error and std::filesystem::pat
-	 * 
-	 */
-	template<>
-	struct ErrDat<std::filesystem::path>
-	{
-		Error error;
-		std::filesystem::path path;
-	};
-
-	/**
-	 * @brief holds Error and File
-	 * 
-	 */
-	template<>
-	struct ErrDat<File>
-	{
-		Error error;
-		File file;
-	};
-
-	/**
-	 * @brief holds Error and Options
-	 * 
-	 */
-	template<>
-	struct ErrDat<Options>
-	{
-		Error error;
-		Options options;
-	};
-
-	/**
-	 * @brief holds Error and Toggle
-	 * 
-	 */
-	template<>
-	struct ErrDat<Toggle>
-	{
-		Error error;
-		Toggle toggle;
-	};
-
-	/**
-	 * @brief holds Error and Theme
-	 * 
-	 */
-	template<>
-	struct ErrDat<Theme>
-	{
-		Error error;
-		Theme theme;
+		/**
+		 * @brief checks the error status
+		 * 
+		 * @return true if error == false
+		 */
+		operator bool()
+		{
+			return error == false;
+		}
 	};
 } // namespace Types
 } // namespace WhipseeySaveManager

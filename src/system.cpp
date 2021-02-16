@@ -22,7 +22,7 @@ namespace System
 			std::optional<DWORD> lightTheme = regHandler.TryGetDwordValue(themeDW);
 			if(lightTheme.has_value())
 			{
-				errTheme.theme.darkmode = lightTheme.value() ? Types::Toggle::Disabled : Types::Toggle::Enabled;
+				errTheme.data.darkmode = lightTheme.value() ? Types::Toggle::Disabled : Types::Toggle::Enabled;
 			}
 			else
 			{
@@ -39,7 +39,7 @@ namespace System
 			std::optional<DWORD> color = regHandler.TryGetDwordValue(colorDW);
 			if(color.has_value())
 			{
-				errTheme.theme.accent = color.value();
+				errTheme.data.accent = color.value();
 			}
 			else
 			{

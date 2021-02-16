@@ -19,9 +19,9 @@ namespace System
 	Types::ErrDat<Types::Settings> readSettings(std::filesystem::path);
 	Types::ErrDat<Types::Options> readOptions(std::filesystem::path);
 	Types::ErrDat<Types::File> readFile(std::filesystem::path, Types::FileIndex);
-	Types::ErrDat<void> writeSave(std::filesystem::path, Types::Save);
-	Types::ErrDat<void> writeSettings(std::filesystem::path, Types::Settings);
-	Types::ErrDat<void> writeOptions(std::filesystem::path,Types::Options);
-	Types::ErrDat<void> writeFile(std::filesystem::path, Types::FileIndex, Types::File);
+	Types::Error writeSave(std::filesystem::path, Types::Save);
+	Types::Error writeSettings(std::filesystem::path, Types::Settings);
+	Types::Error writeOptions(std::filesystem::path,Types::Options);
+	Types::Error writeFile(std::filesystem::path, Types::FileIndex, Types::File);
 } // namespace System
 } // namespace WhipseeySaveManager

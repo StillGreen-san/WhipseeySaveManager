@@ -36,10 +36,10 @@ namespace GUI
 		void connectOnReadSettings(std::function<Types::ErrDat<Types::Settings>(std::filesystem::path)> func);
 		void connectOnReadOptions(std::function<Types::ErrDat<Types::Options>(std::filesystem::path)> func);
 		void connectOnReadFile(std::function<Types::ErrDat<Types::File>(std::filesystem::path, Types::FileIndex)> func);
-		void connectOnWriteSave(std::function<Types::ErrDat<void>(std::filesystem::path, Types::Save)> func);
-		void connectOnWriteSettings(std::function<Types::ErrDat<void>(std::filesystem::path, Types::Settings)> func);
-		void connectOnWriteOptions(std::function<Types::ErrDat<void>(std::filesystem::path, Types::Options)> func);
-		void connectOnWriteFile(std::function<Types::ErrDat<void>(std::filesystem::path, Types::FileIndex, Types::File)> func);
+		void connectOnWriteSave(std::function<Types::Error(std::filesystem::path, Types::Save)> func);
+		void connectOnWriteSettings(std::function<Types::Error(std::filesystem::path, Types::Settings)> func);
+		void connectOnWriteOptions(std::function<Types::Error(std::filesystem::path, Types::Options)> func);
+		void connectOnWriteFile(std::function<Types::Error(std::filesystem::path, Types::FileIndex, Types::File)> func);
 	private:
 		std::unique_ptr<GUIimpl> guiImpl;
 	};
