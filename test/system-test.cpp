@@ -6,7 +6,7 @@
 
 using namespace WhipseeySaveManager;
 
-TEST_CASE("System::systemTheme", "[.][System]")
+TEST_CASE("System::systemTheme", "[.][System][Manual]")
 {
 	Types::ErrDat<Types::Theme> ret = System::systemTheme();
 	if(ret)
@@ -26,4 +26,20 @@ TEST_CASE("System::systemTheme", "[.][System]")
 		<< "\nDarkmode: " << (ret.data.darkmode == Types::Toggle::Enabled ? "Enabled" : "Disabled")
 		<< "\nAccent  : 0x" << std::hex << ret.data.accent;
 	WARN(msg.str());
+}
+
+TEST_CASE("System::defaultSavePath", "[.][System][Save]")
+{
+	Types::ErrDat<std::filesystem::path> ret = System::defaultSavePath();
+	if(ret)
+	{
+		REQUIRE(std::filesystem::exists(ret.data));
+		CHECK(ret.data.filename() == "whipseey.sav");
+		SUCCEED("path retrieved");
+	}
+	else
+	{
+		CHECK(ret.error.code == Types::Error::Code::DefaultSaveNotFound);
+		FAIL("path not retrieved");
+	}
 }

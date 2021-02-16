@@ -59,7 +59,7 @@ namespace System
 	{
 		Types::ErrDat<std::filesystem::path> errPath;
 		PWSTR szPath = nullptr;
-		HRESULT result = SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_DEFAULT, NULL, &szPath);
+		HRESULT result = SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_DEFAULT, NULL, &szPath);//TODO create wrapper
 		if(result == S_OK)
 		{
 			errPath.data.assign(szPath);

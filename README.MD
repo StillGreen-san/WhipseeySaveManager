@@ -1,31 +1,45 @@
 # Whipseey Save Manager
 
 -------------------------
-**! OUTDATED !**
+**! WIP !**
 -------------------------
 -------------------------
 
-**GUI for modifying *some* Values in 'Whipseey and the Lost Atlas' Savegames**
+**GUI for modifying *some* Values in 'Whipseey and the Lost Atlas' Savegames and Settings**
 
 ![Picture](WhipseeySaveManager.png)
 
-Intended to aid with Speedrun practice. Does not allow to modify all possible values in the Savegame.
+Intended to aid with Speedrun practice. Does not allow to modify all values present in the Savegame.
 
-Game needs to be restarted to load a modified Savegame. Autosaving ingame will override all Slots.
+Game needs to be restarted to load a modified Savegame or Settings. Autosaving ingame will override all Slots in Savegame.
 
 ## Features
 
-- Auto-load Savegame & Cheat-settings
-- Set Level Progress
-- Set Lives & Gems
-- Skip Intro (Ending can't it seems)
-- Save/Reload individual Saveslots
-- Toggle Cheats
+- ???
 
 ## Warnings
 
-- Does not currently include full Error Handling
-- Generally assumes data is available / valid data is opened
-- Code is a bit messy
-- Written in AutoIT, so some Antivirus tools may complain
-- no dark mode
+- Windows only
+- only tested on Windows 10 (2004)
+
+## Code
+
+written in C++
+
+uses cmake
+
+### Dependencies
+
+- GUI : [nana](https://github.com/cnjinhao/nana)
+- Testing : [Catch2](https://github.com/catchorg/Catch2)
+- Registry : [WinReg](https://github.com/GiovanniDicanio/WinReg)
+
+### Tests
+
+all functions except those for the GUI have a test case.
+
+some are hidden however and need to be run explicitly. see tags below
+
+- [Manual] some of there returns need to be checked by hand
+- [Game] output varies depending on if the game is installed (with steam)
+- [Save] output varies depending on if a savegame is available in the default location
