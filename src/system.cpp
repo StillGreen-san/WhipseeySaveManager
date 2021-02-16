@@ -10,9 +10,9 @@ namespace System
 	Types::ErrDat<Types::Theme> systemTheme() 
 	{
 		Types::ErrDat<Types::Theme> errTheme;
-		const std::wstring themeKey = LR"(Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize)";
+		const std::wstring themeKey = LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize)";
 		const std::wstring themeDW = LR"(AppsUseLightTheme)";
-		const std::wstring colorKey = LR"(Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\History\Colors)";
+		const std::wstring colorKey = LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\History\Colors)";
 		const std::wstring colorDW = LR"(ColorHistory0)";
 
 		winreg::RegKey regHandler;
