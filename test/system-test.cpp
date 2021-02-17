@@ -43,3 +43,22 @@ TEST_CASE("System::defaultSavePath", "[.][System][Save]")
 		FAIL("path not retrieved");
 	}
 }
+
+TEST_CASE("System::defaultSettingsPath", "[.][System][Game]")
+{
+	Types::ErrDat<std::filesystem::path> ret = System::defaultSettingsPath();
+	if(ret)
+	{
+		REQUIRE(std::filesystem::exists(ret.data));
+		CHECK(ret.data.filename() == "bfs_settings.ini");
+		SUCCEED("path retrieved");
+	}
+	else
+	{
+		CHECK((ret.error.code == Types::Error::Code::GameNotFound
+			|| ret.error.code == Types::Error::Code::SteamDwordNotFound
+			|| ret.error.code == Types::Error::Code::SteamKeyNotFound
+			|| ret.error.code == Types::Error::Code::SteamLibrariesNotFound));
+		FAIL("path not retrieved");
+	}
+}

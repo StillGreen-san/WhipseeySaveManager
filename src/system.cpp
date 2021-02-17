@@ -4,7 +4,8 @@
 #include <winreg/WinReg.hpp>
 #include <ShlObj.h>
 
-#include <vdf_parser.hpp>
+#include <fstream>
+#include <regex>
 
 namespace WhipseeySaveManager
 {
@@ -87,13 +88,13 @@ namespace System
 	Types::ErrDat<std::filesystem::path> defaultSettingsPath() 
 	{
 		Types::ErrDat<std::filesystem::path> errPath;
-		const std::wstring steamKey = LR"(SOFTWARE\WOW6432Node\Valve\Steam)";//TODO make bit independent
+		const std::wstring steamKey = LR"(SOFTWARE\Valve\Steam)";
 		const std::wstring steamSZ = LR"(InstallPath)";
 
 		std::filesystem::path steamPath;
 		winreg::RegKey regHandler;
 
-		if(regHandler.TryOpen(HKEY_LOCAL_MACHINE, steamKey, KEY_READ))
+		if(regHandler.TryOpen(HKEY_LOCAL_MACHINE, steamKey, KEY_READ | KEY_WOW64_32KEY))
 		{
 			std::optional<std::wstring> installPath = regHandler.TryGetStringValue(steamSZ);
 			if(installPath.has_value())
@@ -112,7 +113,7 @@ namespace System
 			return errPath;
 		}
 
-		std::filesystem::path settingsRelativePath("steamapps/common/Whipseey and the Lost Atlas/bfs_settings.ini");
+		const std::filesystem::path settingsRelativePath("steamapps/common/Whipseey and the Lost Atlas/bfs_settings.ini");
 		std::filesystem::path settingsPath(steamPath / settingsRelativePath);
 
 		if(std::filesystem::exists(settingsPath))
@@ -121,25 +122,23 @@ namespace System
 			return errPath;
 		}
 
-		std::filesystem::path librariesRelativePath("steamapps/libraryfolders.vdf");
-		tyti::vdf::object librariesVDF;
-		{
-			std::ifstream librariesFile(steamPath / librariesRelativePath);
-			tyti::vdf::object librariesVDF = tyti::vdf::read(librariesFile);
-			librariesFile.close();
-		}
+		const std::filesystem::path librariesFilePath(steamPath / "steamapps/libraryfolders.vdf");
 
-		if(librariesVDF.name != "")
+		if(std::filesystem::exists(librariesFilePath) == false)
 		{
 			errPath.error.code = Types::Error::Code::SteamLibrariesNotFound;
 			return errPath;
 		}
 
-		for(auto& attribute : librariesVDF.attribs)
+		std::ifstream librariesFile(librariesFilePath);
+		const std::regex reg(R"#(.*"\d+".*"(.*)")#", std::regex_constants::optimize);
+		std::smatch match;
+
+		for(std::string line; std::getline(librariesFile, line);)
 		{
-			if(std::isdigit(attribute.first.front()))
+			if(std::regex_match(line, match, reg) && match.size() == 2)
 			{
-				settingsPath.assign(steamPath / attribute.second);
+				settingsPath.assign(match[1].str() / settingsRelativePath);
 				if(std::filesystem::exists(settingsPath))
 				{
 					errPath.data.assign(std::move(settingsPath));
@@ -147,6 +146,7 @@ namespace System
 				}
 			}
 		}
+		librariesFile.close();
 
 		errPath.error.code = Types::Error::Code::GameNotFound;
 		return errPath;

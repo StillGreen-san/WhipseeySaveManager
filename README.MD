@@ -20,7 +20,7 @@ Game needs to be restarted to load a modified Savegame or Settings. Autosaving i
 ## Warnings
 
 - Windows only
-- only tested on Windows 10 (2004)
+- only tested on Windows 10 (2004) x64
 
 ## Code
 
@@ -33,7 +33,6 @@ uses cmake
 - GUI : [nana](https://github.com/cnjinhao/nana)
 - Testing : [Catch2](https://github.com/catchorg/Catch2)
 - Registry : [WinReg](https://github.com/GiovanniDicanio/WinReg)
-- VDF : [ValveFileVDF](https://github.com/TinyTinni/ValveFileVDF)
 
 ### Tests
 

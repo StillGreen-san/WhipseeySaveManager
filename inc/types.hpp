@@ -274,18 +274,18 @@ namespace Types
 		 */
 		enum class Code
 		{
-			Nothing,
-			Unknown,
+			Nothing,// no error occurred
+			Unknown,// an unknown error occurred
 			ThemeDwordNotFound,
 			ThemeKeyNotFound,
 			ColorDwordNotFound,
 			ColorKeyNotFound,
 			DefaultSaveNotFound,
-			SteamKeyNotFound,
+			SteamKeyNotFound,// an error occurred while opening the steam key in the registry
 			SteamDwordNotFound,
 			SteamLibrariesNotFound,
 			GameNotFound
-		} code = Code::Nothing;
+		} code = Code::Nothing;//TODO add comments for error codes
 		/**
 		 * @brief conversion to bool
 		 * 
