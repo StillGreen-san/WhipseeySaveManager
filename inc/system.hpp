@@ -25,7 +25,14 @@ namespace System
 	 */
 	Types::ErrDat<std::filesystem::path> defaultSavePath();
 
+	/**
+	 * @brief finds the default settings path
+	 * 
+	 * @return Types::ErrDat<std::filesystem::path> if error path is empty and code = 
+	 * SteamKeyNotFound, SteamDwordNotFound, SteamLibrariesNotFound or GameNotFound
+	 */
 	Types::ErrDat<std::filesystem::path> defaultSettingsPath();
+
 	Types::ErrDat<std::filesystem::path> selectSavePath();
 	Types::ErrDat<std::filesystem::path> selectSettingsPath();
 	Types::ErrDat<Types::Save> readSave(std::filesystem::path);

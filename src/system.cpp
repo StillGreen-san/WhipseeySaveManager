@@ -4,6 +4,8 @@
 #include <winreg/WinReg.hpp>
 #include <ShlObj.h>
 
+#include <vdf_parser.hpp>
+
 namespace WhipseeySaveManager
 {
 namespace System
@@ -81,13 +83,73 @@ namespace System
 
 		return errPath;
 	}
-}
-}
+	
+	Types::ErrDat<std::filesystem::path> defaultSettingsPath() 
+	{
+		Types::ErrDat<std::filesystem::path> errPath;
+		const std::wstring steamKey = LR"(SOFTWARE\WOW6432Node\Valve\Steam)";//TODO make bit independent
+		const std::wstring steamSZ = LR"(InstallPath)";
 
-// $steamPath = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam", "InstallPath")
-// $settingsPath = "\steamapps\common\Whipseey and the Lost Atlas\bfs_settings.ini"
-// $librariesPath = "\steamapps\libraryfolders.vdf"
-// FileExists($steamPath & $settingsPath) -> $gameFile = $steamPath & $settingsPath
-// $file = FileOpen($steamPath & $librariesPath, $FO_READ)
-// $library = StringRegExp($line, '.*"(\d+)".*"(.*)"', $STR_REGEXPARRAYMATCH)
-// FileExists($library[$LIB_PATH] & $settingsPath) -> $gameFile = $library[$LIB_PATH] & $settingsPath
+		std::filesystem::path steamPath;
+		winreg::RegKey regHandler;
+
+		if(regHandler.TryOpen(HKEY_LOCAL_MACHINE, steamKey, KEY_READ))
+		{
+			std::optional<std::wstring> installPath = regHandler.TryGetStringValue(steamSZ);
+			if(installPath.has_value())
+			{
+				steamPath.assign(installPath.value());
+			}
+			else
+			{
+				errPath.error.code = Types::Error::Code::SteamDwordNotFound;
+				return errPath;
+			}
+		}
+		else
+		{
+			errPath.error.code = Types::Error::Code::SteamKeyNotFound;
+			return errPath;
+		}
+
+		std::filesystem::path settingsRelativePath("steamapps/common/Whipseey and the Lost Atlas/bfs_settings.ini");
+		std::filesystem::path settingsPath(steamPath / settingsRelativePath);
+
+		if(std::filesystem::exists(settingsPath))
+		{
+			errPath.data.assign(std::move(settingsPath));
+			return errPath;
+		}
+
+		std::filesystem::path librariesRelativePath("steamapps/libraryfolders.vdf");
+		tyti::vdf::object librariesVDF;
+		{
+			std::ifstream librariesFile(steamPath / librariesRelativePath);
+			tyti::vdf::object librariesVDF = tyti::vdf::read(librariesFile);
+			librariesFile.close();
+		}
+
+		if(librariesVDF.name != "")
+		{
+			errPath.error.code = Types::Error::Code::SteamLibrariesNotFound;
+			return errPath;
+		}
+
+		for(auto& attribute : librariesVDF.attribs)
+		{
+			if(std::isdigit(attribute.first.front()))
+			{
+				settingsPath.assign(steamPath / attribute.second);
+				if(std::filesystem::exists(settingsPath))
+				{
+					errPath.data.assign(std::move(settingsPath));
+					return errPath;
+				}
+			}
+		}
+
+		errPath.error.code = Types::Error::Code::GameNotFound;
+		return errPath;
+	}
+}
+}

@@ -280,7 +280,11 @@ namespace Types
 			ThemeKeyNotFound,
 			ColorDwordNotFound,
 			ColorKeyNotFound,
-			DefaultSaveNotFound
+			DefaultSaveNotFound,
+			SteamKeyNotFound,
+			SteamDwordNotFound,
+			SteamLibrariesNotFound,
+			GameNotFound
 		} code = Code::Nothing;
 		/**
 		 * @brief conversion to bool
