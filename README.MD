@@ -24,7 +24,7 @@ Game needs to be restarted to load a modified Savegame or Settings. Autosaving i
 
 ## Code
 
-written in C++
+written in/with C++ 17
 
 uses cmake
 
