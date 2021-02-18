@@ -13,7 +13,7 @@ namespace System
 	/**
 	 * @brief queries the os for theme info
 	 * 
-	 * @return Types::ErrDat<Types::Theme>: theme always valid, 
+	 * @return Types::ErrDat<Types::Theme>: Theme always valid, 
 	 * on error: code = ColorDwordNotFound, ColorKeyNotFound, ThemeDwordNotFound or ThemeKeyNotFound
 	 */
 	Types::ErrDat<Types::Theme> systemTheme();
@@ -34,7 +34,16 @@ namespace System
 	Types::ErrDat<std::filesystem::path> defaultSettingsPath();
 
 	Types::ErrDat<Types::Save> readSave(std::filesystem::path);
+
+	/**
+	 * @brief reads a bfs_settings file
+	 * 
+	 * @param settings path to a bfs_settings file
+	 * @return Types::ErrDat<Types::Settings> Settings always valid,
+	 * on error: code = FailedToLoadSettings, CheatsSectionNotFound, CheatsKeyNotFound, CheatsKeyInvalid
+	 */
 	Types::ErrDat<Types::Settings> readSettings(const std::filesystem::path& settings);
+
 	Types::ErrDat<Types::Options> readOptions(std::filesystem::path);
 	Types::ErrDat<Types::File> readFile(std::filesystem::path, Types::FileIndex);
 	Types::Error writeSave(std::filesystem::path, Types::Save);

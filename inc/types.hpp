@@ -107,7 +107,7 @@ namespace Types
 	{
 		Volume volume = Volume::V100;
 		Toggle toggle = Toggle::Enabled;
-		bool operator==(const Noise& other)
+		bool operator==(const Noise& other) const
 		{
 			return volume == other.volume
 				&& toggle == other.toggle;
@@ -126,7 +126,7 @@ namespace Types
 		Toggle leftHanded = Toggle::Disabled;
 		Noise sound;
 		Noise music;
-		bool operator==(const Options& other)
+		bool operator==(const Options& other) const
 		{
 			return language == other.language
 				&& scale == other.scale
@@ -152,7 +152,7 @@ namespace Types
 		{
 			value = number;
 		}
-		operator Base()
+		operator Base() const
 		{
 			return value;
 		}
@@ -163,7 +163,7 @@ namespace Types
 			else value = number;
 			return *this;
 		}
-		bool operator==(ClampedNumber other)
+		bool operator==(ClampedNumber other) const
 		{
 			return value == other.value;
 		}
@@ -197,7 +197,7 @@ namespace Types
 		Toggle intro = Toggle::Disabled;
 		Lives lives = 5;
 		Gems gems = 0;
-		bool operator==(const File& other)
+		bool operator==(const File& other) const
 		{
 			return noDamage == other.noDamage
 				&& defeated == other.defeated
@@ -230,7 +230,7 @@ namespace Types
 		File file1;
 		File file2;
 		File file3;
-		bool operator==(const Save& other)
+		bool operator==(const Save& other) const
 		{
 			return options == other.options
 				&& file1 == other.file1
@@ -246,7 +246,7 @@ namespace Types
 	struct Settings
 	{
 		Toggle cheats = Toggle::Disabled;
-		bool operator==(const Settings& other)
+		bool operator==(const Settings& other) const
 		{
 			return cheats == other.cheats;
 		}
@@ -287,7 +287,8 @@ namespace Types
 			GameNotFound,
 			FailedToLoadSettings,
 			CheatsSectionNotFound,
-			CheatsKeyNotFound
+			CheatsKeyNotFound,
+			CheatsKeyInvalid
 		} code = Code::Nothing;//TODO add comments for error codes
 		/**
 		 * @brief conversion to bool
@@ -298,7 +299,7 @@ namespace Types
 		{
 			return code != Code::Nothing;
 		}
-		bool operator==(const Error& other)
+		bool operator==(const Error& other) const
 		{
 			return code == other.code;
 		}
@@ -319,7 +320,7 @@ namespace Types
 		 * 
 		 * @return true if error == false
 		 */
-		operator bool()
+		operator bool() const
 		{
 			return error == false;
 		}

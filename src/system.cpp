@@ -166,7 +166,7 @@ namespace WhipseeySaveManager::System
 	Types::ErrDat<Types::Settings> readSettings(const std::filesystem::path& settings) 
 	{
 		Types::ErrDat<Types::Settings> errSettings;
-		
+
 		CSimpleIniA ini;
 		SI_Error er = ini.LoadFile(settings.c_str());
 		if(er != SI_OK)
@@ -192,9 +192,13 @@ namespace WhipseeySaveManager::System
 			errSettings.error.code = Types::Error::Code::CheatsKeyNotFound;
 			return errSettings;
 		}
+		if(cheats < 0 || cheats > 1)//TODO add proper validiotion (for all types)
+		{
+			errSettings.error.code = Types::Error::Code::CheatsKeyInvalid;
+			return errSettings;
+		}
 
 		errSettings.data.cheats = cheats == 0 ? Types::Toggle::Disabled : Types::Toggle::Enabled;
-		
 		return errSettings;
 	}
 }

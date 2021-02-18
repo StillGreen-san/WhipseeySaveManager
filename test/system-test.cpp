@@ -62,3 +62,47 @@ TEST_CASE("System::defaultSettingsPath", "[.][System][Game]")
 		FAIL("path not retrieved");
 	}
 }
+
+TEST_CASE("System::readSettings", "[System]")
+{
+	const std::filesystem::path default(L"data/settings-default.ini");
+	const std::filesystem::path invalid(L"data/settings-invalid.ini");
+	const std::filesystem::path missing(L"data/settings-missing.ini");
+	const std::filesystem::path   valid(L"data/settings-valid.ini");
+
+	if(std::filesystem::exists(default) == false) FAIL("default test file missing!");
+	if(std::filesystem::exists(invalid) == false) FAIL("invalid test file missing!");
+	if(std::filesystem::exists(missing) == false) FAIL("missing test file missing!");
+	if(std::filesystem::exists(  valid) == false) FAIL("  valid test file missing!");
+
+	SECTION("default")
+	{
+		Types::ErrDat<Types::Settings> ret = System::readSettings(default);
+		CHECK(ret);
+		CHECK(ret.data.cheats == Types::Toggle::Disabled);
+	}
+
+	SECTION("valid")
+	{
+		Types::ErrDat<Types::Settings> ret = System::readSettings(valid);
+		CHECK(ret);
+		CHECK(ret.data.cheats == Types::Toggle::Enabled);
+	}
+
+	SECTION("invalid")
+	{
+		Types::ErrDat<Types::Settings> ret = System::readSettings(invalid);
+		CHECK_FALSE(ret);
+		CHECK(ret.error.code == Types::Error::Code::CheatsKeyInvalid);
+		CHECK(ret.data.cheats == Types::Settings().cheats);
+	}
+
+	SECTION("missing")
+	{
+		Types::ErrDat<Types::Settings> ret = System::readSettings(missing);
+		CHECK_FALSE(ret);
+		CHECK((ret.error.code == Types::Error::Code::CheatsSectionNotFound
+			|| ret.error.code == Types::Error::Code::CheatsKeyNotFound));
+		CHECK(ret.data.cheats == Types::Settings().cheats);
+	}
+}
