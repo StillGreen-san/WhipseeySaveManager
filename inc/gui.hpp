@@ -30,8 +30,6 @@ namespace GUI
 		void connectOnDarkmodeEnabled(std::function<Types::ErrDat<Types::Toggle>()> func);
 		void connectOnDefaultSavePath(std::function<Types::ErrDat<std::filesystem::path>()> func);
 		void connectOnDefaultSettingsPath(std::function<Types::ErrDat<std::filesystem::path>()> func);
-		void connectOnSelectSavePath(std::function<Types::ErrDat<std::filesystem::path>()> func);
-		void connectOnSelectSettingsPath(std::function<Types::ErrDat<std::filesystem::path>()> func);
 		void connectOnReadSave(std::function<Types::ErrDat<Types::Save>(std::filesystem::path)> func);
 		void connectOnReadSettings(std::function<Types::ErrDat<Types::Settings>(std::filesystem::path)> func);
 		void connectOnReadOptions(std::function<Types::ErrDat<Types::Options>(std::filesystem::path)> func);

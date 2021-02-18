@@ -33,8 +33,6 @@ namespace System
 	 */
 	Types::ErrDat<std::filesystem::path> defaultSettingsPath();
 
-	Types::ErrDat<std::filesystem::path> selectSavePath();
-	Types::ErrDat<std::filesystem::path> selectSettingsPath();
 	Types::ErrDat<Types::Save> readSave(std::filesystem::path);
 	Types::ErrDat<Types::Settings> readSettings(std::filesystem::path);
 	Types::ErrDat<Types::Options> readOptions(std::filesystem::path);

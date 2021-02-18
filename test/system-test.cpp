@@ -62,8 +62,3 @@ TEST_CASE("System::defaultSettingsPath", "[.][System][Game]")
 		FAIL("path not retrieved");
 	}
 }
-
-TEST_CASE("temptest54421", "[TEMP]")
-{
-	System::selectSavePath();
-}

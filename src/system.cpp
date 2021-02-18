@@ -153,44 +153,5 @@ namespace System
 		errPath.error.code = Types::Error::Code::GameNotFound;
 		return errPath;
 	}
-
-	HRESULT BasicFileOpen()
-	{
-		HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-		if(FAILED(hr)) return hr;
-
-		CComPtr<IFileOpenDialog> pFileOpen;
-		hr = pFileOpen.CoCreateInstance(__uuidof(FileOpenDialog));
-		if(FAILED(hr)) return hr;
-
-		COMDLG_FILTERSPEC fileType;
-		fileType.pszName = L"PDF";
-		fileType.pszSpec = L"*.pdf";
-		hr = pFileOpen->SetFileTypes(1, &fileType);
-		if(FAILED(hr)) return hr;
-
-		hr = pFileOpen->Show(NULL);
-		if(FAILED(hr)) return hr;
-
-		CComPtr<IShellItem> pItem;
-		hr = pFileOpen->GetResult(&pItem);
-		if(FAILED(hr)) return hr;
-
-		PWSTR pszFilePath;
-		pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
-		if(SUCCEEDED(hr))
-		{
-			MessageBox(NULL, pszFilePath, L"File Path", MB_OK);
-			CoTaskMemFree(pszFilePath);
-		}
-
-		return hr;
-	}
-	
-	Types::ErrDat<std::filesystem::path> selectSavePath() 
-	{
-		BasicFileOpen();
-		return {};
-	}
 }
 }
