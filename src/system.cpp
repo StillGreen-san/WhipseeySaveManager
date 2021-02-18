@@ -7,11 +7,9 @@
 #include <fstream>
 #include <regex>
 
-#include <atlbase.h>
+#include <SimpleIni.h>
 
-namespace WhipseeySaveManager
-{
-namespace System
+namespace WhipseeySaveManager::System
 {
 	Types::ErrDat<Types::Theme> systemTheme() 
 	{
@@ -153,5 +151,50 @@ namespace System
 		errPath.error.code = Types::Error::Code::GameNotFound;
 		return errPath;
 	}
-}
+
+	namespace INI
+	{
+		constexpr int NOT_FOUND = -1;
+		namespace bfs_settings
+		{
+		constexpr char* Cheats = "Cheats";
+		constexpr char* cheats_enabled = "cheats_enabled";
+		constexpr long NOT_FOUND = -1;
+		} // namespace bfs_settings
+	} // namespace INI::bfs_settings
+
+	Types::ErrDat<Types::Settings> readSettings(const std::filesystem::path& settings) 
+	{
+		Types::ErrDat<Types::Settings> errSettings;
+		
+		CSimpleIniA ini;
+		SI_Error er = ini.LoadFile(settings.c_str());
+		if(er != SI_OK)
+		{
+			errSettings.error.code = Types::Error::Code::FailedToLoadSettings;
+			return errSettings;
+		}
+
+		int section = ini.GetSectionSize(INI::bfs_settings::Cheats);
+		if(section == INI::NOT_FOUND)
+		{
+			errSettings.error.code = Types::Error::Code::CheatsSectionNotFound;
+			return errSettings;
+		}
+
+		long cheats = ini.GetLongValue(
+			INI::bfs_settings::Cheats,
+			INI::bfs_settings::cheats_enabled,
+			INI::bfs_settings::NOT_FOUND
+		);
+		if(cheats == INI::bfs_settings::NOT_FOUND)
+		{
+			errSettings.error.code = Types::Error::Code::CheatsKeyNotFound;
+			return errSettings;
+		}
+
+		errSettings.data.cheats = cheats == 0 ? Types::Toggle::Disabled : Types::Toggle::Enabled;
+		
+		return errSettings;
+	}
 }

@@ -34,7 +34,7 @@ namespace System
 	Types::ErrDat<std::filesystem::path> defaultSettingsPath();
 
 	Types::ErrDat<Types::Save> readSave(std::filesystem::path);
-	Types::ErrDat<Types::Settings> readSettings(std::filesystem::path);
+	Types::ErrDat<Types::Settings> readSettings(const std::filesystem::path& settings);
 	Types::ErrDat<Types::Options> readOptions(std::filesystem::path);
 	Types::ErrDat<Types::File> readFile(std::filesystem::path, Types::FileIndex);
 	Types::Error writeSave(std::filesystem::path, Types::Save);

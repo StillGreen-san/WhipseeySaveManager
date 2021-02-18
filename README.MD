@@ -33,6 +33,7 @@ uses cmake
 - GUI : [nana](https://github.com/cnjinhao/nana)
 - Testing : [Catch2](https://github.com/catchorg/Catch2)
 - Registry : [WinReg](https://github.com/GiovanniDicanio/WinReg)
+- INI : [simpleini](https://github.com/brofield/simpleini)
 
 ### Tests
 

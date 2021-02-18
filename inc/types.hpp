@@ -284,7 +284,10 @@ namespace Types
 			SteamKeyNotFound,// an error occurred while opening the steam key in the registry
 			SteamDwordNotFound,
 			SteamLibrariesNotFound,
-			GameNotFound
+			GameNotFound,
+			FailedToLoadSettings,
+			CheatsSectionNotFound,
+			CheatsKeyNotFound
 		} code = Code::Nothing;//TODO add comments for error codes
 		/**
 		 * @brief conversion to bool
