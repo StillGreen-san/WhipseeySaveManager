@@ -167,7 +167,7 @@ namespace Types
 		{
 			return value == other.value;
 		}
-	};
+	};//TODO check if needed
 	/**
 	 * @brief enemies, killed holds positive numbers <= 16777216
 	 * 
@@ -290,6 +290,10 @@ namespace Types
 			CheatsKeyNotFound,
 			CheatsKeyInvalid
 		} code = Code::Nothing;//TODO add comments for error codes
+
+		Error() = default;
+		Error(Code code) : code{code} { }
+
 		/**
 		 * @brief conversion to bool
 		 * 
@@ -299,9 +303,21 @@ namespace Types
 		{
 			return code != Code::Nothing;
 		}
+
+		Error& operator=(const Error::Code& code)
+		{
+			this->code = code;
+			return *this;
+		}
+
 		bool operator==(const Error& other) const
 		{
 			return code == other.code;
+		}
+
+		bool operator==(const Error::Code& code) const
+		{
+			return this->code == code;
 		}
 	};
 
@@ -315,6 +331,7 @@ namespace Types
 	{
 		Error error;
 		Data data;
+
 		/**
 		 * @brief checks the error status
 		 * 
@@ -323,6 +340,26 @@ namespace Types
 		operator bool() const
 		{
 			return error == false;
+		}
+
+		ErrDat& operator=(const Error& error)
+		{
+			this->error = error;
+		}
+
+		ErrDat& operator=(const Data& data)
+		{
+			this->data = data;
+		}
+
+		bool operator==(const Error& error) const
+		{
+			return this->error == error;
+		}
+
+		bool operator==(const Data& data) const
+		{
+			return this->data == data;
 		}
 	};
 } // namespace Types

@@ -30,12 +30,12 @@ namespace WhipseeySaveManager::System
 			}
 			else
 			{
-				errTheme.error.code = Types::Error::Code::ThemeDwordNotFound;
+				errTheme = Types::Error::Code::ThemeDwordNotFound;
 			}
 		}
 		else
 		{
-			errTheme.error.code = Types::Error::Code::ThemeKeyNotFound;
+			errTheme = Types::Error::Code::ThemeKeyNotFound;
 		}
 		
 		if(regHandler.TryOpen(HKEY_CURRENT_USER, colorKey, KEY_READ))
@@ -47,15 +47,15 @@ namespace WhipseeySaveManager::System
 			}
 			else
 			{
-				errTheme.error.code = Types::Error::Code::ColorDwordNotFound;
+				errTheme = Types::Error::Code::ColorDwordNotFound;
 			}
 		}
 		else
 		{
-			errTheme.error.code = Types::Error::Code::ColorKeyNotFound;
+			errTheme = Types::Error::Code::ColorKeyNotFound;
 		}
 
-		return errTheme;
+		return errTheme;//TODO handle multiple error codes
 	}
 	
 	Types::ErrDat<std::filesystem::path> defaultSavePath() 
@@ -70,7 +70,7 @@ namespace WhipseeySaveManager::System
 		}
 		else
 		{
-			errPath.error.code = Types::Error::Code::DefaultSaveNotFound;
+			errPath = Types::Error::Code::DefaultSaveNotFound;
 			CoTaskMemFree(szPath);
 			return errPath;
 		}
@@ -78,7 +78,7 @@ namespace WhipseeySaveManager::System
 		errPath.data += R"(\Whipseey\savedata\whipseey.sav)";
 		if(std::filesystem::exists(errPath.data) == false)
 		{
-			errPath.error.code = Types::Error::Code::DefaultSaveNotFound;
+			errPath = Types::Error::Code::DefaultSaveNotFound;
 			errPath.data.clear();
 		}
 
@@ -103,13 +103,13 @@ namespace WhipseeySaveManager::System
 			}
 			else
 			{
-				errPath.error.code = Types::Error::Code::SteamDwordNotFound;
+				errPath = Types::Error::Code::SteamDwordNotFound;
 				return errPath;
 			}
 		}
 		else
 		{
-			errPath.error.code = Types::Error::Code::SteamKeyNotFound;
+			errPath = Types::Error::Code::SteamKeyNotFound;
 			return errPath;
 		}
 
@@ -126,7 +126,7 @@ namespace WhipseeySaveManager::System
 
 		if(std::filesystem::exists(librariesFilePath) == false)
 		{
-			errPath.error.code = Types::Error::Code::SteamLibrariesNotFound;
+			errPath = Types::Error::Code::SteamLibrariesNotFound;
 			return errPath;
 		}
 
@@ -148,7 +148,7 @@ namespace WhipseeySaveManager::System
 		}
 		librariesFile.close();
 
-		errPath.error.code = Types::Error::Code::GameNotFound;
+		errPath = Types::Error::Code::GameNotFound;
 		return errPath;
 	}
 
@@ -157,9 +157,9 @@ namespace WhipseeySaveManager::System
 		constexpr int NOT_FOUND = -1;
 		namespace bfs_settings
 		{
-		constexpr char* Cheats = "Cheats";
-		constexpr char* cheats_enabled = "cheats_enabled";
-		constexpr long NOT_FOUND = -1;
+			constexpr char* Cheats = "Cheats";
+			constexpr char* cheats_enabled = "cheats_enabled";
+			constexpr long NOT_FOUND = -1;
 		} // namespace bfs_settings
 	} // namespace INI::bfs_settings
 
@@ -171,14 +171,14 @@ namespace WhipseeySaveManager::System
 		SI_Error er = ini.LoadFile(settings.c_str());
 		if(er != SI_OK)
 		{
-			errSettings.error.code = Types::Error::Code::FailedToLoadSettings;
+			errSettings = Types::Error::Code::FailedToLoadSettings;
 			return errSettings;
 		}
 
 		int section = ini.GetSectionSize(INI::bfs_settings::Cheats);
 		if(section == INI::NOT_FOUND)
 		{
-			errSettings.error.code = Types::Error::Code::CheatsSectionNotFound;
+			errSettings = Types::Error::Code::CheatsSectionNotFound;
 			return errSettings;
 		}
 
@@ -189,12 +189,12 @@ namespace WhipseeySaveManager::System
 		);
 		if(cheats == INI::bfs_settings::NOT_FOUND)
 		{
-			errSettings.error.code = Types::Error::Code::CheatsKeyNotFound;
+			errSettings = Types::Error::Code::CheatsKeyNotFound;
 			return errSettings;
 		}
 		if(cheats < 0 || cheats > 1)//TODO add proper validiotion (for all types)
 		{
-			errSettings.error.code = Types::Error::Code::CheatsKeyInvalid;
+			errSettings = Types::Error::Code::CheatsKeyInvalid;
 			return errSettings;
 		}
 

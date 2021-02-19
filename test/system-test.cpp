@@ -15,10 +15,10 @@ TEST_CASE("System::systemTheme", "[.][System][Manual]")
 	}
 	else
 	{
-		CHECK((ret.error.code == Types::Error::Code::ColorDwordNotFound
-			|| ret.error.code == Types::Error::Code::ColorKeyNotFound
-			|| ret.error.code == Types::Error::Code::ThemeDwordNotFound
-			|| ret.error.code == Types::Error::Code::ThemeKeyNotFound));
+		CHECK((ret == Types::Error::Code::ColorDwordNotFound
+			|| ret == Types::Error::Code::ColorKeyNotFound
+			|| ret == Types::Error::Code::ThemeDwordNotFound
+			|| ret == Types::Error::Code::ThemeKeyNotFound));
 		FAIL("theme not retrieved");
 	}
 	std::stringstream msg;
@@ -39,7 +39,7 @@ TEST_CASE("System::defaultSavePath", "[.][System][Save]")
 	}
 	else
 	{
-		CHECK(ret.error.code == Types::Error::Code::DefaultSaveNotFound);
+		CHECK(ret == Types::Error::Code::DefaultSaveNotFound);
 		FAIL("path not retrieved");
 	}
 }
@@ -55,10 +55,10 @@ TEST_CASE("System::defaultSettingsPath", "[.][System][Game]")
 	}
 	else
 	{
-		CHECK((ret.error.code == Types::Error::Code::GameNotFound
-			|| ret.error.code == Types::Error::Code::SteamDwordNotFound
-			|| ret.error.code == Types::Error::Code::SteamKeyNotFound
-			|| ret.error.code == Types::Error::Code::SteamLibrariesNotFound));
+		CHECK((ret == Types::Error::Code::GameNotFound
+			|| ret == Types::Error::Code::SteamDwordNotFound
+			|| ret == Types::Error::Code::SteamKeyNotFound
+			|| ret == Types::Error::Code::SteamLibrariesNotFound));
 		FAIL("path not retrieved");
 	}
 }
@@ -93,7 +93,7 @@ TEST_CASE("System::readSettings", "[System]")
 	{
 		Types::ErrDat<Types::Settings> ret = System::readSettings(invalid);
 		CHECK_FALSE(ret);
-		CHECK(ret.error.code == Types::Error::Code::CheatsKeyInvalid);
+		CHECK(ret == Types::Error::Code::CheatsKeyInvalid);
 		CHECK(ret.data.cheats == Types::Settings().cheats);
 	}
 
@@ -101,8 +101,8 @@ TEST_CASE("System::readSettings", "[System]")
 	{
 		Types::ErrDat<Types::Settings> ret = System::readSettings(missing);
 		CHECK_FALSE(ret);
-		CHECK((ret.error.code == Types::Error::Code::CheatsSectionNotFound
-			|| ret.error.code == Types::Error::Code::CheatsKeyNotFound));
+		CHECK((ret == Types::Error::Code::CheatsSectionNotFound
+			|| ret == Types::Error::Code::CheatsKeyNotFound));
 		CHECK(ret.data.cheats == Types::Settings().cheats);
 	}
 }
