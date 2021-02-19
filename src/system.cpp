@@ -8,7 +8,7 @@
 #include <regex>
 
 #include <SimpleIni.h>
-
+//TODO use new error stuff
 namespace WhipseeySaveManager::System
 {
 	Types::ErrDat<Types::Theme> systemTheme() 

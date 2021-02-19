@@ -5,7 +5,7 @@
 #include <ios>
 
 using namespace WhipseeySaveManager;
-
+//TODO use new error stuff
 TEST_CASE("System::systemTheme", "[.][System][Manual]")
 {
 	Types::ErrDat<Types::Theme> ret = System::systemTheme();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <set>
 
 /**
  * @brief General Project Namespace
@@ -152,7 +153,7 @@ namespace Types
 		{
 			value = number;
 		}
-		operator Base() const
+		explicit operator Base() const
 		{
 			return value;
 		}
@@ -263,11 +264,12 @@ namespace Types
 	};
 
 	/**
-	 * @brief contains Where & What info of an error, converts to true if an error occurred
+	 * @brief may contain on or more error codes, converts to true if not empty
 	 * 
 	 */
-	struct Error
+	class Error
 	{
+	public:
 		/**
 		 * @brief the type of error
 		 * 
@@ -289,10 +291,14 @@ namespace Types
 			CheatsSectionNotFound,
 			CheatsKeyNotFound,
 			CheatsKeyInvalid
-		} code = Code::Nothing;//TODO add comments for error codes
+		};//TODO add comments for error codes
 
+	private:
+		std::set<Code> codes;
+
+	public:
 		Error() = default;
-		Error(Code code) : code{code} { }
+		Error(Code code) : codes{code} { }
 
 		/**
 		 * @brief conversion to bool
@@ -301,25 +307,72 @@ namespace Types
 		 */
 		operator bool() const
 		{
-			return code != Code::Nothing;
+			return codes.empty() == false;
 		}
 
+		/**
+		 * @brief resets codes to only the one passed in
+		 * 
+		 * @param code the code to assign
+		 * @return Error& reference to this object
+		 */
 		Error& operator=(const Error::Code& code)
 		{
-			this->code = code;
+			codes.clear();
+			codes.emplace(code);
 			return *this;
 		}
 
-		bool operator==(const Error& other) const
+		/**
+		 * @brief adds a code
+		 * 
+		 * @param code the code to add
+		 * @return Error& reference to this object
+		 */
+		Error& operator+=(const Error::Code& code)
 		{
-			return code == other.code;
+			codes.emplace(code);
+			return *this;
 		}
 
+		/**
+		 * @brief checks if both contain the same errors (order does not matter)
+		 * 
+		 * @param other the error class to compare to
+		 * @return true if both contain the same errors (order does not matter)
+		 */
+		bool operator==(const Error& other) const
+		{
+			if(codes.size() != other.codes.size()) return false;
+			for(Code code : codes)
+			{
+				bool found = false;
+				for(Code otherCode : other.codes)
+				{
+					if(code == otherCode)
+					{
+						found = true;
+						break;
+					}
+				}
+				if(found == false) return false;
+			}
+			return true;
+		}
+
+		/**
+		 * @brief checks if this only conatins the code passed in
+		 * 
+		 * @param code the code to check
+		 * @return true if this only conatins the code passed in
+		 */
 		bool operator==(const Error::Code& code) const
 		{
-			return this->code == code;
+			if(code == Code::Nothing) return codes.empty();
+			if(codes.size() > 1) return false;
+			return codes.find(code) != codes.cend();
 		}
-	};
+	};//TODO tests & more interface?
 
 	/**
 	 * @brief holds Error and Data
@@ -347,6 +400,11 @@ namespace Types
 			this->error = error;
 		}
 
+		ErrDat& operator+=(const Error::Code& error)
+		{
+			this->error += error;
+		}
+
 		ErrDat& operator=(const Data& data)
 		{
 			this->data = data;
@@ -361,6 +419,6 @@ namespace Types
 		{
 			return this->data == data;
 		}
-	};
+	};//TODO more helpers?
 } // namespace Types
 } // namespace WhipseeySaveManager
