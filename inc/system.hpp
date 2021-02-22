@@ -26,7 +26,7 @@ namespace System
 	Types::ErrDat<std::filesystem::path> defaultSavePath();
 
 	/**
-	 * @brief finds the default settings path
+	 * @brief finds the default bfs_settings.ini path
 	 * 
 	 * @return Types::ErrDat<std::filesystem::path> if error path is empty and code = 
 	 * SteamKeyNotFound, SteamDwordNotFound, SteamLibrariesNotFound or GameNotFound
@@ -44,11 +44,19 @@ namespace System
 	 */
 	Types::ErrDat<Types::Settings> readSettings(const std::filesystem::path& settings);
 
-	Types::ErrDat<Types::Options> readOptions(std::filesystem::path);
+	/**
+	 * @brief reads the options section of a whipseey save file
+	 * 
+	 * @param options path to whipseey save file
+	 * @return Types::ErrDat<Types::Options> 
+	 */
+	Types::ErrDat<Types::Options> readOptions(const std::filesystem::path& options);
+
 	Types::ErrDat<Types::File> readFile(std::filesystem::path, Types::FileIndex);
 	Types::Error writeSave(std::filesystem::path, Types::Save);
 	Types::Error writeSettings(std::filesystem::path, Types::Settings);
 	Types::Error writeOptions(std::filesystem::path,Types::Options);
 	Types::Error writeFile(std::filesystem::path, Types::FileIndex, Types::File);
 } // namespace System
+	void func();
 } // namespace WhipseeySaveManager

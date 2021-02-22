@@ -5,7 +5,7 @@
 #include <ios>
 
 using namespace WhipseeySaveManager;
-//TODO use new error stuff
+
 TEST_CASE("System::systemTheme", "[.][System][Manual]")
 {
 	Types::ErrDat<Types::Theme> ret = System::systemTheme();
@@ -105,4 +105,48 @@ TEST_CASE("System::readSettings", "[System]")
 			|| ret == Types::Error::Code::CheatsKeyNotFound));
 		CHECK(ret.data.cheats == Types::Settings().cheats);
 	}
+}
+
+TEST_CASE("System::readOptions", "[System]")
+{
+	const std::filesystem::path default(L"data/options-default.ini");
+	// const std::filesystem::path invalid(L"data/options-invalid.ini");
+	// const std::filesystem::path missing(L"data/options-missing.ini");
+	// const std::filesystem::path   valid(L"data/options-valid.ini");
+
+	if(std::filesystem::exists(default) == false) FAIL("default test file missing!");
+	// if(std::filesystem::exists(invalid) == false) FAIL("invalid test file missing!");
+	// if(std::filesystem::exists(missing) == false) FAIL("missing test file missing!");
+	// if(std::filesystem::exists(  valid) == false) FAIL("  valid test file missing!");
+
+	SECTION("default")
+	{
+		Types::ErrDat<Types::Options> ret = System::readOptions(default);
+		CHECK(ret);
+		// CHECK(ret.data.cheats == Types::Toggle::Disabled);
+	}
+
+	// SECTION("valid")
+	// {
+	// 	Types::ErrDat<Types::Settings> ret = System::readSettings(valid);
+	// 	CHECK(ret);
+	// 	CHECK(ret.data.cheats == Types::Toggle::Enabled);
+	// }
+
+	// SECTION("invalid")
+	// {
+	// 	Types::ErrDat<Types::Settings> ret = System::readSettings(invalid);
+	// 	CHECK_FALSE(ret);
+	// 	CHECK(ret == Types::Error::Code::CheatsKeyInvalid);
+	// 	CHECK(ret.data.cheats == Types::Settings().cheats);
+	// }
+
+	// SECTION("missing")
+	// {
+	// 	Types::ErrDat<Types::Settings> ret = System::readSettings(missing);
+	// 	CHECK_FALSE(ret);
+	// 	CHECK((ret == Types::Error::Code::CheatsSectionNotFound
+	// 		|| ret == Types::Error::Code::CheatsKeyNotFound));
+	// 	CHECK(ret.data.cheats == Types::Settings().cheats);
+	// }
 }

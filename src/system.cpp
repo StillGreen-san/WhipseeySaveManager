@@ -8,7 +8,7 @@
 #include <regex>
 
 #include <SimpleIni.h>
-//TODO use new error stuff
+
 namespace WhipseeySaveManager::System
 {
 	Types::ErrDat<Types::Theme> systemTheme() 
@@ -30,12 +30,12 @@ namespace WhipseeySaveManager::System
 			}
 			else
 			{
-				errTheme = Types::Error::Code::ThemeDwordNotFound;
+				errTheme += Types::Error::Code::ThemeDwordNotFound;
 			}
 		}
 		else
 		{
-			errTheme = Types::Error::Code::ThemeKeyNotFound;
+			errTheme += Types::Error::Code::ThemeKeyNotFound;
 		}
 		
 		if(regHandler.TryOpen(HKEY_CURRENT_USER, colorKey, KEY_READ))
@@ -47,15 +47,15 @@ namespace WhipseeySaveManager::System
 			}
 			else
 			{
-				errTheme = Types::Error::Code::ColorDwordNotFound;
+				errTheme += Types::Error::Code::ColorDwordNotFound;
 			}
 		}
 		else
 		{
-			errTheme = Types::Error::Code::ColorKeyNotFound;
+			errTheme += Types::Error::Code::ColorKeyNotFound;
 		}
 
-		return errTheme;//TODO handle multiple error codes
+		return errTheme;
 	}
 	
 	Types::ErrDat<std::filesystem::path> defaultSavePath() 
@@ -155,12 +155,37 @@ namespace WhipseeySaveManager::System
 	namespace INI
 	{
 		constexpr int NOT_FOUND = -1;
+
 		namespace bfs_settings
 		{
 			constexpr char* Cheats = "Cheats";
 			constexpr char* cheats_enabled = "cheats_enabled";
 			constexpr long NOT_FOUND = -1;
 		} // namespace bfs_settings
+
+		namespace whipseey
+		{
+			constexpr char* options = "options";
+			constexpr char* language = "language";
+			constexpr char* scale = "scale";
+			constexpr char* fullscreen = "fullscreen";
+			constexpr char* left_handed = "left_handed";
+			constexpr char* sound_volume = "sound_volume";
+			constexpr char* sound_toggle = "sound_toggle";
+			constexpr char* music_volume = "music_volume";
+			constexpr char* music_toggle = "music_toggle";
+			constexpr char* NOT_FOUND = nullptr;
+		} // namespace whipseey
+
+		double parseSaveDouble(const char* rawValue)
+		{
+			return std::strtod(rawValue+1, nullptr);
+		}//TODO validation?
+
+		long parseSaveLong(const char* rawValue)
+		{
+			return std::strtol(rawValue+1, nullptr, 10);
+		}
 	} // namespace INI::bfs_settings
 
 	Types::ErrDat<Types::Settings> readSettings(const std::filesystem::path& settings) 
@@ -192,7 +217,7 @@ namespace WhipseeySaveManager::System
 			errSettings = Types::Error::Code::CheatsKeyNotFound;
 			return errSettings;
 		}
-		if(cheats < 0 || cheats > 1)//TODO add proper validiotion (for all types)
+		if(cheats < 0 || cheats > 1)//TODO add proper validatiotion (for all types)
 		{
 			errSettings = Types::Error::Code::CheatsKeyInvalid;
 			return errSettings;
@@ -200,5 +225,42 @@ namespace WhipseeySaveManager::System
 
 		errSettings.data.cheats = cheats == 0 ? Types::Toggle::Disabled : Types::Toggle::Enabled;
 		return errSettings;
+	}
+	
+	Types::ErrDat<Types::Options> readOptions(const std::filesystem::path& options) 
+	{
+		Types::ErrDat<Types::Options> errOpt;
+
+		CSimpleIniA ini;//TODO create ini wrapper
+		SI_Error er = ini.LoadFile(options.c_str());
+		if(er != SI_OK)
+		{
+			errOpt = Types::Error::Code::FailedToLoadOptions;
+			return errOpt;
+		}
+
+		int section = ini.GetSectionSize(INI::whipseey::options);
+		if(section == INI::NOT_FOUND)
+		{
+			errOpt = Types::Error::Code::OptionsSectionNotFound;
+			return errOpt;
+		}
+
+		const char* scaleRaw = ini.GetValue(
+			INI::whipseey::options,
+			INI::whipseey::scale,
+			INI::whipseey::NOT_FOUND
+		);
+		if(scaleRaw == INI::whipseey::NOT_FOUND)
+		{
+			errOpt = Types::Error::Code::ScaleKeyNotFound;
+			return errOpt;
+		}//TODO add proper validiotion (for all types)
+
+		long scale = INI::parseSaveLong(scaleRaw);
+
+		errOpt.data.scale = static_cast<Types::Scale>(scale);//TODO validation?
+
+		return errOpt;
 	}
 }

@@ -290,7 +290,10 @@ namespace Types
 			FailedToLoadSettings,
 			CheatsSectionNotFound,
 			CheatsKeyNotFound,
-			CheatsKeyInvalid
+			CheatsKeyInvalid,
+			FailedToLoadOptions,
+			OptionsSectionNotFound,
+			ScaleKeyNotFound
 		};//TODO add comments for error codes
 
 	private:
@@ -395,29 +398,32 @@ namespace Types
 			return error == false;
 		}
 
-		ErrDat& operator=(const Error& error)
+		ErrDat& operator=(const Error& newError)
 		{
-			this->error = error;
+			error = newError;
+			return *this;
 		}
 
-		ErrDat& operator+=(const Error::Code& error)
+		ErrDat& operator+=(const Error::Code& additionalCode)
 		{
-			this->error += error;
+			error += additionalCode;
+			return *this;
 		}
 
-		ErrDat& operator=(const Data& data)
+		ErrDat& operator=(const Data& newData)
 		{
-			this->data = data;
+			data = newData;
+			return *this;
 		}
 
-		bool operator==(const Error& error) const
+		bool operator==(const Error& otherError) const
 		{
-			return this->error == error;
+			return error == otherError;
 		}
 
-		bool operator==(const Data& data) const
+		bool operator==(const Data& otherData) const
 		{
-			return this->data == data;
+			return data == otherData;
 		}
 	};//TODO more helpers?
 } // namespace Types
