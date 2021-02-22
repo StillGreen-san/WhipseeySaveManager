@@ -293,7 +293,14 @@ namespace Types
 			CheatsKeyInvalid,
 			FailedToLoadOptions,
 			OptionsSectionNotFound,
-			ScaleKeyNotFound
+			ScaleKeyNotFound,
+			LanguageKeyNotFound,
+			FullscreenKeyNotFound,
+			LefthandedKeyNotFound,
+			SoundvolumeKeyNotFound,
+			SoundtoggleKeyNotFound,
+			MusicvolumeKeyNotFound,
+			MusictoggleKeyNotFound
 		};//TODO add comments for error codes
 
 	private:

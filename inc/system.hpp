@@ -48,7 +48,10 @@ namespace System
 	 * @brief reads the options section of a whipseey save file
 	 * 
 	 * @param options path to whipseey save file
-	 * @return Types::ErrDat<Types::Options> 
+	 * @return Types::ErrDat<Types::Options> Options always valid,
+	 * on error: code = FailedToLoadOptions, OptionsSectionNotFound, ScaleKeyNotFound,
+	 * LanguageKeyNotFound, FullscreenKeyNotFound, LefthandedKeyNotFound, SoundvolumeKeyNotFound,
+	 * SoundtoggleKeyNotFound, MusicvolumeKeyNotFound, MusictoggleKeyNotFound
 	 */
 	Types::ErrDat<Types::Options> readOptions(const std::filesystem::path& options);
 

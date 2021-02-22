@@ -154,13 +154,15 @@ namespace WhipseeySaveManager::System
 
 	namespace INI
 	{
-		constexpr int NOT_FOUND = -1;
+		constexpr int SIZE_NOT_FOUND = -1;
+		constexpr char* VALUE_NOT_FOUND = nullptr;
+		constexpr long LONG_NOT_FOUND = -1;
+		constexpr double DOUBLE_NOT_FOUND = -1.0;
 
 		namespace bfs_settings
 		{
 			constexpr char* Cheats = "Cheats";
 			constexpr char* cheats_enabled = "cheats_enabled";
-			constexpr long NOT_FOUND = -1;
 		} // namespace bfs_settings
 
 		namespace whipseey
@@ -174,18 +176,35 @@ namespace WhipseeySaveManager::System
 			constexpr char* sound_toggle = "sound_toggle";
 			constexpr char* music_volume = "music_volume";
 			constexpr char* music_toggle = "music_toggle";
-			constexpr char* NOT_FOUND = nullptr;
 		} // namespace whipseey
 
-		double parseSaveDouble(const char* rawValue)
+		template<typename T>
+		void parseSaveValue(const CSimpleIniA& ini, T& data, Types::Error& error, Types::Error::Code code,
+			const char* section, const char* key)
 		{
-			return std::strtod(rawValue+1, nullptr);
-		}//TODO validation?
+			const char* rawValue = ini.GetValue(section, key, VALUE_NOT_FOUND);
+			if(rawValue == VALUE_NOT_FOUND)
+			{
+				error += code;
+				return;
+			}
+			long value = std::strtol(rawValue+1, nullptr, 10);
+			data = static_cast<T>(value);
+		}//TODO validation
 
-		long parseSaveLong(const char* rawValue)
+		template<>
+		void parseSaveValue(const CSimpleIniA& ini, Types::Volume& data, Types::Error& error, Types::Error::Code code,
+			const char* section, const char* key)
 		{
-			return std::strtol(rawValue+1, nullptr, 10);
-		}
+			const char* rawValue = ini.GetValue(section, key, VALUE_NOT_FOUND);
+			if(rawValue == VALUE_NOT_FOUND)
+			{
+				error += code;
+				return;
+			}
+			double value = std::strtod(rawValue+1, nullptr) * 10.0;
+			data = static_cast<Types::Volume>(value);
+		}//TODO validation
 	} // namespace INI::bfs_settings
 
 	Types::ErrDat<Types::Settings> readSettings(const std::filesystem::path& settings) 
@@ -201,7 +220,7 @@ namespace WhipseeySaveManager::System
 		}
 
 		int section = ini.GetSectionSize(INI::bfs_settings::Cheats);
-		if(section == INI::NOT_FOUND)
+		if(section == INI::SIZE_NOT_FOUND)
 		{
 			errSettings = Types::Error::Code::CheatsSectionNotFound;
 			return errSettings;
@@ -210,14 +229,14 @@ namespace WhipseeySaveManager::System
 		long cheats = ini.GetLongValue(
 			INI::bfs_settings::Cheats,
 			INI::bfs_settings::cheats_enabled,
-			INI::bfs_settings::NOT_FOUND
+			INI::LONG_NOT_FOUND
 		);
-		if(cheats == INI::bfs_settings::NOT_FOUND)
+		if(cheats == INI::LONG_NOT_FOUND)
 		{
 			errSettings = Types::Error::Code::CheatsKeyNotFound;
 			return errSettings;
 		}
-		if(cheats < 0 || cheats > 1)//TODO add proper validatiotion (for all types)
+		if(cheats < 0 || cheats > 1)//TODO add proper validation (for all types)
 		{
 			errSettings = Types::Error::Code::CheatsKeyInvalid;
 			return errSettings;
@@ -240,26 +259,59 @@ namespace WhipseeySaveManager::System
 		}
 
 		int section = ini.GetSectionSize(INI::whipseey::options);
-		if(section == INI::NOT_FOUND)
+		if(section == INI::SIZE_NOT_FOUND)
 		{
 			errOpt = Types::Error::Code::OptionsSectionNotFound;
 			return errOpt;
 		}
 
-		const char* scaleRaw = ini.GetValue(
-			INI::whipseey::options,
-			INI::whipseey::scale,
-			INI::whipseey::NOT_FOUND
+		INI::parseSaveValue(
+			ini, errOpt.data.language,
+			errOpt.error, Types::Error::Code::LanguageKeyNotFound,
+			INI::whipseey::options, INI::whipseey::language
 		);
-		if(scaleRaw == INI::whipseey::NOT_FOUND)
-		{
-			errOpt = Types::Error::Code::ScaleKeyNotFound;
-			return errOpt;
-		}//TODO add proper validiotion (for all types)
 
-		long scale = INI::parseSaveLong(scaleRaw);
+		INI::parseSaveValue(
+			ini, errOpt.data.scale,
+			errOpt.error, Types::Error::Code::ScaleKeyNotFound,
+			INI::whipseey::options, INI::whipseey::scale
+		);
 
-		errOpt.data.scale = static_cast<Types::Scale>(scale);//TODO validation?
+		INI::parseSaveValue(
+			ini, errOpt.data.fullScreen,
+			errOpt.error, Types::Error::Code::FullscreenKeyNotFound,
+			INI::whipseey::options, INI::whipseey::fullscreen
+		);
+
+		INI::parseSaveValue(
+			ini, errOpt.data.leftHanded,
+			errOpt.error, Types::Error::Code::LefthandedKeyNotFound,
+			INI::whipseey::options, INI::whipseey::left_handed
+		);
+
+		INI::parseSaveValue(
+			ini, errOpt.data.sound.volume,
+			errOpt.error, Types::Error::Code::SoundvolumeKeyNotFound,
+			INI::whipseey::options, INI::whipseey::sound_volume
+		);
+
+		INI::parseSaveValue(
+			ini, errOpt.data.sound.toggle,
+			errOpt.error, Types::Error::Code::SoundtoggleKeyNotFound,
+			INI::whipseey::options, INI::whipseey::sound_toggle
+		);
+
+		INI::parseSaveValue(
+			ini, errOpt.data.sound.volume,
+			errOpt.error, Types::Error::Code::MusicvolumeKeyNotFound,
+			INI::whipseey::options, INI::whipseey::sound_volume
+		);
+
+		INI::parseSaveValue(
+			ini, errOpt.data.sound.toggle,
+			errOpt.error, Types::Error::Code::MusictoggleKeyNotFound,
+			INI::whipseey::options, INI::whipseey::music_volume
+		);
 
 		return errOpt;
 	}
