@@ -302,15 +302,15 @@ namespace WhipseeySaveManager::System
 		);
 
 		INI::parseSaveValue(
-			ini, errOpt.data.sound.volume,
+			ini, errOpt.data.music.volume,
 			errOpt.error, Types::Error::Code::MusicvolumeKeyNotFound,
-			INI::whipseey::options, INI::whipseey::sound_volume
+			INI::whipseey::options, INI::whipseey::music_volume
 		);
 
 		INI::parseSaveValue(
-			ini, errOpt.data.sound.toggle,
+			ini, errOpt.data.music.toggle,
 			errOpt.error, Types::Error::Code::MusictoggleKeyNotFound,
-			INI::whipseey::options, INI::whipseey::music_volume
+			INI::whipseey::options, INI::whipseey::music_toggle
 		);
 
 		return errOpt;
