@@ -10,6 +10,10 @@
 #include <nana/gui/widgets/group.hpp>
 #include <nana/gui/widgets/label.hpp>
 
+#include "ini.hpp"
+
+using namespace WhipseeySaveManager;
+
 int WinMain()
 {
 	nana::form fm(nana::api::make_center(625, 255));
@@ -57,6 +61,7 @@ int WinMain()
 	grf1.collocate();
 	nana::group grf2(fm, "File2 7-42069");
 	nana::group grf3(fm, "File3 7-42069");
+	grf3.add_option(std::to_string(INI::test()));
 
 	fm.div(
 		"vert"

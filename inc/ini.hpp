@@ -115,38 +115,89 @@ namespace INI
 		}
 	};
 
-	struct IKey
+	class IKey
 	{
+	public:
 		virtual std::string_view key() = 0;
-		virtual Types::Error fromString(std::string_view) = 0;
-		virtual std::string_view toString() = 0;
+		virtual Types::Error fromString(std::string_view /*value*/)
+		{
+			return {};
+		}//default for stringyfied float
+		virtual std::string toString()
+		{
+			return {};
+		}//default for stringyfied float
+		bool operator==(const IKey& other)
+		{
+			return mValue == other.mValue;
+		}
+		virtual ~IKey() = default;
+	protected:
+		explicit IKey(float value) : mValue{value} {}
+		float mValue;
 	};
 	struct ISection
 	{
 		virtual std::string_view section() = 0;
-		virtual std::vector<std::shared_ptr<IKey>> keys() = 0;
+		virtual const std::vector<std::unique_ptr<IKey>>& keys() = 0;
+		virtual ~ISection() = default;
+		std::vector<std::unique_ptr<IKey>> mKeys;
 	};
 	struct IIni
 	{
-		virtual std::vector<std::shared_ptr<IKey>> keys() = 0;
-		virtual std::vector<std::shared_ptr<ISection>> sections() = 0;
+		virtual std::vector<std::unique_ptr<IKey>> keys() = 0;
+		virtual std::vector<std::unique_ptr<ISection>> sections() = 0;
+		virtual ~IIni() = default;
 	};
-	struct Language : IKey
+	struct Language : public IKey
 	{
-		std::string_view key() override;
-		Types::Error fromString(std::string_view) override;
-		std::string_view toString() override;
+		static constexpr std::string_view name = "language";
+		enum Languages { TEMP1=0, TEMP2=1 };
+		Language() : IKey(0.f) {}
+		bool operator==(Languages arg){ return mValue == arg; }
+		std::string_view key() override
+		{
+			return name;
+		}
+	};
+	struct Scale : IKey
+	{
+		static constexpr std::string_view name = "scale";
+		std::string_view key() override
+		{
+			return name;
+		}
+		Types::Error fromString(std::string_view) override
+		{
+			return {};
+		}
+		std::string toString() override
+		{
+			return "2.000000";
+		}
 	};
 	struct Options : ISection
 	{
-		
+		static constexpr std::string_view name = "options";
+		std::string_view section() override
+		{
+			return name;
+		}
+		const std::vector<std::unique_ptr<IKey>>& keys() override
+		{
+			return {};
+		}
 	};
 	struct Save : IIni
 	{
-		void func(const std::vector<std::shared_ptr<IKey>>& vec){
-			std::shared_ptr<IKey> spk = std::make_shared<Language>();
-			std::shared_ptr<IKey> two = vec.front();//! broken!? (all this)
-		}
+		
 	};
+
+	int test()
+	{
+		std::unique_ptr<IKey> spk = std::make_unique<Language>();
+		return spk->key().front();//sizeof(Language);//
+		
+	}
 } // namespace INI
 } // namespace WhispseeySaveManager
