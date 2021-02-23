@@ -1,13 +1,14 @@
 # Whipseey Save Manager
 
 -------------------------
+
 **! WIP !**
--------------------------
+
 -------------------------
 
 **GUI for modifying *some* Values in 'Whipseey and the Lost Atlas' Savegames and Settings**
 
-![Picture](WhipseeySaveManager.png)
+<!-- ![Picture](WhipseeySaveManager.png) -->
 
 Intended to aid with Speedrun practice. Does not allow to modify all values present in the Savegame.
 
@@ -30,16 +31,13 @@ uses cmake
 
 ### Dependencies
 
-- GUI : [nana](https://github.com/cnjinhao/nana)
 - Testing : [Catch2](https://github.com/catchorg/Catch2)
 - Registry : [WinReg](https://github.com/GiovanniDicanio/WinReg)
 - INI : [simpleini](https://github.com/brofield/simpleini)
 
 ### Tests
 
-all functions except those for the GUI have a test case.
-
-some are hidden however and need to be run explicitly. see tags below
+some tests are hidden and need to be run explicitly. see tags below
 
 - [Manual] some of there returns need to be checked by hand
 - [Game] output varies depending on if the game is installed (with steam)

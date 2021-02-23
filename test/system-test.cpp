@@ -116,6 +116,15 @@ TEST_CASE("System::readSettings", "[System]")
 			|| ret == Types::Error::Code::CheatsKeyNotFound));
 		CHECK(ret.data.cheats == Types::Settings().cheats);
 	}
+
+	SECTION("missing")
+	{
+		if(std::filesystem::exists(missing) == true) FAIL("missing test file should not exist!");
+		Types::ErrDat<Types::Settings> ret = System::readSettings(missing);
+		CHECK_FALSE(ret);
+		CHECK(ret == Types::Error::Code::FailedToLoadSettings);
+		CHECK(ret.data.cheats == Types::Settings().cheats);
+	}
 }
 
 TEST_CASE("System::readOptions", "[System]")
@@ -193,8 +202,8 @@ TEST_CASE("System::readOptions", "[System]")
 
 	SECTION("missing")
 	{
-		const Types::ErrDat<Types::Options> ret = System::readOptions(missing);
 		if(std::filesystem::exists(missing) == true) FAIL("missing test file should not exist!");
+		const Types::ErrDat<Types::Options> ret = System::readOptions(missing);
 		CHECK_FALSE(ret);
 		CHECK(ret == Types::Error::Code::FailedToLoadOptions);
 		CHECK(ret.data.language == Types::Language::English);
