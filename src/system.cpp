@@ -176,6 +176,19 @@ namespace WhipseeySaveManager::System
 			constexpr char* sound_toggle = "sound_toggle";
 			constexpr char* music_volume = "music_volume";
 			constexpr char* music_toggle = "music_toggle";
+
+			constexpr char* file[3] = {"file3", "file2", "file1"};
+			constexpr char* boss_no_damage_progress = "boss_no_damage_progress";
+			constexpr char* enemies_defeated = "enemies_defeated";
+			constexpr char* castle = "castle";
+			constexpr char* moon = "moon";
+			constexpr char* snow = "snow";
+			constexpr char* desert = "desert";
+			constexpr char* forest = "forest";
+			constexpr char* ending = "ending";
+			constexpr char* intro = "intro";
+			constexpr char* lives = "lives";
+			constexpr char* gems = "gems";
 		} // namespace whipseey
 
 		template<typename T>
@@ -204,6 +217,20 @@ namespace WhipseeySaveManager::System
 			}
 			double value = std::strtod(rawValue+1, nullptr) * 10.0;
 			data = static_cast<Types::Volume>(value);
+		}//TODO validation
+
+		template<>
+		void parseSaveValue(const CSimpleIniA& ini, Types::Level& data, Types::Error& error, Types::Error::Code code,
+			const char* section, const char* key)
+		{
+			const char* rawValue = ini.GetValue(section, key, VALUE_NOT_FOUND);
+			if(rawValue == VALUE_NOT_FOUND)
+			{
+				error += code;
+				return;
+			}
+			long value = std::strtol(rawValue+1, nullptr, 10);
+			data = static_cast<Types::Level>(value | static_cast<long>(data));
 		}//TODO validation
 	} // namespace INI::bfs_settings
 
@@ -246,12 +273,12 @@ namespace WhipseeySaveManager::System
 		return errSettings;
 	}
 	
-	Types::ErrDat<Types::Options> readOptions(const std::filesystem::path& options) 
+	Types::ErrDat<Types::Options> readOptions(const std::filesystem::path& save) 
 	{
 		Types::ErrDat<Types::Options> errOpt;
 
 		CSimpleIniA ini;//TODO create ini wrapper
-		SI_Error er = ini.LoadFile(options.c_str());
+		SI_Error er = ini.LoadFile(save.c_str());
 		if(er != SI_OK)
 		{
 			errOpt = Types::Error::Code::FailedToLoadOptions;
@@ -265,54 +292,66 @@ namespace WhipseeySaveManager::System
 			return errOpt;
 		}
 
-		INI::parseSaveValue(
-			ini, errOpt.data.language,
-			errOpt.error, Types::Error::Code::LanguageKeyNotFound,
-			INI::whipseey::options, INI::whipseey::language
-		);
+		auto parse = [&](auto& data, Types::Error::Code code, const char* key)
+		{
+			INI::parseSaveValue(
+				ini, data, errOpt.error, code,
+				INI::whipseey::options, key
+			);
+		};
 
-		INI::parseSaveValue(
-			ini, errOpt.data.scale,
-			errOpt.error, Types::Error::Code::ScaleKeyNotFound,
-			INI::whipseey::options, INI::whipseey::scale
-		);
-
-		INI::parseSaveValue(
-			ini, errOpt.data.fullScreen,
-			errOpt.error, Types::Error::Code::FullscreenKeyNotFound,
-			INI::whipseey::options, INI::whipseey::fullscreen
-		);
-
-		INI::parseSaveValue(
-			ini, errOpt.data.leftHanded,
-			errOpt.error, Types::Error::Code::LefthandedKeyNotFound,
-			INI::whipseey::options, INI::whipseey::left_handed
-		);
-
-		INI::parseSaveValue(
-			ini, errOpt.data.sound.volume,
-			errOpt.error, Types::Error::Code::SoundvolumeKeyNotFound,
-			INI::whipseey::options, INI::whipseey::sound_volume
-		);
-
-		INI::parseSaveValue(
-			ini, errOpt.data.sound.toggle,
-			errOpt.error, Types::Error::Code::SoundtoggleKeyNotFound,
-			INI::whipseey::options, INI::whipseey::sound_toggle
-		);
-
-		INI::parseSaveValue(
-			ini, errOpt.data.music.volume,
-			errOpt.error, Types::Error::Code::MusicvolumeKeyNotFound,
-			INI::whipseey::options, INI::whipseey::music_volume
-		);
-
-		INI::parseSaveValue(
-			ini, errOpt.data.music.toggle,
-			errOpt.error, Types::Error::Code::MusictoggleKeyNotFound,
-			INI::whipseey::options, INI::whipseey::music_toggle
-		);
+		parse(errOpt.data.language, Types::Error::Code::LanguageKeyNotFound, INI::whipseey::language);
+		parse(errOpt.data.scale, Types::Error::Code::ScaleKeyNotFound, INI::whipseey::scale);
+		parse(errOpt.data.fullScreen, Types::Error::Code::FullscreenKeyNotFound, INI::whipseey::fullscreen);
+		parse(errOpt.data.leftHanded, Types::Error::Code::LefthandedKeyNotFound, INI::whipseey::left_handed);
+		parse(errOpt.data.sound.volume, Types::Error::Code::SoundvolumeKeyNotFound, INI::whipseey::sound_volume);
+		parse(errOpt.data.sound.toggle, Types::Error::Code::SoundtoggleKeyNotFound, INI::whipseey::sound_toggle);
+		parse(errOpt.data.music.volume, Types::Error::Code::MusicvolumeKeyNotFound, INI::whipseey::music_volume);
+		parse(errOpt.data.music.toggle, Types::Error::Code::MusictoggleKeyNotFound, INI::whipseey::music_toggle);
 
 		return errOpt;
+	}
+
+	Types::ErrDat<Types::File> readFile(const std::filesystem::path& save, Types::FileIndex index) 
+	{
+		Types::ErrDat<Types::File> errFile;
+
+		CSimpleIniA ini;
+		SI_Error er = ini.LoadFile(save.c_str());
+		if(er != SI_OK)
+		{
+			errFile = Types::Error::Code::FailedToLoadFile;
+			return errFile;
+		}
+
+		int section = ini.GetSectionSize(INI::whipseey::options);
+		if(section == INI::SIZE_NOT_FOUND)
+		{
+			errFile = Types::Error::Code::FileSectionNotFound;
+			return errFile;
+		}
+
+		auto parse = [&](auto& data, Types::Error::Code code, const char* key)
+		{
+			INI::parseSaveValue(
+				ini, data, errFile.error, code,
+				INI::whipseey::file[static_cast<size_t>(index)], key
+			);
+		};
+
+		parse(errFile.data.noDamage, Types::Error::Code::NodamageKeyNotFound, INI::whipseey::boss_no_damage_progress);
+		parse(errFile.data.noDamage, Types::Error::Code::NodamageKeyNotFound, INI::whipseey::boss_no_damage_progress);
+		parse(errFile.data.defeated, Types::Error::Code::DefeatedKeyNotFound, INI::whipseey::enemies_defeated);
+		parse(errFile.data.progress, Types::Error::Code::CastleKeyNotFound, INI::whipseey::castle);
+		parse(errFile.data.progress, Types::Error::Code::MoonKeyNotFound, INI::whipseey::moon);
+		parse(errFile.data.progress, Types::Error::Code::SnowKeyNotFound, INI::whipseey::snow);
+		parse(errFile.data.progress, Types::Error::Code::DesertKeyNotFound, INI::whipseey::desert);
+		parse(errFile.data.progress, Types::Error::Code::ForestKeyNotFound, INI::whipseey::forest);
+		parse(errFile.data.ending, Types::Error::Code::EndingKeyNotFound, INI::whipseey::ending);
+		parse(errFile.data.ending, Types::Error::Code::IntroKeyNotFound, INI::whipseey::intro);
+		parse(errFile.data.lives, Types::Error::Code::LivesKeyNotFound, INI::whipseey::lives);
+		parse(errFile.data.gems, Types::Error::Code::GemsKeyNotFound, INI::whipseey::gems);
+
+		return errFile;
 	}
 }

@@ -53,9 +53,19 @@ namespace System
 	 * LanguageKeyNotFound, FullscreenKeyNotFound, LefthandedKeyNotFound, SoundvolumeKeyNotFound,
 	 * SoundtoggleKeyNotFound, MusicvolumeKeyNotFound, MusictoggleKeyNotFound
 	 */
-	Types::ErrDat<Types::Options> readOptions(const std::filesystem::path& options);
+	Types::ErrDat<Types::Options> readOptions(const std::filesystem::path& save);
 
-	Types::ErrDat<Types::File> readFile(std::filesystem::path, Types::FileIndex);
+	/**
+	 * @brief reads the options section of a whipseey save file
+	 * 
+	 * @param options path to whipseey save file
+	 * @return Types::ErrDat<Types::File> File always valid,
+	 * on error: code = FailedToLoadFile, FileSectionNotFound, NodamageKeyNotFound, DefeatedKeyNotFound,
+	 * CastleKeyNotFound, MoonKeyNotFound, SnowKeyNotFound, DesertKeyNotFound, ForestKeyNotFound,
+	 * EndingKeyNotFound, IntroKeyNotFound, LivesKeyNotFound, GemsKeyNotFound
+	 */
+	Types::ErrDat<Types::File> readFile(const std::filesystem::path& save, Types::FileIndex index);
+
 	Types::Error writeSave(std::filesystem::path, Types::Save);
 	Types::Error writeSettings(std::filesystem::path, Types::Settings);
 	Types::Error writeOptions(std::filesystem::path,Types::Options);

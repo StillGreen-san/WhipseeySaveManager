@@ -139,51 +139,20 @@ namespace Types
 	};
 
 	/**
-	 * @brief a number of type Base automatically clamped between Min and Max
-	 * 
-	 * @tparam Base the type to store internally
-	 * @tparam Min the minimum value to clamp to
-	 * @tparam Max the maximum value to clamp to
-	 */
-	template<typename Base, Base Min, Base Max>
-	struct ClampedNumber
-	{
-		Base value;
-		ClampedNumber(Base number)
-		{
-			value = number;
-		}
-		explicit operator Base() const
-		{
-			return value;
-		}
-		ClampedNumber& operator=(Base number)
-		{
-			if(number > Max) value = Max;
-			else if(number < Min) value = Min;
-			else value = number;
-			return *this;
-		}
-		bool operator==(ClampedNumber other) const
-		{
-			return value == other.value;
-		}
-	};//TODO check if needed
-	/**
 	 * @brief enemies, killed holds positive numbers <= 16777216
 	 * 
 	 */
-	using Enemies = ClampedNumber<uint32_t, 0, 16777216>;
+	using Enemies = uint32_t;
 	/**
 	 * @brief lives, holds positive numbers <= 16777216
 	 * 
 	 */
-	using Lives = ClampedNumber<uint32_t, 0, 16777216>;
+	using Lives = uint32_t;
 	/**
 	 * @brief gems, holds positive numbers <= 99
 	 * 
 	 */
-	using Gems = ClampedNumber<uint8_t, 0, 99>;
+	using Gems = uint8_t;
 
 	/**
 	 * @brief holds all values of a file section in the savegame
@@ -214,11 +183,11 @@ namespace Types
 	 * @brief identifies a file section in a savegame
 	 * 
 	 */
-	enum class FileIndex
+	enum class FileIndex : size_t
 	{
-		File1 = 0,
+		File1 = 2,
 		File2 = 1,
-		File3 = 2
+		File3 = 0
 	};
 
 	/**
@@ -300,7 +269,20 @@ namespace Types
 			SoundvolumeKeyNotFound,
 			SoundtoggleKeyNotFound,
 			MusicvolumeKeyNotFound,
-			MusictoggleKeyNotFound
+			MusictoggleKeyNotFound,
+			FailedToLoadFile,
+			FileSectionNotFound,
+			NodamageKeyNotFound,
+			DefeatedKeyNotFound,
+			CastleKeyNotFound,
+			MoonKeyNotFound,
+			SnowKeyNotFound,
+			DesertKeyNotFound,
+			ForestKeyNotFound,
+			EndingKeyNotFound,
+			IntroKeyNotFound,
+			LivesKeyNotFound,
+			GemsKeyNotFound
 		};//TODO add comments for error codes
 
 	private:

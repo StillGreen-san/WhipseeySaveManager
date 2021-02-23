@@ -20,12 +20,6 @@ namespace Test
 		return std::numeric_limits<TYPE>::max();
 	}
 
-	template<typename Base, Base Min, Base Max>
-	constexpr Types::ClampedNumber<Base, Min, Max> maxTypeVal(const Types::ClampedNumber<Base, Min, Max>&)
-	{
-		return std::numeric_limits<Base>::max();
-	}
-
 	Types::Options makeInvalidOptions();
 
 	Types::File makeInvalidFile();
