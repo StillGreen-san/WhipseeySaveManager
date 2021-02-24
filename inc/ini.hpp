@@ -2,6 +2,7 @@
 
 #include "types.hpp"
 #include <memory>
+#include <charconv>
 namespace WhipseeySaveManager
 {
 /**
@@ -16,24 +17,18 @@ namespace INI
 		virtual std::string_view key() const = 0;
 		virtual Types::Error fromString(std::string_view string)
 		{
-			float value;
-			Types::Error error;
-			if(string.front() == '"' && string.back() == '"')
+			char* end = nullptr;
+			size_t offset = string.front() == '"' ? 1 : 0;
+			float value = strtof(string.data()+offset, &end);
+			if(value == 0 && string.data()+offset == end)
 			{
-				
-				char* end = nullptr;
-				value = strtof(string.data()+1, &end);
-				if(&string.back() != end)
-				{
-					error += Types::Error::Code::Unknown;
-				}
+				return Types::Error::Code::InvalidFormat;
 			}
-			else
+			Types::Error error = validate(value);
+			if(error == false)
 			{
-				error += Types::Error::Code::InvalidFormat;
+				mValue = value;
 			}
-			// error += validate(value);
-			if(error == false) mValue = value;
 			return error;
 		}
 		virtual std::string toString() const
@@ -99,9 +94,13 @@ namespace INI
 			return name;
 		}
 	private:
-		Types::Error validate(float /*value*/) const override
+		Types::Error validate(float value) const override
 		{
-			return {};
+			if(value >= 0 && value <= 9)
+			{
+				return {};
+			}
+			return Types::Error::Code::InvalidValue;
 		}
 	};
 
@@ -124,9 +123,13 @@ namespace INI
 			return name;
 		}
 	private:
-		Types::Error validate(float /*value*/) const override
+		Types::Error validate(float value) const override
 		{
-			return {};
+			if(value >= 2 && value <= 4)
+			{
+				return {};
+			}
+			return Types::Error::Code::InvalidValue;
 		}
 	};
 
@@ -149,9 +152,13 @@ namespace INI
 			return name;
 		}
 	private:
-		Types::Error validate(float /*value*/) const override
+		Types::Error validate(float value) const override
 		{
-			return {};
+			if(value == 0 || value == 1)
+			{
+				return {};
+			}
+			return Types::Error::Code::InvalidValue;
 		}
 	};
 

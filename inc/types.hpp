@@ -282,7 +282,10 @@ namespace Types
 			EndingKeyNotFound,
 			IntroKeyNotFound,
 			LivesKeyNotFound,
-			GemsKeyNotFound
+			GemsKeyNotFound,
+
+			InvalidFormat,
+			InvalidValue
 		};//TODO add comments for error codes
 
 	private:
