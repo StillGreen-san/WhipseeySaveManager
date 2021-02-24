@@ -10,123 +10,36 @@ namespace WhipseeySaveManager
  */
 namespace INI
 {
-	namespace Sections
-	{
-		namespace Cheats
-		{
-			namespace Keys
-			{
-				namespace cheats_enabled
-				{
-					constexpr std::string_view name = "cheats_enabled";
-					using type = Types::Toggle;
-				} // namespace cheats_enabled
-			} // namespace Keys
-		} // namespace Cheats
-		namespace options
-		{
-			constexpr std::string_view name = "options";
-			namespace Keys
-			{
-				namespace language
-				{
-					constexpr std::string_view name = "language";
-					using type = Types::Language;
-				} // namespace Language
-				namespace scale
-				{
-					constexpr std::string_view name = "scale";
-					using type = Types::Scale;
-				} // namespace scale
-				namespace fullscreen
-				{
-					constexpr std::string_view name = "fullscreen";
-					using type = Types::Toggle;
-				} // namespace fullscreen
-				namespace left_handed
-				{
-					constexpr std::string_view name = "left_handed";
-					using type = Types::Toggle;
-				} // namespace left_handed
-				namespace sound_volume
-				{
-					constexpr std::string_view name = "sound_volume";
-					using type = Types::Volume;
-				} // namespace sound_volume
-				namespace sound_toggle
-				{
-					constexpr std::string_view name = "sound_toggle";
-					using type = Types::Toggle;
-				} // namespace sound_toggle
-				namespace music_volume
-				{
-					constexpr std::string_view name = "music_volume";
-					using type = Types::Volume;
-				} // namespace music_volume
-				namespace music_toggle
-				{
-					constexpr std::string_view name = "music_toggle";
-					using type = Types::Toggle;
-				} // namespace music_toggle
-			} // namespace Keys
-		} // namespace options
-		namespace file1
-		{
-			namespace Keys
-			{
-				namespace boss_no_damage_progress
-				{
-					constexpr std::string_view name = "boss_no_damage_progress";
-					using type = Types::BossNoDamage;
-				} // namespace boss_no_damage_progress
-				namespace castle
-				{
-					constexpr std::string_view name = "castle";
-					using type = Types::Level;
-				} // namespace castle
-			} // namespace Keys
-			
-		} // namespace file1
-		namespace file2
-		{
-			using namespace file1;
-		} // namespace file2
-		namespace file3
-		{
-			using namespace file1;
-		} // namespace file3
-	} // namespace Sections
-	
-	class INI
-	{
-	public:
-		void linkError(const Types::Error&);
-		void unlinkError();
-		bool loadFile();
-		bool hasSection();
-		template<typename T>
-		bool readKey();
-		template<typename T>
-		bool readKey(Types::FileIndex);
-	private:
-		void testfunc()
-		{
-			Sections::file2::Keys::boss_no_damage_progress::name;
-		}
-	};
-
 	class IKey
 	{
 	public:
 		virtual std::string_view key() const = 0;
-		virtual Types::Error fromString(std::string_view /*value*/)
+		virtual Types::Error fromString(std::string_view string)
 		{
-			return validate(0);
-		}//default for stringyfied float
+			float value;
+			Types::Error error;
+			if(string.front() == '"' && string.back() == '"')
+			{
+				
+				char* end = nullptr;
+				value = strtof(string.data()+1, &end);
+				if(&string.back() != end)
+				{
+					error += Types::Error::Code::Unknown;
+				}
+			}
+			else
+			{
+				error += Types::Error::Code::InvalidFormat;
+			}
+			// error += validate(value);
+			if(error == false) mValue = value;
+			return error;
+		}
 		virtual std::string toString() const
 		{
-			return {};
-		}//default for stringyfied float
+			return std::to_string(mValue).insert(0, 1, '"').append(1, '"');
+		}
 		bool operator==(const IKey& other) const
 		{
 			return mValue == other.mValue;
@@ -141,27 +54,31 @@ namespace INI
 	class ISection
 	{
 	public:
+		ISection(std::initializer_list<std::shared_ptr<IKey>> il) : mKeys{il} {}
 		virtual std::string_view section() const = 0;
-		virtual const std::vector<std::unique_ptr<IKey>>& keys()
+		virtual const std::vector<std::shared_ptr<IKey>>& keys()
 		{
 			return mKeys;
 		}
 		virtual ~ISection() = default;
 	protected:
-		std::vector<std::unique_ptr<IKey>> mKeys;
+		std::vector<std::shared_ptr<IKey>> mKeys;
 	};
 
 	class IIni
 	{
 	public:
-		virtual const std::vector<std::unique_ptr<ISection>>& sections()
+		IIni(std::initializer_list<std::shared_ptr<ISection>> il) : mSections{il} {}
+		virtual const std::vector<std::shared_ptr<ISection>>& sections()
 		{
 			return mSections;
 		}
 		virtual ~IIni() = default;
 	protected:
-		std::vector<std::unique_ptr<ISection>> mSections;
+		std::vector<std::shared_ptr<ISection>> mSections;
 	};
+
+
 
 	class Language final : public IKey
 	{
@@ -188,29 +105,100 @@ namespace INI
 		}
 	};
 
-	struct Options : ISection
+	class Scale final : public IKey
 	{
-		static constexpr std::string_view name = "options";
-		std::string_view section() const override
+	public:
+		static constexpr std::string_view name = "scale";
+		Scale() : IKey(static_cast<float>(Types::Scale::R768x432)) { }
+		bool operator==(const Types::Scale& other) const
+		{
+			return mValue == static_cast<float>(other);
+		}
+		Scale& operator=(Types::Scale value)
+		{
+			mValue = static_cast<float>(value);
+			return *this;
+		}
+		std::string_view key() const override
 		{
 			return name;
 		}
-		const std::vector<std::unique_ptr<IKey>>& keys() override
+	private:
+		Types::Error validate(float /*value*/) const override
 		{
 			return {};
 		}
 	};
 
-	struct Save : IIni
+	class Fullscreen final : public IKey
 	{
-		
+	public:
+		static constexpr std::string_view name = "fullscreen";
+		Fullscreen() : IKey(static_cast<float>(Types::Toggle::Enabled)) { }
+		bool operator==(const Types::Toggle& other) const
+		{
+			return mValue == static_cast<float>(other);
+		}
+		Fullscreen& operator=(Types::Toggle value)
+		{
+			mValue = static_cast<float>(value);
+			return *this;
+		}
+		std::string_view key() const override
+		{
+			return name;
+		}
+	private:
+		Types::Error validate(float /*value*/) const override
+		{
+			return {};
+		}
+	};
+
+
+
+	class Options final : public ISection
+	{
+	public:
+		static constexpr std::string_view name = "options";
+		Options() : ISection({
+			std::make_shared<Language>(),
+			std::make_shared<Language>()
+		}) { }
+		std::string_view section() const override
+		{
+			return name;
+		}
+	};
+
+
+
+	class Save final : public IIni
+	{
+	public:
+		Save() : IIni({
+			std::make_shared<Options>(),
+			std::make_shared<Options>()
+		}) { }
 	};
 
 	int test()
 	{
-		std::unique_ptr<IKey> spk = std::make_unique<Language>();
-		return spk->key().front();//sizeof(Language);//
+		std::shared_ptr<IIni> spi = std::make_shared<Save>();
+		return spi->sections().front()->keys().front()->key().front();//sizeof(Language);//
 		// Language::name;
 	}
+
+	class INI
+	{
+	public:
+		Types::Error extractError();
+		bool loadFile(std::filesystem::path);
+		bool has(std::shared_ptr<ISection>) const;
+		bool read(std::shared_ptr<ISection>);
+		bool read(std::shared_ptr<IIni>);
+	private:
+		Types::Error mError;
+	};
 } // namespace INI
 } // namespace WhispseeySaveManager
