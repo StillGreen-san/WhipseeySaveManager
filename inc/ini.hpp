@@ -118,68 +118,80 @@ namespace INI
 	class IKey
 	{
 	public:
-		virtual std::string_view key() = 0;
+		virtual std::string_view key() const = 0;
 		virtual Types::Error fromString(std::string_view /*value*/)
 		{
-			return {};
+			return validate(0);
 		}//default for stringyfied float
-		virtual std::string toString()
+		virtual std::string toString() const
 		{
 			return {};
 		}//default for stringyfied float
-		bool operator==(const IKey& other)
+		bool operator==(const IKey& other) const
 		{
 			return mValue == other.mValue;
 		}
 		virtual ~IKey() = default;
 	protected:
 		explicit IKey(float value) : mValue{value} {}
+		virtual Types::Error validate(float value) const = 0;
 		float mValue;
 	};
-	struct ISection
+
+	class ISection
 	{
-		virtual std::string_view section() = 0;
-		virtual const std::vector<std::unique_ptr<IKey>>& keys() = 0;
+	public:
+		virtual std::string_view section() const = 0;
+		virtual const std::vector<std::unique_ptr<IKey>>& keys()
+		{
+			return mKeys;
+		}
 		virtual ~ISection() = default;
+	protected:
 		std::vector<std::unique_ptr<IKey>> mKeys;
 	};
-	struct IIni
+
+	class IIni
 	{
-		virtual std::vector<std::unique_ptr<IKey>> keys() = 0;
-		virtual std::vector<std::unique_ptr<ISection>> sections() = 0;
+	public:
+		virtual const std::vector<std::unique_ptr<ISection>>& sections()
+		{
+			return mSections;
+		}
 		virtual ~IIni() = default;
+	protected:
+		std::vector<std::unique_ptr<ISection>> mSections;
 	};
-	struct Language : public IKey
+
+	class Language final : public IKey
 	{
+	public:
 		static constexpr std::string_view name = "language";
-		enum Languages { TEMP1=0, TEMP2=1 };
-		Language() : IKey(0.f) {}
-		bool operator==(Languages arg){ return mValue == arg; }
-		std::string_view key() override
+		Language() : IKey(static_cast<float>(Types::Language::English)) { }
+		bool operator==(const Types::Language& other) const
+		{
+			return mValue == static_cast<float>(other);
+		}
+		Language& operator=(Types::Language value)
+		{
+			mValue = static_cast<float>(value);
+			return *this;
+		}
+		std::string_view key() const override
 		{
 			return name;
 		}
-	};
-	struct Scale : IKey
-	{
-		static constexpr std::string_view name = "scale";
-		std::string_view key() override
-		{
-			return name;
-		}
-		Types::Error fromString(std::string_view) override
+	private:
+		Types::Error validate(float /*value*/) const override
 		{
 			return {};
 		}
-		std::string toString() override
-		{
-			return "2.000000";
-		}
 	};
+
 	struct Options : ISection
 	{
 		static constexpr std::string_view name = "options";
-		std::string_view section() override
+		std::string_view section() const override
 		{
 			return name;
 		}
@@ -188,6 +200,7 @@ namespace INI
 			return {};
 		}
 	};
+
 	struct Save : IIni
 	{
 		
@@ -197,7 +210,7 @@ namespace INI
 	{
 		std::unique_ptr<IKey> spk = std::make_unique<Language>();
 		return spk->key().front();//sizeof(Language);//
-		
+		// Language::name;
 	}
 } // namespace INI
 } // namespace WhispseeySaveManager
