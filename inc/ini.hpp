@@ -2,7 +2,7 @@
 
 #include "types.hpp"
 #include <memory>
-#include <charconv>
+
 namespace WhipseeySaveManager
 {
 /**
@@ -10,7 +10,7 @@ namespace WhipseeySaveManager
  * 
  */
 namespace INI
-{
+{//TODO remove magic index numbers
 	class IKey
 	{
 	public:
@@ -75,6 +75,20 @@ namespace INI
 
 
 
+	class INI
+	{
+	public:
+		Types::Error extractError();
+		bool loadFile(std::filesystem::path);
+		bool has(std::shared_ptr<ISection>) const;
+		bool read(std::shared_ptr<ISection>);
+		bool read(std::shared_ptr<IIni>);
+	private:
+		Types::Error mError;
+	};
+
+
+
 	class Language final : public IKey
 	{
 	public:
@@ -88,6 +102,10 @@ namespace INI
 		{
 			mValue = static_cast<float>(value);
 			return *this;
+		}
+		Types::Language get()
+		{
+			return static_cast<Types::Language>(mValue);
 		}
 		std::string_view key() const override
 		{
@@ -118,6 +136,10 @@ namespace INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
+		Types::Scale get()
+		{
+			return static_cast<Types::Scale>(mValue);
+		}
 		std::string_view key() const override
 		{
 			return name;
@@ -147,6 +169,10 @@ namespace INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
+		Types::Toggle get()
+		{
+			return static_cast<Types::Toggle>(mValue);
+		}
 		std::string_view key() const override
 		{
 			return name;
@@ -162,6 +188,39 @@ namespace INI
 		}
 	};
 
+	class LeftHanded final : public IKey
+	{
+	public:
+		static constexpr std::string_view name = "left_handed";
+		LeftHanded() : IKey(static_cast<float>(Types::Toggle::Disabled)) { }
+		bool operator==(const Types::Toggle& other) const
+		{
+			return mValue == static_cast<float>(other);
+		}
+		LeftHanded& operator=(Types::Toggle value)
+		{
+			mValue = static_cast<float>(value);
+			return *this;
+		}
+		Types::Toggle get()
+		{
+			return static_cast<Types::Toggle>(mValue);
+		}
+		std::string_view key() const override
+		{
+			return name;
+		}
+	private:
+		Types::Error validate(float value) const override
+		{
+			if(value == 0 || value == 1)
+			{
+				return {};
+			}
+			return Types::Error::Code::InvalidValue;
+		}
+	};
+	//! static functions selected by enums instead of virtual?
 
 
 	class Options final : public ISection
@@ -170,11 +229,24 @@ namespace INI
 		static constexpr std::string_view name = "options";
 		Options() : ISection({
 			std::make_shared<Language>(),
-			std::make_shared<Language>()
+			std::make_shared<Scale>(),
+			std::make_shared<Fullscreen>()
 		}) { }
 		std::string_view section() const override
 		{
 			return name;
+		}
+		Types::Language getLanguage()
+		{
+			return std::static_pointer_cast<Language>(mKeys[0])->get();
+		}
+		Types::Scale getScale()
+		{
+			return std::static_pointer_cast<Scale>(mKeys[1])->get();
+		}
+		Types::Toggle getFullscreen()
+		{
+			return std::static_pointer_cast<Fullscreen>(mKeys[2])->get();
 		}
 	};
 
@@ -184,28 +256,12 @@ namespace INI
 	{
 	public:
 		Save() : IIni({
-			std::make_shared<Options>(),
 			std::make_shared<Options>()
 		}) { }
-	};
-
-	int test()
-	{
-		std::shared_ptr<IIni> spi = std::make_shared<Save>();
-		return spi->sections().front()->keys().front()->key().front();//sizeof(Language);//
-		// Language::name;
-	}
-
-	class INI
-	{
-	public:
-		Types::Error extractError();
-		bool loadFile(std::filesystem::path);
-		bool has(std::shared_ptr<ISection>) const;
-		bool read(std::shared_ptr<ISection>);
-		bool read(std::shared_ptr<IIni>);
-	private:
-		Types::Error mError;
+		Options& getOptions()
+		{
+			return *static_cast<Options*>(mSections[0].get());
+		}
 	};
 } // namespace INI
 } // namespace WhispseeySaveManager

@@ -289,7 +289,7 @@ namespace Types
 		};//TODO add comments for error codes
 
 	private:
-		std::set<Code> codes;
+		std::set<Code> codes;//TODO use vector instead to keep code order
 
 	public:
 		Error() = default;

@@ -61,7 +61,7 @@ int WinMain()
 	grf1.collocate();
 	nana::group grf2(fm, "File2 7-42069");
 	nana::group grf3(fm, "File3 7-42069");
-	grf3.add_option(std::to_string(INI::test()));
+	// grf3.add_option(std::to_string(INI::test()));
 
 	fm.div(
 		"vert"
