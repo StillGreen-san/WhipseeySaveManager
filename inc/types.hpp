@@ -92,6 +92,34 @@ namespace Types
 		V90 = 9,
 		V100 = 10
 	};
+	enum class SoundVolume : uint8_t
+	{
+		V0 = 0,
+		V10 = 1,
+		V20 = 2,
+		V30 = 3,
+		V40 = 4,
+		V50 = 5,
+		V60 = 6,
+		V70 = 7,
+		V80 = 8,
+		V90 = 9,
+		V100 = 10
+	};
+	enum class MusicVolume : uint8_t
+	{
+		V0 = 0,
+		V10 = 1,
+		V20 = 2,
+		V30 = 3,
+		V40 = 4,
+		V50 = 5,
+		V60 = 6,
+		V70 = 7,
+		V80 = 8,
+		V90 = 9,
+		V100 = 10
+	};
 
 	/**
 	 * @brief boss no damage progress bitfield associated with there savegame values

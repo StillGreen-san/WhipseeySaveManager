@@ -174,6 +174,94 @@ namespace INI
 		static constexpr std::string_view name = "left_handed";
 	};
 
+	class SoundVolume final : public IKey
+	{
+	public:
+		SoundVolume() : IKey(
+			name,
+			static_cast<float>(Types::SoundVolume::V100),
+			Limits::MinMax,
+			Number::StringFloat
+		) { }
+		SoundVolume& operator=(Types::SoundVolume value)
+		{
+			mValue = static_cast<float>(value);
+			return *this;
+		}
+		operator Types::SoundVolume()
+		{
+			return static_cast<Types::SoundVolume>(mValue);
+		}
+	private:
+		static constexpr std::string_view name = "left_handed";
+	};
+
+	class SoundToggle final : public IKey
+	{
+	public:
+		SoundToggle() : IKey(
+			name,
+			static_cast<float>(Types::SoundToggle::Enabled),
+			Limits::EitherOr,
+			Number::StringInt
+		) { }
+		SoundToggle& operator=(Types::SoundToggle value)
+		{
+			mValue = static_cast<float>(value);
+			return *this;
+		}
+		operator Types::SoundToggle()
+		{
+			return static_cast<Types::SoundToggle>(mValue);
+		}
+	private:
+		static constexpr std::string_view name = "left_handed";
+	};
+
+	class MusicVolume final : public IKey
+	{
+	public:
+		MusicVolume() : IKey(
+			name,
+			static_cast<float>(Types::MusicVolume::V100),
+			Limits::MinMax,
+			Number::StringFloat
+		) { }
+		MusicVolume& operator=(Types::MusicVolume value)
+		{
+			mValue = static_cast<float>(value);
+			return *this;
+		}
+		operator Types::MusicVolume()
+		{
+			return static_cast<Types::MusicVolume>(mValue);
+		}
+	private:
+		static constexpr std::string_view name = "left_handed";
+	};
+
+	class MusicToggle final : public IKey
+	{
+	public:
+		MusicToggle() : IKey(
+			name,
+			static_cast<float>(Types::MusicToggle::Enabled),
+			Limits::EitherOr,
+			Number::StringInt
+		) { }
+		MusicToggle& operator=(Types::MusicToggle value)
+		{
+			mValue = static_cast<float>(value);
+			return *this;
+		}
+		operator Types::MusicToggle()
+		{
+			return static_cast<Types::MusicToggle>(mValue);
+		}
+	private:
+		static constexpr std::string_view name = "left_handed";
+	};
+
 
 
 	class Options final : public ISection
@@ -184,7 +272,12 @@ namespace INI
 			{
 				std::make_shared<Language>(),
 				std::make_shared<Scale>(),
-				std::make_shared<Fullscreen>()
+				std::make_shared<Fullscreen>(),
+				std::make_shared<LeftHanded>(),
+				std::make_shared<SoundVolume>(),
+				std::make_shared<SoundToggle>(),
+				std::make_shared<MusicVolume>(),
+				std::make_shared<MusicToggle>()
 			}
 		) { }
 		Language& getLanguage()
@@ -198,6 +291,26 @@ namespace INI
 		Fullscreen& getFullscreen()
 		{
 			return *std::static_pointer_cast<Fullscreen>(mKeys[2]);
+		}
+		LeftHanded& getLeftHanded()
+		{
+			return *std::static_pointer_cast<LeftHanded>(mKeys[3]);
+		}
+		SoundVolume& getSoundVolume()
+		{
+			return *std::static_pointer_cast<SoundVolume>(mKeys[4]);
+		}
+		SoundToggle& getSoundToggle()
+		{
+			return *std::static_pointer_cast<SoundToggle>(mKeys[5]);
+		}
+		MusicVolume& getMusicVolume()
+		{
+			return *std::static_pointer_cast<MusicVolume>(mKeys[6]);
+		}
+		MusicToggle& getMusicToggle()
+		{
+			return *std::static_pointer_cast<MusicToggle>(mKeys[7]);
 		}
 	private:
 		static constexpr std::string_view name = "options";
