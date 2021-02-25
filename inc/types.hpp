@@ -24,6 +24,26 @@ namespace Types
 		Disabled = 0,
 		Enabled = 1
 	};
+	enum class Fullscreen : uint8_t
+	{
+		Disabled = 0,
+		Enabled = 1
+	};
+	enum class LeftHanded : uint8_t
+	{
+		Disabled = 0,
+		Enabled = 1
+	};
+	enum class SoundToggle : uint8_t
+	{
+		Disabled = 0,
+		Enabled = 1
+	};
+	enum class MusicToggle : uint8_t
+	{
+		Disabled = 0,
+		Enabled = 1
+	};
 
 	/**
 	 * @brief selectable languages associated with there savegame values

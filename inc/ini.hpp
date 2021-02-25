@@ -14,49 +14,47 @@ namespace INI
 	class IKey
 	{
 	public:
-		virtual std::string_view key() const = 0;
-		virtual Types::Error fromString(std::string_view string)
-		{
-			char* end = nullptr;
-			size_t offset = string.front() == '"' ? 1 : 0;
-			float value = strtof(string.data()+offset, &end);
-			if(value == 0 && string.data()+offset == end)
-			{
-				return Types::Error::Code::InvalidFormat;
-			}
-			Types::Error error = validate(value);
-			if(error == false)
-			{
-				mValue = value;
-			}
-			return error;
-		}
-		virtual std::string toString() const
-		{
-			return std::to_string(mValue).insert(0, 1, '"').append(1, '"');
-		}
+		std::string_view key();
+		Types::Error fromString(std::string_view string);
+		std::string toString() const;
 		bool operator==(const IKey& other) const
 		{
-			return mValue == other.mValue;
+			return mValue == other.mValue
+				&& mLimits == other.mLimits
+				&& mNumber == other.mNumber;
 		}
-		virtual ~IKey() = default;
 	protected:
-		explicit IKey(float value) : mValue{value} {}
-		virtual Types::Error validate(float value) const = 0;
+		const std::string_view mName;
 		float mValue;
+		enum class Limits : uint8_t
+		{
+			MinMax,
+			EitherOr
+		} const mLimits;
+		enum class Number : uint8_t
+		{
+			StringFloat,
+			StringInt,
+			Int
+		} const mNumber;
+		explicit IKey(std::string_view name, float value, Limits limits, Number number) :
+			mName{name}, mValue{value}, mLimits{limits}, mNumber{number}
+		{}
 	};
 
 	class ISection
 	{
 	public:
-		ISection(std::initializer_list<std::shared_ptr<IKey>> il) : mKeys{il} {}
-		virtual std::string_view section() const = 0;
-		virtual const std::vector<std::shared_ptr<IKey>>& keys()
+		ISection(std::string_view name, std::initializer_list<std::shared_ptr<IKey>> il) :
+			mName{name}, mKeys{il}
+		{}
+		std::string_view section();
+		const std::vector<std::shared_ptr<IKey>>& keys()
 		{
 			return mKeys;
 		}
-		virtual ~ISection() = default;
 	protected:
+		const std::string_view mName;
 		std::vector<std::shared_ptr<IKey>> mKeys;
 	};
 
@@ -64,11 +62,10 @@ namespace INI
 	{
 	public:
 		IIni(std::initializer_list<std::shared_ptr<ISection>> il) : mSections{il} {}
-		virtual const std::vector<std::shared_ptr<ISection>>& sections()
+		const std::vector<std::shared_ptr<ISection>>& sections()
 		{
 			return mSections;
 		}
-		virtual ~IIni() = default;
 	protected:
 		std::vector<std::shared_ptr<ISection>> mSections;
 	};
@@ -92,162 +89,118 @@ namespace INI
 	class Language final : public IKey
 	{
 	public:
-		static constexpr std::string_view name = "language";
-		Language() : IKey(static_cast<float>(Types::Language::English)) { }
-		bool operator==(const Types::Language& other) const
-		{
-			return mValue == static_cast<float>(other);
-		}
+		Language() : IKey(
+			name,
+			static_cast<float>(Types::Language::English),
+			Limits::MinMax,
+			Number::StringInt
+		) { }
 		Language& operator=(Types::Language value)
 		{
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		Types::Language get()
+		operator Types::Language()
 		{
 			return static_cast<Types::Language>(mValue);
 		}
-		std::string_view key() const override
-		{
-			return name;
-		}
 	private:
-		Types::Error validate(float value) const override
-		{
-			if(value >= 0 && value <= 9)
-			{
-				return {};
-			}
-			return Types::Error::Code::InvalidValue;
-		}
+		static constexpr std::string_view name = "language";
 	};
 
 	class Scale final : public IKey
 	{
 	public:
-		static constexpr std::string_view name = "scale";
-		Scale() : IKey(static_cast<float>(Types::Scale::R768x432)) { }
-		bool operator==(const Types::Scale& other) const
-		{
-			return mValue == static_cast<float>(other);
-		}
+		Scale() : IKey(
+			name,
+			static_cast<float>(Types::Scale::R768x432),
+			Limits::MinMax,
+			Number::StringInt
+		) { }
 		Scale& operator=(Types::Scale value)
 		{
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		Types::Scale get()
+		operator Types::Scale()
 		{
 			return static_cast<Types::Scale>(mValue);
 		}
-		std::string_view key() const override
-		{
-			return name;
-		}
 	private:
-		Types::Error validate(float value) const override
-		{
-			if(value >= 2 && value <= 4)
-			{
-				return {};
-			}
-			return Types::Error::Code::InvalidValue;
-		}
+		static constexpr std::string_view name = "scale";
 	};
 
 	class Fullscreen final : public IKey
 	{
 	public:
-		static constexpr std::string_view name = "fullscreen";
-		Fullscreen() : IKey(static_cast<float>(Types::Toggle::Enabled)) { }
-		bool operator==(const Types::Toggle& other) const
-		{
-			return mValue == static_cast<float>(other);
-		}
-		Fullscreen& operator=(Types::Toggle value)
+		Fullscreen() : IKey(
+			name,
+			static_cast<float>(Types::Fullscreen::Enabled),
+			Limits::EitherOr,
+			Number::StringInt
+		) { }
+		Fullscreen& operator=(Types::Fullscreen value)
 		{
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		Types::Toggle get()
+		operator Types::Fullscreen()
 		{
-			return static_cast<Types::Toggle>(mValue);
-		}
-		std::string_view key() const override
-		{
-			return name;
+			return static_cast<Types::Fullscreen>(mValue);
 		}
 	private:
-		Types::Error validate(float value) const override
-		{
-			if(value == 0 || value == 1)
-			{
-				return {};
-			}
-			return Types::Error::Code::InvalidValue;
-		}
+		static constexpr std::string_view name = "fullscreen";
 	};
 
 	class LeftHanded final : public IKey
 	{
 	public:
-		static constexpr std::string_view name = "left_handed";
-		LeftHanded() : IKey(static_cast<float>(Types::Toggle::Disabled)) { }
-		bool operator==(const Types::Toggle& other) const
-		{
-			return mValue == static_cast<float>(other);
-		}
-		LeftHanded& operator=(Types::Toggle value)
+		LeftHanded() : IKey(
+			name,
+			static_cast<float>(Types::LeftHanded::Enabled),
+			Limits::EitherOr,
+			Number::StringInt
+		) { }
+		LeftHanded& operator=(Types::LeftHanded value)
 		{
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		Types::Toggle get()
+		operator Types::LeftHanded()
 		{
-			return static_cast<Types::Toggle>(mValue);
-		}
-		std::string_view key() const override
-		{
-			return name;
+			return static_cast<Types::LeftHanded>(mValue);
 		}
 	private:
-		Types::Error validate(float value) const override
-		{
-			if(value == 0 || value == 1)
-			{
-				return {};
-			}
-			return Types::Error::Code::InvalidValue;
-		}
+		static constexpr std::string_view name = "left_handed";
 	};
-	//! static functions selected by enums instead of virtual?
+
 
 
 	class Options final : public ISection
 	{
 	public:
+		Options() : ISection(
+			name,
+			{
+				std::make_shared<Language>(),
+				std::make_shared<Scale>(),
+				std::make_shared<Fullscreen>()
+			}
+		) { }
+		Language& getLanguage()
+		{
+			return *std::static_pointer_cast<Language>(mKeys[0]);
+		}
+		Scale& getScale()
+		{
+			return *std::static_pointer_cast<Scale>(mKeys[1]);
+		}
+		Fullscreen& getFullscreen()
+		{
+			return *std::static_pointer_cast<Fullscreen>(mKeys[2]);
+		}
+	private:
 		static constexpr std::string_view name = "options";
-		Options() : ISection({
-			std::make_shared<Language>(),
-			std::make_shared<Scale>(),
-			std::make_shared<Fullscreen>()
-		}) { }
-		std::string_view section() const override
-		{
-			return name;
-		}
-		Types::Language getLanguage()
-		{
-			return std::static_pointer_cast<Language>(mKeys[0])->get();
-		}
-		Types::Scale getScale()
-		{
-			return std::static_pointer_cast<Scale>(mKeys[1])->get();
-		}
-		Types::Toggle getFullscreen()
-		{
-			return std::static_pointer_cast<Fullscreen>(mKeys[2])->get();
-		}
 	};
 
 
@@ -260,7 +213,7 @@ namespace INI
 		}) { }
 		Options& getOptions()
 		{
-			return *static_cast<Options*>(mSections[0].get());
+			return *std::static_pointer_cast<Options>(mSections[0]);
 		}
 	};
 } // namespace INI
