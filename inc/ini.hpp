@@ -694,11 +694,87 @@ namespace INI
 	{
 	public:
 		Save() : IIni({
-			std::make_shared<Options>()
+			std::make_shared<Options>(),
+			std::make_shared<File1>(),
+			std::make_shared<File2>(),
+			std::make_shared<File3>()
 		}) { }
 		Options& getOptions()
 		{
 			return *std::static_pointer_cast<Options>(mSections[0]);
+		}
+		File1& getFile1()
+		{
+			return *std::static_pointer_cast<File1>(mSections[1]);
+		}
+		File2& getFile2()
+		{
+			return *std::static_pointer_cast<File2>(mSections[2]);
+		}
+		File3& getFile3()
+		{
+			return *std::static_pointer_cast<File3>(mSections[3]);
+		}
+	};
+
+
+
+	class CheatsEnabled final : public IKey
+	{
+	public:
+		CheatsEnabled() : IKey(
+			name,
+			0,
+			Limits::EitherOr,
+			Number::Int,
+			0,
+			1
+		) {}
+		CheatsEnabled& operator=(Types::CheatsEnabled value)
+		{
+			mValue = static_cast<float>(value);
+			return *this;
+		}
+		operator Types::CheatsEnabled()
+		{
+			return static_cast<Types::CheatsEnabled>(mValue);
+		}
+	private:
+		static constexpr std::string_view name = "cheats_enabled";
+	};
+
+
+
+	class Cheats final : public ISection
+	{
+	public:
+		Cheats() : ISection(
+			name,
+			{
+				std::make_shared<CheatsEnabled>()
+			}
+		) {}
+		CheatsEnabled& getCheatsEnabled()
+		{
+			return *std::static_pointer_cast<CheatsEnabled>(mKeys[0]);
+		}
+	private:
+		static constexpr std::string_view name = "Cheats";
+	};
+
+
+
+	class Settings final : public IIni
+	{
+	public:
+		Settings() : IIni(
+			{
+				std::make_shared<Cheats>()
+			}
+		) {}
+		Cheats& getCheats()
+		{
+			return *std::static_pointer_cast<Cheats>(mSections[0]);
 		}
 	};
 } // namespace INI

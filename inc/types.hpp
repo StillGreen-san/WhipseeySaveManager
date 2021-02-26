@@ -54,6 +54,11 @@ namespace Types
 		Unwatched = 0,
 		Watched = 1
 	};//TODO better naming?
+	enum class CheatsEnabled : uint8_t
+	{
+		Disabled = 0,
+		Enabled = 1
+	};
 
 	/**
 	 * @brief selectable languages associated with there savegame values
