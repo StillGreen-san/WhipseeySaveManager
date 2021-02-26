@@ -14,7 +14,7 @@ namespace WhipseeySaveManager
  * 
  */
 namespace Types
-{
+{//TODO rename / delete unneeded types
 	/**
 	 * @brief named boolean associated with there savegame values
 	 * 
@@ -44,6 +44,16 @@ namespace Types
 		Disabled = 0,
 		Enabled = 1
 	};
+	enum class Ending : uint8_t
+	{
+		Unwatched = 0,
+		Watched = 1
+	};
+	enum class Intro : uint8_t
+	{
+		Unwatched = 0,
+		Watched = 1
+	};//TODO better naming?
 
 	/**
 	 * @brief selectable languages associated with there savegame values
@@ -146,6 +156,31 @@ namespace Types
 		Snow = 8,
 		Moon = 16,
 		Castle = 32
+	};
+	enum class Castle : uint8_t
+	{
+		Remaining = 0,
+		Cleared = 32
+	};
+	enum class Moon : uint8_t
+	{
+		Remaining = 0,
+		Cleared = 16
+	};
+	enum class Snow : uint8_t
+	{
+		Remaining = 0,
+		Cleared = 8
+	};
+	enum class Desert : uint8_t
+	{
+		Remaining = 0,
+		Cleared = 4
+	};
+	enum class Forest : uint8_t
+	{
+		Remaining = 0,
+		Cleared = 2
 	};
 
 	/**
