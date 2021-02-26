@@ -373,7 +373,9 @@ namespace Types
 			GemsKeyNotFound,
 
 			InvalidFormat,
-			InvalidValue
+			InvalidValue,
+			SectionNotFound,
+			KeyNotFound
 		};//TODO add comments for error codes
 
 	private:
@@ -415,6 +417,12 @@ namespace Types
 		Error& operator+=(const Error::Code& code)
 		{
 			codes.emplace(code);
+			return *this;
+		}
+
+		Error& operator+=(Error error)
+		{
+			codes.merge(error.codes);
 			return *this;
 		}
 

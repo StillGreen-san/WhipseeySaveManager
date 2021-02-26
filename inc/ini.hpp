@@ -77,14 +77,17 @@ namespace INI
 	class INI
 	{
 	public:
+		INI();
 		Types::Error extractError();
-		bool loadFile(std::filesystem::path);
-		bool has(std::shared_ptr<ISection>) const;
-		bool read(std::shared_ptr<ISection>);
-		bool read(std::shared_ptr<IIni>);
+		bool loadFile(const std::filesystem::path& path);
+		bool has(const std::shared_ptr<ISection>& section);
+		bool read(const std::shared_ptr<ISection>& section);
+		bool read(const std::shared_ptr<IIni>& ini);
 	private:
 		Types::Error mError;
-	};
+		class INIintern;
+		std::unique_ptr<INIintern> mIni;
+	};//!internal
 
 
 

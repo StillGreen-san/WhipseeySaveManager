@@ -29,6 +29,7 @@ set( TEST_TARGET ${CMAKE_PROJECT_NAME}-Tests )
 
 set( MAIN_SOURCES
 	${WSM_SRC_DIR}/system.cpp
+	${WSM_SRC_DIR}/ini.cpp
 )
 
 add_executable( ${MAIN_TARGET} WIN32 ${WSM_SRC_DIR}/${MAIN_TARGET}.cpp )
