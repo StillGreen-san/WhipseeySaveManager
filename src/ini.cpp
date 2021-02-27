@@ -4,6 +4,71 @@
 
 namespace WhipseeySaveManager::INI
 {
+	Types::Error IKey::fromString(std::string_view string)
+	{
+		switch(mNumber)
+		{
+		case Number::Int :
+		{
+			if(std::all_of(string.begin(), string.end(), std::isdigit))
+			{
+				mValue = std::strtof(string.data(), nullptr);
+			}
+			else
+			{
+				return Types::Error::Code::InvalidFormat;
+			}
+		}
+		case Number::StringFloat :
+		case Number::StringInt :
+		default:
+		{
+			auto ifFloatPart = [hasDot = bool(false)](char chr) mutable
+			{
+				if(chr == '.')
+				{
+					if(hasDot == true)
+					{
+						return false;
+					}
+					else
+					{
+						hasDot = true;
+						return true;
+					}
+				}
+				else
+				{
+					return static_cast<bool>(std::isdigit(chr));
+				}
+			};
+			if((string.front() == '"' && string.back() == '"')
+			&& std::all_of(++string.begin(), --string.end(), ifFloatPart))
+			{
+				mValue = std::strtof(string.data()+1, nullptr);
+				return {};
+			}
+			else
+			{
+				return Types::Error::Code::InvalidFormat;
+			}
+		}
+		}
+	}
+	
+	std::string IKey::toString() const
+	{
+		switch(mNumber)
+		{
+		case Number::Int :
+			return std::to_string(static_cast<uint32_t>(mValue));
+		case Number::StringFloat :
+		case Number::StringInt :
+		default:
+			return std::to_string(mValue).insert(0, 1, '"').append(1, '"');
+		}
+	}
+
 	class INI::INIintern final : public CSimpleIniA
 	{
 	public:
@@ -23,7 +88,7 @@ namespace WhipseeySaveManager::INI
 	
 	bool INI::loadFile(const std::filesystem::path& path)
 	{
-		SI_Error siErr = mIni->LoadFile(path.native().c_str());
+		const SI_Error siErr = mIni->LoadFile(path.native().c_str());
 		if(siErr == SI_Error::SI_OK)
 		{
 			return true;
@@ -61,7 +126,12 @@ namespace WhipseeySaveManager::INI
 			}
 			else
 			{
-				mError += key->fromString(value);
+				Types::Error error = key->fromString(value);
+				if(error)
+				{
+					mError += error;
+					success = false;
+				}
 			}
 		}
 		return success;
@@ -72,7 +142,7 @@ namespace WhipseeySaveManager::INI
 		bool success = true;
 		for(auto& section : ini->sections())
 		{
-			bool hasSection = has(section);
+			const bool hasSection = has(section);
 			success &= hasSection;
 			if(hasSection)
 			{

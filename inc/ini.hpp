@@ -14,7 +14,10 @@ namespace INI
 	class IKey
 	{
 	public:
-		std::string_view key();
+		std::string_view key() const
+		{
+			return mName;
+		}
 		Types::Error fromString(std::string_view string);
 		std::string toString() const;
 		bool operator==(const IKey& other) const
