@@ -2,13 +2,7 @@
 
 #include "types.hpp"
 
-namespace WhipseeySaveManager
-{
-/**
- * @brief contain functions that interact with the OS
- * 
- */
-namespace System
+namespace WhipseeySaveManager::System
 {
 	/**
 	 * @brief queries the os for theme info
@@ -70,6 +64,4 @@ namespace System
 	Types::Error writeSettings(std::filesystem::path, Types::Settings);
 	Types::Error writeOptions(std::filesystem::path,Types::Options);
 	Types::Error writeFile(std::filesystem::path, Types::FileIndex, Types::File);
-} // namespace System
-	void func();
-} // namespace WhipseeySaveManager
+} // namespace WhipseeySaveManager::System

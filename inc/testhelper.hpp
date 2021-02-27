@@ -4,9 +4,7 @@
 
 #include "types.hpp"
 
-namespace WhipseeySaveManager
-{
-namespace Test
+namespace WhipseeySaveManager::Test
 {
 	template<typename ENUM>
 	constexpr ENUM maxEnumVal() noexcept
@@ -35,5 +33,4 @@ namespace Test
 	Types::Settings makeInvalidSettings();
 
 	Types::Settings makeValidSettings();
-} // namespace Test
-} // namespace WhipseeySaveManager
+} // namespace WhipseeySaveManager::Test

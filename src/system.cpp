@@ -354,4 +354,4 @@ namespace WhipseeySaveManager::System
 
 		return errFile;
 	}
-}
+} // WhipseeySaveManager::System

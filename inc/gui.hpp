@@ -4,9 +4,7 @@
 
 #include <functional>
 
-namespace WhipseeySaveManager
-{
-namespace GUI
+namespace WhipseeySaveManager::GUI
 {
 	/**
 	 * @brief internal implementation of GUI
@@ -41,5 +39,4 @@ namespace GUI
 	private:
 		std::unique_ptr<GUIimpl> guiImpl;
 	};
-} // namespace GUI
-} // namespace WhipseeySaveManager
+} // namespace WhipseeySaveManager::GUI

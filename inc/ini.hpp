@@ -1,15 +1,10 @@
 #pragma once
 
 #include "types.hpp"
+
 #include <memory>
 
-namespace WhipseeySaveManager
-{
-/**
- * @brief 
- * 
- */
-namespace INI
+namespace WhipseeySaveManager::INI
 {//TODO remove magic index numbers
 	class IKey
 	{
@@ -53,7 +48,10 @@ namespace INI
 		ISection(std::string_view name, std::initializer_list<std::shared_ptr<IKey>> il) :
 			mName{name}, mKeys{il}
 		{}
-		std::string_view section();
+		std::string_view section()
+		{
+			return mName;
+		}
 		const std::vector<std::shared_ptr<IKey>>& keys()
 		{
 			return mKeys;
@@ -783,5 +781,4 @@ namespace INI
 			return *std::static_pointer_cast<Cheats>(mSections[0]);
 		}
 	};
-} // namespace INI
-} // namespace WhispseeySaveManager
+} // namespace WhispseeySaveManager::INI

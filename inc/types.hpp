@@ -1,19 +1,11 @@
 #pragma once
 
+#include "core.hpp"
+
 #include <filesystem>
 #include <set>
 
-/**
- * @brief General Project Namespace
- * 
- */
-namespace WhipseeySaveManager
-{
-/**
- * @brief Contains all Types used in WhipseeySaveManager
- * 
- */
-namespace Types
+namespace WhipseeySaveManager::Types
 {//TODO rename / delete unneeded types
 	/**
 	 * @brief named boolean associated with there savegame values
@@ -372,10 +364,10 @@ namespace Types
 			LivesKeyNotFound,
 			GemsKeyNotFound,
 
-			InvalidFormat,
-			InvalidValue,
-			SectionNotFound,
-			KeyNotFound
+			InvalidFormat,// the value of the key was in the wrong format, default value used
+			InvalidValue,// the value read was not valid for this key, default value used
+			SectionNotFound,// the section was not found in the file
+			KeyNotFound// the key was not found in the file, default value used
 		};//TODO add comments for error codes
 
 	private:
@@ -514,5 +506,4 @@ namespace Types
 			return data == otherData;
 		}
 	};//TODO more helpers?
-} // namespace Types
-} // namespace WhipseeySaveManager
+} // namespace WhipseeySaveManager::Types

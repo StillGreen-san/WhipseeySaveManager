@@ -1,8 +1,6 @@
 #include "testhelper.hpp"
 
-namespace WhipseeySaveManager
-{
-namespace Test
+namespace WhipseeySaveManager::Test
 {
 	Types::Options makeInvalidOptions()
 	{
@@ -91,5 +89,4 @@ namespace Test
 		settings.cheats = Types::Toggle::Enabled;
 		return settings;
 	}
-} // namespace Test
-} // namespace WhipseeySaveManager
+} // namespace WhipseeySaveManager::Test
