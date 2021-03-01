@@ -41,6 +41,7 @@ set_property( TARGET ${MAIN_TARGET} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded
 
 set( TEST_SOURCES
 	${WSM_TEST_DIR}/system-test.cpp
+	${WSM_TEST_DIR}/ini-test.cpp
 	${WSM_TEST_DIR}/testhelper.cpp
 )
 

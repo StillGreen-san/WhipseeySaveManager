@@ -46,11 +46,16 @@ namespace WhipseeySaveManager::INI
 			};
 			if((string.front() == '"' && string.back() == '"')
 			&& std::all_of(++string.begin(), --string.end(), ifFloatPart))
-			{
+			{//TODO check fractional lenght? (not testet yet)
 				newValue = std::strtof(string.data()+1, nullptr);
 				if(mNumber == Number::StringInt)
 				{
-					newValue = std::floorf(newValue);
+					float asInt = std::floorf(newValue);
+					if(asInt != newValue)
+					{
+						return Types::Error::Code::InvalidValue;
+					}
+					newValue = asInt;
 				}
 				break;
 			}
