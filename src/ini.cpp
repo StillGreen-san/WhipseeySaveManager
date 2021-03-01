@@ -112,6 +112,7 @@ namespace WhipseeySaveManager::INI
 	};
 
 	INI::INI() : mIni(std::make_unique<INIintern>()) { }
+	INI::~INI() = default;
 
 	Types::Error INI::extractError()
 	{

@@ -46,7 +46,7 @@ struct EitherOrInt final : public IKey
 	static constexpr float or = 99.f;
 };
 
-TEST_CASE("INI::IKey")
+TEST_CASE("INI::IKey", "[INI]")
 {
 	SECTION("Common")
 	{
@@ -157,4 +157,24 @@ TEST_CASE("INI::IKey")
 		Types::Error fromStringString = key.fromString(valStr);
 		CHECK(fromStringString == Types::Error::Code::InvalidFormat);
 	}
+}
+
+TEST_CASE("INI::INI", "[INI]")
+{
+	// bool loadFile(const std::filesystem::path& path);
+	SECTION("loadFile")
+	{
+		INI::INI ini;
+		const std::filesystem::path settingsDefault(L"data/settings-default.ini");//TODO move paths to testhelper?
+		CHECK(ini.loadFile(settingsDefault));
+		Types::Error error = ini.extractError();
+		CHECK(error == Types::Error::Code::Nothing);
+
+		CHECK_FALSE(ini.loadFile(Test::missing));
+		error = ini.extractError();
+		CHECK(error == Types::Error::Code::FailedToLoadFile);
+	}
+	// bool has(const std::shared_ptr<ISection>& section);
+	// bool read(const std::shared_ptr<ISection>& section);
+	// bool read(const std::shared_ptr<IIni>& ini);
 }

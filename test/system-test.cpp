@@ -1,4 +1,5 @@
 #include "system.hpp"
+#include "testhelper.hpp"
 
 #include <catch.hpp>
 #include <sstream>
@@ -6,7 +7,7 @@
 
 using namespace WhipseeySaveManager;
 
-const std::filesystem::path missing(L"data/__MISSING_FILE__.NONE");
+using Test::missing;
 
 TEST_CASE("System::systemTheme", "[.][System][Manual]")
 {

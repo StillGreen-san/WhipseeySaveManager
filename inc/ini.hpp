@@ -79,6 +79,7 @@ namespace WhipseeySaveManager::INI
 	{
 	public:
 		INI();
+		~INI();
 		Types::Error extractError();
 		bool loadFile(const std::filesystem::path& path);
 		bool has(const std::shared_ptr<ISection>& section);
