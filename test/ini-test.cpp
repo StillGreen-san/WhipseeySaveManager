@@ -165,12 +165,11 @@ TEST_CASE("INI::INI", "[INI]")
 	SECTION("loadFile")
 	{
 		INI::INI ini;
-		const std::filesystem::path settingsDefault(L"data/settings-default.ini");//TODO move paths to testhelper?
-		CHECK(ini.loadFile(settingsDefault));
+		CHECK(ini.loadFile(Test::Data::settingsDefault));
 		Types::Error error = ini.extractError();
 		CHECK(error == Types::Error::Code::Nothing);
 
-		CHECK_FALSE(ini.loadFile(Test::missing));
+		CHECK_FALSE(ini.loadFile(Test::Data::missing));
 		error = ini.extractError();
 		CHECK(error == Types::Error::Code::FailedToLoadFile);
 	}

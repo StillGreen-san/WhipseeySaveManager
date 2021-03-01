@@ -7,8 +7,6 @@
 
 using namespace WhipseeySaveManager;
 
-using Test::missing;
-
 TEST_CASE("System::systemTheme", "[.][System][Manual]")
 {
 	Types::ErrDat<Types::Theme> ret = System::systemTheme();
@@ -70,27 +68,24 @@ TEST_CASE("System::readSettings", "[System]")
 {
 	SECTION("default")
 	{
-		const std::filesystem::path default(L"data/settings-default.ini");
-		if(std::filesystem::exists(default) == false) FAIL("default test file missing!");
-		Types::ErrDat<Types::Settings> ret = System::readSettings(default);
+		if(std::filesystem::exists(Test::Data::settingsDefault) == false) FAIL("default test file missing!");
+		Types::ErrDat<Types::Settings> ret = System::readSettings(Test::Data::settingsDefault);
 		CHECK(ret);
 		CHECK(ret.data.cheats == Types::Toggle::Disabled);
 	}
 
 	SECTION("valid")
 	{
-		const std::filesystem::path valid(L"data/settings-valid.ini");
-		if(std::filesystem::exists(valid) == false) FAIL("valid test file missing!");
-		Types::ErrDat<Types::Settings> ret = System::readSettings(valid);
+		if(std::filesystem::exists(Test::Data::settingsValid) == false) FAIL("valid test file missing!");
+		Types::ErrDat<Types::Settings> ret = System::readSettings(Test::Data::settingsValid);
 		CHECK(ret);
 		CHECK(ret.data.cheats == Types::Toggle::Enabled);
 	}
 
 	SECTION("invalid")
 	{
-		const std::filesystem::path invalid(L"data/settings-invalid.ini");
-		if(std::filesystem::exists(invalid) == false) FAIL("invalid test file missing!");
-		Types::ErrDat<Types::Settings> ret = System::readSettings(invalid);
+		if(std::filesystem::exists(Test::Data::settingsInvalid) == false) FAIL("invalid test file missing!");
+		Types::ErrDat<Types::Settings> ret = System::readSettings(Test::Data::settingsInvalid);
 		CHECK_FALSE(ret);
 		CHECK(ret == Types::Error::Code::CheatsKeyInvalid);
 		CHECK(ret.data.cheats == Types::Settings().cheats);
@@ -98,9 +93,8 @@ TEST_CASE("System::readSettings", "[System]")
 
 	SECTION("missingSection")
 	{
-		const std::filesystem::path missingSection(L"data/settings-missing-section.ini");
-		if(std::filesystem::exists(missingSection) == false) FAIL("missing-section test file missing!");
-		Types::ErrDat<Types::Settings> ret = System::readSettings(missingSection);
+		if(std::filesystem::exists(Test::Data::settingsMissingSection) == false) FAIL("missing-section test file missing!");
+		Types::ErrDat<Types::Settings> ret = System::readSettings(Test::Data::settingsMissingSection);
 		CHECK_FALSE(ret);
 		CHECK((ret == Types::Error::Code::CheatsSectionNotFound
 			|| ret == Types::Error::Code::CheatsKeyNotFound));
@@ -109,9 +103,8 @@ TEST_CASE("System::readSettings", "[System]")
 
 	SECTION("missingKey")
 	{
-		const std::filesystem::path missingKey(L"data/settings-missing-key.ini");
-		if(std::filesystem::exists(missingKey) == false) FAIL("missing-key test file missing!");
-		Types::ErrDat<Types::Settings> ret = System::readSettings(missingKey);
+		if(std::filesystem::exists(Test::Data::settingsMissingKey) == false) FAIL("missing-key test file missing!");
+		Types::ErrDat<Types::Settings> ret = System::readSettings(Test::Data::settingsMissingKey);
 		CHECK_FALSE(ret);
 		CHECK((ret == Types::Error::Code::CheatsSectionNotFound
 			|| ret == Types::Error::Code::CheatsKeyNotFound));
@@ -120,8 +113,8 @@ TEST_CASE("System::readSettings", "[System]")
 
 	SECTION("missing")
 	{
-		if(std::filesystem::exists(missing) == true) FAIL("missing test file should not exist!");
-		Types::ErrDat<Types::Settings> ret = System::readSettings(missing);
+		if(std::filesystem::exists(Test::Data::missing) == true) FAIL("missing test file should not exist!");
+		Types::ErrDat<Types::Settings> ret = System::readSettings(Test::Data::missing);
 		CHECK_FALSE(ret);
 		CHECK(ret == Types::Error::Code::FailedToLoadSettings);
 		CHECK(ret.data.cheats == Types::Settings().cheats);
@@ -132,9 +125,8 @@ TEST_CASE("System::readOptions", "[System]")
 {
 	SECTION("default")
 	{
-		const std::filesystem::path default(L"data/options-default.ini");
-		if(std::filesystem::exists(default) == false) FAIL("default test file missing!");
-		const Types::ErrDat<Types::Options> ret = System::readOptions(default);
+		if(std::filesystem::exists(Test::Data::optionsDefault) == false) FAIL("default test file missing!");
+		const Types::ErrDat<Types::Options> ret = System::readOptions(Test::Data::optionsDefault);
 		CHECK(ret);
 		CHECK(ret.data.language == Types::Language::English);
 		CHECK(ret.data.scale == Types::Scale::R768x432);
@@ -148,9 +140,8 @@ TEST_CASE("System::readOptions", "[System]")
 
 	SECTION("valid")
 	{
-		const std::filesystem::path valid(L"data/options-valid.ini");
-		if(std::filesystem::exists(valid) == false) FAIL("valid test file missing!");
-		const Types::ErrDat<Types::Options> ret = System::readOptions(valid);
+		if(std::filesystem::exists(Test::Data::optionsValid) == false) FAIL("valid test file missing!");
+		const Types::ErrDat<Types::Options> ret = System::readOptions(Test::Data::optionsValid);
 		CHECK(ret);
 		CHECK(ret.data.language == Types::Language::Japanese);
 		CHECK(ret.data.scale == Types::Scale::R1536x864);
@@ -164,15 +155,13 @@ TEST_CASE("System::readOptions", "[System]")
 
 	SECTION("invalid")
 	{
-		const std::filesystem::path invalid(L"data/options-invalid.ini");
 		FAIL("validation not implemented");
 	}
 
 	SECTION("missingSection")
 	{
-		const std::filesystem::path missingSection(L"data/options-missing-section.ini");
-		if(std::filesystem::exists(missingSection) == false) FAIL("missingSection test file missing!");
-		const Types::ErrDat<Types::Options> ret = System::readOptions(missingSection);
+		if(std::filesystem::exists(Test::Data::optionsMissingSection) == false) FAIL("missingSection test file missing!");
+		const Types::ErrDat<Types::Options> ret = System::readOptions(Test::Data::optionsMissingSection);
 		CHECK_FALSE(ret);
 		CHECK(ret == Types::Error::Code::OptionsSectionNotFound);
 		CHECK(ret.data.language == Types::Language::English);
@@ -187,9 +176,8 @@ TEST_CASE("System::readOptions", "[System]")
 
 	SECTION("missingKey")
 	{
-		const std::filesystem::path missingKey(L"data/options-missing-key.ini");
-		if(std::filesystem::exists(missingKey) == false) FAIL("missingKey test file missing!");
-		const Types::ErrDat<Types::Options> ret = System::readOptions(missingKey);
+		if(std::filesystem::exists(Test::Data::optionsMissingKey) == false) FAIL("missingKey test file missing!");
+		const Types::ErrDat<Types::Options> ret = System::readOptions(Test::Data::optionsMissingKey);
 		CHECK_FALSE(ret);
 		CHECK(ret.data.language == Types::Language::English);
 		CHECK(ret.data.scale == Types::Scale::R768x432);
@@ -203,8 +191,8 @@ TEST_CASE("System::readOptions", "[System]")
 
 	SECTION("missing")
 	{
-		if(std::filesystem::exists(missing) == true) FAIL("missing test file should not exist!");
-		const Types::ErrDat<Types::Options> ret = System::readOptions(missing);
+		if(std::filesystem::exists(Test::Data::missing) == true) FAIL("missing test file should not exist!");
+		const Types::ErrDat<Types::Options> ret = System::readOptions(Test::Data::missing);
 		CHECK_FALSE(ret);
 		CHECK(ret == Types::Error::Code::FailedToLoadOptions);
 		CHECK(ret.data.language == Types::Language::English);

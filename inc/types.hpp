@@ -376,7 +376,6 @@ namespace WhipseeySaveManager::Types
 	public:
 		Error() = default;
 		Error(Code code) : codes{code} { }
-		Error(Error&& error) : codes{std::move(error.codes)} { }
 
 		/**
 		 * @brief conversion to bool
@@ -398,18 +397,6 @@ namespace WhipseeySaveManager::Types
 		{
 			codes.clear();
 			codes.emplace(code);
-			return *this;
-		}
-
-		Error& operator=(Error&& error)
-		{
-			codes = std::move(error.codes);
-			return *this;
-		}
-
-		Error& operator=(const Error& error)
-		{
-			codes = error.codes;
 			return *this;
 		}
 
