@@ -69,7 +69,7 @@ namespace WhipseeySaveManager::INI
 		{
 		case Limits::EitherOr :
 		{
-			if(newValue != mMinOrA || newValue != mMaxOrB)
+			if(!(newValue == mMinOrA || newValue == mMaxOrB))
 			{
 				return Types::Error::Code::InvalidValue;
 			}

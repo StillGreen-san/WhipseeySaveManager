@@ -106,14 +106,14 @@ TEST_CASE("INI::IKey")
 		using KeyType = EitherOrInt;
 		KeyType key;
 
-		auto valStr = std::to_string(KeyType::default);
+		auto valStr = std::to_string(static_cast<int>(KeyType::default));
 		Types::Error fromStringDefault = key.fromString(valStr);
 		CHECK(fromStringDefault == Types::Error::Code::Nothing);
 		CHECK(key.toString() == valStr);
 
 		valStr = std::to_string(KeyType::default+.3f);
 		Types::Error fromStringFloat = key.fromString(valStr);
-		CHECK(fromStringFloat == Types::Error::Code::InvalidValue);
+		CHECK(fromStringFloat == Types::Error::Code::InvalidFormat);
 
 		valStr = Test::stringify(KeyType::default);
 		Types::Error fromStringString = key.fromString(valStr);
@@ -126,13 +126,9 @@ TEST_CASE("INI::IKey")
 		KeyType key;
 
 		auto valStr = Test::stringify(KeyType::default);
-		Types::Error fromStringDefault = key.fromString(valStr);
-		CHECK(fromStringDefault == Types::Error::Code::Nothing);
-		CHECK(key.toString() == valStr);
-
-		valStr = Test::stringify(KeyType::default+.3f);
 		Types::Error fromStringFloat = key.fromString(valStr);
 		CHECK(fromStringFloat == Types::Error::Code::Nothing);
+		CHECK(key.toString() == valStr);
 
 		valStr = std::to_string(KeyType::default);
 		Types::Error fromStringWrong = key.fromString(valStr);
