@@ -5,7 +5,7 @@
 #include <memory>
 
 namespace WhipseeySaveManager::INI
-{//TODO remove magic index numbers
+{//TODO remove magic numbers
 	class IKey
 	{
 	public:

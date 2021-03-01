@@ -6,18 +6,20 @@ namespace WhipseeySaveManager::INI
 {
 	Types::Error IKey::fromString(std::string_view string)
 	{
+		float newValue = mValue;
 		switch(mNumber)
 		{
 		case Number::Int :
 		{
 			if(std::all_of(string.begin(), string.end(), std::isdigit))
 			{
-				mValue = std::strtof(string.data(), nullptr);
+				newValue = std::strtof(string.data(), nullptr);
 			}
 			else
 			{
 				return Types::Error::Code::InvalidFormat;
 			}
+			break;
 		}
 		case Number::StringFloat :
 		case Number::StringInt :
@@ -45,8 +47,12 @@ namespace WhipseeySaveManager::INI
 			if((string.front() == '"' && string.back() == '"')
 			&& std::all_of(++string.begin(), --string.end(), ifFloatPart))
 			{
-				mValue = std::strtof(string.data()+1, nullptr);
-				return {};
+				newValue = std::strtof(string.data()+1, nullptr);
+				if(mNumber == Number::StringInt)
+				{
+					newValue = std::floorf(newValue);
+				}
+				break;
 			}
 			else
 			{
@@ -54,6 +60,28 @@ namespace WhipseeySaveManager::INI
 			}
 		}
 		}
+		switch(mLimits)
+		{
+		case Limits::EitherOr :
+		{
+			if(newValue != mMinOrA || newValue != mMaxOrB)
+			{
+				return Types::Error::Code::InvalidValue;
+			}
+			break;
+		}
+		case Limits::MinMax :
+		default:
+		{
+			if(newValue < mMinOrA || newValue > mMaxOrB)
+			{
+				return Types::Error::Code::InvalidValue;
+			}
+			break;
+		}
+		}
+		mValue = newValue;
+		return {};
 	}
 	
 	std::string IKey::toString() const
@@ -61,7 +89,7 @@ namespace WhipseeySaveManager::INI
 		switch(mNumber)
 		{
 		case Number::Int :
-			return std::to_string(static_cast<uint32_t>(mValue));
+			return std::to_string(static_cast<int>(mValue));
 		case Number::StringFloat :
 		case Number::StringInt :
 		default:
