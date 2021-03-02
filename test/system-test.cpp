@@ -68,7 +68,7 @@ TEST_CASE("System::readSettings", "[System]")
 {
 	SECTION("default")
 	{
-		if(std::filesystem::exists(Test::Data::settingsDefault) == false) FAIL("default test file missing!");
+		REQUIRE_EXISTS(Test::Data::settingsDefault);
 		Types::ErrDat<Types::Settings> ret = System::readSettings(Test::Data::settingsDefault);
 		CHECK(ret);
 		CHECK(ret.data.cheats == Types::Toggle::Disabled);
@@ -76,7 +76,7 @@ TEST_CASE("System::readSettings", "[System]")
 
 	SECTION("valid")
 	{
-		if(std::filesystem::exists(Test::Data::settingsValid) == false) FAIL("valid test file missing!");
+		REQUIRE_EXISTS(Test::Data::settingsValid);
 		Types::ErrDat<Types::Settings> ret = System::readSettings(Test::Data::settingsValid);
 		CHECK(ret);
 		CHECK(ret.data.cheats == Types::Toggle::Enabled);
@@ -84,7 +84,7 @@ TEST_CASE("System::readSettings", "[System]")
 
 	SECTION("invalid")
 	{
-		if(std::filesystem::exists(Test::Data::settingsInvalid) == false) FAIL("invalid test file missing!");
+		REQUIRE_EXISTS(Test::Data::settingsInvalid);
 		Types::ErrDat<Types::Settings> ret = System::readSettings(Test::Data::settingsInvalid);
 		CHECK_FALSE(ret);
 		CHECK(ret == Types::Error::Code::CheatsKeyInvalid);
@@ -93,7 +93,7 @@ TEST_CASE("System::readSettings", "[System]")
 
 	SECTION("missingSection")
 	{
-		if(std::filesystem::exists(Test::Data::settingsMissingSection) == false) FAIL("missing-section test file missing!");
+		REQUIRE_EXISTS(Test::Data::settingsMissingSection);
 		Types::ErrDat<Types::Settings> ret = System::readSettings(Test::Data::settingsMissingSection);
 		CHECK_FALSE(ret);
 		CHECK((ret == Types::Error::Code::CheatsSectionNotFound
@@ -103,7 +103,7 @@ TEST_CASE("System::readSettings", "[System]")
 
 	SECTION("missingKey")
 	{
-		if(std::filesystem::exists(Test::Data::settingsMissingKey) == false) FAIL("missing-key test file missing!");
+		REQUIRE_EXISTS(Test::Data::settingsMissingKey);
 		Types::ErrDat<Types::Settings> ret = System::readSettings(Test::Data::settingsMissingKey);
 		CHECK_FALSE(ret);
 		CHECK((ret == Types::Error::Code::CheatsSectionNotFound
@@ -125,7 +125,7 @@ TEST_CASE("System::readOptions", "[System]")
 {
 	SECTION("default")
 	{
-		if(std::filesystem::exists(Test::Data::optionsDefault) == false) FAIL("default test file missing!");
+		REQUIRE_EXISTS(Test::Data::optionsDefault);
 		const Types::ErrDat<Types::Options> ret = System::readOptions(Test::Data::optionsDefault);
 		CHECK(ret);
 		CHECK(ret.data.language == Types::Language::English);
@@ -140,7 +140,7 @@ TEST_CASE("System::readOptions", "[System]")
 
 	SECTION("valid")
 	{
-		if(std::filesystem::exists(Test::Data::optionsValid) == false) FAIL("valid test file missing!");
+		REQUIRE_EXISTS(Test::Data::optionsValid);
 		const Types::ErrDat<Types::Options> ret = System::readOptions(Test::Data::optionsValid);
 		CHECK(ret);
 		CHECK(ret.data.language == Types::Language::Japanese);
@@ -160,7 +160,8 @@ TEST_CASE("System::readOptions", "[System]")
 
 	SECTION("missingSection")
 	{
-		if(std::filesystem::exists(Test::Data::optionsMissingSection) == false) FAIL("missingSection test file missing!");
+		REQUIRE_EXISTS(Test::Data::settingsDefault);
+		REQUIRE_EXISTS(Test::Data::optionsMissingSection);
 		const Types::ErrDat<Types::Options> ret = System::readOptions(Test::Data::optionsMissingSection);
 		CHECK_FALSE(ret);
 		CHECK(ret == Types::Error::Code::OptionsSectionNotFound);
@@ -176,7 +177,7 @@ TEST_CASE("System::readOptions", "[System]")
 
 	SECTION("missingKey")
 	{
-		if(std::filesystem::exists(Test::Data::optionsMissingKey) == false) FAIL("missingKey test file missing!");
+		REQUIRE_EXISTS(Test::Data::optionsMissingKey);
 		const Types::ErrDat<Types::Options> ret = System::readOptions(Test::Data::optionsMissingKey);
 		CHECK_FALSE(ret);
 		CHECK(ret.data.language == Types::Language::English);

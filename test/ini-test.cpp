@@ -161,9 +161,9 @@ TEST_CASE("INI::IKey", "[INI]")
 
 TEST_CASE("INI::INI", "[INI]")
 {
-	// bool loadFile(const std::filesystem::path& path);
 	SECTION("loadFile")
 	{
+		REQUIRE_EXISTS(Test::Data::settingsDefault);
 		INI::INI ini;
 		CHECK(ini.loadFile(Test::Data::settingsDefault));
 		Types::Error error = ini.extractError();
@@ -173,7 +173,31 @@ TEST_CASE("INI::INI", "[INI]")
 		error = ini.extractError();
 		CHECK(error == Types::Error::Code::FailedToLoadFile);
 	}
-	// bool has(const std::shared_ptr<ISection>& section);
-	// bool read(const std::shared_ptr<ISection>& section);
-	// bool read(const std::shared_ptr<IIni>& ini);
+
+	SECTION("has")
+	{
+		REQUIRE_EXISTS(Test::Data::settingsDefault);
+		INI::INI ini;
+		REQUIRE(ini.loadFile(Test::Data::settingsDefault));
+
+		auto cheats = std::make_shared<INI::Cheats>();
+		CHECK(ini.has(cheats));
+		Types::Error error = ini.extractError();
+		CHECK(error == Types::Error::Code::Nothing);
+
+		auto options = std::make_shared<INI::Options>();
+		CHECK_FALSE(ini.has(options));
+		error = ini.extractError();
+		CHECK(error == Types::Error::Code::SectionNotFound);
+	}
+
+	SECTION("read<ISection>")
+	{
+		FAIL("test not implemented");
+	}
+
+	SECTION("read<IIni>")
+	{
+		FAIL("test not implemented");
+	}
 }

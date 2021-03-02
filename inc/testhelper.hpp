@@ -20,4 +20,7 @@ namespace WhipseeySaveManager::Test
 		const std::filesystem::path optionsMissingSection(L"data/options-missing-section.ini");
 		const std::filesystem::path optionsMissingKey(L"data/options-missing-key.ini");
 	} // namespace Data
+
+	#define REQUIRE_EXISTS(path) if(std::filesystem::exists(path) == false) FAIL(#path" test file missing!")
+
 } // namespace WhipseeySaveManager::Test

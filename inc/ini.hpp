@@ -4,8 +4,11 @@
 
 #include <memory>
 
+//TODO remove magic numbers
+//TODO provide namespaces for keys,sections inis
+
 namespace WhipseeySaveManager::INI
-{//TODO remove magic numbers
+{
 	class IKey
 	{
 	public:
