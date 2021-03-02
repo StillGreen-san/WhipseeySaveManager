@@ -172,7 +172,7 @@ TEST_CASE("INI::INI", "[INI]")
 		CHECK_FALSE(ini.loadFile(Test::Data::missing));
 		error = ini.extractError();
 		CHECK(error == Types::Error::Code::FailedToLoadFile);
-	}
+	}//TODO check if internal data has been replaced
 
 	SECTION("has")
 	{
@@ -191,12 +191,39 @@ TEST_CASE("INI::INI", "[INI]")
 		CHECK(error == Types::Error::Code::SectionNotFound);
 	}
 
-	SECTION("read<ISection>")
+	SECTION("read ISection")
 	{
-		FAIL("test not implemented");
+		REQUIRE_EXISTS(Test::Data::settingsValid);
+		INI::INI ini;
+		REQUIRE(ini.loadFile(Test::Data::settingsValid));
+
+		auto cheats = std::make_shared<INI::Cheats>();
+		CHECK(ini.read(cheats));
+		Types::Error error = ini.extractError();
+		CHECK(error == Types::Error::Code::Nothing);
+		bool hasNewValue = cheats->getCheatsEnabled() == Types::CheatsEnabled::Enabled;
+		CHECK(hasNewValue);
+
+		REQUIRE_EXISTS(Test::Data::settingsMissingSection);
+		REQUIRE(ini.loadFile(Test::Data::settingsMissingSection));
+
+		CHECK_FALSE(ini.read(cheats));
+		error = ini.extractError();
+		CHECK(error == Types::Error::Code::SectionNotFound);
+		bool hasDefaultValue = cheats->getCheatsEnabled() == INI::CheatsEnabled();
+		CHECK(hasDefaultValue);
+
+		REQUIRE_EXISTS(Test::Data::settingsMissingKey);
+		REQUIRE(ini.loadFile(Test::Data::settingsMissingKey));
+
+		CHECK_FALSE(ini.read(cheats));
+		error = ini.extractError();
+		CHECK(error == Types::Error::Code::KeyNotFound);
+		hasDefaultValue = cheats->getCheatsEnabled() == INI::CheatsEnabled();
+		CHECK(hasDefaultValue);
 	}
 
-	SECTION("read<IIni>")
+	SECTION("read IIni")
 	{
 		FAIL("test not implemented");
 	}

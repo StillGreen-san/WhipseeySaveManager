@@ -122,6 +122,7 @@ namespace WhipseeySaveManager::INI
 	
 	bool INI::loadFile(const std::filesystem::path& path)
 	{
+		mIni->Reset();
 		const SI_Error siErr = mIni->LoadFile(path.native().c_str());
 		if(siErr == SI_Error::SI_OK)
 		{
@@ -149,7 +150,11 @@ namespace WhipseeySaveManager::INI
 
 	bool INI::read(const std::shared_ptr<ISection>& section)
 	{
-		bool success = true;
+		bool success = has(section);
+		if(!success)
+		{
+			return success;
+		}
 		for(auto& key : section->keys())
 		{
 			std::string_view value = mIni->GetValue(section->section(), key->key(), NOT_FOUND);

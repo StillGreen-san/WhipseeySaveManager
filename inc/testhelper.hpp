@@ -21,6 +21,7 @@ namespace WhipseeySaveManager::Test
 		const std::filesystem::path optionsMissingKey(L"data/options-missing-key.ini");
 	} // namespace Data
 
-	#define REQUIRE_EXISTS(path) if(std::filesystem::exists(path) == false) FAIL(#path" test file missing!")
+	//TODO display path not name
+	#define REQUIRE_EXISTS(path) if(std::filesystem::exists(path) == false) FAIL(#path" file missing!")
 
 } // namespace WhipseeySaveManager::Test

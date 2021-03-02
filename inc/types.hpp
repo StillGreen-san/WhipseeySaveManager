@@ -366,7 +366,7 @@ namespace WhipseeySaveManager::Types
 
 			InvalidFormat,// the value of the key was in the wrong format, default value used
 			InvalidValue,// the value read was not valid for this key, default value used
-			SectionNotFound,// the section was not found in the file
+			SectionNotFound,// the section was not found in the file, default values used
 			KeyNotFound// the key was not found in the file, default value used
 		};//TODO add comments for error codes
 
