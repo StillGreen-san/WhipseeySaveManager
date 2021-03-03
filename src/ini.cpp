@@ -7,6 +7,7 @@ namespace WhipseeySaveManager::INI
 	Types::Error IKey::fromString(std::string_view string)
 	{
 		float newValue = mValue;
+		applyDefaults();
 		switch(mNumber)
 		{
 		case Number::Int :
@@ -105,10 +106,11 @@ namespace WhipseeySaveManager::INI
 	class INI::INIintern final : public CSimpleIniA
 	{
 	public:
-		std::string_view GetValue(std::string_view section, std::string_view key, std::string_view default)
+		std::string_view GetValue(std::string_view section, std::string_view key, std::string_view default = NOT_FOUND)
 		{
 			return CSimpleIniA::GetValue(section.data(), key.data(), default.data());
 		}
+		static constexpr std::string_view NOT_FOUND = "%INVALID%";
 	};
 
 	INI::INI() : mIni(std::make_unique<INIintern>()) { }
@@ -116,7 +118,6 @@ namespace WhipseeySaveManager::INI
 
 	Types::Error INI::extractError()
 	{
-		// Types::Error error = std::move(mError);
 		return std::move(mError);
 	}
 	
@@ -134,32 +135,31 @@ namespace WhipseeySaveManager::INI
 	
 	bool INI::has(const std::shared_ptr<ISection>& section)
 	{
-		if(mIni->IsEmpty())
-		{
-			return false;
-		}
-		if(mIni->GetSection(section->section().data()) == nullptr)
+		if(mIni->IsEmpty() || mIni->GetSection(section->section().data()) == nullptr)
 		{
 			mError += Types::Error::Code::SectionNotFound;
 			return false;
 		}
 		return true;
 	}
-	
-	constexpr std::string_view NOT_FOUND = "%INVALID%";
 
 	bool INI::read(const std::shared_ptr<ISection>& section)
 	{
 		bool success = has(section);
 		if(!success)
 		{
+			for(auto& key : section->keys())
+			{
+				key->applyDefaults();
+			}
 			return success;
 		}
 		for(auto& key : section->keys())
 		{
-			std::string_view value = mIni->GetValue(section->section(), key->key(), NOT_FOUND);
-			if(value == NOT_FOUND)
+			std::string_view value = mIni->GetValue(section->section(), key->key());
+			if(value == INIintern::NOT_FOUND)
 			{
+				key->applyDefaults();
 				mError += Types::Error::Code::KeyNotFound;
 				success = false;
 			}
@@ -181,12 +181,7 @@ namespace WhipseeySaveManager::INI
 		bool success = true;
 		for(auto& section : ini->sections())
 		{
-			const bool hasSection = has(section);
-			success &= hasSection;
-			if(hasSection)
-			{
-				success &= read(section);
-			}
+			success &= read(section);
 		}
 		return success;
 	}

@@ -456,7 +456,7 @@ namespace WhipseeySaveManager::Types
 			if(codes.size() > 1) return false;
 			return codes.find(code) != codes.cend();
 		}
-	};//TODO tests & more interface?
+	};
 
 	/**
 	 * @brief holds Error and Data
@@ -506,5 +506,5 @@ namespace WhipseeySaveManager::Types
 		{
 			return data == otherData;
 		}
-	};//TODO more helpers?
+	};
 } // namespace WhipseeySaveManager::Types

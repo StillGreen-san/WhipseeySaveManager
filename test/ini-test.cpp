@@ -6,9 +6,30 @@
 using namespace WhipseeySaveManager;
 using WhipseeySaveManager::INI::IKey;
 
-struct MinMaxStringInt final : public IKey
+struct TestKey : public IKey
 {
-	MinMaxStringInt() : IKey(
+	struct InternalData
+	{
+		float minOrA;
+		float maxOrB;
+		float default;
+		float value;
+	};
+	InternalData getInternalData()
+	{
+		return {
+			mMinOrA,
+			mMaxOrB,
+			mDefault,
+			mValue
+		};
+	}
+	using IKey::IKey;
+};
+
+struct MinMaxStringInt final : public TestKey
+{
+	MinMaxStringInt() : TestKey(
 		name, default,
 		Limits::MinMax,
 		Number::StringInt,
@@ -19,9 +40,9 @@ struct MinMaxStringInt final : public IKey
 	static constexpr float min = 5.f;
 	static constexpr float max = 99.f;
 };
-struct EitherOrStringFloat final : public IKey
+struct EitherOrStringFloat final : public TestKey
 {
-	EitherOrStringFloat() : IKey(
+	EitherOrStringFloat() : TestKey(
 		name, default,
 		Limits::EitherOr,
 		Number::StringFloat,
@@ -32,9 +53,9 @@ struct EitherOrStringFloat final : public IKey
 	static constexpr float either = 5.5f;
 	static constexpr float or = 99.9f;
 };
-struct EitherOrInt final : public IKey
+struct EitherOrInt final : public TestKey
 {
-	EitherOrInt() : IKey(
+	EitherOrInt() : TestKey(
 		name, default,
 		Limits::EitherOr,
 		Number::Int,
@@ -52,9 +73,12 @@ TEST_CASE("INI::IKey", "[INI]")
 	{
 		using KeyType = MinMaxStringInt;
 		KeyType key;
+		auto const iData = key.getInternalData();
 		CHECK(key.key() == KeyType::name);
-		CHECK(key.mMinOrA == KeyType::min);
-		CHECK(key.mMaxOrB == KeyType::max);
+		CHECK(iData.minOrA == KeyType::min);
+		CHECK(iData.maxOrB == KeyType::max);
+		CHECK(iData.default == KeyType::default);
+		CHECK(iData.value == KeyType::default);
 	}
 	
 	SECTION("MinMax")
@@ -198,6 +222,7 @@ TEST_CASE("INI::INI", "[INI]")
 		REQUIRE(ini.loadFile(Test::Data::settingsValid));
 
 		auto cheats = std::make_shared<INI::Cheats>();
+
 		CHECK(ini.read(cheats));
 		Types::Error error = ini.extractError();
 		CHECK(error == Types::Error::Code::Nothing);

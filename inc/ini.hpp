@@ -18,17 +18,25 @@ namespace WhipseeySaveManager::INI
 		}
 		Types::Error fromString(std::string_view string);
 		std::string toString() const;
+		void applyDefaults()
+		{
+			mValue = mDefault;
+		}
 		bool operator==(const IKey& other) const
 		{
 			return mValue == other.mValue
+				&& mDefault == other.mDefault
+				&& mMinOrA == other.mMinOrA
+				&& mMaxOrB == other.mMaxOrB
 				&& mLimits == other.mLimits
 				&& mNumber == other.mNumber;
 		}
+	protected:
 		const float mMinOrA;
 		const float mMaxOrB;
-	protected:
-		const std::string_view mName;
+		const float mDefault;
 		float mValue;
+		const std::string_view mName;
 		enum class Limits : uint8_t
 		{
 			MinMax,
@@ -41,7 +49,7 @@ namespace WhipseeySaveManager::INI
 			Int
 		} const mNumber;
 		explicit IKey(std::string_view name, float value, Limits limits, Number number, float minOrA, float maxOrB) :
-			mMinOrA{minOrA}, mMaxOrB{maxOrB}, mName{name}, mValue{value}, mLimits{limits}, mNumber{number}
+			mMinOrA{minOrA}, mMaxOrB{maxOrB}, mValue{value}, mDefault{value}, mName{name}, mLimits{limits}, mNumber{number}
 		{}
 	};
 
@@ -580,7 +588,7 @@ namespace WhipseeySaveManager::INI
 		}
 	private:
 		static constexpr std::string_view name = "lives";
-	};//TODO min max default constants for types (&uint)
+	};
 
 	class Gems final : public IKey
 	{
