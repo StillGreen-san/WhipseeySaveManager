@@ -1,6 +1,7 @@
 #pragma once
 
 #include "types.hpp"
+#include <catch.hpp>
 
 namespace WhipseeySaveManager::Test
 {
@@ -24,4 +25,24 @@ namespace WhipseeySaveManager::Test
 	//TODO display path not name
 	#define REQUIRE_EXISTS(path) if(std::filesystem::exists(path) == false) FAIL(#path" file missing!")
 
+	template<typename T>
+	class EqualsMatcher : public Catch::Matchers::Impl::MatcherUntypedBase {
+		T mRhs;
+		std::string mDescription;
+	public:
+		EqualsMatcher(T&& rhs, std::string&& desc) :
+			mRhs{std::move(rhs)}, mDescription{std::move(desc).insert(0, "== ")}
+		{ }
+		template<typename U>
+		bool match(U const& lhs) const
+		{
+			return lhs == mRhs;
+		}
+		std::string describe() const override
+		{
+			return mDescription;
+		}
+	};
+
+	#define EQUALS(rhs) EqualsMatcher(rhs, #rhs) 
 } // namespace WhipseeySaveManager::Test

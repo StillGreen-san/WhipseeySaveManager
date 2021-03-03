@@ -1,7 +1,6 @@
 #include "system.hpp"
 #include "testhelper.hpp"
 
-#include <catch.hpp>
 #include <sstream>
 #include <ios>
 
@@ -113,11 +112,68 @@ TEST_CASE("System::readSettings", "[System]")
 
 	SECTION("missing")
 	{
-		if(std::filesystem::exists(Test::Data::missing) == true) FAIL("missing test file should not exist!");
+		REQUIRE_EXISTS(Test::Data::missing);
 		Types::ErrDat<Types::Settings> ret = System::readSettings(Test::Data::missing);
 		CHECK_FALSE(ret);
 		CHECK(ret == Types::Error::Code::FailedToLoadSettings);
 		CHECK(ret.data.cheats == Types::Settings().cheats);
+	}
+}
+
+TEST_CASE("System::read ISection", "[System]")
+{
+	auto settings = std::make_shared<INI::Cheats>();
+
+	SECTION("default")
+	{
+		REQUIRE_EXISTS(Test::Data::settingsDefault);
+		Types::Error error = System::read(settings, Test::Data::settingsDefault);
+		CHECK_FALSE(error);
+		CHECK_THAT(settings->getCheatsEnabled(), Test::EQUALS(Types::CheatsEnabled::Disabled));
+	}
+
+	SECTION("valid")
+	{
+		REQUIRE_EXISTS(Test::Data::settingsValid);
+		Types::Error error = System::read(settings, Test::Data::settingsValid);
+		CHECK_FALSE(error);
+		CHECK(settings->getCheatsEnabled() == Types::CheatsEnabled::Enabled);
+	}
+
+	SECTION("invalid")
+	{
+		REQUIRE_EXISTS(Test::Data::settingsInvalid);
+		Types::Error error = System::read(settings, Test::Data::settingsInvalid);
+		CHECK(error);
+		CHECK(error == Types::Error::Code::InvalidValue);
+		CHECK(settings->getCheatsEnabled() == INI::CheatsEnabled());
+	}
+
+	SECTION("missingSection")
+	{
+		REQUIRE_EXISTS(Test::Data::settingsMissingSection);
+		Types::Error error = System::read(settings, Test::Data::settingsMissingSection);
+		CHECK(error);
+		CHECK(error == Types::Error::Code::SectionNotFound);
+		CHECK(settings->getCheatsEnabled() == INI::CheatsEnabled());
+	}
+
+	SECTION("missingKey")
+	{
+		REQUIRE_EXISTS(Test::Data::settingsMissingKey);
+		Types::Error error = System::read(settings, Test::Data::settingsMissingKey);
+		CHECK(error);
+		CHECK(error == Types::Error::Code::KeyNotFound);
+		CHECK(settings->getCheatsEnabled() == INI::CheatsEnabled());
+	}
+
+	SECTION("missing")
+	{
+		REQUIRE_EXISTS(Test::Data::missing);
+		Types::Error error = System::read(settings, Test::Data::missing);
+		CHECK(error);
+		CHECK(error == Types::Error::Code::KeyNotFound);
+		CHECK(settings->getCheatsEnabled() == INI::CheatsEnabled());
 	}
 }
 
@@ -192,7 +248,7 @@ TEST_CASE("System::readOptions", "[System]")
 
 	SECTION("missing")
 	{
-		if(std::filesystem::exists(Test::Data::missing) == true) FAIL("missing test file should not exist!");
+		REQUIRE_EXISTS(Test::Data::missing);
 		const Types::ErrDat<Types::Options> ret = System::readOptions(Test::Data::missing);
 		CHECK_FALSE(ret);
 		CHECK(ret == Types::Error::Code::FailedToLoadOptions);
