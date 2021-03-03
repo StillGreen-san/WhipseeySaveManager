@@ -152,7 +152,7 @@ namespace WhipseeySaveManager::System
 		return errPath;
 	}
 
-	namespace INI
+	namespace sINI
 	{
 		constexpr int SIZE_NOT_FOUND = -1;
 		constexpr char* VALUE_NOT_FOUND = nullptr;
@@ -232,7 +232,7 @@ namespace WhipseeySaveManager::System
 			long value = std::strtol(rawValue+1, nullptr, 10);
 			data = static_cast<Types::Level>(value | static_cast<long>(data));
 		}//TODO validation
-	} // namespace INI::bfs_settings
+	} // namespace sINI
 
 	Types::ErrDat<Types::Settings> readSettings(const std::filesystem::path& settings) 
 	{
@@ -246,19 +246,19 @@ namespace WhipseeySaveManager::System
 			return errSettings;
 		}
 
-		int section = ini.GetSectionSize(INI::bfs_settings::Cheats);
-		if(section == INI::SIZE_NOT_FOUND)
+		int section = ini.GetSectionSize(sINI::bfs_settings::Cheats);
+		if(section == sINI::SIZE_NOT_FOUND)
 		{
 			errSettings = Types::Error::Code::CheatsSectionNotFound;
 			return errSettings;
 		}
 
 		long cheats = ini.GetLongValue(
-			INI::bfs_settings::Cheats,
-			INI::bfs_settings::cheats_enabled,
-			INI::LONG_NOT_FOUND
+			sINI::bfs_settings::Cheats,
+			sINI::bfs_settings::cheats_enabled,
+			sINI::LONG_NOT_FOUND
 		);
-		if(cheats == INI::LONG_NOT_FOUND)
+		if(cheats == sINI::LONG_NOT_FOUND)
 		{
 			errSettings = Types::Error::Code::CheatsKeyNotFound;
 			return errSettings;
@@ -273,6 +273,21 @@ namespace WhipseeySaveManager::System
 		return errSettings;
 	}
 	
+	Types::Error read(std::shared_ptr<INI::ISection> section, const std::filesystem::path& file) 
+	{
+		INI::INI ini;
+		if(!ini.loadFile(file))
+		{
+			return ini.extractError();//TODO defaults if early error?
+		}
+		if(!ini.has(section))
+		{
+			return ini.extractError();
+		}
+		ini.read(section);
+		return ini.extractError();
+	}
+	
 	Types::ErrDat<Types::Options> readOptions(const std::filesystem::path& save) 
 	{
 		Types::ErrDat<Types::Options> errOpt;
@@ -285,8 +300,8 @@ namespace WhipseeySaveManager::System
 			return errOpt;
 		}
 
-		int section = ini.GetSectionSize(INI::whipseey::options);
-		if(section == INI::SIZE_NOT_FOUND)
+		int section = ini.GetSectionSize(sINI::whipseey::options);
+		if(section == sINI::SIZE_NOT_FOUND)
 		{
 			errOpt = Types::Error::Code::OptionsSectionNotFound;
 			return errOpt;
@@ -294,20 +309,20 @@ namespace WhipseeySaveManager::System
 
 		auto parse = [&](auto& data, Types::Error::Code code, const char* key)
 		{
-			INI::parseSaveValue(
+			sINI::parseSaveValue(
 				ini, data, errOpt.error, code,
-				INI::whipseey::options, key
+				sINI::whipseey::options, key
 			);
 		};
 
-		parse(errOpt.data.language, Types::Error::Code::LanguageKeyNotFound, INI::whipseey::language);
-		parse(errOpt.data.scale, Types::Error::Code::ScaleKeyNotFound, INI::whipseey::scale);
-		parse(errOpt.data.fullScreen, Types::Error::Code::FullscreenKeyNotFound, INI::whipseey::fullscreen);
-		parse(errOpt.data.leftHanded, Types::Error::Code::LefthandedKeyNotFound, INI::whipseey::left_handed);
-		parse(errOpt.data.sound.volume, Types::Error::Code::SoundvolumeKeyNotFound, INI::whipseey::sound_volume);
-		parse(errOpt.data.sound.toggle, Types::Error::Code::SoundtoggleKeyNotFound, INI::whipseey::sound_toggle);
-		parse(errOpt.data.music.volume, Types::Error::Code::MusicvolumeKeyNotFound, INI::whipseey::music_volume);
-		parse(errOpt.data.music.toggle, Types::Error::Code::MusictoggleKeyNotFound, INI::whipseey::music_toggle);
+		parse(errOpt.data.language, Types::Error::Code::LanguageKeyNotFound, sINI::whipseey::language);
+		parse(errOpt.data.scale, Types::Error::Code::ScaleKeyNotFound, sINI::whipseey::scale);
+		parse(errOpt.data.fullScreen, Types::Error::Code::FullscreenKeyNotFound, sINI::whipseey::fullscreen);
+		parse(errOpt.data.leftHanded, Types::Error::Code::LefthandedKeyNotFound, sINI::whipseey::left_handed);
+		parse(errOpt.data.sound.volume, Types::Error::Code::SoundvolumeKeyNotFound, sINI::whipseey::sound_volume);
+		parse(errOpt.data.sound.toggle, Types::Error::Code::SoundtoggleKeyNotFound, sINI::whipseey::sound_toggle);
+		parse(errOpt.data.music.volume, Types::Error::Code::MusicvolumeKeyNotFound, sINI::whipseey::music_volume);
+		parse(errOpt.data.music.toggle, Types::Error::Code::MusictoggleKeyNotFound, sINI::whipseey::music_toggle);
 
 		return errOpt;
 	}
@@ -324,8 +339,8 @@ namespace WhipseeySaveManager::System
 			return errFile;
 		}
 
-		int section = ini.GetSectionSize(INI::whipseey::options);
-		if(section == INI::SIZE_NOT_FOUND)
+		int section = ini.GetSectionSize(sINI::whipseey::options);
+		if(section == sINI::SIZE_NOT_FOUND)
 		{
 			errFile = Types::Error::Code::FileSectionNotFound;
 			return errFile;
@@ -333,24 +348,24 @@ namespace WhipseeySaveManager::System
 
 		auto parse = [&](auto& data, Types::Error::Code code, const char* key)
 		{
-			INI::parseSaveValue(
+			sINI::parseSaveValue(
 				ini, data, errFile.error, code,
-				INI::whipseey::file[static_cast<size_t>(index)], key
+				sINI::whipseey::file[static_cast<size_t>(index)], key
 			);
 		};
 
-		parse(errFile.data.noDamage, Types::Error::Code::NodamageKeyNotFound, INI::whipseey::boss_no_damage_progress);
-		parse(errFile.data.noDamage, Types::Error::Code::NodamageKeyNotFound, INI::whipseey::boss_no_damage_progress);
-		parse(errFile.data.defeated, Types::Error::Code::DefeatedKeyNotFound, INI::whipseey::enemies_defeated);
-		parse(errFile.data.progress, Types::Error::Code::CastleKeyNotFound, INI::whipseey::castle);
-		parse(errFile.data.progress, Types::Error::Code::MoonKeyNotFound, INI::whipseey::moon);
-		parse(errFile.data.progress, Types::Error::Code::SnowKeyNotFound, INI::whipseey::snow);
-		parse(errFile.data.progress, Types::Error::Code::DesertKeyNotFound, INI::whipseey::desert);
-		parse(errFile.data.progress, Types::Error::Code::ForestKeyNotFound, INI::whipseey::forest);
-		parse(errFile.data.ending, Types::Error::Code::EndingKeyNotFound, INI::whipseey::ending);
-		parse(errFile.data.ending, Types::Error::Code::IntroKeyNotFound, INI::whipseey::intro);
-		parse(errFile.data.lives, Types::Error::Code::LivesKeyNotFound, INI::whipseey::lives);
-		parse(errFile.data.gems, Types::Error::Code::GemsKeyNotFound, INI::whipseey::gems);
+		parse(errFile.data.noDamage, Types::Error::Code::NodamageKeyNotFound, sINI::whipseey::boss_no_damage_progress);
+		parse(errFile.data.noDamage, Types::Error::Code::NodamageKeyNotFound, sINI::whipseey::boss_no_damage_progress);
+		parse(errFile.data.defeated, Types::Error::Code::DefeatedKeyNotFound, sINI::whipseey::enemies_defeated);
+		parse(errFile.data.progress, Types::Error::Code::CastleKeyNotFound, sINI::whipseey::castle);
+		parse(errFile.data.progress, Types::Error::Code::MoonKeyNotFound, sINI::whipseey::moon);
+		parse(errFile.data.progress, Types::Error::Code::SnowKeyNotFound, sINI::whipseey::snow);
+		parse(errFile.data.progress, Types::Error::Code::DesertKeyNotFound, sINI::whipseey::desert);
+		parse(errFile.data.progress, Types::Error::Code::ForestKeyNotFound, sINI::whipseey::forest);
+		parse(errFile.data.ending, Types::Error::Code::EndingKeyNotFound, sINI::whipseey::ending);
+		parse(errFile.data.ending, Types::Error::Code::IntroKeyNotFound, sINI::whipseey::intro);
+		parse(errFile.data.lives, Types::Error::Code::LivesKeyNotFound, sINI::whipseey::lives);
+		parse(errFile.data.gems, Types::Error::Code::GemsKeyNotFound, sINI::whipseey::gems);
 
 		return errFile;
 	}

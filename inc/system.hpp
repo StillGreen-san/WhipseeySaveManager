@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.hpp"
+#include "ini.hpp"
 
 namespace WhipseeySaveManager::System
 {
@@ -37,6 +37,8 @@ namespace WhipseeySaveManager::System
 	 * on error: code = FailedToLoadSettings, CheatsSectionNotFound, CheatsKeyNotFound, CheatsKeyInvalid
 	 */
 	Types::ErrDat<Types::Settings> readSettings(const std::filesystem::path& settings);
+
+	Types::Error read(std::shared_ptr<INI::ISection> section, const std::filesystem::path& file);
 
 	/**
 	 * @brief reads the options section of a whipseey save file
