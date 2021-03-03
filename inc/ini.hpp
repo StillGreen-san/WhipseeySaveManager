@@ -6,6 +6,7 @@
 
 //TODO remove magic numbers
 //TODO provide namespaces for keys,sections inis
+//TODO not using static_pointer_cast ?
 
 namespace WhipseeySaveManager::INI
 {
@@ -740,11 +741,11 @@ namespace WhipseeySaveManager::INI
 	public:
 		CheatsEnabled() : IKey(
 			name,
-			0,
+			static_cast<float>(Types::CheatsEnabled::Disabled),
 			Limits::EitherOr,
 			Number::Int,
-			0,
-			1
+			static_cast<float>(Types::CheatsEnabled::Disabled),
+			static_cast<float>(Types::CheatsEnabled::Enabled)
 		) {}
 		CheatsEnabled& operator=(Types::CheatsEnabled value)
 		{

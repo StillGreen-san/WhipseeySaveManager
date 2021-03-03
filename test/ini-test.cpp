@@ -250,6 +250,34 @@ TEST_CASE("INI::INI", "[INI]")
 
 	SECTION("read IIni")
 	{
-		FAIL("test not implemented");
+		REQUIRE_EXISTS(Test::Data::settingsValid);
+		INI::INI ini;
+		REQUIRE(ini.loadFile(Test::Data::settingsValid));
+
+		auto settings = std::make_shared<INI::Settings>();
+
+		CHECK(ini.read(settings));
+		Types::Error error = ini.extractError();
+		CHECK(error == Types::Error::Code::Nothing);
+		bool hasNewValue = settings->getCheats().getCheatsEnabled() == Types::CheatsEnabled::Enabled;
+		CHECK(hasNewValue);
+
+		REQUIRE_EXISTS(Test::Data::settingsMissingSection);
+		REQUIRE(ini.loadFile(Test::Data::settingsMissingSection));
+
+		CHECK_FALSE(ini.read(settings));
+		error = ini.extractError();
+		CHECK(error == Types::Error::Code::SectionNotFound);
+		bool hasDefaultValue = settings->getCheats().getCheatsEnabled() == INI::CheatsEnabled();
+		CHECK(hasDefaultValue);
+
+		REQUIRE_EXISTS(Test::Data::settingsMissingKey);
+		REQUIRE(ini.loadFile(Test::Data::settingsMissingKey));
+
+		CHECK_FALSE(ini.read(settings));
+		error = ini.extractError();
+		CHECK(error == Types::Error::Code::KeyNotFound);
+		hasDefaultValue = settings->getCheats().getCheatsEnabled() == INI::CheatsEnabled();
+		CHECK(hasDefaultValue);
 	}
 }
