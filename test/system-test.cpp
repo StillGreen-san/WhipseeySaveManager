@@ -129,7 +129,7 @@ TEST_CASE("System::read ISection", "[System]")
 		REQUIRE_EXISTS(Test::Data::settingsDefault);
 		Types::Error error = System::read(settings, Test::Data::settingsDefault);
 		CHECK_FALSE(error);
-		CHECK_THAT(settings->getCheatsEnabled(), Test::EQUALS(Types::CheatsEnabled::Disabled));
+		CHECK(settings->getCheatsEnabled() == Types::CheatsEnabled::Disabled);
 	}
 
 	SECTION("valid")
@@ -169,10 +169,10 @@ TEST_CASE("System::read ISection", "[System]")
 
 	SECTION("missing")
 	{
-		REQUIRE_EXISTS(Test::Data::missing);
+		REQUIRE_MISSING(Test::Data::missing);
 		Types::Error error = System::read(settings, Test::Data::missing);
 		CHECK(error);
-		CHECK(error == Types::Error::Code::KeyNotFound);
+		CHECK(error == Types::Error::Code::FailedToLoadFile);
 		CHECK(settings->getCheatsEnabled() == INI::CheatsEnabled());
 	}
 }

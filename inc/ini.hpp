@@ -121,7 +121,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::Language()
+		operator Types::Language() const
 		{
 			return static_cast<Types::Language>(mValue);
 		}
@@ -145,7 +145,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::Scale()
+		operator Types::Scale() const
 		{
 			return static_cast<Types::Scale>(mValue);
 		}
@@ -169,7 +169,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::Fullscreen()
+		operator Types::Fullscreen() const
 		{
 			return static_cast<Types::Fullscreen>(mValue);
 		}
@@ -193,7 +193,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::LeftHanded()
+		operator Types::LeftHanded() const
 		{
 			return static_cast<Types::LeftHanded>(mValue);
 		}
@@ -217,7 +217,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::SoundVolume()
+		operator Types::SoundVolume() const
 		{
 			return static_cast<Types::SoundVolume>(mValue);
 		}
@@ -241,7 +241,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::SoundToggle()
+		operator Types::SoundToggle() const
 		{
 			return static_cast<Types::SoundToggle>(mValue);
 		}
@@ -265,7 +265,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::MusicVolume()
+		operator Types::MusicVolume() const
 		{
 			return static_cast<Types::MusicVolume>(mValue);
 		}
@@ -289,7 +289,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::MusicToggle()
+		operator Types::MusicToggle() const
 		{
 			return static_cast<Types::MusicToggle>(mValue);
 		}
@@ -367,7 +367,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::BossNoDamage()
+		operator Types::BossNoDamage() const
 		{
 			return static_cast<Types::BossNoDamage>(mValue);
 		}
@@ -415,7 +415,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::Castle()
+		operator Types::Castle() const
 		{
 			return static_cast<Types::Castle>(mValue);
 		}
@@ -439,7 +439,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::Moon()
+		operator Types::Moon() const
 		{
 			return static_cast<Types::Moon>(mValue);
 		}
@@ -463,7 +463,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::Snow()
+		operator Types::Snow() const
 		{
 			return static_cast<Types::Snow>(mValue);
 		}
@@ -487,7 +487,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::Desert()
+		operator Types::Desert() const
 		{
 			return static_cast<Types::Desert>(mValue);
 		}
@@ -511,7 +511,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::Forest()
+		operator Types::Forest() const
 		{
 			return static_cast<Types::Forest>(mValue);
 		}
@@ -535,7 +535,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::Ending()
+		operator Types::Ending() const
 		{
 			return static_cast<Types::Ending>(mValue);
 		}
@@ -559,7 +559,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::Intro()
+		operator Types::Intro() const
 		{
 			return static_cast<Types::Intro>(mValue);
 		}
@@ -752,7 +752,7 @@ namespace WhipseeySaveManager::INI
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator Types::CheatsEnabled()
+		operator Types::CheatsEnabled() const
 		{
 			return static_cast<Types::CheatsEnabled>(mValue);
 		}

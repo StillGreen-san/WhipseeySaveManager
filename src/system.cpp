@@ -273,7 +273,7 @@ namespace WhipseeySaveManager::System
 		return errSettings;
 	}
 	
-	Types::Error read(std::shared_ptr<INI::ISection> section, const std::filesystem::path& file) 
+	Types::Error read(std::shared_ptr<INI::ISection> section, std::filesystem::path file) 
 	{
 		INI::INI ini;
 		if(!ini.loadFile(file))

@@ -22,27 +22,6 @@ namespace WhipseeySaveManager::Test
 		const std::filesystem::path optionsMissingKey(L"data/options-missing-key.ini");
 	} // namespace Data
 
-	//TODO display path not name
-	#define REQUIRE_EXISTS(path) if(std::filesystem::exists(path) == false) FAIL(#path" file missing!")
-
-	template<typename T>
-	class EqualsMatcher : public Catch::Matchers::Impl::MatcherUntypedBase {
-		T mRhs;
-		std::string mDescription;
-	public:
-		EqualsMatcher(T&& rhs, std::string&& desc) :
-			mRhs{std::move(rhs)}, mDescription{std::move(desc).insert(0, "== ")}
-		{ }
-		template<typename U>
-		bool match(U const& lhs) const
-		{
-			return lhs == mRhs;
-		}
-		std::string describe() const override
-		{
-			return mDescription;
-		}
-	};
-
-	#define EQUALS(rhs) EqualsMatcher(rhs, #rhs) 
+	#define REQUIRE_EXISTS(path) if(std::filesystem::exists(path) == false) FAIL(path.relative_path().string().append(" missing!"))
+	#define REQUIRE_MISSING(path) if(std::filesystem::exists(path) == true) FAIL(path.relative_path().string().append(" exists!"))
 } // namespace WhipseeySaveManager::Test
