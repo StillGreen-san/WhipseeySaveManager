@@ -5,7 +5,7 @@
 #include <memory>
 
 //TODO remove magic numbers
-//TODO provide namespaces for keys,sections inis
+//TODO provide namespaces for keys,sections inis ; hide INI
 //TODO not using static_pointer_cast ?
 
 namespace WhipseeySaveManager::INI
@@ -13,16 +13,35 @@ namespace WhipseeySaveManager::INI
 	class IKey
 	{
 	public:
+		/**
+		 * @return std::string_view with the key name
+		 */
 		std::string_view key() const
 		{
 			return mName;
 		}
+
+		/**
+		 * @brief trys to parse the value from a raw format string
+		 * 
+		 * @param string the raw value in the expected format
+		 * @return Types::Error if failed InvalidFormat, InvalidValue
+		 */
 		Types::Error fromString(std::string_view string);
+
+		/**
+		 * @return std::string the value in raw format
+		 */
 		std::string toString() const;
+
+		/**
+		 * @brief resets the value to its default
+		 */
 		void applyDefaults()
 		{
 			mValue = mDefault;
 		}
+
 		bool operator==(const IKey& other) const
 		{
 			return mValue == other.mValue
@@ -60,10 +79,15 @@ namespace WhipseeySaveManager::INI
 		ISection(std::string_view name, std::initializer_list<std::shared_ptr<IKey>> il) :
 			mName{name}, mKeys{il}
 		{}
+
+		/**
+		 * @return std::string_view with the section name
+		 */
 		std::string_view section()
 		{
 			return mName;
 		}
+
 		const std::vector<std::shared_ptr<IKey>>& keys()
 		{
 			return mKeys;
@@ -86,22 +110,60 @@ namespace WhipseeySaveManager::INI
 	};
 
 
-
+	/**
+	 * @brief internal helper object to load, check, read, write an ini file, 
+	 * holds an Error onj containing all error that occured during operation
+	 * 
+	 */
 	class INI
 	{
 	public:
+		/**
+		 * @brief extracts an error object containing all errors that occured when calling other funtions of this object
+		 * 
+		 * @return Types::Error see other functions for possible values
+		 */
+		Types::Error extractError();
+		
+		/**
+		 * @brief trys to load the file at path, 
+		 * adds FailedToLoadFile error code if failed
+		 * 
+		 * @return bool true when successful
+		 */
+		bool loadFile(const std::filesystem::path& path);
+		
+		/**
+		 * @brief checks if a section is present in the loaded ini, 
+		 * adds SectionNotFound error code if failed
+		 * 
+		 * @return bool true when successful
+		 */
+		bool has(const std::shared_ptr<ISection>& section);
+		
+		/**
+		 * @brief trys to read all keys in ISection from loaded ini, 
+		 * adds KeyNotFound, SectionNotFound error codes if failed
+		 * 
+		 * @return bool true when successful
+		 */
+		bool read(const std::shared_ptr<ISection>& section);
+		
+		/**
+		 * @brief trys to read all keys in IIni from loaded ini, 
+		 * adds KeyNotFound, SectionNotFound error codes if failed
+		 * 
+		 * @return bool true when successful
+		 */
+		bool read(const std::shared_ptr<IIni>& ini);
+
 		INI();
 		~INI();
-		Types::Error extractError();
-		bool loadFile(const std::filesystem::path& path);
-		bool has(const std::shared_ptr<ISection>& section);
-		bool read(const std::shared_ptr<ISection>& section);
-		bool read(const std::shared_ptr<IIni>& ini);
 	private:
 		Types::Error mError;
 		class INIintern;
 		std::unique_ptr<INIintern> mIni;
-	};//!internal
+	};
 
 
 

@@ -25,6 +25,8 @@ namespace WhipseeySaveManager::GUI
 		 * @return Types::Error 
 		 */
 		Types::Error run();
+
+		//TODO update function signatures
 		void connectOnDarkmodeEnabled(std::function<Types::ErrDat<Types::Toggle>()> func);
 		void connectOnDefaultSavePath(std::function<Types::ErrDat<std::filesystem::path>()> func);
 		void connectOnDefaultSettingsPath(std::function<Types::ErrDat<std::filesystem::path>()> func);
