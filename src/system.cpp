@@ -152,135 +152,10 @@ namespace WhipseeySaveManager::System
 		return errPath;
 	}
 
-	namespace sINI
-	{
-		constexpr int SIZE_NOT_FOUND = -1;
-		constexpr char* VALUE_NOT_FOUND = nullptr;
-		constexpr long LONG_NOT_FOUND = -1;
-		constexpr double DOUBLE_NOT_FOUND = -1.0;
-
-		namespace bfs_settings
-		{
-			constexpr char* Cheats = "Cheats";
-			constexpr char* cheats_enabled = "cheats_enabled";
-		} // namespace bfs_settings
-
-		namespace whipseey
-		{
-			constexpr char* options = "options";
-			constexpr char* language = "language";
-			constexpr char* scale = "scale";
-			constexpr char* fullscreen = "fullscreen";
-			constexpr char* left_handed = "left_handed";
-			constexpr char* sound_volume = "sound_volume";
-			constexpr char* sound_toggle = "sound_toggle";
-			constexpr char* music_volume = "music_volume";
-			constexpr char* music_toggle = "music_toggle";
-
-			constexpr char* file[3] = {"file3", "file2", "file1"};
-			constexpr char* boss_no_damage_progress = "boss_no_damage_progress";
-			constexpr char* enemies_defeated = "enemies_defeated";
-			constexpr char* castle = "castle";
-			constexpr char* moon = "moon";
-			constexpr char* snow = "snow";
-			constexpr char* desert = "desert";
-			constexpr char* forest = "forest";
-			constexpr char* ending = "ending";
-			constexpr char* intro = "intro";
-			constexpr char* lives = "lives";
-			constexpr char* gems = "gems";
-		} // namespace whipseey
-
-		template<typename T>
-		void parseSaveValue(const CSimpleIniA& ini, T& data, Types::Error& error, Types::Error::Code code,
-			const char* section, const char* key)
-		{
-			const char* rawValue = ini.GetValue(section, key, VALUE_NOT_FOUND);
-			if(rawValue == VALUE_NOT_FOUND)
-			{
-				error += code;
-				return;
-			}
-			long value = std::strtol(rawValue+1, nullptr, 10);
-			data = static_cast<T>(value);
-		}//TODO validation
-
-		template<>
-		void parseSaveValue(const CSimpleIniA& ini, Types::Volume& data, Types::Error& error, Types::Error::Code code,
-			const char* section, const char* key)
-		{
-			const char* rawValue = ini.GetValue(section, key, VALUE_NOT_FOUND);
-			if(rawValue == VALUE_NOT_FOUND)
-			{
-				error += code;
-				return;
-			}
-			double value = std::strtod(rawValue+1, nullptr) * 10.0;
-			data = static_cast<Types::Volume>(value);
-		}//TODO validation
-
-		template<>
-		void parseSaveValue(const CSimpleIniA& ini, Types::Level& data, Types::Error& error, Types::Error::Code code,
-			const char* section, const char* key)
-		{
-			const char* rawValue = ini.GetValue(section, key, VALUE_NOT_FOUND);
-			if(rawValue == VALUE_NOT_FOUND)
-			{
-				error += code;
-				return;
-			}
-			long value = std::strtol(rawValue+1, nullptr, 10);
-			data = static_cast<Types::Level>(value | static_cast<long>(data));
-		}//TODO validation
-	} // namespace sINI
-
-	Types::ErrDat<Types::Settings> readSettings(const std::filesystem::path& settings) 
-	{
-		Types::ErrDat<Types::Settings> errSettings;
-
-		CSimpleIniA ini;
-		SI_Error er = ini.LoadFile(settings.c_str());
-		if(er != SI_OK)
-		{
-			errSettings = Types::Error::Code::FailedToLoadSettings;
-			return errSettings;
-		}
-
-		int section = ini.GetSectionSize(sINI::bfs_settings::Cheats);
-		if(section == sINI::SIZE_NOT_FOUND)
-		{
-			errSettings = Types::Error::Code::CheatsSectionNotFound;
-			return errSettings;
-		}
-
-		long cheats = ini.GetLongValue(
-			sINI::bfs_settings::Cheats,
-			sINI::bfs_settings::cheats_enabled,
-			sINI::LONG_NOT_FOUND
-		);
-		if(cheats == sINI::LONG_NOT_FOUND)
-		{
-			errSettings = Types::Error::Code::CheatsKeyNotFound;
-			return errSettings;
-		}
-		if(cheats < 0 || cheats > 1)//TODO add proper validation (for all types)
-		{
-			errSettings = Types::Error::Code::CheatsKeyInvalid;
-			return errSettings;
-		}
-
-		errSettings.data.cheats = cheats == 0 ? Types::Toggle::Disabled : Types::Toggle::Enabled;
-		return errSettings;
-	}
-	
 	Types::Error read(std::shared_ptr<INI::ISection> section, std::filesystem::path file) 
 	{
 		INI::INI ini;
 		if(!ini.loadFile(file))
-		{
-			return ini.extractError();//TODO defaults if early error?
-		}
-		if(!ini.has(section))
 		{
 			return ini.extractError();
 		}
@@ -288,85 +163,14 @@ namespace WhipseeySaveManager::System
 		return ini.extractError();
 	}
 	
-	Types::ErrDat<Types::Options> readOptions(const std::filesystem::path& save) 
+	Types::Error read(std::shared_ptr<INI::IIni> ini, std::filesystem::path file) 
 	{
-		Types::ErrDat<Types::Options> errOpt;
-
-		CSimpleIniA ini;//TODO create ini wrapper
-		SI_Error er = ini.LoadFile(save.c_str());
-		if(er != SI_OK)
+		INI::INI sIni;
+		if(!sIni.loadFile(file))
 		{
-			errOpt = Types::Error::Code::FailedToLoadOptions;
-			return errOpt;
+			return sIni.extractError();
 		}
-
-		int section = ini.GetSectionSize(sINI::whipseey::options);
-		if(section == sINI::SIZE_NOT_FOUND)
-		{
-			errOpt = Types::Error::Code::OptionsSectionNotFound;
-			return errOpt;
-		}
-
-		auto parse = [&](auto& data, Types::Error::Code code, const char* key)
-		{
-			sINI::parseSaveValue(
-				ini, data, errOpt.error, code,
-				sINI::whipseey::options, key
-			);
-		};
-
-		parse(errOpt.data.language, Types::Error::Code::LanguageKeyNotFound, sINI::whipseey::language);
-		parse(errOpt.data.scale, Types::Error::Code::ScaleKeyNotFound, sINI::whipseey::scale);
-		parse(errOpt.data.fullScreen, Types::Error::Code::FullscreenKeyNotFound, sINI::whipseey::fullscreen);
-		parse(errOpt.data.leftHanded, Types::Error::Code::LefthandedKeyNotFound, sINI::whipseey::left_handed);
-		parse(errOpt.data.sound.volume, Types::Error::Code::SoundvolumeKeyNotFound, sINI::whipseey::sound_volume);
-		parse(errOpt.data.sound.toggle, Types::Error::Code::SoundtoggleKeyNotFound, sINI::whipseey::sound_toggle);
-		parse(errOpt.data.music.volume, Types::Error::Code::MusicvolumeKeyNotFound, sINI::whipseey::music_volume);
-		parse(errOpt.data.music.toggle, Types::Error::Code::MusictoggleKeyNotFound, sINI::whipseey::music_toggle);
-
-		return errOpt;
-	}
-
-	Types::ErrDat<Types::File> readFile(const std::filesystem::path& save, Types::FileIndex index) 
-	{
-		Types::ErrDat<Types::File> errFile;
-
-		CSimpleIniA ini;
-		SI_Error er = ini.LoadFile(save.c_str());
-		if(er != SI_OK)
-		{
-			errFile = Types::Error::Code::FailedToLoadFile;
-			return errFile;
-		}
-
-		int section = ini.GetSectionSize(sINI::whipseey::options);
-		if(section == sINI::SIZE_NOT_FOUND)
-		{
-			errFile = Types::Error::Code::FileSectionNotFound;
-			return errFile;
-		}
-
-		auto parse = [&](auto& data, Types::Error::Code code, const char* key)
-		{
-			sINI::parseSaveValue(
-				ini, data, errFile.error, code,
-				sINI::whipseey::file[static_cast<size_t>(index)], key
-			);
-		};
-
-		parse(errFile.data.noDamage, Types::Error::Code::NodamageKeyNotFound, sINI::whipseey::boss_no_damage_progress);
-		parse(errFile.data.noDamage, Types::Error::Code::NodamageKeyNotFound, sINI::whipseey::boss_no_damage_progress);
-		parse(errFile.data.defeated, Types::Error::Code::DefeatedKeyNotFound, sINI::whipseey::enemies_defeated);
-		parse(errFile.data.progress, Types::Error::Code::CastleKeyNotFound, sINI::whipseey::castle);
-		parse(errFile.data.progress, Types::Error::Code::MoonKeyNotFound, sINI::whipseey::moon);
-		parse(errFile.data.progress, Types::Error::Code::SnowKeyNotFound, sINI::whipseey::snow);
-		parse(errFile.data.progress, Types::Error::Code::DesertKeyNotFound, sINI::whipseey::desert);
-		parse(errFile.data.progress, Types::Error::Code::ForestKeyNotFound, sINI::whipseey::forest);
-		parse(errFile.data.ending, Types::Error::Code::EndingKeyNotFound, sINI::whipseey::ending);
-		parse(errFile.data.ending, Types::Error::Code::IntroKeyNotFound, sINI::whipseey::intro);
-		parse(errFile.data.lives, Types::Error::Code::LivesKeyNotFound, sINI::whipseey::lives);
-		parse(errFile.data.gems, Types::Error::Code::GemsKeyNotFound, sINI::whipseey::gems);
-
-		return errFile;
+		sIni.read(ini);
+		return sIni.extractError();
 	}
 } // WhipseeySaveManager::System

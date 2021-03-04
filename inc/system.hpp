@@ -27,43 +27,24 @@ namespace WhipseeySaveManager::System
 	 */
 	Types::ErrDat<std::filesystem::path> defaultSettingsPath();
 
-	Types::ErrDat<Types::Save> readSave(std::filesystem::path);
-
 	/**
-	 * @brief reads a bfs_settings file
+	 * @brief reads all keys defined in section from file into ini
 	 * 
-	 * @param settings path to a bfs_settings file
-	 * @return Types::ErrDat<Types::Settings> Settings always valid,
-	 * on error: code = FailedToLoadSettings, CheatsSectionNotFound, CheatsKeyNotFound, CheatsKeyInvalid
+	 * @param isectionni INI::ISection object to read into
+	 * @param file path to file to read from
+	 * @return Types::Error 
 	 */
-	Types::ErrDat<Types::Settings> readSettings(const std::filesystem::path& settings);
-
 	Types::Error read(std::shared_ptr<INI::ISection> section, std::filesystem::path file);
 
 	/**
-	 * @brief reads the options section of a whipseey save file
+	 * @brief reads all keys defined in ini from file into ini
 	 * 
-	 * @param options path to whipseey save file
-	 * @return Types::ErrDat<Types::Options> Options always valid,
-	 * on error: code = FailedToLoadOptions, OptionsSectionNotFound, ScaleKeyNotFound,
-	 * LanguageKeyNotFound, FullscreenKeyNotFound, LefthandedKeyNotFound, SoundvolumeKeyNotFound,
-	 * SoundtoggleKeyNotFound, MusicvolumeKeyNotFound, MusictoggleKeyNotFound
+	 * @param ini INI::IIni object to read into
+	 * @param file path to file to read from
+	 * @return Types::Error 
 	 */
-	Types::ErrDat<Types::Options> readOptions(const std::filesystem::path& save);
+	Types::Error read(std::shared_ptr<INI::IIni> ini, std::filesystem::path file);
 
-	/**
-	 * @brief reads the options section of a whipseey save file
-	 * 
-	 * @param options path to whipseey save file
-	 * @return Types::ErrDat<Types::File> File always valid,
-	 * on error: code = FailedToLoadFile, FileSectionNotFound, NodamageKeyNotFound, DefeatedKeyNotFound,
-	 * CastleKeyNotFound, MoonKeyNotFound, SnowKeyNotFound, DesertKeyNotFound, ForestKeyNotFound,
-	 * EndingKeyNotFound, IntroKeyNotFound, LivesKeyNotFound, GemsKeyNotFound
-	 */
-	Types::ErrDat<Types::File> readFile(const std::filesystem::path& save, Types::FileIndex index);
-
-	Types::Error writeSave(std::filesystem::path, Types::Save);
-	Types::Error writeSettings(std::filesystem::path, Types::Settings);
-	Types::Error writeOptions(std::filesystem::path,Types::Options);
-	Types::Error writeFile(std::filesystem::path, Types::FileIndex, Types::File);
+	Types::Error write(std::shared_ptr<INI::ISection> section, std::filesystem::path file);
+	Types::Error write(std::shared_ptr<INI::IIni> ini, std::filesystem::path file);
 } // namespace WhipseeySaveManager::System
