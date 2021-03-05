@@ -216,3 +216,19 @@ TEST_CASE("System::write ISection", "[System]")
 		REMOVE(Test::Data::write);
 	}
 }
+
+TEST_CASE("System::write IIni", "[System]")
+{
+	REQUIRE_MISSING(Test::Data::write);
+	auto settingsWrite = std::make_shared<INI::Settings>();
+	settingsWrite->getCheats().getCheatsEnabled() = Types::CheatsEnabled::Enabled;
+	Types::Error error = System::write(settingsWrite, Test::Data::write);
+	CHECK_FALSE(error);
+
+	auto settingsCheck = std::make_shared<INI::Settings>();
+	error = System::read(settingsCheck, Test::Data::write);
+	CHECK_FALSE(error);
+	CHECK(settingsCheck->getCheats().getCheatsEnabled() == settingsWrite->getCheats().getCheatsEnabled());
+
+	REMOVE(Test::Data::write);
+}

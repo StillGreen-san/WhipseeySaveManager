@@ -185,23 +185,26 @@ TEST_CASE("INI::IKey", "[INI]")
 
 TEST_CASE("INI::INI", "[INI]")
 {
+	INI::INI ini;
+
 	SECTION("loadFile")
 	{
 		REQUIRE_EXISTS(Test::Data::settingsDefault);
-		INI::INI ini;
 		CHECK(ini.loadFile(Test::Data::settingsDefault));
 		Types::Error error = ini.extractError();
 		CHECK(error == Types::Error::Code::Nothing);
+		auto cheats = std::make_shared<INI::Cheats>();
+		CHECK(ini.has(cheats));
 
 		CHECK_FALSE(ini.loadFile(Test::Data::missing));
 		error = ini.extractError();
 		CHECK(error == Types::Error::Code::FailedToLoadFile);
-	}//TODO check if internal data has been replaced
+		CHECK_FALSE(ini.has(cheats));
+	}
 
 	SECTION("writeFile")
 	{
 		REQUIRE_MISSING(Test::Data::write);
-		INI::INI ini;
 		REQUIRE_EXISTS(Test::Data::settingsDefault);
 		REQUIRE(ini.loadFile(Test::Data::settingsDefault));
 		auto cheatsDefault = std::make_shared<INI::Cheats>();
@@ -220,12 +223,19 @@ TEST_CASE("INI::INI", "[INI]")
 		REMOVE(Test::Data::write);
 	}
 
-	//TODO test extract error
+	SECTION("extractError")
+	{
+		REQUIRE_MISSING(Test::Data::missing);
+		ini.loadFile(Test::Data::missing);
+		Types::Error error = ini.extractError();
+		CHECK(error == Types::Error::Code::FailedToLoadFile);
+		error = ini.extractError();
+		CHECK(error == Types::Error::Code::Nothing);
+	}
 
 	SECTION("has")
 	{
 		REQUIRE_EXISTS(Test::Data::settingsDefault);
-		INI::INI ini;
 		REQUIRE(ini.loadFile(Test::Data::settingsDefault));
 
 		auto cheats = std::make_shared<INI::Cheats>();
@@ -242,7 +252,6 @@ TEST_CASE("INI::INI", "[INI]")
 	SECTION("read ISection")
 	{
 		REQUIRE_EXISTS(Test::Data::settingsValid);
-		INI::INI ini;
 		REQUIRE(ini.loadFile(Test::Data::settingsValid));
 
 		auto cheats = std::make_shared<INI::Cheats>();
@@ -250,8 +259,7 @@ TEST_CASE("INI::INI", "[INI]")
 		CHECK(ini.read(cheats));
 		Types::Error error = ini.extractError();
 		CHECK(error == Types::Error::Code::Nothing);
-		bool hasNewValue = cheats->getCheatsEnabled() == Types::CheatsEnabled::Enabled;
-		CHECK(hasNewValue);
+		CHECK(cheats->getCheatsEnabled() == Types::CheatsEnabled::Enabled);
 
 		REQUIRE_EXISTS(Test::Data::settingsMissingSection);
 		REQUIRE(ini.loadFile(Test::Data::settingsMissingSection));
@@ -259,8 +267,7 @@ TEST_CASE("INI::INI", "[INI]")
 		CHECK_FALSE(ini.read(cheats));
 		error = ini.extractError();
 		CHECK(error == Types::Error::Code::SectionNotFound);
-		bool hasDefaultValue = cheats->getCheatsEnabled() == INI::CheatsEnabled();
-		CHECK(hasDefaultValue);
+		CHECK(cheats->getCheatsEnabled() == INI::CheatsEnabled());
 
 		REQUIRE_EXISTS(Test::Data::settingsMissingKey);
 		REQUIRE(ini.loadFile(Test::Data::settingsMissingKey));
@@ -268,14 +275,12 @@ TEST_CASE("INI::INI", "[INI]")
 		CHECK_FALSE(ini.read(cheats));
 		error = ini.extractError();
 		CHECK(error == Types::Error::Code::KeyNotFound);
-		hasDefaultValue = cheats->getCheatsEnabled() == INI::CheatsEnabled();
-		CHECK(hasDefaultValue);
+		CHECK(cheats->getCheatsEnabled() == INI::CheatsEnabled());
 	}
 
 	SECTION("read IIni")
 	{
 		REQUIRE_EXISTS(Test::Data::settingsValid);
-		INI::INI ini;//TODO move out of sections
 		REQUIRE(ini.loadFile(Test::Data::settingsValid));
 
 		auto settings = std::make_shared<INI::Settings>();
@@ -283,8 +288,7 @@ TEST_CASE("INI::INI", "[INI]")
 		CHECK(ini.read(settings));
 		Types::Error error = ini.extractError();
 		CHECK(error == Types::Error::Code::Nothing);
-		bool hasNewValue = settings->getCheats().getCheatsEnabled() == Types::CheatsEnabled::Enabled;
-		CHECK(hasNewValue);
+		CHECK(settings->getCheats().getCheatsEnabled() == Types::CheatsEnabled::Enabled);
 
 		REQUIRE_EXISTS(Test::Data::settingsMissingSection);
 		REQUIRE(ini.loadFile(Test::Data::settingsMissingSection));
@@ -292,8 +296,7 @@ TEST_CASE("INI::INI", "[INI]")
 		CHECK_FALSE(ini.read(settings));
 		error = ini.extractError();
 		CHECK(error == Types::Error::Code::SectionNotFound);
-		bool hasDefaultValue = settings->getCheats().getCheatsEnabled() == INI::CheatsEnabled();
-		CHECK(hasDefaultValue);
+		CHECK(settings->getCheats().getCheatsEnabled() == INI::CheatsEnabled());
 
 		REQUIRE_EXISTS(Test::Data::settingsMissingKey);
 		REQUIRE(ini.loadFile(Test::Data::settingsMissingKey));
@@ -301,14 +304,12 @@ TEST_CASE("INI::INI", "[INI]")
 		CHECK_FALSE(ini.read(settings));
 		error = ini.extractError();
 		CHECK(error == Types::Error::Code::KeyNotFound);
-		hasDefaultValue = settings->getCheats().getCheatsEnabled() == INI::CheatsEnabled();
-		CHECK(hasDefaultValue);//TODO check remove of indirection
+		CHECK(settings->getCheats().getCheatsEnabled() == INI::CheatsEnabled());
 	}
 
 	SECTION("write ISection")
 	{
 		REQUIRE_EXISTS(Test::Data::settingsValid);
-		INI::INI ini;
 		REQUIRE(ini.loadFile(Test::Data::settingsValid));
 
 		auto cheatsValid = std::make_shared<INI::Cheats>();
@@ -332,7 +333,6 @@ TEST_CASE("INI::INI", "[INI]")
 	SECTION("write IIni")
 	{
 		REQUIRE_EXISTS(Test::Data::settingsValid);
-		INI::INI ini;
 		REQUIRE(ini.loadFile(Test::Data::settingsValid));
 
 		auto cheatsValid = std::make_shared<INI::Settings>();
