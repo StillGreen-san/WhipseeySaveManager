@@ -106,11 +106,15 @@ namespace WhipseeySaveManager::INI
 	class INI::INIintern final : public CSimpleIniA
 	{
 	public:
+		static constexpr std::string_view NOT_FOUND = "%INVALID%";
 		std::string_view GetValue(std::string_view section, std::string_view key, std::string_view default = NOT_FOUND)
 		{
 			return CSimpleIniA::GetValue(section.data(), key.data(), default.data());
 		}
-		static constexpr std::string_view NOT_FOUND = "%INVALID%";
+		void SetValue(std::string_view section, std::string_view key, std::string&& value)
+		{
+			CSimpleIniA::SetValue(section.data(), key.data(), value.data());
+		}
 	};
 
 	INI::INI() : mIni(std::make_unique<INIintern>()) { }
@@ -130,6 +134,17 @@ namespace WhipseeySaveManager::INI
 			return true;
 		}
 		mError += Types::Error::Code::FailedToLoadFile;
+		return false;
+	}
+	
+	bool INI::writeFile(const std::filesystem::path& path) 
+	{
+		const SI_Error siErr = mIni->SaveFile(path.native().c_str());
+		if(siErr == SI_Error::SI_OK)
+		{
+			return true;
+		}
+		mError += Types::Error::Code::FailedToWriteFile;
 		return false;
 	}
 	
@@ -184,5 +199,21 @@ namespace WhipseeySaveManager::INI
 			success &= read(section);
 		}
 		return success;
+	}
+	
+	void INI::write(const std::shared_ptr<ISection>& section) 
+	{
+		for(auto& key : section->keys())
+		{
+			mIni->SetValue(section->section(), key->key(), key->toString());
+		}
+	}
+	
+	void INI::write(const std::shared_ptr<IIni>& ini) 
+	{
+		for(auto& section : ini->sections())
+		{
+			write(section);
+		}
 	}
 }

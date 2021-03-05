@@ -134,7 +134,15 @@ namespace WhipseeySaveManager::INI
 		bool loadFile(const std::filesystem::path& path);
 		
 		/**
-		 * @brief checks if a section is present in the loaded ini, 
+		 * @brief trys to write to the file at path, 
+		 * adds FailedToWriteFile error code if failed
+		 * 
+		 * @return bool true when successful
+		 */
+		bool writeFile(const std::filesystem::path& path);
+		
+		/**
+		 * @brief checks if a section is present in the loaded ini data, 
 		 * adds SectionNotFound error code if failed
 		 * 
 		 * @return bool true when successful
@@ -142,7 +150,7 @@ namespace WhipseeySaveManager::INI
 		bool has(const std::shared_ptr<ISection>& section);
 		
 		/**
-		 * @brief trys to read all keys in ISection from loaded ini, 
+		 * @brief trys to read all keys in ISection from loaded ini data, 
 		 * adds KeyNotFound, SectionNotFound error codes if failed
 		 * 
 		 * @return bool true when successful
@@ -150,12 +158,22 @@ namespace WhipseeySaveManager::INI
 		bool read(const std::shared_ptr<ISection>& section);
 		
 		/**
-		 * @brief trys to read all keys in IIni from loaded ini, 
+		 * @brief trys to read all keys in IIni from loaded ini data, 
 		 * adds KeyNotFound, SectionNotFound error codes if failed
 		 * 
 		 * @return bool true when successful
 		 */
 		bool read(const std::shared_ptr<IIni>& ini);
+		
+		/**
+		 * @brief writes all keys in ISection to loaded ini data
+		 */
+		void write(const std::shared_ptr<ISection>& section);
+		
+		/**
+		 * @brief writs all keys in IIni to loaded ini data
+		 */
+		void write(const std::shared_ptr<IIni>& ini);
 
 		INI();
 		~INI();

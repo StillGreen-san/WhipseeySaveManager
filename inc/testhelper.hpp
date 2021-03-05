@@ -10,6 +10,7 @@ namespace WhipseeySaveManager::Test
 	namespace Data
 	{
 		const std::filesystem::path missing(L"data/__MISSING_FILE__.NONE");
+		const std::filesystem::path write(L"data/__WRITE_FILE__.TMP");
 		const std::filesystem::path settingsDefault(L"data/settings-default.ini");
 		const std::filesystem::path settingsValid(L"data/settings-valid.ini");
 		const std::filesystem::path settingsInvalid(L"data/settings-invalid.ini");
