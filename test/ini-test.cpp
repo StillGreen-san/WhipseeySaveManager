@@ -217,7 +217,7 @@ TEST_CASE("INI::INI", "[INI]")
 
 		CHECK(cheatsDefault->getCheatsEnabled() == cheatsWrite->getCheatsEnabled());
 
-		REQUIRE(std::filesystem::remove(Test::Data::write));
+		REMOVE(Test::Data::write);
 	}
 
 	//TODO test extract error

@@ -25,4 +25,6 @@ namespace WhipseeySaveManager::Test
 
 	#define REQUIRE_EXISTS(path) if(!std::filesystem::exists(path)) FAIL(path.relative_path().string().append(" missing!"))
 	#define REQUIRE_MISSING(path) if(std::filesystem::exists(path)) FAIL(path.relative_path().string().append(" exists!"))
+	#define REMOVE(path) if(std::filesystem::exists(path)) if(!std::filesystem::remove(path))\
+		FAIL(path.relative_path().string().append(" could not be deleted!"))
 } // namespace WhipseeySaveManager::Test

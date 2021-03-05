@@ -7,6 +7,7 @@
 //TODO remove magic numbers
 //TODO provide namespaces for keys,sections inis ; hide INI
 //TODO not using static_pointer_cast ?
+//TODO comparison operator for IKey, ISection, IIni (update tests after)
 
 namespace WhipseeySaveManager::INI
 {

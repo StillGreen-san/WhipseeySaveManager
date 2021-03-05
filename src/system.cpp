@@ -172,5 +172,25 @@ namespace WhipseeySaveManager::System
 		}
 		sIni.read(ini);
 		return sIni.extractError();
+	}//TODO combine as template?
+	
+	Types::Error write(std::shared_ptr<INI::ISection> section, std::filesystem::path file) 
+	{
+		INI::INI ini;
+		if(std::filesystem::exists(file))
+		{
+			ini.loadFile(file);
+		}
+		ini.write(section);
+		ini.writeFile(file);
+		return ini.extractError();
+	}
+	
+	Types::Error write(std::shared_ptr<INI::IIni> ini, std::filesystem::path file) 
+	{
+		INI::INI sIni;
+		sIni.write(ini);
+		sIni.writeFile(file);
+		return sIni.extractError();
 	}
 } // WhipseeySaveManager::System

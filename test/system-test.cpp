@@ -176,3 +176,43 @@ TEST_CASE("System::read IIni", "[System]")
 		CHECK(settings->getCheats().getCheatsEnabled() == INI::CheatsEnabled());
 	}
 }
+
+TEST_CASE("System::write ISection", "[System]")
+{
+	SECTION("write new")
+	{
+		REQUIRE_MISSING(Test::Data::write);
+		auto cheatsWrite = std::make_shared<INI::Cheats>();
+		Types::Error error = System::write(cheatsWrite, Test::Data::write);
+		CHECK_FALSE(error);
+
+		auto cheatsDefault = std::make_shared<INI::Cheats>();
+		System::read(cheatsDefault, Test::Data::write);
+		CHECK(cheatsDefault->getCheatsEnabled() == cheatsWrite->getCheatsEnabled());
+		
+		REMOVE(Test::Data::write);
+	}
+
+	SECTION("write existing")
+	{
+		REQUIRE_MISSING(Test::Data::write);
+		REQUIRE_EXISTS(Test::Data::settingsDefault);
+		REQUIRE(std::filesystem::copy_file(Test::Data::settingsDefault, Test::Data::write));
+
+		auto optionsWrite = std::make_shared<INI::Options>();
+		Types::Error error = System::write(optionsWrite, Test::Data::write);
+		CHECK_FALSE(error);
+
+		auto cheatsDefault = std::make_shared<INI::Cheats>();
+		error = System::read(cheatsDefault, Test::Data::write);
+		CHECK_FALSE(error);
+		CHECK(cheatsDefault->getCheatsEnabled() == INI::Cheats().getCheatsEnabled());
+
+		auto optionsDefault = std::make_shared<INI::Options>();
+		error = System::read(optionsDefault, Test::Data::write);
+		CHECK_FALSE(error);
+		CHECK(optionsDefault->getLanguage() == optionsWrite->getLanguage());
+
+		REMOVE(Test::Data::write);
+	}
+}
