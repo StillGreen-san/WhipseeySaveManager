@@ -57,21 +57,57 @@ namespace WhipseeySaveManager::System
 
 		return errTheme;
 	}
+
+	template<typename T>
+	class CoTaskMem
+	{
+	public:
+		void Alloc(size_t elements)
+		{
+			Free();
+			pointer = static_cast<T*>(CoTaskMemAlloc(elements * sizeof(T)));
+		}
+		void Realloc(size_t elements)
+		{
+			pointer = static_cast<T*>(CoTaskMemRealloc(pointer, elements * sizeof(T)));
+		}
+		void Free()
+		{
+			CoTaskMemFree(pointer);
+			pointer = NULL;
+		}
+		~CoTaskMem()
+		{
+			Free();
+		}
+		T* Get()
+		{
+			return pointer;
+		}
+		operator T*()
+		{
+			return pointer;
+		}
+		operator T**()
+		{
+			return &pointer;
+		}
+	private:
+		T* pointer = NULL;
+	};
 	
 	Types::ErrDat<std::filesystem::path> defaultSavePath() 
 	{
 		Types::ErrDat<std::filesystem::path> errPath;
-		PWSTR szPath = nullptr;
-		HRESULT result = SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_DEFAULT, NULL, &szPath);//TODO create wrapper
+		CoTaskMem<WCHAR> szPath;
+		HRESULT result = SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_DEFAULT, NULL, szPath);
 		if(result == S_OK)
 		{
-			errPath.data.assign(szPath);
-			CoTaskMemFree(szPath);
+			errPath.data.assign(szPath.Get());
 		}
 		else
 		{
 			errPath = Types::Error::Code::DefaultSaveNotFound;
-			CoTaskMemFree(szPath);
 			return errPath;
 		}
 
