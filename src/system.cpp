@@ -116,12 +116,11 @@ namespace WhipseeySaveManager::System
 			return {};
 		}
 
-		return path;
+		return path.make_preferred();
 	}
 	
 	std::optional<std::filesystem::path> defaultSettingsPath() 
 	{
-		std::filesystem::path path;
 		const std::wstring steamKey = LR"(SOFTWARE\Valve\Steam)";
 		const std::wstring steamSZ = LR"(InstallPath)";
 
@@ -150,8 +149,7 @@ namespace WhipseeySaveManager::System
 
 		if(std::filesystem::exists(settingsPath))
 		{
-			path.assign(std::move(settingsPath));
-			return path;
+			return settingsPath.make_preferred();
 		}
 
 		const std::filesystem::path librariesFilePath(steamPath / "steamapps/libraryfolders.vdf");
@@ -172,8 +170,7 @@ namespace WhipseeySaveManager::System
 				settingsPath.assign(match[1].str() / settingsRelativePath);
 				if(std::filesystem::exists(settingsPath))
 				{
-					path.assign(std::move(settingsPath));
-					return path;
+					return settingsPath.make_preferred();//TODO further cleanup paths
 				}
 			}
 		}
