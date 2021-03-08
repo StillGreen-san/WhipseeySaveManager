@@ -36,7 +36,7 @@ add_executable( ${MAIN_TARGET} WIN32 ${WSM_SRC_DIR}/${MAIN_TARGET}.cpp )
 target_include_directories( ${MAIN_TARGET} PRIVATE ${WSM_INC_DIR} )
 target_include_directories( ${MAIN_TARGET} SYSTEM PRIVATE ${WINREG_INCLUDE_DIRS} ${SIMPLEINI_INCLUDE_DIRS} )
 target_link_libraries( ${MAIN_TARGET} PRIVATE unofficial::nana::nana )
-target_sources( ${MAIN_TARGET} PRIVATE ${MAIN_SOURCES} )
+target_sources( ${MAIN_TARGET} PRIVATE ${MAIN_SOURCES} ${WSM_SRC_DIR}/gui.cpp )
 set_property( TARGET ${MAIN_TARGET} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" )
 
 set( TEST_SOURCES

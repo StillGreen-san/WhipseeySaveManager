@@ -7,12 +7,6 @@
 namespace WhipseeySaveManager::GUI
 {
 	/**
-	 * @brief internal implementation of GUI
-	 * 
-	 */
-	struct GUIimpl;
-	
-	/**
 	 * @brief userinterface, will run the main program loop
 	 * 
 	 */
@@ -20,21 +14,36 @@ namespace WhipseeySaveManager::GUI
 	{
 	public:
 		/**
-		 * @brief show the GUI, starts main loop (connect functions first)
+		 * @brief show the GUI, starts main loop (connect functions first), 
+		 * returns when the gui is closed or an error occurred
 		 * 
 		 * @return Types::Error 
 		 */
 		Types::Error run();
 
+		using ThemeSignature = std::optional<Types::Theme>();
+		using PathSignature = std::optional<std::filesystem::path>();
+		using SectionSignature = Types::Error(std::shared_ptr<INI::ISection>, std::filesystem::path);
+		using IniSignature = Types::Error(std::shared_ptr<INI::IIni>, std::filesystem::path);
+
 		//TODO add comments
-		void connectOnSystemTheme(std::function<std::optional<Types::Theme>()> func);
-		void connectOnDefaultSavePath(std::function<std::optional<std::filesystem::path>()> func);
-		void connectOnDefaultSettingsPath(std::function<std::optional<std::filesystem::path>()> func);
-		void connectOnRead(std::function<Types::Error(std::shared_ptr<INI::ISection>, std::filesystem::path)> func);
-		void connectOnRead(std::function<Types::Error(std::shared_ptr<INI::IIni>, std::filesystem::path)> func);
-		void connectOnWrite(std::function<Types::Error(std::shared_ptr<INI::ISection>, std::filesystem::path)> func);
-		void connectOnWrite(std::function<Types::Error(std::shared_ptr<INI::IIni>, std::filesystem::path)> func);
+		void connectOnSystemTheme(std::function<ThemeSignature> func);
+		void connectOnDefaultSavePath(std::function<PathSignature> func);
+		void connectOnDefaultSettingsPath(std::function<PathSignature> func);
+		void connectOnReadSection(std::function<SectionSignature> func);
+		void connectOnReadIni(std::function<IniSignature> func);
+		void connectOnWriteSection(std::function<SectionSignature> func);
+		void connectOnWriteIni(std::function<IniSignature> func);
 	private:
-		std::unique_ptr<GUIimpl> guiImpl;
+		struct FuncitonStore
+		{
+			std::function<ThemeSignature> onSystemTheme;
+			std::function<PathSignature> onDefaultSavePath;
+			std::function<PathSignature> onDefaultSettingsPath;
+			std::function<SectionSignature> onReadSection;
+			std::function<IniSignature> onReadIni;
+			std::function<SectionSignature> onWriteSection;
+			std::function<IniSignature> onWriteIni;
+		} callbacks;
 	};
 } // namespace WhipseeySaveManager::GUI
