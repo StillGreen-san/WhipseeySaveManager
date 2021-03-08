@@ -1,31 +1,30 @@
 #pragma once
 
 #include "ini.hpp"
+#include <optional>
 
 namespace WhipseeySaveManager::System
 {
 	/**
-	 * @brief queries the os for theme info
+	 * @brief trys to querie the os for theme info
 	 * 
-	 * @return Types::ErrDat<Types::Theme>: Theme always valid, 
-	 * on error: code = ColorDwordNotFound, ColorKeyNotFound, ThemeDwordNotFound or ThemeKeyNotFound
+	 * @return std::optional<Types::Theme>: if successful contains Theme object
 	 */
-	Types::ErrDat<Types::Theme> systemTheme();//TODO simplify
+	std::optional<Types::Theme> systemTheme();
 
 	/**
-	 * @brief finds the default save path
+	 * @brief trys to find the default whipseey.sav path
 	 * 
-	 * @return Types::ErrDat<std::filesystem::path> if error path is empty and code = DefaultSaveNotFound
+	 * @return std::optional<std::filesystem::path>: if successful contains path
 	 */
-	Types::ErrDat<std::filesystem::path> defaultSavePath();//TODO simplify
+	std::optional<std::filesystem::path> defaultSavePath();
 
 	/**
-	 * @brief finds the default bfs_settings.ini path
+	 * @brief trys to find the default bfs_settings.ini path
 	 * 
-	 * @return Types::ErrDat<std::filesystem::path> if error path is empty and code = 
-	 * SteamKeyNotFound, SteamDwordNotFound, SteamLibrariesNotFound or GameNotFound
+	 * @return std::optional<std::filesystem::path>: if successful contains path
 	 */
-	Types::ErrDat<std::filesystem::path> defaultSettingsPath();//TODO simplify
+	std::optional<std::filesystem::path> defaultSettingsPath();
 
 	/**
 	 * @brief reads all keys defined in ISection from file into ini

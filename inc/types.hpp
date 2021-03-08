@@ -51,6 +51,11 @@ namespace WhipseeySaveManager::Types
 		Disabled = 0,
 		Enabled = 1
 	};
+	enum class Darkmode : uint8_t
+	{
+		Disabled = 0,
+		Enabled = 1
+	};
 
 	/**
 	 * @brief selectable languages associated with there savegame values
@@ -308,7 +313,7 @@ namespace WhipseeySaveManager::Types
 	 */
 	struct Theme
 	{
-		Toggle darkmode = Toggle::Disabled;
+		Darkmode darkmode = Darkmode::Disabled;
 		uint32_t accent = 0x0078d7;
 	};
 
@@ -327,15 +332,6 @@ namespace WhipseeySaveManager::Types
 		{
 			Nothing,// no error occurred
 			Unknown,// an unknown error occurred
-			ThemeDwordNotFound,
-			ThemeKeyNotFound,
-			ColorDwordNotFound,
-			ColorKeyNotFound,
-			DefaultSaveNotFound,
-			SteamKeyNotFound,// an error occurred while opening the steam key in the registry
-			SteamDwordNotFound,
-			SteamLibrariesNotFound,
-			GameNotFound,
 			FailedToLoadSettings,
 			CheatsSectionNotFound,
 			CheatsKeyNotFound,

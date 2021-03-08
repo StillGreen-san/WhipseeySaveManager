@@ -11,9 +11,9 @@
 
 namespace WhipseeySaveManager::System
 {
-	Types::ErrDat<Types::Theme> systemTheme() 
+	std::optional<Types::Theme> systemTheme() 
 	{
-		Types::ErrDat<Types::Theme> errTheme;
+		Types::Theme theme;
 		const std::wstring themeKey = LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize)";
 		const std::wstring themeDW = LR"(AppsUseLightTheme)";
 		const std::wstring colorKey = LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\History\Colors)";
@@ -26,16 +26,16 @@ namespace WhipseeySaveManager::System
 			std::optional<DWORD> lightTheme = regHandler.TryGetDwordValue(themeDW);
 			if(lightTheme.has_value())
 			{
-				errTheme.data.darkmode = lightTheme.value() ? Types::Toggle::Disabled : Types::Toggle::Enabled;
+				theme.darkmode = lightTheme.value() ? Types::Darkmode::Disabled : Types::Darkmode::Enabled;
 			}
 			else
 			{
-				errTheme += Types::Error::Code::ThemeDwordNotFound;
+				return {};
 			}
 		}
 		else
 		{
-			errTheme += Types::Error::Code::ThemeKeyNotFound;
+			return {};
 		}
 		
 		if(regHandler.TryOpen(HKEY_CURRENT_USER, colorKey, KEY_READ))
@@ -43,19 +43,19 @@ namespace WhipseeySaveManager::System
 			std::optional<DWORD> color = regHandler.TryGetDwordValue(colorDW);
 			if(color.has_value())
 			{
-				errTheme.data.accent = color.value();
+				theme.accent = color.value();
 			}
 			else
 			{
-				errTheme += Types::Error::Code::ColorDwordNotFound;
+				return {};
 			}
 		}
 		else
 		{
-			errTheme += Types::Error::Code::ColorKeyNotFound;
+			return {};
 		}
 
-		return errTheme;
+		return theme;
 	}
 
 	template<typename T>
@@ -96,34 +96,32 @@ namespace WhipseeySaveManager::System
 		T* pointer = NULL;
 	};
 	
-	Types::ErrDat<std::filesystem::path> defaultSavePath() 
+	std::optional<std::filesystem::path> defaultSavePath() 
 	{
-		Types::ErrDat<std::filesystem::path> errPath;
+		std::filesystem::path path;
 		CoTaskMem<WCHAR> szPath;
 		HRESULT result = SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_DEFAULT, NULL, szPath);
 		if(result == S_OK)
 		{
-			errPath.data.assign(szPath.Get());
+			path.assign(szPath.Get());
 		}
 		else
 		{
-			errPath = Types::Error::Code::DefaultSaveNotFound;
-			return errPath;
+			return {};
 		}
 
-		errPath.data += R"(\Whipseey\savedata\whipseey.sav)";
-		if(std::filesystem::exists(errPath.data) == false)
+		path += R"(\Whipseey\savedata\whipseey.sav)";
+		if(std::filesystem::exists(path) == false)
 		{
-			errPath = Types::Error::Code::DefaultSaveNotFound;
-			errPath.data.clear();
+			return {};
 		}
 
-		return errPath;
+		return path;
 	}
 	
-	Types::ErrDat<std::filesystem::path> defaultSettingsPath() 
+	std::optional<std::filesystem::path> defaultSettingsPath() 
 	{
-		Types::ErrDat<std::filesystem::path> errPath;
+		std::filesystem::path path;
 		const std::wstring steamKey = LR"(SOFTWARE\Valve\Steam)";
 		const std::wstring steamSZ = LR"(InstallPath)";
 
@@ -139,14 +137,12 @@ namespace WhipseeySaveManager::System
 			}
 			else
 			{
-				errPath = Types::Error::Code::SteamDwordNotFound;
-				return errPath;
+				return {};
 			}
 		}
 		else
 		{
-			errPath = Types::Error::Code::SteamKeyNotFound;
-			return errPath;
+			return {};
 		}
 
 		const std::filesystem::path settingsRelativePath("steamapps/common/Whipseey and the Lost Atlas/bfs_settings.ini");
@@ -154,16 +150,15 @@ namespace WhipseeySaveManager::System
 
 		if(std::filesystem::exists(settingsPath))
 		{
-			errPath.data.assign(std::move(settingsPath));
-			return errPath;
+			path.assign(std::move(settingsPath));
+			return path;
 		}
 
 		const std::filesystem::path librariesFilePath(steamPath / "steamapps/libraryfolders.vdf");
 
 		if(std::filesystem::exists(librariesFilePath) == false)
 		{
-			errPath = Types::Error::Code::SteamLibrariesNotFound;
-			return errPath;
+			return {};
 		}
 
 		std::ifstream librariesFile(librariesFilePath);
@@ -177,15 +172,13 @@ namespace WhipseeySaveManager::System
 				settingsPath.assign(match[1].str() / settingsRelativePath);
 				if(std::filesystem::exists(settingsPath))
 				{
-					errPath.data.assign(std::move(settingsPath));
-					return errPath;
+					path.assign(std::move(settingsPath));
+					return path;
 				}
 			}
 		}
-		librariesFile.close();
 
-		errPath = Types::Error::Code::GameNotFound;
-		return errPath;
+		return {};
 	}
 
 	Types::Error read(std::shared_ptr<INI::ISection> section, std::filesystem::path file) 
