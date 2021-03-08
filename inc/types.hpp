@@ -3,7 +3,6 @@
 #include "core.hpp"
 
 #include <filesystem>
-#include <set>
 #include <optional>
 
 namespace WhipseeySaveManager::Types
@@ -183,7 +182,7 @@ namespace WhipseeySaveManager::Types
 	 * 
 	 */
 	class Error
-	{
+	{//TODO tests
 	public:
 		/**
 		 * @brief the type of error
@@ -202,7 +201,7 @@ namespace WhipseeySaveManager::Types
 		};
 
 	private:
-		std::set<Code> codes;//TODO use vector instead to keep code order
+		std::vector<Code> codes;
 
 	public:
 		Error() = default;
@@ -226,8 +225,8 @@ namespace WhipseeySaveManager::Types
 		 */
 		Error& operator=(const Error::Code& code)
 		{
-			codes.clear();
-			codes.emplace(code);
+			if(code == Code::Nothing) return *this;
+			codes.assign(1, code);
 			return *this;
 		}
 
@@ -239,14 +238,20 @@ namespace WhipseeySaveManager::Types
 		 */
 		Error& operator+=(const Error::Code& code)
 		{
-			codes.emplace(code);
+			if(code == Code::Nothing) return *this;
+			codes.emplace_back(code);
 			return *this;
 		}
 
+		/**
+		 * @brief appends all codes contained in the other error
+		 * 
+		 * @param error the Error object to copy codes from
+		 * @return Error& *this
+		 */
 		Error& operator+=(const Error& error)
 		{
-			std::set<Code> other(error.codes);
-			codes.merge(other);
+			codes.insert(codes.end(), error.codes.cbegin(), error.codes.cend());
 			return *this;
 		}
 
@@ -285,7 +290,7 @@ namespace WhipseeySaveManager::Types
 		{
 			if(code == Code::Nothing) return codes.empty();
 			if(codes.size() > 1) return false;
-			return codes.find(code) != codes.cend();
+			return codes[0] == code;
 		}
 	};
 } // namespace WhipseeySaveManager::Types
