@@ -201,7 +201,7 @@ namespace WhipseeySaveManager::System
 		}
 		sIni.read(ini);
 		return sIni.extractError();
-	}//TODO combine as template?
+	}
 	
 	Types::Error write(std::shared_ptr<INI::ISection> section, std::filesystem::path file) 
 	{

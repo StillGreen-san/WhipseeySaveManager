@@ -157,6 +157,10 @@ TEST_CASE("INI::IKey", "[INI]")
 		valStr = std::to_string(KeyType::default);
 		Types::Error fromStringWrong = key.fromString(valStr);
 		CHECK(fromStringWrong == Types::Error::Code::InvalidFormat);
+
+		valStr = "\"0.000\"";
+		Types::Error fromStringFractionalShort = key.fromString(valStr);
+		CHECK(fromStringFractionalShort == Types::Error::Code::InvalidFormat);
 	}
 
 	SECTION("StringInt")
@@ -180,6 +184,10 @@ TEST_CASE("INI::IKey", "[INI]")
 		valStr = std::to_string(KeyType::default);
 		Types::Error fromStringString = key.fromString(valStr);
 		CHECK(fromStringString == Types::Error::Code::InvalidFormat);
+
+		valStr = "\"0.00000000\"";
+		Types::Error fromStringFractionalLong = key.fromString(valStr);
+		CHECK(fromStringFractionalLong == Types::Error::Code::InvalidFormat);
 	}
 }
 

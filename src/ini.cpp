@@ -26,7 +26,8 @@ namespace WhipseeySaveManager::INI
 		case Number::StringInt :
 		default:
 		{
-			auto ifFloatPart = [hasDot = bool(false)](char chr) mutable
+			auto fractionalPrecision = 0;
+			auto ifFloatPart = [hasDot = bool(false), &fractionalPrecision](char chr) mutable
 			{
 				if(chr == '.')
 				{
@@ -42,12 +43,21 @@ namespace WhipseeySaveManager::INI
 				}
 				else
 				{
+					if(hasDot)
+					{
+						++fractionalPrecision;
+					}
+					if(fractionalPrecision > 6)
+					{
+						return false;
+					}
 					return static_cast<bool>(std::isdigit(chr));
 				}
 			};
 			if((string.front() == '"' && string.back() == '"')
-			&& std::all_of(++string.begin(), --string.end(), ifFloatPart))
-			{//TODO check fractional lenght? (not testet yet)
+			&& std::all_of(++string.begin(), --string.end(), ifFloatPart)
+			&& fractionalPrecision == 6)
+			{
 				newValue = std::strtof(string.data()+1, nullptr);
 				if(mNumber == Number::StringInt)
 				{
