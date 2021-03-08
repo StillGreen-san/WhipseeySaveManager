@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.hpp"
+#include "ini.hpp"
 
 #include <functional>
 
@@ -26,18 +26,14 @@ namespace WhipseeySaveManager::GUI
 		 */
 		Types::Error run();
 
-		//TODO update function signatures
-		void connectOnDarkmodeEnabled(std::function<Types::ErrDat<Types::Toggle>()> func);
-		void connectOnDefaultSavePath(std::function<Types::ErrDat<std::filesystem::path>()> func);
-		void connectOnDefaultSettingsPath(std::function<Types::ErrDat<std::filesystem::path>()> func);
-		void connectOnReadSave(std::function<Types::ErrDat<Types::Save>(std::filesystem::path)> func);
-		void connectOnReadSettings(std::function<Types::ErrDat<Types::Settings>(std::filesystem::path)> func);
-		void connectOnReadOptions(std::function<Types::ErrDat<Types::Options>(std::filesystem::path)> func);
-		void connectOnReadFile(std::function<Types::ErrDat<Types::File>(std::filesystem::path, Types::FileIndex)> func);
-		void connectOnWriteSave(std::function<Types::Error(std::filesystem::path, Types::Save)> func);
-		void connectOnWriteSettings(std::function<Types::Error(std::filesystem::path, Types::Settings)> func);
-		void connectOnWriteOptions(std::function<Types::Error(std::filesystem::path, Types::Options)> func);
-		void connectOnWriteFile(std::function<Types::Error(std::filesystem::path, Types::FileIndex, Types::File)> func);
+		//TODO add comments
+		void connectOnSystemTheme(std::function<std::optional<Types::Theme>()> func);
+		void connectOnDefaultSavePath(std::function<std::optional<std::filesystem::path>()> func);
+		void connectOnDefaultSettingsPath(std::function<std::optional<std::filesystem::path>()> func);
+		void connectOnRead(std::function<Types::Error(std::shared_ptr<INI::ISection>, std::filesystem::path)> func);
+		void connectOnRead(std::function<Types::Error(std::shared_ptr<INI::IIni>, std::filesystem::path)> func);
+		void connectOnWrite(std::function<Types::Error(std::shared_ptr<INI::ISection>, std::filesystem::path)> func);
+		void connectOnWrite(std::function<Types::Error(std::shared_ptr<INI::IIni>, std::filesystem::path)> func);
 	private:
 		std::unique_ptr<GUIimpl> guiImpl;
 	};

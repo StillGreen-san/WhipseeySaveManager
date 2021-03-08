@@ -19,7 +19,7 @@ namespace WhipseeySaveManager
 	
 	/**
 	 * @brief contains objects/functions that represent/interacts with ini files,
-	 * include ini.hpp to use, included in system.hpp
+	 * include ini.hpp to use, included in system.hpp, gui.hpp
 	 * 
 	 */
 	namespace INI { }

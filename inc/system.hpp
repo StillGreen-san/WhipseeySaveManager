@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ini.hpp"
-#include <optional>
 
 namespace WhipseeySaveManager::System
 {
