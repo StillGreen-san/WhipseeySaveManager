@@ -18,10 +18,32 @@ namespace WhipseeySaveManager::GUI
 		nana::button openFile{*this, "..."};
 		nana::button saveFile{*this, "save"};
 		nana::button reloadFile{*this, "reload"};
+
 		PathControls(nana::window wd) : nana::panel<false>(wd)
 		{
 			place.div("this fit gap=5");
 			place["this"] << filePath << openFile << saveFile << reloadFile;
+			filePath.events().click.connect([&](nana::arg_click click){
+				open();
+			});
+		}
+
+		void open()
+		{
+			nana::filebox ofd(*this, true);
+			if(auto path = filePath.getline(0))
+			{
+				ofd.init_file(*path);
+			}
+			ofd.add_filter({
+				{"Save", "*.sav"},
+				{"All", "*.*"}
+			});
+			auto paths = ofd.show();
+			if(paths.size() == 1)
+			{
+				filePath.caption(paths[0].native());
+			}
 		}
 	};
 
@@ -124,6 +146,10 @@ namespace WhipseeySaveManager::GUI
 		{
 			group.update(file);
 			progress.update(file);
+			intro.check(file.getIntro() == Types::Intro::Watched);
+			ending.check(file.getEnding() == Types::Ending::Watched);
+			tgems.caption(std::to_string(file.getGems()));
+			tlives.caption(std::to_string(file.getLives()));
 		}
 	};
 	
@@ -141,10 +167,10 @@ namespace WhipseeySaveManager::GUI
 				pcsave.filePath.caption(path->native());
 			}
 		}
-		pcsave.openFile.events().click.connect([&](nana::arg_click){
-			nana::filebox fb(mainForm, true);
-			fb.show();
-		});
+		// pcsave.openFile.events().click.connect([&](nana::arg_click){
+		// 	nana::filebox fb(mainForm, true);
+		// 	fb.show();
+		// });
 		PathControls pcset(mainForm);
 		if(callbacks.onDefaultSettingsPath)
 		{
