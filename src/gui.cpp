@@ -24,12 +24,74 @@ namespace WhipseeySaveManager::GUI
 			place["this"] << filePath << openFile << saveFile << reloadFile;
 		}
 	};
+
+	class FileGroup : public nana::group
+	{
+	public:
+		using nana::group::group;
+		void update(INI::FileBase& file)
+		{
+			std::string title(file.section());
+			title.append("  ")
+				.append(std::to_string(
+					unsigned(Types::BossNoDamage(file.getBossNoDamageProgress()))//! not so nice
+				))
+				.append(" - ")
+				.append(std::to_string(file.getEnemiesDefeated()));
+			caption(title);
+		}
+	};
+
+	class ProgressGroup : public nana::group
+	{
+	public:
+		ProgressGroup(nana::window wd) :
+			nana::group::group(wd, "progress")
+		{
+			radio_mode(true);
+			add_option("Castle");
+			add_option("Moon");
+			add_option("Snow");
+			add_option("Desert");
+			add_option("Forest");
+			add_option("Beach").check(true);
+		}
+
+		void update(INI::FileBase& file)
+		{
+				 if(file.getCastle() == Types::Castle::Cleared)
+			{
+				option_check(0, true);
+			}
+			else if(file.getMoon() == Types::Moon::Cleared)
+			{
+				option_check(1, true);
+			}
+			else if(file.getSnow() == Types::Snow::Cleared)
+			{
+				option_check(2, true);
+			}
+			else if(file.getDesert() == Types::Desert::Cleared)
+			{
+				option_check(3, true);
+			}
+			else if(file.getForest() == Types::Forest::Cleared)
+			{
+				option_check(4, true);
+			}
+			else //TODO add Types::Level conversion to FileBase?
+			{
+				option_check(5, true);
+			}
+		}
+	};
+
 	class FileBox : public nana::panel<false>
 	{
 	public:
 		nana::place place{*this};
-		nana::group group{*this, "fileX  7-16777215"};
-		nana::group progress{group, "progress"};
+		FileGroup group{*this, "FileX  0 - 07"};//! placeholder text needed
+		ProgressGroup progress{group};
 		nana::checkbox intro{group, "Intro"};
 		nana::checkbox ending{group, "Ending"};
 		nana::label lgems{group, "Gems"};
@@ -43,15 +105,9 @@ namespace WhipseeySaveManager::GUI
 		nana::button save{group, "save"};
 		nana::button reload{group, "reload"};
 		nana::radio_group pgroup;
+
 		FileBox(nana::window wd) : nana::panel<false>(wd)
 		{
-			progress.add_option("Castle");
-			progress.add_option("Moon");
-			progress.add_option("Snow");
-			progress.add_option("Desert");
-			progress.add_option("Forest");
-			progress.add_option("Beach");
-			progress.radio_mode(true);
 			group.div(
 			"<progress weight=80 margin=[5,5,5,5]>"
 			"<vert gems weight=45 margin=[5,0,5,0] gap=5>"
@@ -62,6 +118,12 @@ namespace WhipseeySaveManager::GUI
 			group.collocate();
 			place.div("this");
 			place["this"] << group;
+		}
+
+		void update(INI::FileBase& file)
+		{
+			group.update(file);
+			progress.update(file);
 		}
 	};
 	
@@ -96,6 +158,18 @@ namespace WhipseeySaveManager::GUI
 		FileBox fb1(mainForm);
 		FileBox fb2(mainForm);
 		FileBox fb3(mainForm);
+
+		auto save = std::make_shared<INI::Save>();
+		if(auto path = pcsave.filePath.getline(0))
+		{
+			Types::Error error = callbacks.onReadIni(save, *path);
+			if(!error)
+			{
+				fb1.update(save->getFile1());
+				fb2.update(save->getFile2());
+				fb3.update(save->getFile3());
+			}
+		}
 
 		mainForm.div("vertical<vertical paths gap=5 margin=5 weight=70><files gap=3 margin=5>");
 		mainForm["paths"] << pcsave << pcset;

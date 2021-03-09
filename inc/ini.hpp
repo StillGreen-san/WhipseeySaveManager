@@ -84,7 +84,7 @@ namespace WhipseeySaveManager::INI
 		/**
 		 * @return std::string_view with the section name
 		 */
-		std::string_view section()
+		std::string_view section() const
 		{
 			return mName;
 		}
@@ -678,7 +678,7 @@ namespace WhipseeySaveManager::INI
 		Gems() : IKey(
 			name,
 			0,
-			Limits::EitherOr,
+			Limits::MinMax,
 			Number::StringInt,
 			0,
 			99
