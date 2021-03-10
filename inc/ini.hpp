@@ -744,6 +744,7 @@ namespace WhipseeySaveManager::INI
 		{
 			return *std::static_pointer_cast<Forest>(mKeys[6]);
 		}
+		Types::Level getLevel();
 		Ending& getEnding()
 		{
 			return *std::static_pointer_cast<Ending>(mKeys[7]);

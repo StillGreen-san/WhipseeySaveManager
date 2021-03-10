@@ -112,6 +112,34 @@ namespace WhipseeySaveManager::INI
 			return std::to_string(mValue).insert(0, 1, '"').append(1, '"');
 		}
 	}
+	
+	Types::Level FileBase::getLevel()
+	{
+			if(getCastle() == Types::Castle::Cleared)
+		{
+			return Types::Level::Castle;
+		}
+		else if(getMoon() == Types::Moon::Cleared)
+		{
+			return Types::Level::Moon;
+		}
+		else if(getSnow() == Types::Snow::Cleared)
+		{
+			return Types::Level::Snow;
+		}
+		else if(getDesert() == Types::Desert::Cleared)
+		{
+			return Types::Level::Desert;
+		}
+		else if(getForest() == Types::Forest::Cleared)
+		{
+			return Types::Level::Forest;
+		}
+		else
+		{
+			return Types::Level::Beach;
+		}
+	}
 
 	class INI::INIintern final : public CSimpleIniA
 	{
@@ -134,7 +162,7 @@ namespace WhipseeySaveManager::INI
 	{
 		return std::move(mError);
 	}
-	
+
 	bool INI::loadFile(const std::filesystem::path& path)
 	{
 		mIni->Reset();
@@ -146,8 +174,8 @@ namespace WhipseeySaveManager::INI
 		mError += Types::Error::Code::FailedToLoadFile;
 		return false;
 	}
-	
-	bool INI::writeFile(const std::filesystem::path& path) 
+
+	bool INI::writeFile(const std::filesystem::path& path)
 	{
 		const SI_Error siErr = mIni->SaveFile(path.native().c_str());
 		if(siErr == SI_Error::SI_OK)
@@ -157,7 +185,7 @@ namespace WhipseeySaveManager::INI
 		mError += Types::Error::Code::FailedToWriteFile;
 		return false;
 	}
-	
+
 	bool INI::has(const std::shared_ptr<ISection>& section)
 	{
 		if(mIni->IsEmpty() || mIni->GetSection(section->section().data()) == nullptr)
@@ -200,7 +228,7 @@ namespace WhipseeySaveManager::INI
 		}
 		return success;
 	}
-	
+
 	bool INI::read(const std::shared_ptr<IIni>& ini)
 	{
 		bool success = true;
@@ -210,16 +238,16 @@ namespace WhipseeySaveManager::INI
 		}
 		return success;
 	}
-	
-	void INI::write(const std::shared_ptr<ISection>& section) 
+
+	void INI::write(const std::shared_ptr<ISection>& section)
 	{
 		for(auto& key : section->keys())
 		{
 			mIni->SetValue(section->section(), key->key(), key->toString());
 		}
 	}
-	
-	void INI::write(const std::shared_ptr<IIni>& ini) 
+
+	void INI::write(const std::shared_ptr<IIni>& ini)
 	{
 		for(auto& section : ini->sections())
 		{

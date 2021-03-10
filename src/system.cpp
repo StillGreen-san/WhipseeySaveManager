@@ -170,7 +170,7 @@ namespace WhipseeySaveManager::System
 				settingsPath.assign(match[1].str() / settingsRelativePath);
 				if(std::filesystem::exists(settingsPath))
 				{
-					return settingsPath.make_preferred();//TODO further cleanup paths
+					return settingsPath.make_preferred().lexically_normal();
 				}
 			}
 		}

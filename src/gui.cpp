@@ -18,12 +18,15 @@ namespace WhipseeySaveManager::GUI
 		nana::button openFile{*this, "..."};
 		nana::button saveFile{*this, "save"};
 		nana::button reloadFile{*this, "reload"};
+		std::vector<std::pair<std::string,std::string>> additianalFilters;
 
-		PathControls(nana::window wd) : nana::panel<false>(wd)
+		PathControls(nana::window wd, std::vector<std::pair<std::string,std::string>> filters) :
+			nana::panel<false>(wd),
+			additianalFilters{std::move(filters)}
 		{
 			place.div("this fit gap=5");
 			place["this"] << filePath << openFile << saveFile << reloadFile;
-			filePath.events().click.connect([&](nana::arg_click click){
+			openFile.events().click.connect([&](nana::arg_click click){
 				open();
 			});
 		}
@@ -35,10 +38,8 @@ namespace WhipseeySaveManager::GUI
 			{
 				ofd.init_file(*path);
 			}
-			ofd.add_filter({
-				{"Save", "*.sav"},
-				{"All", "*.*"}
-			});
+			ofd.add_filter(additianalFilters);
+			ofd.add_filter("All (*.*)", "*.*");
 			auto paths = ofd.show();
 			if(paths.size() == 1)
 			{
@@ -81,29 +82,21 @@ namespace WhipseeySaveManager::GUI
 
 		void update(INI::FileBase& file)
 		{
-				 if(file.getCastle() == Types::Castle::Cleared)
+			Types::Level level = file.getLevel();
+			switch(level)
 			{
-				option_check(0, true);
-			}
-			else if(file.getMoon() == Types::Moon::Cleared)
-			{
-				option_check(1, true);
-			}
-			else if(file.getSnow() == Types::Snow::Cleared)
-			{
-				option_check(2, true);
-			}
-			else if(file.getDesert() == Types::Desert::Cleared)
-			{
-				option_check(3, true);
-			}
-			else if(file.getForest() == Types::Forest::Cleared)
-			{
-				option_check(4, true);
-			}
-			else //TODO add Types::Level conversion to FileBase?
-			{
-				option_check(5, true);
+			case Types::Level::Castle :
+				option_check(0, true); break;
+			case Types::Level::Moon :
+				option_check(1, true); break;
+			case Types::Level::Snow :
+				option_check(2, true); break;
+			case Types::Level::Desert :
+				option_check(3, true); break;
+			case Types::Level::Forest :
+				option_check(4, true); break;
+			case Types::Level::Beach :
+				option_check(5, true); break;
 			}
 		}
 	};
@@ -158,7 +151,7 @@ namespace WhipseeySaveManager::GUI
 		nana::form mainForm(nana::api::make_center(615, 255));
 		mainForm.caption("Whipseey Save Manager");
 
-		PathControls pcsave(mainForm);
+		PathControls pcsave(mainForm, {{"Save (*.sav)", "*.sav"}});
 		if(callbacks.onDefaultSavePath)
 		{
 			auto path = callbacks.onDefaultSavePath();
@@ -167,11 +160,7 @@ namespace WhipseeySaveManager::GUI
 				pcsave.filePath.caption(path->native());
 			}
 		}
-		// pcsave.openFile.events().click.connect([&](nana::arg_click){
-		// 	nana::filebox fb(mainForm, true);
-		// 	fb.show();
-		// });
-		PathControls pcset(mainForm);
+		PathControls pcset(mainForm, {{"INI (*.ini)", "*.ini"}});
 		if(callbacks.onDefaultSettingsPath)
 		{
 			auto path = callbacks.onDefaultSettingsPath();
