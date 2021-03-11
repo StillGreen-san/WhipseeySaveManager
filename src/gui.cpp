@@ -7,6 +7,7 @@
 #include <nana/gui/widgets/panel.hpp>
 #include <nana/gui/widgets/group.hpp>
 #include <nana/gui/widgets/label.hpp>
+#include <nana/gui/widgets/tabbar.hpp>
 
 namespace WhipseeySaveManager::GUI
 {
@@ -31,6 +32,11 @@ namespace WhipseeySaveManager::GUI
 			});
 		}
 
+		void setPath(const std::filesystem::path& path)
+		{
+			filePath.caption(path.native());
+		}
+
 		void open()
 		{
 			nana::filebox ofd(*this, true);
@@ -43,7 +49,7 @@ namespace WhipseeySaveManager::GUI
 			auto paths = ofd.show();
 			if(paths.size() == 1)
 			{
-				filePath.caption(paths[0].native());
+				setPath(paths[0]);
 			}
 		}
 	};
@@ -145,50 +151,81 @@ namespace WhipseeySaveManager::GUI
 			tlives.caption(std::to_string(file.getLives()));
 		}
 	};
-	
+
+	class TabFiles : public nana::panel<false>
+	{
+	public:
+		nana::place place{*this};
+		PathControls path{*this, {{"Save (*.sav)", "*.sav"}}};
+		FileBox file1{*this};
+		FileBox file2{*this};
+		FileBox file3{*this};
+
+		TabFiles(nana::window wd) : nana::panel<false>(wd)
+		{
+			place.div("vert <path gap=5 margin=5 weight=35><files gap=3 margin=5>");
+			place["path"] << path;
+			place["files"] << file1 << file2 << file3;
+		}
+
+		void update(INI::FileBase& file)
+		{
+			file1.update(file);
+			file2.update(file);
+			file3.update(file);
+		}
+	};
+
+	class TabOptions : public nana::panel<false>
+	{
+	public:
+		nana::place place{*this};
+		PathControls path{*this, {{"Save (*.sav)", "*.sav"}}};
+		TabOptions(nana::window wd) : nana::panel<false>(wd)
+		{
+			place.div("vert <path gap=5 margin=5 weight=35><options margin=5>");
+			place["path"] << path;
+		}
+	};
+
+	class TabCheats : public nana::panel<false>
+	{
+	public:
+		nana::place place{*this};
+		PathControls path{*this, {{"INI (*.ini)", "*.ini"}}};
+		TabCheats(nana::window wd) : nana::panel<false>(wd)
+		{
+			place.div("vert <path gap=5 margin=5 weight=35><cheats margin=5>");
+			place["path"] << path;
+		}
+	};
+
 	Types::Error GUI::run()
 	{
 		nana::form mainForm(nana::api::make_center(615, 255));
 		mainForm.caption("Whipseey Save Manager");
 
-		PathControls pcsave(mainForm, {{"Save (*.sav)", "*.sav"}});
+		TabFiles files(mainForm);
+		TabOptions options(mainForm);
+		TabCheats cheats(mainForm);
+
+		nana::tabbar<size_t> tabs(mainForm);
+		tabs.append("Files", files);
+		tabs.append("Options", options);
+		tabs.append("Cheats", cheats);
+
 		if(callbacks.onDefaultSavePath)
 		{
-			auto path = callbacks.onDefaultSavePath();
+			std::optional<std::filesystem::path> path = callbacks.onDefaultSavePath();
 			if(path)
 			{
-				pcsave.filePath.caption(path->native());
-			}
-		}
-		PathControls pcset(mainForm, {{"INI (*.ini)", "*.ini"}});
-		if(callbacks.onDefaultSettingsPath)
-		{
-			auto path = callbacks.onDefaultSettingsPath();
-			if(path)
-			{
-				pcset.filePath.caption(path->native());
+				files.path.setPath(*path);
 			}
 		}
 
-		FileBox fb1(mainForm);
-		FileBox fb2(mainForm);
-		FileBox fb3(mainForm);
-
-		auto save = std::make_shared<INI::Save>();
-		if(auto path = pcsave.filePath.getline(0))
-		{
-			Types::Error error = callbacks.onReadIni(save, *path);
-			if(!error)
-			{
-				fb1.update(save->getFile1());
-				fb2.update(save->getFile2());
-				fb3.update(save->getFile3());
-			}
-		}
-
-		mainForm.div("vertical<vertical paths gap=5 margin=5 weight=70><files gap=3 margin=5>");
-		mainForm["paths"] << pcsave << pcset;
-		mainForm["files"] << fb1 << fb2 << fb3;
+		mainForm.div("vertical<tabbar weight=28><tabframe>");
+		mainForm["tabbar"] << tabs;
+		mainForm["tabframe"].fasten(files).fasten(options).fasten(cheats);
 		mainForm.collocate();
 
 		mainForm.show();
