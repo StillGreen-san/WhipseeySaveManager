@@ -200,6 +200,33 @@ namespace WhipseeySaveManager::GUI
 		}
 	};
 
+	class CheatsBox : public nana::panel<false>
+	{
+	public:
+		nana::place place{*this};
+		nana::checkbox cheatsEnabled{*this, "cheats enabled"};
+		nana::label description{*this,
+			"checking Cheats will enable some hotkeys in game"
+			"\nR  : restart room"
+			"\nN  : next room"
+			"\nP  : toggle fullscreen"
+			"\n, . , .  : infinite flight"
+			"\n, . , ,  : unlock all levels"
+			"\n, , , .  : disable hud"
+			"\n, , , ,  : invincibility"};
+
+		CheatsBox(nana::window wd) : nana::panel<false>(wd)
+		{
+			place.div("vert things arrange=[40,variable]");
+			place["things"] << cheatsEnabled << description;
+		}
+
+		void update(INI::Cheats& cheats)
+		{
+			cheatsEnabled.check(cheats.getCheatsEnabled() == Types::CheatsEnabled::Enabled);
+		}
+	};
+
 	class TabFiles : public nana::panel<false>
 	{
 	public:
@@ -243,10 +270,12 @@ namespace WhipseeySaveManager::GUI
 	public:
 		nana::place place{*this};
 		PathControls path{*this, {{"INI (*.ini)", "*.ini"}}};
+		CheatsBox cheats{*this};
 		TabCheats(nana::window wd) : nana::panel<false>(wd)
 		{
 			place.div("vert <path gap=5 margin=5 weight=35><cheats margin=5>");
 			place["path"] << path;
+			place["cheats"] << cheats;
 		}
 	};
 
