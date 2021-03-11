@@ -125,7 +125,6 @@ namespace WhipseeySaveManager::GUI
 		nana::button remove{group, "delete"};
 		nana::button save{group, "save"};
 		nana::button reload{group, "reload"};
-		nana::radio_group pgroup;
 
 		FileBox(nana::window wd) : nana::panel<false>(wd)
 		{
@@ -152,6 +151,55 @@ namespace WhipseeySaveManager::GUI
 		}
 	};
 
+	class LabeledTextBox : public nana::panel<false>
+	{
+	public:
+		nana::place place{*this};
+		nana::label label;
+		nana::textbox textBox;
+		LabeledTextBox(nana::window wd, std::string_view labelText, std::string_view textboxText) :
+			nana::panel<false>(wd),
+			label{*this, labelText},
+			textBox{*this, textboxText}
+		{
+			place.div("things");
+			place["things"] << label << textBox;
+		}
+	};
+
+	class OptionsBox : public nana::panel<false>
+	{
+	public:
+		nana::place place{*this};
+		LabeledTextBox language{*this, "language", ""};
+		LabeledTextBox scale{*this, "scale", ""};
+		LabeledTextBox fullscreen{*this, "fullscreen", ""};
+		LabeledTextBox lefthanded{*this, "lefthaded", ""};
+		LabeledTextBox soundvolume{*this, "soundvolume", ""};
+		LabeledTextBox soundtoggle{*this, "soundtoggle", ""};
+		LabeledTextBox musicvolume{*this, "musicvolume", ""};
+		LabeledTextBox musictoggle{*this, "musictoggle", ""};
+
+		OptionsBox(nana::window wd) : nana::panel<false>(wd)
+		{
+			place.div("vert things");
+			place["things"] << language << scale << fullscreen << lefthanded
+				<< soundvolume << soundtoggle << musicvolume << musictoggle;
+		}
+
+		void update(INI::Options& options)
+		{
+			language.textBox.caption(options.getLanguage().toString());
+			scale.textBox.caption(options.getScale().toString());
+			fullscreen.textBox.caption(options.getFullscreen().toString());
+			lefthanded.textBox.caption(options.getLeftHanded().toString());
+			soundvolume.textBox.caption(options.getSoundVolume().toString());
+			soundtoggle.textBox.caption(options.getSoundToggle().toString());
+			musicvolume.textBox.caption(options.getMusicVolume().toString());
+			musictoggle.textBox.caption(options.getMusicToggle().toString());
+		}
+	};
+
 	class TabFiles : public nana::panel<false>
 	{
 	public:
@@ -168,11 +216,11 @@ namespace WhipseeySaveManager::GUI
 			place["files"] << file1 << file2 << file3;
 		}
 
-		void update(INI::FileBase& file)
+		void update(INI::Save& file)
 		{
-			file1.update(file);
-			file2.update(file);
-			file3.update(file);
+			file1.update(file.getFile1());
+			file2.update(file.getFile2());
+			file3.update(file.getFile3());
 		}
 	};
 
@@ -181,10 +229,12 @@ namespace WhipseeySaveManager::GUI
 	public:
 		nana::place place{*this};
 		PathControls path{*this, {{"Save (*.sav)", "*.sav"}}};
+		OptionsBox options{*this};
 		TabOptions(nana::window wd) : nana::panel<false>(wd)
 		{
 			place.div("vert <path gap=5 margin=5 weight=35><options margin=5>");
 			place["path"] << path;
+			place["options"] << options;
 		}
 	};
 
@@ -213,6 +263,10 @@ namespace WhipseeySaveManager::GUI
 		tabs.append("Files", files);
 		tabs.append("Options", options);
 		tabs.append("Cheats", cheats);
+		tabs.activated(0);
+
+		auto save = std::make_shared<INI::Save>();
+		auto settings = std::make_shared<INI::Settings>();
 
 		if(callbacks.onDefaultSavePath)
 		{
@@ -220,6 +274,22 @@ namespace WhipseeySaveManager::GUI
 			if(path)
 			{
 				files.path.setPath(*path);
+				options.path.setPath(*path);
+
+				if(callbacks.onReadIni)
+				{
+					/*Types::Error error = */callbacks.onReadIni(save, *path);
+				}
+			}
+			files.update(*save);
+			options.options.update(save->getOptions());
+		}
+		if(callbacks.onDefaultSettingsPath)
+		{
+			std::optional<std::filesystem::path> path = callbacks.onDefaultSettingsPath();
+			if(path)
+			{
+				cheats.path.setPath(*path);
 			}
 		}
 

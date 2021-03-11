@@ -6,6 +6,8 @@
 using namespace WhipseeySaveManager;
 using WhipseeySaveManager::INI::IKey;
 
+//TODO missing bossnodamage
+
 struct TestKey : public IKey
 {
 	struct InternalData
