@@ -10,6 +10,9 @@
 #include <nana/gui/widgets/tabbar.hpp>
 #include <nana/gui/widgets/combox.hpp>
 
+//TODO delegate reset&max to INI types
+//TODO connect vs connect_front
+
 namespace WhipseeySaveManager::GUI
 {
 	class PathControls : public nana::panel<false>
@@ -28,7 +31,7 @@ namespace WhipseeySaveManager::GUI
 		{
 			place.div("this fit gap=5");
 			place["this"] << filePath << openFile << saveFile << reloadFile;
-			openFile.events().click.connect([&](nana::arg_click click){
+			openFile.events().click.connect_front([&](nana::arg_click click){
 				open();
 			});
 		}
@@ -52,6 +55,7 @@ namespace WhipseeySaveManager::GUI
 			{
 				setPath(paths[0]);
 			}
+			reloadFile.events().click.emit({}, *this);
 		}
 	};
 
@@ -463,11 +467,20 @@ namespace WhipseeySaveManager::GUI
 		nana::place place{*this};
 		PathControls path{*this, {{"INI (*.ini)", "*.ini"}}};
 		CheatsBox cheats{*this};
+		std::shared_ptr<INI::Settings> settings;
 		TabCheats(nana::window wd) : nana::panel<false>(wd)
 		{
 			place.div("vert <path gap=5 margin=5 weight=35><cheats margin=5>");
 			place["path"] << path;
 			place["cheats"] << cheats;
+		}
+		nana::basic_event<nana::arg_click>& onReload()
+		{
+			return path.reloadFile.events().click;
+		}
+		nana::basic_event<nana::arg_click>& onSave()
+		{
+			return path.saveFile.events().click;
 		}
 	};
 
@@ -488,6 +501,28 @@ namespace WhipseeySaveManager::GUI
 
 		auto save = std::make_shared<INI::Save>();
 		auto settings = std::make_shared<INI::Settings>();
+
+		cheats.onReload().connect_front([&](nana::arg_click){
+			if(callbacks.onReadIni)
+			{
+				std::wstring cap = cheats.path.filePath.caption_native();
+				Types::Error error = callbacks.onReadIni(settings, cap);
+				//TODO show error
+				cheats.cheats.update(settings->getCheats());
+			}
+		});
+		cheats.onSave().connect_front([&](nana::arg_click){
+			if(callbacks.onWriteIni)
+			{
+				std::wstring cap = cheats.path.filePath.caption_native();
+				Types::Error error = callbacks.onWriteIni(settings, cap);
+				//TODO show error
+			}
+		});
+		cheats.cheats.cheatsEnabled.events().click.connect_front([&](nana::arg_click){
+			settings->getCheats().getCheatsEnabled() =
+				static_cast<Types::CheatsEnabled>(cheats.cheats.cheatsEnabled.checked());
+		});
 
 		if(callbacks.onDefaultSavePath)
 		{
