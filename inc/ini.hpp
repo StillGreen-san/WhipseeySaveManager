@@ -8,6 +8,7 @@
 //TODO provide namespaces for keys,sections inis ; hide INI
 //TODO not using static_pointer_cast ?
 //TODO comparison operator for IKey, ISection, IIni (update tests after)
+//TODO tests?
 
 namespace WhipseeySaveManager::INI
 {
@@ -51,6 +52,16 @@ namespace WhipseeySaveManager::INI
 				&& mMaxOrB == other.mMaxOrB
 				&& mLimits == other.mLimits
 				&& mNumber == other.mNumber;
+		}
+
+		/**
+		 * @brief converts internal float value to T
+		 * 
+		 */
+		template<typename T>
+		T as() const
+		{
+			return static_cast<T>(mValue);
 		}
 	protected:
 		const float mMinOrA;
@@ -300,7 +311,7 @@ namespace WhipseeySaveManager::INI
 		}
 		operator Types::SoundVolume() const
 		{
-			return static_cast<Types::SoundVolume>(mValue);
+			return static_cast<Types::SoundVolume>(mValue * 10);
 		}
 	private:
 		static constexpr std::string_view name = "left_handed";
@@ -348,7 +359,7 @@ namespace WhipseeySaveManager::INI
 		}
 		operator Types::MusicVolume() const
 		{
-			return static_cast<Types::MusicVolume>(mValue);
+			return static_cast<Types::MusicVolume>(mValue * 10);
 		}
 	private:
 		static constexpr std::string_view name = "left_handed";

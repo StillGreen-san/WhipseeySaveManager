@@ -8,6 +8,7 @@
 #include <nana/gui/widgets/group.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/tabbar.hpp>
+#include <nana/gui/widgets/combox.hpp>
 
 namespace WhipseeySaveManager::GUI
 {
@@ -62,11 +63,9 @@ namespace WhipseeySaveManager::GUI
 		{
 			std::string title(file.section());
 			title.append("  ")
-				.append(std::to_string(
-					unsigned(Types::BossNoDamage(file.getBossNoDamageProgress()))//! not so nice
-				))
+				.append(std::to_string(file.getBossNoDamageProgress().as<uint32_t>()))
 				.append(" - ")
-				.append(std::to_string(file.getEnemiesDefeated()));
+				.append(std::to_string(file.getEnemiesDefeated().as<uint32_t>()));
 			caption(title);
 		}
 	};
@@ -162,8 +161,65 @@ namespace WhipseeySaveManager::GUI
 			label{*this, labelText},
 			textBox{*this, textboxText}
 		{
-			place.div("things");
+			label.text_align(nana::align::right, nana::align_v::center);
+			place.div("things gap=8 arrange=[150,variable]");
 			place["things"] << label << textBox;
+		}
+	};
+
+	class OptionBase : public nana::panel<false>
+	{
+	public:
+		nana::place place{*this};
+		nana::label label;
+		nana::combox combo{*this};
+		OptionBase(nana::window wd, std::string_view labelText) :
+			nana::panel<false>(wd),
+			label{*this, labelText}
+		{
+			label.text_align(nana::align::right, nana::align_v::center);
+			place.div("things gap=8 arrange=[150,variable]");
+			place[FIELD] << label << combo;
+		}
+		static constexpr char* FIELD = "things";
+	};
+
+	class OptionLanguage : public OptionBase
+	{
+	public:
+		OptionLanguage(nana::window wd) : OptionBase(wd, "Language")
+		{
+			combo
+				.push_back("English")
+				.push_back("Spanish")
+				.push_back("French")
+				.push_back("Italian")
+				.push_back("German")
+				.push_back("Russian")
+				.push_back("Swedish")
+				.push_back("Japanese")
+				.push_back("Chinese")
+				.push_back("Portogese");
+		}
+		void update(INI::Options& options)
+		{
+			combo.option(options.getLanguage().as<uint32_t>());
+		}
+	};
+
+	class OptionScale : public OptionBase
+	{
+	public:
+		OptionScale(nana::window wd) : OptionBase(wd, "Scale")
+		{
+			combo
+				.push_back("R768x432")
+				.push_back("R1152x648")
+				.push_back("R1536x864");
+		}
+		void update(INI::Options& options)
+		{
+			combo.option(options.getScale().as<uint32_t>() - 2);
 		}
 	};
 
@@ -171,8 +227,8 @@ namespace WhipseeySaveManager::GUI
 	{
 	public:
 		nana::place place{*this};
-		LabeledTextBox language{*this, "language", ""};
-		LabeledTextBox scale{*this, "scale", ""};
+		OptionLanguage language{*this};
+		OptionScale scale{*this};
 		LabeledTextBox fullscreen{*this, "fullscreen", ""};
 		LabeledTextBox lefthanded{*this, "lefthaded", ""};
 		LabeledTextBox soundvolume{*this, "soundvolume", ""};
@@ -182,15 +238,15 @@ namespace WhipseeySaveManager::GUI
 
 		OptionsBox(nana::window wd) : nana::panel<false>(wd)
 		{
-			place.div("vert things");
+			place.div("vert things gap=2");
 			place["things"] << language << scale << fullscreen << lefthanded
 				<< soundvolume << soundtoggle << musicvolume << musictoggle;
 		}
 
 		void update(INI::Options& options)
 		{
-			language.textBox.caption(options.getLanguage().toString());
-			scale.textBox.caption(options.getScale().toString());
+			language.update(options);
+			scale.update(options);
 			fullscreen.textBox.caption(options.getFullscreen().toString());
 			lefthanded.textBox.caption(options.getLeftHanded().toString());
 			soundvolume.textBox.caption(options.getSoundVolume().toString());
