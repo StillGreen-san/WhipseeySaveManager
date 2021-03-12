@@ -84,25 +84,27 @@ namespace WhipseeySaveManager::GUI
 			add_option("Forest");
 			add_option("Beach").check(true);
 		}
-
-		void update(INI::FileBase& file)
+		size_t levelToIndex(Types::Level level)
 		{
-			Types::Level level = file.getLevel();
 			switch(level)
 			{
-			case Types::Level::Castle :
-				option_check(0, true); break;
-			case Types::Level::Moon :
-				option_check(1, true); break;
-			case Types::Level::Snow :
-				option_check(2, true); break;
-			case Types::Level::Desert :
-				option_check(3, true); break;
-			case Types::Level::Forest :
-				option_check(4, true); break;
+			case Types::Level::Castle : return 0;
+			case Types::Level::Moon : return 1;
+			case Types::Level::Snow : return 2;
+			case Types::Level::Desert : return 3;
+			case Types::Level::Forest : return 4;
 			case Types::Level::Beach :
-				option_check(5, true); break;
+			default : return 5;
 			}
+		}
+		void update(INI::FileBase& file)
+		{
+			option_check(levelToIndex(file.getLevel()), true);
+		}
+		using nana::group::option_check;
+		void option_check(Types::Level level)
+		{
+			option_check(levelToIndex(level), true);
 		}
 	};
 
@@ -121,7 +123,7 @@ namespace WhipseeySaveManager::GUI
 		nana::button bgems{group, "cycle"};
 		nana::button blives{group, "cycle"};
 		nana::button max{group, "max"};
-		nana::button remove{group, "delete"};
+		nana::button reset{group, "reset"};
 		nana::button save{group, "save"};
 		nana::button reload{group, "reload"};
 
@@ -129,14 +131,53 @@ namespace WhipseeySaveManager::GUI
 		{
 			group.div(
 			"<progress weight=80 margin=[5,5,5,5]>"
-			"<vert gems weight=45 margin=[5,0,5,0] gap=5>"
-			"<vert lives weight=70 margin=[5,5,5,5] gap=5>");
+			"<vert gems weight=45 margin=[14,0,5,0] gap=5 arrange=[14,12,21,21,21,21]>"
+			"<vert lives weight=70 margin=[14,5,5,5] gap=5 arrange=[14,12,21,21,21,21]>");
 			group["progress"] << progress;
 			group["gems"] << intro << lgems << tgems << bgems << max << save;
-			group["lives"] << ending << llives << tlives << blives << remove << reload;
+			group["lives"] << ending << llives << tlives << blives << reset << reload;
 			group.collocate();
 			place.div("this");
 			place["this"] << group;
+			bgems.events().click.connect([&](nana::arg_click){
+				if(tgems.caption() == "99")
+				{
+					tgems.caption("0");
+				}
+				else
+				{
+					tgems.caption("99");
+				}
+			});
+			blives.events().click.connect([&](nana::arg_click){
+				const std::string lives = tlives.caption();
+				if(lives == "9999")
+				{
+					tlives.caption("5");
+				}
+				else if(lives == "99")
+				{
+					tlives.caption("9999");
+				}
+				else
+				{
+					tlives.caption("99");
+				}
+			});
+			reset.events().click.connect([&](nana::arg_click){
+				tgems.caption("0");
+				tlives.caption("5");
+				intro.check(false);
+				ending.check(false);
+				progress.option_check(Types::Level::Beach);
+			});
+			max.events().click.connect([&](nana::arg_click){
+				tgems.caption("99");
+				tlives.caption("9999");
+				intro.check(true);
+				ending.check(true);
+				progress.option_check(Types::Level::Castle);
+			});
 		}
 
 		void update(INI::FileBase& file)
@@ -364,7 +405,7 @@ namespace WhipseeySaveManager::GUI
 
 		CheatsBox(nana::window wd) : nana::panel<false>(wd)
 		{
-			place.div("vert things arrange=[40,variable]");
+			place.div("vert things margin=[0, 50] arrange=[40,variable]");
 			place["things"] << cheatsEnabled << description;
 		}
 
