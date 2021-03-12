@@ -63,9 +63,9 @@ namespace WhipseeySaveManager::GUI
 		{
 			std::string title(file.section());
 			title.append("  ")
-				.append(std::to_string(file.getBossNoDamageProgress().as<uint32_t>()))
+				.append(std::to_string(file.getBossNoDamageProgress().asInt()))
 				.append(" - ")
-				.append(std::to_string(file.getEnemiesDefeated().as<uint32_t>()));
+				.append(std::to_string(file.getEnemiesDefeated().asInt()));
 			caption(title);
 		}
 	};
@@ -150,23 +150,6 @@ namespace WhipseeySaveManager::GUI
 		}
 	};
 
-	class LabeledTextBox : public nana::panel<false>
-	{
-	public:
-		nana::place place{*this};
-		nana::label label;
-		nana::textbox textBox;
-		LabeledTextBox(nana::window wd, std::string_view labelText, std::string_view textboxText) :
-			nana::panel<false>(wd),
-			label{*this, labelText},
-			textBox{*this, textboxText}
-		{
-			label.text_align(nana::align::right, nana::align_v::center);
-			place.div("things gap=8 arrange=[150,variable]");
-			place["things"] << label << textBox;
-		}
-	};
-
 	class OptionBase : public nana::panel<false>
 	{
 	public:
@@ -178,7 +161,7 @@ namespace WhipseeySaveManager::GUI
 			label{*this, labelText}
 		{
 			label.text_align(nana::align::right, nana::align_v::center);
-			place.div("things gap=8 arrange=[150,variable]");
+			place.div("things gap=8 arrange=[190,300]");
 			place[FIELD] << label << combo;
 		}
 		static constexpr char* FIELD = "things";
@@ -203,7 +186,7 @@ namespace WhipseeySaveManager::GUI
 		}
 		void update(INI::Options& options)
 		{
-			combo.option(options.getLanguage().as<uint32_t>());
+			combo.option(options.getLanguage().asInt());
 		}
 	};
 
@@ -219,7 +202,115 @@ namespace WhipseeySaveManager::GUI
 		}
 		void update(INI::Options& options)
 		{
-			combo.option(options.getScale().as<uint32_t>() - 2);
+			combo.option(options.getScale().asInt() - 2);
+		}
+	};
+
+	class OptionFullscreen : public OptionBase
+	{
+	public:
+		OptionFullscreen(nana::window wd) : OptionBase(wd, "Fullscreen")
+		{
+			combo
+				.push_back("Disabled")
+				.push_back("Enabled");
+		}
+		void update(INI::Options& options)
+		{
+			combo.option(options.getFullscreen().asInt());
+		}
+	};
+
+	class OptionLeftHanded : public OptionBase
+	{
+	public:
+		OptionLeftHanded(nana::window wd) : OptionBase(wd, "LeftHanded")
+		{
+			combo
+				.push_back("Disabled")
+				.push_back("Enabled");
+		}
+		void update(INI::Options& options)
+		{
+			combo.option(options.getLeftHanded().asInt());
+		}
+	};
+
+	class OptionSoundVolume : public OptionBase
+	{
+	public:
+		OptionSoundVolume(nana::window wd) : OptionBase(wd, "SoundVolume")
+		{
+			combo
+				.push_back("0%")
+				.push_back("10%")
+				.push_back("20%")
+				.push_back("30%")
+				.push_back("40%")
+				.push_back("50%")
+				.push_back("60%")
+				.push_back("70%")
+				.push_back("80%")
+				.push_back("90%")
+				.push_back("100%");
+		}
+		void update(INI::Options& options)
+		{
+			combo.option(options.getSoundVolume().asInt());
+		}
+	};
+
+	class OptionSoundToggle : public OptionBase
+	{
+	public:
+		OptionSoundToggle(nana::window wd) : OptionBase(wd, "SoundToggle")
+		{
+			combo
+				.push_back("Disabled")
+				.push_back("Enabled");
+		}
+		void update(INI::Options& options)
+		{
+			combo.option(options.getSoundToggle().asInt());
+		}
+	};
+
+	class OptionMusicVolume : public OptionBase
+	{
+	public:
+		OptionMusicVolume(nana::window wd) : OptionBase(wd, "MusicVolume")
+		{
+			combo
+				.push_back("0%")
+				.push_back("10%")
+				.push_back("20%")
+				.push_back("30%")
+				.push_back("40%")
+				.push_back("50%")
+				.push_back("60%")
+				.push_back("70%")
+				.push_back("80%")
+				.push_back("90%")
+				.push_back("100%");
+		}
+		void update(INI::Options& options)
+		{
+			combo.option(options.getMusicVolume().asInt());
+		}
+	};
+
+	class OptionMusicToggle : public OptionBase
+	{
+	public:
+		OptionMusicToggle(nana::window wd) : OptionBase(wd, "MusicToggle")
+		{
+			combo
+				.push_back("Disabled")
+				.push_back("Enabled");
+		}
+		void update(INI::Options& options)
+		{
+			combo.option(options.getMusicToggle().asInt());
 		}
 	};
 
@@ -229,12 +320,12 @@ namespace WhipseeySaveManager::GUI
 		nana::place place{*this};
 		OptionLanguage language{*this};
 		OptionScale scale{*this};
-		LabeledTextBox fullscreen{*this, "fullscreen", ""};
-		LabeledTextBox lefthanded{*this, "lefthaded", ""};
-		LabeledTextBox soundvolume{*this, "soundvolume", ""};
-		LabeledTextBox soundtoggle{*this, "soundtoggle", ""};
-		LabeledTextBox musicvolume{*this, "musicvolume", ""};
-		LabeledTextBox musictoggle{*this, "musictoggle", ""};
+		OptionFullscreen fullscreen{*this};
+		OptionLeftHanded lefthanded{*this};
+		OptionSoundVolume soundvolume{*this};
+		OptionSoundToggle soundtoggle{*this};
+		OptionMusicVolume musicvolume{*this};
+		OptionMusicToggle musictoggle{*this};
 
 		OptionsBox(nana::window wd) : nana::panel<false>(wd)
 		{
@@ -247,12 +338,12 @@ namespace WhipseeySaveManager::GUI
 		{
 			language.update(options);
 			scale.update(options);
-			fullscreen.textBox.caption(options.getFullscreen().toString());
-			lefthanded.textBox.caption(options.getLeftHanded().toString());
-			soundvolume.textBox.caption(options.getSoundVolume().toString());
-			soundtoggle.textBox.caption(options.getSoundToggle().toString());
-			musicvolume.textBox.caption(options.getMusicVolume().toString());
-			musictoggle.textBox.caption(options.getMusicToggle().toString());
+			fullscreen.update(options);
+			lefthanded.update(options);
+			soundvolume.update(options);
+			soundtoggle.update(options);
+			musicvolume.update(options);
+			musictoggle.update(options);
 		}
 	};
 
@@ -299,11 +390,11 @@ namespace WhipseeySaveManager::GUI
 			place["files"] << file1 << file2 << file3;
 		}
 
-		void update(INI::Save& file)
+		void update(INI::Save& save)
 		{
-			file1.update(file.getFile1());
-			file2.update(file.getFile2());
-			file3.update(file.getFile3());
+			file1.update(save.getFile1());
+			file2.update(save.getFile2());
+			file3.update(save.getFile3());
 		}
 	};
 
@@ -318,6 +409,10 @@ namespace WhipseeySaveManager::GUI
 			place.div("vert <path gap=5 margin=5 weight=35><options margin=5>");
 			place["path"] << path;
 			place["options"] << options;
+		}
+		void update(INI::Save& save)
+		{
+			options.update(save.getOptions());
 		}
 	};
 
@@ -367,7 +462,7 @@ namespace WhipseeySaveManager::GUI
 				}
 			}
 			files.update(*save);
-			options.options.update(save->getOptions());
+			options.update(*save);
 		}
 		if(callbacks.onDefaultSettingsPath)
 		{

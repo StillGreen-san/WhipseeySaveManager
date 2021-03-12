@@ -54,14 +54,13 @@ namespace WhipseeySaveManager::INI
 				&& mNumber == other.mNumber;
 		}
 
-		/**
-		 * @brief converts internal float value to T
-		 * 
-		 */
-		template<typename T>
-		T as() const
+		int asInt() const
 		{
-			return static_cast<T>(mValue);
+			return static_cast<int>(mValue);
+		}
+		float asFloat() const
+		{
+			return mValue;
 		}
 	protected:
 		const float mMinOrA;
@@ -313,8 +312,12 @@ namespace WhipseeySaveManager::INI
 		{
 			return static_cast<Types::SoundVolume>(mValue * 10);
 		}
+		int asInt()
+		{
+			return static_cast<int>(mValue * 10);
+		}
 	private:
-		static constexpr std::string_view name = "left_handed";
+		static constexpr std::string_view name = "sound_volume";
 	};
 
 	class SoundToggle final : public IKey
@@ -338,7 +341,7 @@ namespace WhipseeySaveManager::INI
 			return static_cast<Types::SoundToggle>(mValue);
 		}
 	private:
-		static constexpr std::string_view name = "left_handed";
+		static constexpr std::string_view name = "sound_toggle";
 	};
 
 	class MusicVolume final : public IKey
@@ -361,8 +364,12 @@ namespace WhipseeySaveManager::INI
 		{
 			return static_cast<Types::MusicVolume>(mValue * 10);
 		}
+		int asInt()
+		{
+			return static_cast<int>(mValue * 10);
+		}
 	private:
-		static constexpr std::string_view name = "left_handed";
+		static constexpr std::string_view name = "music_volume";
 	};
 
 	class MusicToggle final : public IKey
@@ -386,7 +393,7 @@ namespace WhipseeySaveManager::INI
 			return static_cast<Types::MusicToggle>(mValue);
 		}
 	private:
-		static constexpr std::string_view name = "left_handed";
+		static constexpr std::string_view name = "music_toggle";
 	};
 
 	class Options final : public ISection
