@@ -25,7 +25,10 @@ namespace WhipseeySaveManager::GUI
 		nana::button reloadFile{*this, "reload"};
 		std::vector<std::pair<std::string,std::string>> additianalFilters;
 
-		PathControls(nana::window wd, std::vector<std::pair<std::string,std::string>> filters) :
+		static constexpr nana::colors validBG = nana::colors::white;
+		static constexpr nana::colors invalidBG = nana::colors::firebrick;
+
+		PathControls(nana::window wd, std::vector<std::pair<std::string,std::string>>&& filters) :
 			nana::panel<false>(wd),
 			additianalFilters{std::move(filters)}
 		{
@@ -34,11 +37,24 @@ namespace WhipseeySaveManager::GUI
 			openFile.events().click.connect_front([&](nana::arg_click click){
 				open();
 			});
+			setPath({});
 		}
 
 		void setPath(const std::filesystem::path& path)
 		{
 			filePath.caption(path.native());
+			if(std::filesystem::exists(path))
+			{
+				filePath.scheme().background = validBG;
+				saveFile.enabled(true);
+				reloadFile.enabled(true);
+			}
+			else
+			{
+				filePath.scheme().background = invalidBG;
+				saveFile.enabled(false);
+				reloadFile.enabled(false);
+			}
 		}
 
 		void open()
@@ -210,6 +226,10 @@ namespace WhipseeySaveManager::GUI
 			place[FIELD] << label << combo;
 		}
 		static constexpr char* FIELD = "things";
+		nana::basic_event<nana::arg_combox>& onChanged()
+		{
+			return combo.events().text_changed;
+		}
 	};
 
 	class OptionLanguage : public OptionBase
