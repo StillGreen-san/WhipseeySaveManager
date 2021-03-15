@@ -28,7 +28,11 @@ namespace WhipseeySaveManager::GUI
 		static constexpr nana::colors validBG = nana::colors::white;
 		static constexpr nana::colors invalidBG = nana::colors::firebrick;
 
-		PathControls(nana::window wd, std::vector<std::pair<std::string,std::string>>&& filters) :
+		PathControls(
+			nana::window wd,
+			std::vector<std::pair<std::string,std::string>>&& filters,
+			std::filesystem::path path = {}
+		) :
 			nana::panel<false>(wd),
 			additianalFilters{std::move(filters)}
 		{
@@ -37,13 +41,16 @@ namespace WhipseeySaveManager::GUI
 			openFile.events().click.connect_front([&](nana::arg_click click){
 				open();
 			});
-			setPath({});
+			setPath(path);
 		}
-
+		std::filesystem::path getPath()
+		{
+			return filePath.caption_native();
+		}
 		void setPath(const std::filesystem::path& path)
 		{
 			filePath.caption(path.native());
-			if(std::filesystem::exists(path))
+			if(std::filesystem::exists(path))//TODO check when typing, long path field height
 			{
 				filePath.scheme().background = validBG;
 				saveFile.enabled(true);
@@ -56,7 +63,14 @@ namespace WhipseeySaveManager::GUI
 				reloadFile.enabled(false);
 			}
 		}
-
+		nana::basic_event<nana::arg_click>& onSave()
+		{
+			return saveFile.events().click;
+		}
+		nana::basic_event<nana::arg_click>& onReload()
+		{
+			return reloadFile.events().click;
+		}
 		void open()
 		{
 			nana::filebox ofd(*this, true);
@@ -418,7 +432,7 @@ namespace WhipseeySaveManager::GUI
 		nana::place place{*this};
 		nana::checkbox cheatsEnabled{*this, "cheats enabled"};
 		nana::label description{*this,
-			"checking Cheats will enable some hotkeys in game"
+			"checking \"cheats enabled\" will enable some hotkeys in game:"
 			"\nR  : restart room"
 			"\nN  : next room"
 			"\nP  : toggle fullscreen"
@@ -432,7 +446,10 @@ namespace WhipseeySaveManager::GUI
 			place.div("vert things margin=[0, 50] arrange=[40,variable]");
 			place["things"] << cheatsEnabled << description;
 		}
-
+		nana::basic_event<nana::arg_checkbox>& onEnabledChanged()
+		{
+			return cheatsEnabled.events().checked;
+		}
 		void update(INI::Cheats& cheats)
 		{
 			cheatsEnabled.check(cheats.getCheatsEnabled() == Types::CheatsEnabled::Enabled);
@@ -488,11 +505,16 @@ namespace WhipseeySaveManager::GUI
 		PathControls path{*this, {{"INI (*.ini)", "*.ini"}}};
 		CheatsBox cheats{*this};
 		std::shared_ptr<INI::Settings> settings;
-		TabCheats(nana::window wd) : nana::panel<false>(wd)
+		TabCheats(nana::window wd, std::shared_ptr<INI::Settings> sttngs) :
+			nana::panel<false>(wd),
+			settings{std::move(sttngs)}
 		{
 			place.div("vert <path gap=5 margin=5 weight=35><cheats margin=5>");
 			place["path"] << path;
 			place["cheats"] << cheats;
+			cheats.onEnabledChanged().connect_front([&](nana::arg_checkbox cb){
+				settings->getCheats().getCheatsEnabled() = static_cast<Types::CheatsEnabled>(cb.widget->checked());
+			});
 		}
 		nana::basic_event<nana::arg_click>& onReload()
 		{
@@ -509,9 +531,12 @@ namespace WhipseeySaveManager::GUI
 		nana::form mainForm(nana::api::make_center(615, 255));
 		mainForm.caption("Whipseey Save Manager");
 
+		auto save = std::make_shared<INI::Save>();
+		auto settings = std::make_shared<INI::Settings>();
+
 		TabFiles files(mainForm);
 		TabOptions options(mainForm);
-		TabCheats cheats(mainForm);
+		TabCheats cheats(mainForm, settings);
 
 		nana::tabbar<size_t> tabs(mainForm);
 		tabs.append("Files", files);
@@ -519,14 +544,10 @@ namespace WhipseeySaveManager::GUI
 		tabs.append("Cheats", cheats);
 		tabs.activated(0);
 
-		auto save = std::make_shared<INI::Save>();
-		auto settings = std::make_shared<INI::Settings>();
-
 		cheats.onReload().connect_front([&](nana::arg_click){
 			if(callbacks.onReadIni)
 			{
-				std::wstring cap = cheats.path.filePath.caption_native();
-				Types::Error error = callbacks.onReadIni(settings, cap);
+				Types::Error error = callbacks.onReadIni(settings, cheats.path.getPath());
 				//TODO show error
 				cheats.cheats.update(settings->getCheats());
 			}
@@ -534,14 +555,9 @@ namespace WhipseeySaveManager::GUI
 		cheats.onSave().connect_front([&](nana::arg_click){
 			if(callbacks.onWriteIni)
 			{
-				std::wstring cap = cheats.path.filePath.caption_native();
-				Types::Error error = callbacks.onWriteIni(settings, cap);
+				Types::Error error = callbacks.onWriteIni(settings, cheats.path.getPath());
 				//TODO show error
 			}
-		});
-		cheats.cheats.cheatsEnabled.events().click.connect_front([&](nana::arg_click){
-			settings->getCheats().getCheatsEnabled() =
-				static_cast<Types::CheatsEnabled>(cheats.cheats.cheatsEnabled.checked());
 		});
 
 		if(callbacks.onDefaultSavePath)
