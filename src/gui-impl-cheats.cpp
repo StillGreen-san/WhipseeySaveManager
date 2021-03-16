@@ -18,34 +18,28 @@ namespace WhipseeySaveManager::GUI
 		cheatsEnabled.check(cheats.getCheatsEnabled() == Types::CheatsEnabled::Enabled);
 	}
 
-	TabCheats::TabCheats(nana::window wd, std::shared_ptr<INI::Settings> sttngs,
-		std::function<GUI::IniSignature> cbReadIni, std::function<GUI::IniSignature> cbWriteIni
-	) :
-		nana::panel<false>(wd),
-		settings{std::move(sttngs)},
-		onReadIni{std::move(cbReadIni)},
-		onWriteIni{std::move(cbWriteIni)}
+	TabCheats::TabCheats(nana::window wd, const std::shared_ptr<INI::Settings>& sttngs, const GUI::FunctionStore& callbacks) :
+		nana::panel<false>(wd)
 	{
 		place.div("vert <path gap=5 margin=5 weight=35><cheats margin=5>");
 		place["path"] << path;
 		place["cheats"] << cheats;
 		cheats.onEnabledChanged().connect_front([&](nana::arg_checkbox cb){
-			settings->getCheats().getCheatsEnabled() = static_cast<Types::CheatsEnabled>(cb.widget->checked());
+			sttngs->getCheats().getCheatsEnabled() = static_cast<Types::CheatsEnabled>(cb.widget->checked());
 		});
-		if(onReadIni)
+		onReload().connect_front([&](nana::arg_click){
+			Types::Error error = callbacks.onReadIni(sttngs, path.getPath());
+			//TODO show error
+			cheats.update(sttngs->getCheats());
+		});
+		onSave().connect_front([&](nana::arg_click){
+			Types::Error error = callbacks.onWriteIni(sttngs, path.getPath());
+			//TODO show error
+		});
+		std::optional<std::filesystem::path> sttngsPath = callbacks.onDefaultSettingsPath();
+		if(sttngsPath)
 		{
-			onReload().connect_front([&](nana::arg_click){
-				Types::Error error = onReadIni(settings, path.getPath());
-				//TODO show error
-				cheats.update(settings->getCheats());
-			});
-		}
-		if(onWriteIni)
-		{
-			onSave().connect_front([&](nana::arg_click){
-				Types::Error error = onWriteIni(settings, path.getPath());
-				//TODO show error
-			});
+			path.setPath(*sttngsPath);
 		}
 	}
 

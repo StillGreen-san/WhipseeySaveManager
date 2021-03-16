@@ -34,7 +34,7 @@ namespace WhipseeySaveManager::GUI
 		void connectOnReadIni(std::function<IniSignature> func);
 		void connectOnWriteSection(std::function<SectionSignature> func);
 		void connectOnWriteIni(std::function<IniSignature> func);
-	private:
+
 		struct FunctionStore
 		{
 			std::function<ThemeSignature> onSystemTheme;
@@ -44,6 +44,8 @@ namespace WhipseeySaveManager::GUI
 			std::function<IniSignature> onReadIni;
 			std::function<SectionSignature> onWriteSection;
 			std::function<IniSignature> onWriteIni;
-		} callbacks;
+		};
+	private:
+		struct FunctionStore callbacks;
 	};
 } // namespace WhipseeySaveManager::GUI

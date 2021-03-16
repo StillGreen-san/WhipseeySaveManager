@@ -197,7 +197,8 @@ namespace WhipseeySaveManager::Types
 			SectionNotFound,// the section was not found in the file, default values used
 			KeyNotFound,// the key was not found in the file, default value used
 			FailedToLoadFile,// the file could not be read, check existence and permissions
-			FailedToWriteFile// the file could not be written, check existence or permissions
+			FailedToWriteFile,// the file could not be written, check existence or permissions
+			MissingCallback// one or more gui callback where not specified, gui not initialized
 		};
 
 	private:

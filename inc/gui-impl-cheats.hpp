@@ -32,12 +32,7 @@ namespace WhipseeySaveManager::GUI
 		nana::place place{*this};
 		PathControls path{*this, {{"INI (*.ini)", "*.ini"}}};
 		CheatsBox cheats{*this};
-		std::shared_ptr<INI::Settings> settings;
-		std::function<GUI::IniSignature> onReadIni;
-		std::function<GUI::IniSignature> onWriteIni;
-		TabCheats(nana::window wd, std::shared_ptr<INI::Settings> sttngs,
-			std::function<GUI::IniSignature> cbReadIni, std::function<GUI::IniSignature> cbWriteIni
-		);
+		TabCheats(nana::window wd, const std::shared_ptr<INI::Settings>& sttngs, const GUI::FunctionStore& callbacks);
 		nana::basic_event<nana::arg_click>& onReload();
 		nana::basic_event<nana::arg_click>& onSave();
 	};

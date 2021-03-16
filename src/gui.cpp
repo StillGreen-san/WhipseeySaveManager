@@ -12,15 +12,28 @@ namespace WhipseeySaveManager::GUI
 {
 	Types::Error GUI::run()
 	{
+		if(	   !callbacks.onDefaultSavePath
+			|| !callbacks.onDefaultSettingsPath
+			|| !callbacks.onReadIni
+			|| !callbacks.onReadSection
+			|| !callbacks.onSystemTheme
+			|| !callbacks.onWriteIni
+			|| !callbacks.onWriteSection
+		)
+		{
+			return Types::Error::Code::MissingCallback;
+		}
+		
 		nana::form mainForm(nana::api::make_center(615, 255));
 		mainForm.caption("Whipseey Save Manager");
 
+		//TODO check shared_ptr usage in gui impl (reference lifetime lamdas)
 		auto save = std::make_shared<INI::Save>();
 		auto settings = std::make_shared<INI::Settings>();
 
 		TabFiles files(mainForm);
 		TabOptions options(mainForm);
-		TabCheats cheats(mainForm, settings, callbacks.onReadIni, callbacks.onWriteIni);
+		TabCheats cheats(mainForm, settings, callbacks);
 
 		nana::tabbar<size_t> tabs(mainForm);
 		tabs.append("Files", files);
@@ -43,14 +56,6 @@ namespace WhipseeySaveManager::GUI
 			}
 			files.update(*save);
 			options.update(*save);
-		}
-		if(callbacks.onDefaultSettingsPath)
-		{
-			std::optional<std::filesystem::path> path = callbacks.onDefaultSettingsPath();
-			if(path)
-			{
-				cheats.path.setPath(*path);
-			}
 		}
 
 		mainForm.div("vertical<tabbar weight=28><tabframe>");
