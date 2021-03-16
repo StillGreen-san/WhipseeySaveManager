@@ -33,6 +33,7 @@ namespace WhipseeySaveManager::GUI
 			filePath.scheme().background = validBG;
 			saveFile.enabled(true);
 			reloadFile.enabled(true);
+			reloadFile.events().click.emit({}, *this);
 		}
 		else
 		{
@@ -66,6 +67,5 @@ namespace WhipseeySaveManager::GUI
 		{
 			setPath(paths[0]);
 		}
-		reloadFile.events().click.emit({}, *this);
 	}
 }

@@ -26,15 +26,59 @@ namespace WhipseeySaveManager::GUI
 		using SectionSignature = Types::Error(std::shared_ptr<INI::ISection>, std::filesystem::path);
 		using IniSignature = Types::Error(std::shared_ptr<INI::IIni>, std::filesystem::path);
 
-		//TODO add comments
+		/**
+		 * @brief provide callback to supply a Theme object
+		 * 
+		 * @param func see GUI::ThemeSignature
+		 */
 		void connectOnSystemTheme(std::function<ThemeSignature> func);
+		
+		/**
+		 * @brief provide callback to supply a path for INI::Save
+		 * 
+		 * @param func see GUI::PathSignature
+		 */
 		void connectOnDefaultSavePath(std::function<PathSignature> func);
+		
+		/**
+		 * @brief provide callback to supply a path for INI::Settings
+		 * 
+		 * @param func see GUI::PathSignature
+		 */
 		void connectOnDefaultSettingsPath(std::function<PathSignature> func);
+		
+		/**
+		 * @brief provide callback for reading INI::ISection
+		 * 
+		 * @param func see GUI::SectionSignature
+		 */
 		void connectOnReadSection(std::function<SectionSignature> func);
+		
+		/**
+		 * @brief provide callback for reading INI::IIni
+		 * 
+		 * @param func see GUI::IniSignature
+		 */
 		void connectOnReadIni(std::function<IniSignature> func);
+		
+		/**
+		 * @brief provide callback for writing INI::ISection
+		 * 
+		 * @param func see GUI::SectionSignature
+		 */
 		void connectOnWriteSection(std::function<SectionSignature> func);
+		
+		/**
+		 * @brief provide callback for writing INI::IIni
+		 * 
+		 * @param func see GUI::IniSignature
+		 */
 		void connectOnWriteIni(std::function<IniSignature> func);
 
+		/**
+		 * @brief struct holding all necessary callback
+		 * 
+		 */
 		struct FunctionStore
 		{
 			std::function<ThemeSignature> onSystemTheme;

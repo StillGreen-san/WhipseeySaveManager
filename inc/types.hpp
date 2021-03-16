@@ -6,42 +6,81 @@
 #include <optional>
 
 namespace WhipseeySaveManager::Types
-{//TODO comments
+{
+	/**
+	 * @brief stringly typed toggle associated with there savegame values
+	 * 
+	 */
 	enum class Fullscreen : uint8_t
 	{
 		Disabled = 0,
 		Enabled = 1
 	};
+
+	/**
+	 * @brief stringly typed toggle associated with there savegame values
+	 * 
+	 */
 	enum class LeftHanded : uint8_t
 	{
 		Disabled = 0,
 		Enabled = 1
 	};
+
+	/**
+	 * @brief stringly typed toggle associated with there savegame values
+	 * 
+	 */
 	enum class SoundToggle : uint8_t
 	{
 		Disabled = 0,
 		Enabled = 1
 	};
+
+	/**
+	 * @brief stringly typed toggle associated with there savegame values
+	 * 
+	 */
 	enum class MusicToggle : uint8_t
 	{
 		Disabled = 0,
 		Enabled = 1
 	};
+
+	/**
+	 * @brief stringly typed toggle associated with there savegame values
+	 * 
+	 */
 	enum class Ending : uint8_t
 	{
 		Unwatched = 0,
 		Watched = 1
 	};
+
+	/**
+	 * @brief stringly typed toggle associated with there savegame values
+	 * 
+	 */
 	enum class Intro : uint8_t
 	{
 		Unwatched = 0,
 		Watched = 1
-	};//TODO better naming?
+	};
+
+	/**
+	 * @brief stringly typed toggle associated with there savegame values
+	 * 
+	 */
 	enum class CheatsEnabled : uint8_t
 	{
 		Disabled = 0,
 		Enabled = 1
 	};
+
+	/**
+	 * @brief stringly typed toggle associated with there savegame values
+	 * 
+	 */
 	enum class Darkmode : uint8_t
 	{
 		Disabled = 0,
@@ -141,26 +180,51 @@ namespace WhipseeySaveManager::Types
 		Moon = 16,
 		Castle = 32
 	};//TODO something
+
+	/**
+	 * @brief individual level progress associated with there savegame values
+	 * 
+	 */
 	enum class Castle : uint8_t
 	{
 		Remaining = 0,
 		Cleared = 32
 	};
+	
+	/**
+	 * @brief individual level progress associated with there savegame values
+	 * 
+	 */
 	enum class Moon : uint8_t
 	{
 		Remaining = 0,
 		Cleared = 16
 	};
+	
+	/**
+	 * @brief individual level progress associated with there savegame values
+	 * 
+	 */
 	enum class Snow : uint8_t
 	{
 		Remaining = 0,
 		Cleared = 8
 	};
+	
+	/**
+	 * @brief individual level progress associated with there savegame values
+	 * 
+	 */
 	enum class Desert : uint8_t
 	{
 		Remaining = 0,
 		Cleared = 4
 	};
+	
+	/**
+	 * @brief individual level progress associated with there savegame values
+	 * 
+	 */
 	enum class Forest : uint8_t
 	{
 		Remaining = 0,
