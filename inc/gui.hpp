@@ -17,7 +17,7 @@ namespace WhipseeySaveManager::GUI
 		 * @brief show the GUI, starts main loop (connect functions first), 
 		 * returns when the gui is closed or an error occurred
 		 * 
-		 * @return Types::Error 
+		 * @return Types::Error if error MissingCallback
 		 */
 		Types::Error run();
 

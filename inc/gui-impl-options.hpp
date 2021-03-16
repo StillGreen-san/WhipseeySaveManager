@@ -89,6 +89,14 @@ namespace WhipseeySaveManager::GUI
 		OptionsBox(nana::window wd);
 
 		void update(INI::Options& options);
+		nana::basic_event<nana::arg_combox>& onLanguageChanged();
+		nana::basic_event<nana::arg_combox>& onScaleChanged();
+		nana::basic_event<nana::arg_combox>& onFullscreenChanged();
+		nana::basic_event<nana::arg_combox>& onLeftHandedChanged();
+		nana::basic_event<nana::arg_combox>& onSoundVolumeChanged();
+		nana::basic_event<nana::arg_combox>& onSoundToggleChanged();
+		nana::basic_event<nana::arg_combox>& onMusicVolumeChanged();
+		nana::basic_event<nana::arg_combox>& onMusicToggleChanged();
 	};
 
 	class TabOptions : public nana::panel<false>
@@ -97,7 +105,9 @@ namespace WhipseeySaveManager::GUI
 		nana::place place{*this};
 		PathControls path{*this, {{"Save (*.sav)", "*.sav"}}};
 		OptionsBox options{*this};
-		TabOptions(nana::window wd);
+		TabOptions(nana::window wd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks);
 		void update(INI::Save& save);
+		nana::basic_event<nana::arg_click>& onReload();
+		nana::basic_event<nana::arg_click>& onSave();
 	};
 }

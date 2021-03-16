@@ -32,7 +32,7 @@ namespace WhipseeySaveManager::GUI
 		auto settings = std::make_shared<INI::Settings>();
 
 		TabFiles files(mainForm);
-		TabOptions options(mainForm);
+		TabOptions options(mainForm, save, callbacks);
 		TabCheats cheats(mainForm, settings, callbacks);
 
 		nana::tabbar<size_t> tabs(mainForm);
@@ -41,22 +41,14 @@ namespace WhipseeySaveManager::GUI
 		tabs.append("Cheats", cheats);
 		tabs.activated(0);
 
-		if(callbacks.onDefaultSavePath)
+		std::optional<std::filesystem::path> path = callbacks.onDefaultSavePath();
+		if(path)
 		{
-			std::optional<std::filesystem::path> path = callbacks.onDefaultSavePath();
-			if(path)
-			{
-				files.path.setPath(*path);
-				options.path.setPath(*path);
-
-				if(callbacks.onReadIni)
-				{
-					/*Types::Error error = */callbacks.onReadIni(save, *path);
-				}
-			}
-			files.update(*save);
-			options.update(*save);
+			files.path.setPath(*path);
+			/*Types::Error error = */callbacks.onReadIni(save, *path);
 		}
+		files.update(*save);
+		options.update(*save);//TODO move into Tab
 
 		mainForm.div("vertical<tabbar weight=28><tabframe>");
 		mainForm["tabbar"] << tabs;
@@ -66,7 +58,7 @@ namespace WhipseeySaveManager::GUI
 		mainForm.show();
 		nana::exec();
 
-		return {};
+		return Types::Error::Code::Nothing;
 	}
 
 	void GUI::connectOnSystemTheme(std::function<GUI::ThemeSignature> func)
