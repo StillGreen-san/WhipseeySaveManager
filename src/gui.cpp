@@ -505,9 +505,15 @@ namespace WhipseeySaveManager::GUI
 		PathControls path{*this, {{"INI (*.ini)", "*.ini"}}};
 		CheatsBox cheats{*this};
 		std::shared_ptr<INI::Settings> settings;
-		TabCheats(nana::window wd, std::shared_ptr<INI::Settings> sttngs) :
+		std::function<GUI::IniSignature> onReadIni;
+		std::function<GUI::IniSignature> onWriteIni;
+		TabCheats(nana::window wd, std::shared_ptr<INI::Settings> sttngs,
+			std::function<GUI::IniSignature> cbReadIni, std::function<GUI::IniSignature> cbWriteIni
+		) :
 			nana::panel<false>(wd),
-			settings{std::move(sttngs)}
+			settings{std::move(sttngs)},
+			onReadIni{std::move(cbReadIni)},
+			onWriteIni{std::move(cbWriteIni)}
 		{
 			place.div("vert <path gap=5 margin=5 weight=35><cheats margin=5>");
 			place["path"] << path;
@@ -515,6 +521,21 @@ namespace WhipseeySaveManager::GUI
 			cheats.onEnabledChanged().connect_front([&](nana::arg_checkbox cb){
 				settings->getCheats().getCheatsEnabled() = static_cast<Types::CheatsEnabled>(cb.widget->checked());
 			});
+			if(onReadIni)
+			{
+				onReload().connect_front([&](nana::arg_click){
+					Types::Error error = onReadIni(settings, path.getPath());
+					//TODO show error
+					cheats.update(settings->getCheats());
+				});
+			}
+			if(onWriteIni)
+			{
+				onSave().connect_front([&](nana::arg_click){
+					Types::Error error = onWriteIni(settings, path.getPath());
+					//TODO show error
+				});
+			}
 		}
 		nana::basic_event<nana::arg_click>& onReload()
 		{
@@ -536,29 +557,13 @@ namespace WhipseeySaveManager::GUI
 
 		TabFiles files(mainForm);
 		TabOptions options(mainForm);
-		TabCheats cheats(mainForm, settings);
+		TabCheats cheats(mainForm, settings, callbacks.onReadIni, callbacks.onWriteIni);
 
 		nana::tabbar<size_t> tabs(mainForm);
 		tabs.append("Files", files);
 		tabs.append("Options", options);
 		tabs.append("Cheats", cheats);
 		tabs.activated(0);
-
-		cheats.onReload().connect_front([&](nana::arg_click){
-			if(callbacks.onReadIni)
-			{
-				Types::Error error = callbacks.onReadIni(settings, cheats.path.getPath());
-				//TODO show error
-				cheats.cheats.update(settings->getCheats());
-			}
-		});
-		cheats.onSave().connect_front([&](nana::arg_click){
-			if(callbacks.onWriteIni)
-			{
-				Types::Error error = callbacks.onWriteIni(settings, cheats.path.getPath());
-				//TODO show error
-			}
-		});
 
 		if(callbacks.onDefaultSavePath)
 		{
