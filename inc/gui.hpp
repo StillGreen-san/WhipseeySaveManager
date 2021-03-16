@@ -35,7 +35,7 @@ namespace WhipseeySaveManager::GUI
 		void connectOnWriteSection(std::function<SectionSignature> func);
 		void connectOnWriteIni(std::function<IniSignature> func);
 	private:
-		struct FuncitonStore
+		struct FunctionStore
 		{
 			std::function<ThemeSignature> onSystemTheme;
 			std::function<PathSignature> onDefaultSavePath;

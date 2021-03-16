@@ -27,16 +27,23 @@ set( WSM_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test )
 set( MAIN_TARGET ${CMAKE_PROJECT_NAME} )
 set( TEST_TARGET ${CMAKE_PROJECT_NAME}-Tests )
 
-set( MAIN_SOURCES
+set( COMMON_SOURCES
 	${WSM_SRC_DIR}/system.cpp
 	${WSM_SRC_DIR}/ini.cpp
+)
+set( MAIN_SOURCES
+	${WSM_SRC_DIR}/gui.cpp
+	${WSM_SRC_DIR}/gui-impl-common.cpp
+	${WSM_SRC_DIR}/gui-impl-files.cpp
+	${WSM_SRC_DIR}/gui-impl-options.cpp
+	${WSM_SRC_DIR}/gui-impl-cheats.cpp
 )
 
 add_executable( ${MAIN_TARGET} WIN32 ${WSM_SRC_DIR}/${MAIN_TARGET}.cpp )
 target_include_directories( ${MAIN_TARGET} PRIVATE ${WSM_INC_DIR} )
 target_include_directories( ${MAIN_TARGET} SYSTEM PRIVATE ${WINREG_INCLUDE_DIRS} ${SIMPLEINI_INCLUDE_DIRS} )
 target_link_libraries( ${MAIN_TARGET} PRIVATE unofficial::nana::nana )
-target_sources( ${MAIN_TARGET} PRIVATE ${MAIN_SOURCES} ${WSM_SRC_DIR}/gui.cpp )
+target_sources( ${MAIN_TARGET} PRIVATE ${MAIN_SOURCES} ${COMMON_SOURCES} )
 set_property( TARGET ${MAIN_TARGET} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" )
 
 set( TEST_SOURCES
@@ -48,7 +55,7 @@ set( TEST_SOURCES
 add_executable( ${TEST_TARGET} ${WSM_TEST_DIR}/${TEST_TARGET}.cpp )
 target_include_directories( ${TEST_TARGET} PRIVATE ${WSM_INC_DIR} )
 target_include_directories( ${TEST_TARGET} SYSTEM PRIVATE ${Catch2_INCLUDE_DIRS} ${WINREG_INCLUDE_DIRS} ${SIMPLEINI_INCLUDE_DIRS} )
-target_sources( ${TEST_TARGET} PRIVATE ${TEST_SOURCES} ${MAIN_SOURCES} )
+target_sources( ${TEST_TARGET} PRIVATE ${TEST_SOURCES} ${COMMON_SOURCES} )
 target_link_libraries( ${TEST_TARGET} PRIVATE Catch2::Catch2 )
 set_property( TARGET ${TEST_TARGET} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" )
 add_custom_command( TARGET ${TEST_TARGET} POST_BUILD
