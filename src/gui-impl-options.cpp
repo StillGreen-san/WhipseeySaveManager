@@ -204,37 +204,37 @@ namespace WhipseeySaveManager::GUI
 		place["path"] << path;
 		place["options"] << options;
 		options.onLanguageChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions().getLanguage() = static_cast<Types::Language>(cb.widget.option());
-		});
+			save->getOptions()->getLanguage() = static_cast<Types::Language>(cb.widget.option());
+		});//TODO change individual updates to monolithic save/reload event
 		options.onScaleChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions().getScale() = static_cast<Types::Scale>(cb.widget.option() + 2);
+			save->getOptions()->getScale() = static_cast<Types::Scale>(cb.widget.option() + 2);
 		});
 		options.onFullscreenChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions().getFullscreen() = static_cast<Types::Fullscreen>(cb.widget.option());
+			save->getOptions()->getFullscreen() = static_cast<Types::Fullscreen>(cb.widget.option());
 		});
 		options.onLeftHandedChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions().getLeftHanded() = static_cast<Types::LeftHanded>(cb.widget.option());
+			save->getOptions()->getLeftHanded() = static_cast<Types::LeftHanded>(cb.widget.option());
 		});
 		options.onSoundVolumeChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions().getSoundVolume() = static_cast<Types::SoundVolume>(cb.widget.option());
+			save->getOptions()->getSoundVolume() = static_cast<Types::SoundVolume>(cb.widget.option());
 		});
 		options.onSoundToggleChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions().getSoundToggle() = static_cast<Types::SoundToggle>(cb.widget.option());
+			save->getOptions()->getSoundToggle() = static_cast<Types::SoundToggle>(cb.widget.option());
 		});
 		options.onMusicVolumeChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions().getMusicVolume() = static_cast<Types::MusicVolume>(cb.widget.option());
+			save->getOptions()->getMusicVolume() = static_cast<Types::MusicVolume>(cb.widget.option());
 		});
 		options.onMusicToggleChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions().getMusicToggle() = static_cast<Types::MusicToggle>(cb.widget.option());
+			save->getOptions()->getMusicToggle() = static_cast<Types::MusicToggle>(cb.widget.option());
 		});
 		onReload().connect_front([&](nana::arg_click){
-			Types::Error error = callbacks.onReadSection(save->sections()[0], path.getPath());
-			//TODO show error & redo sections()[0]
-			options.update(save->getOptions());
+			Types::Error error = callbacks.onReadSection(save->getOptions(), path.getPath());
+			//TODO show error
+			options.update(*save->getOptions());
 		});
 		onSave().connect_front([&](nana::arg_click){
-			Types::Error error = callbacks.onWriteSection(save->sections()[0], path.getPath());
-			//TODO show error & redo sections()[0]
+			Types::Error error = callbacks.onWriteSection(save->getOptions(), path.getPath());
+			//TODO show error
 		});
 		std::optional<std::filesystem::path> savePath = callbacks.onDefaultSavePath();
 		if(savePath)
@@ -245,7 +245,7 @@ namespace WhipseeySaveManager::GUI
 
 	void TabOptions::update(INI::Save& save)
 	{
-		options.update(save.getOptions());
+		options.update(*save.getOptions());//TODO remove unused functions
 	}
 	
 	nana::basic_event<nana::arg_click>& TabOptions::onReload() 

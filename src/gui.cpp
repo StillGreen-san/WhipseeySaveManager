@@ -31,7 +31,7 @@ namespace WhipseeySaveManager::GUI
 		auto save = std::make_shared<INI::Save>();
 		auto settings = std::make_shared<INI::Settings>();
 
-		TabFiles files(mainForm);
+		TabFiles files(mainForm, save, callbacks);
 		TabOptions options(mainForm, save, callbacks);
 		TabCheats cheats(mainForm, settings, callbacks);
 
@@ -48,7 +48,6 @@ namespace WhipseeySaveManager::GUI
 			/*Types::Error error = */callbacks.onReadIni(save, *path);
 		}
 		files.update(*save);
-		options.update(*save);//TODO move into Tab
 
 		mainForm.div("vertical<tabbar weight=28><tabframe>");
 		mainForm["tabbar"] << tabs;

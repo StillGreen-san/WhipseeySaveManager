@@ -111,18 +111,36 @@ namespace WhipseeySaveManager::GUI
 		tgems.caption(std::to_string(file.getGems()));
 		tlives.caption(std::to_string(file.getLives()));
 	}
+	
+	nana::basic_event<nana::arg_click>& FileBox::onSave() 
+	{
+		return save.events().click;
+	}
+	
+	nana::basic_event<nana::arg_click>& FileBox::onReload() 
+	{
+		return reload.events().click;
+	}
 
-	TabFiles::TabFiles(nana::window wd) : nana::panel<false>(wd)
+	TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks) :
+		nana::panel<false>(wd)
 	{
 		place.div("vert <path gap=5 margin=5 weight=35><files gap=3 margin=5>");
 		place["path"] << path;
 		place["files"] << file1 << file2 << file3;
+		// file1.onReload().connect_front([&](nana::arg_click){
+		// 	callbacks.onReadSection(save->getFile1(), path.getPath());
+		// 	file1.update(*save->getFile1());
+		// });
+		// file1.onSave().connect_front([&](nana::arg_click){
+		// 	file1.update(*save->getFile1());
+		// });
 	}
 
 	void TabFiles::update(INI::Save& save)
 	{
-		file1.update(save.getFile1());
-		file2.update(save.getFile2());
-		file3.update(save.getFile3());
+		file1.update(*save.getFile1());
+		file2.update(*save.getFile2());
+		file3.update(*save.getFile3());
 	}
 }

@@ -27,7 +27,7 @@ namespace WhipseeySaveManager::GUI
 	{
 	public:
 		nana::place place{*this};
-		FileGroup group{*this, "FileX  0 - 07"};//! placeholder text needed
+		FileGroup group{*this, "FileX  0 - 0"};//! placeholder text required
 		ProgressGroup progress{group};
 		nana::checkbox intro{group, "Intro"};
 		nana::checkbox ending{group, "Ending"};
@@ -45,6 +45,8 @@ namespace WhipseeySaveManager::GUI
 		FileBox(nana::window wd);
 
 		void update(INI::FileBase& file);
+		nana::basic_event<nana::arg_click>& onSave();
+		nana::basic_event<nana::arg_click>& onReload();
 	};
 
 	class TabFiles : public nana::panel<false>
@@ -56,7 +58,7 @@ namespace WhipseeySaveManager::GUI
 		FileBox file2{*this};
 		FileBox file3{*this};
 
-		TabFiles(nana::window wd);
+		TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks);
 
 		void update(INI::Save& save);
 	};

@@ -816,21 +816,21 @@ namespace WhipseeySaveManager::INI
 			std::make_shared<File2>(),
 			std::make_shared<File3>()
 		}) { }
-		Options& getOptions()
+		std::shared_ptr<Options> getOptions()
 		{
-			return *std::static_pointer_cast<Options>(mSections[0]);
+			return std::static_pointer_cast<Options>(mSections[0]);
 		}
-		File1& getFile1()
+		std::shared_ptr<File1> getFile1()
 		{
-			return *std::static_pointer_cast<File1>(mSections[1]);
+			return std::static_pointer_cast<File1>(mSections[1]);
 		}
-		File2& getFile2()
+		std::shared_ptr<File2> getFile2()
 		{
-			return *std::static_pointer_cast<File2>(mSections[2]);
+			return std::static_pointer_cast<File2>(mSections[2]);
 		}
-		File3& getFile3()
+		std::shared_ptr<File3> getFile3()
 		{
-			return *std::static_pointer_cast<File3>(mSections[3]);
+			return std::static_pointer_cast<File3>(mSections[3]);
 		}
 	};
 
