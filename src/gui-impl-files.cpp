@@ -122,7 +122,7 @@ namespace WhipseeySaveManager::GUI
 		return reload.events().click;
 	}
 
-	TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks) :
+	TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& , const GUI::FunctionStore& ) :
 		nana::panel<false>(wd)
 	{
 		place.div("vert <path gap=5 margin=5 weight=35><files gap=3 margin=5>");

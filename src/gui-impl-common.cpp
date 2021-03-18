@@ -18,17 +18,19 @@ namespace WhipseeySaveManager::GUI
 			open();
 		});
 		setPath(path);
+		filePath.events().text_changed.connect_front([&](nana::arg_textbox tb){
+			varifyPath(getPath());
+		});
 	}
 
-	std::filesystem::path PathControls::getPath()
+	std::filesystem::path PathControls::getPath() const
 	{
 		return filePath.caption_native();
 	}
 
-	void PathControls::setPath(const std::filesystem::path& path)
+	void PathControls::varifyPath(const std::filesystem::path& path)
 	{
-		filePath.caption(path.native());
-		if(std::filesystem::exists(path))//TODO check when typing, long path field height
+		if(std::filesystem::exists(path))
 		{
 			filePath.scheme().background = validBG;
 			saveFile.enabled(true);
@@ -41,6 +43,12 @@ namespace WhipseeySaveManager::GUI
 			saveFile.enabled(false);
 			reloadFile.enabled(false);
 		}
+	}
+
+	void PathControls::setPath(const std::filesystem::path& path)
+	{
+		filePath.caption(path.native());
+		varifyPath(path);
 	}
 
 	nana::basic_event<nana::arg_click>& PathControls::onSave()

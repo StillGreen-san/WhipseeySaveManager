@@ -12,6 +12,7 @@ namespace WhipseeySaveManager::GUI
 {
 	class PathControls : public nana::panel<false>
 	{
+		void varifyPath(const std::filesystem::path& path);
 	public:
 		nana::place place{*this};
 		nana::textbox filePath{*this};
@@ -28,7 +29,7 @@ namespace WhipseeySaveManager::GUI
 			std::vector<std::pair<std::string,std::string>>&& filters,
 			std::filesystem::path path = {}
 		);
-		std::filesystem::path getPath();
+		std::filesystem::path getPath() const;
 		void setPath(const std::filesystem::path& path);
 		nana::basic_event<nana::arg_click>& onSave();
 		nana::basic_event<nana::arg_click>& onReload();
