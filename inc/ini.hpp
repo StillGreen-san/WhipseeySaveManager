@@ -762,7 +762,7 @@ namespace WhipseeySaveManager::INI
 		{
 			return *std::static_pointer_cast<Forest>(mKeys[6]);
 		}
-		Types::Level getLevel();//TODO tests for get/setlevel
+		Types::Level getLevel();
 		void setLevel(Types::Level level);
 		Ending& getEnding()
 		{

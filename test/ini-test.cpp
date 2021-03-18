@@ -363,3 +363,47 @@ TEST_CASE("INI::INI", "[INI]")
 		CHECK(cheatsDefault->getCheats().getCheatsEnabled() == cheatsValid->getCheats().getCheatsEnabled());
 	}
 }
+
+TEST_CASE("FileBase")
+{
+	INI::File1 file;
+	file.getCastle() = Types::Castle::Remaining;
+	file.getMoon() = Types::Moon::Remaining;
+	file.getSnow() = Types::Snow::Remaining;
+	file.getDesert() = Types::Desert::Remaining;
+	file.getForest() = Types::Forest::Remaining;
+
+	SECTION("getLevel")
+	{
+		REQUIRE(file.getLevel() == Types::Level::Beach);
+
+		file.getDesert() = Types::Desert::Cleared;
+		file.getForest() = Types::Forest::Cleared;
+
+		REQUIRE(file.getLevel() == Types::Level::Desert);
+
+		file.getCastle() = Types::Castle::Cleared;
+		file.getMoon() = Types::Moon::Cleared;
+		file.getSnow() = Types::Snow::Cleared;
+
+		REQUIRE(file.getLevel() == Types::Level::Castle);
+	}
+
+	SECTION("setLevel")
+	{
+		file.setLevel(Types::Level::Desert);
+		REQUIRE(file.getDesert() == Types::Desert::Cleared);
+		REQUIRE(file.getForest() == Types::Forest::Cleared);
+
+		file.setLevel(Types::Level::Moon);
+		REQUIRE(file.getDesert() == Types::Desert::Cleared);
+		REQUIRE(file.getForest() == Types::Forest::Cleared);
+		REQUIRE(file.getSnow() == Types::Snow::Cleared);
+		REQUIRE(file.getMoon() == Types::Moon::Cleared);
+
+		file.setLevel(Types::Level::Forest);
+		REQUIRE(file.getSnow() == Types::Snow::Remaining);
+		REQUIRE(file.getMoon() == Types::Moon::Remaining);
+		REQUIRE(file.getDesert() == Types::Desert::Remaining);
+	}
+}

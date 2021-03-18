@@ -189,7 +189,7 @@ namespace WhipseeySaveManager::Types
 	{
 		Remaining = 0,
 		Cleared = 32
-	};
+	};//TODO change to un/locked
 	
 	/**
 	 * @brief individual level progress associated with there savegame values
