@@ -50,6 +50,7 @@ set( TEST_SOURCES
 	${WSM_TEST_DIR}/system-test.cpp
 	${WSM_TEST_DIR}/ini-test.cpp
 	${WSM_TEST_DIR}/testhelper.cpp
+	${WSM_TEST_DIR}/types-test.cpp
 )
 
 add_executable( ${TEST_TARGET} ${WSM_TEST_DIR}/${TEST_TARGET}.cpp )
