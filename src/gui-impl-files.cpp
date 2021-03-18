@@ -1,5 +1,6 @@
 #include "gui-impl-files.hpp"
 
+#include <cwctype>
 
 namespace WhipseeySaveManager::GUI
 {
@@ -59,6 +60,15 @@ namespace WhipseeySaveManager::GUI
 	void ProgressGroup::option_check(Types::Level level)
 	{
 		option_check(levelToIndex(level), true);
+	}
+	
+	NumericTextbox::NumericTextbox(nana::window parent, std::string_view text) :
+		nana::textbox{parent, text}
+	{
+		set_accept([](wchar_t chr)->bool{
+			return std::iswdigit(chr);
+		});
+		
 	}
 
 	FileBox::FileBox(nana::window wd) : nana::panel<false>(wd)
@@ -128,8 +138,8 @@ namespace WhipseeySaveManager::GUI
 	{
 		file.getIntro() = static_cast<Types::Intro>(intro.checked());
 		file.getEnding() = static_cast<Types::Ending>(ending.checked());
-		file.getGems() = static_cast<Types::Gems>(std::stoul(tgems.caption()));
-		file.getLives() = static_cast<Types::Lives>(std::stoul(tlives.caption()));
+		file.getGems() = static_cast<Types::Gems>(tgems.to_int());
+		file.getLives() = static_cast<Types::Lives>(tlives.to_int());
 		file.setLevel(progress.indexToLevel(progress.option()));
 	}
 	
@@ -185,6 +195,13 @@ namespace WhipseeySaveManager::GUI
 			Types::Error error = callbacks.onWriteIni(save, path.getPath());
 			//TODO show error
 		});
+		std::optional<std::filesystem::path> savePath = callbacks.onDefaultSavePath();
+		if(savePath)
+		{
+			path.setPath(*savePath);
+			/*Types::Error error = */callbacks.onReadIni(save, *savePath);
+		}
+		update(*save);
 	}
 
 	void TabFiles::update(INI::Save& save)

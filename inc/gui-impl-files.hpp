@@ -24,6 +24,12 @@ namespace WhipseeySaveManager::GUI
 		void option_check(Types::Level level);
 	};
 
+	class NumericTextbox : public nana::textbox
+	{
+	public:
+		NumericTextbox(nana::window parent, std::string_view text);
+	};
+
 	class FileBox : public nana::panel<false>
 	{
 	public:
@@ -34,8 +40,8 @@ namespace WhipseeySaveManager::GUI
 		nana::checkbox ending{group, "Ending"};
 		nana::label lgems{group, "Gems"};
 		nana::label llives{group, "Lives"};
-		nana::textbox tgems{group, "99"};
-		nana::textbox tlives{group, "9999"};
+		NumericTextbox tgems{group, "99"};
+		NumericTextbox tlives{group, "9999"};
 		nana::button bgems{group, "cycle"};
 		nana::button blives{group, "cycle"};
 		nana::button max{group, "max"};

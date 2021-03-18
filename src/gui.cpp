@@ -41,14 +41,6 @@ namespace WhipseeySaveManager::GUI
 		tabs.append("Cheats", cheats);
 		tabs.activated(0);
 
-		std::optional<std::filesystem::path> path = callbacks.onDefaultSavePath();
-		if(path)
-		{
-			files.path.setPath(*path);
-			/*Types::Error error = */callbacks.onReadIni(save, *path);
-		}
-		files.update(*save);
-
 		mainForm.div("vertical<tabbar weight=28><tabframe>");
 		mainForm["tabbar"] << tabs;
 		mainForm["tabframe"].fasten(files).fasten(options).fasten(cheats);
