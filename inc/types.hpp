@@ -231,6 +231,9 @@ namespace WhipseeySaveManager::Types
 		Cleared = 2
 	};
 
+	using Gems = uint8_t;
+	using Lives = uint32_t;
+
 	/**
 	 * @brief contains basic info on a color theme (accent = rgb)
 	 * 

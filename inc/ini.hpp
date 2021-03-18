@@ -677,14 +677,14 @@ namespace WhipseeySaveManager::INI
 			1,
 			16777215
 		) { }
-		Lives& operator=(uint32_t value)
+		Lives& operator=(Types::Lives value)
 		{
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator uint32_t()
+		operator Types::Lives()
 		{
-			return static_cast<uint32_t>(mValue);
+			return static_cast<Types::Lives>(mValue);
 		}
 	private:
 		static constexpr std::string_view name = "lives";
@@ -701,14 +701,14 @@ namespace WhipseeySaveManager::INI
 			0,
 			99
 		) { }
-		Gems& operator=(uint8_t value)
+		Gems& operator=(Types::Gems value)
 		{
 			mValue = static_cast<float>(value);
 			return *this;
 		}
-		operator uint8_t()
+		operator Types::Gems()
 		{
-			return static_cast<uint8_t>(mValue);
+			return static_cast<Types::Gems>(mValue);
 		}
 	private:
 		static constexpr std::string_view name = "gems";
@@ -762,7 +762,8 @@ namespace WhipseeySaveManager::INI
 		{
 			return *std::static_pointer_cast<Forest>(mKeys[6]);
 		}
-		Types::Level getLevel();
+		Types::Level getLevel();//TODO tests for get/setlevel
+		void setLevel(Types::Level level);
 		Ending& getEnding()
 		{
 			return *std::static_pointer_cast<Ending>(mKeys[7]);

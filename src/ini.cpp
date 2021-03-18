@@ -140,6 +140,32 @@ namespace WhipseeySaveManager::INI
 			return Types::Level::Beach;
 		}
 	}
+	
+	void FileBase::setLevel(Types::Level level) 
+	{
+		getCastle() = Types::Castle::Remaining;
+		getMoon() = Types::Moon::Remaining;
+		getSnow() = Types::Snow::Remaining;
+		getDesert() = Types::Desert::Remaining;
+		getForest() = Types::Forest::Remaining;
+		switch(level)
+		{
+		case Types::Level::Castle :
+			getCastle() = Types::Castle::Cleared;
+			[[fallthrough]];
+		case Types::Level::Moon :
+			getMoon() = Types::Moon::Cleared;
+			[[fallthrough]];
+		case Types::Level::Snow :
+			getSnow() = Types::Snow::Cleared;
+			[[fallthrough]];
+		case Types::Level::Desert :
+			getDesert() = Types::Desert::Cleared;
+			[[fallthrough]];
+		case Types::Level::Forest :
+			getForest() = Types::Forest::Cleared;
+		}
+	}
 
 	class INI::INIintern final : public CSimpleIniA
 	{

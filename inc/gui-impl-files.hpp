@@ -18,6 +18,7 @@ namespace WhipseeySaveManager::GUI
 	public:
 		ProgressGroup(nana::window wd);
 		size_t levelToIndex(Types::Level level);
+		Types::Level indexToLevel(size_t index);
 		void update(INI::FileBase& file);
 		using nana::group::option_check;
 		void option_check(Types::Level level);
@@ -45,6 +46,7 @@ namespace WhipseeySaveManager::GUI
 		FileBox(nana::window wd);
 
 		void update(INI::FileBase& file);
+		void get(INI::FileBase& file);
 		nana::basic_event<nana::arg_click>& onSave();
 		nana::basic_event<nana::arg_click>& onReload();
 	};

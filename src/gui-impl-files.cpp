@@ -34,8 +34,20 @@ namespace WhipseeySaveManager::GUI
 		case Types::Level::Snow : return 2;
 		case Types::Level::Desert : return 3;
 		case Types::Level::Forest : return 4;
-		case Types::Level::Beach :
-		default : return 5;
+		case Types::Level::Beach : default : return 5;
+		}
+	}
+	
+	Types::Level ProgressGroup::indexToLevel(size_t index) 
+	{
+		switch(index)
+		{
+		case 0 : return Types::Level::Castle;
+		case 1 : return Types::Level::Moon;
+		case 2 : return Types::Level::Snow;
+		case 3 : return Types::Level::Desert;
+		case 4 : return Types::Level::Forest;
+		case 5 : default : return Types::Level::Beach;
 		}
 	}
 
@@ -112,6 +124,15 @@ namespace WhipseeySaveManager::GUI
 		tlives.caption(std::to_string(file.getLives()));
 	}
 	
+	void FileBox::get(INI::FileBase& file) 
+	{
+		file.getIntro() = static_cast<Types::Intro>(intro.checked());
+		file.getEnding() = static_cast<Types::Ending>(ending.checked());
+		file.getGems() = static_cast<Types::Gems>(std::stoul(tgems.caption()));
+		file.getLives() = static_cast<Types::Lives>(std::stoul(tlives.caption()));
+		file.setLevel(progress.indexToLevel(progress.option()));
+	}
+	
 	nana::basic_event<nana::arg_click>& FileBox::onSave() 
 	{
 		return save.events().click;
@@ -122,23 +143,52 @@ namespace WhipseeySaveManager::GUI
 		return reload.events().click;
 	}
 
-	TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& , const GUI::FunctionStore& ) :
+	TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks) :
 		nana::panel<false>(wd)
 	{
 		place.div("vert <path gap=5 margin=5 weight=35><files gap=3 margin=5>");
 		place["path"] << path;
 		place["files"] << file1 << file2 << file3;
-		// file1.onReload().connect_front([&](nana::arg_click){
-		// 	callbacks.onReadSection(save->getFile1(), path.getPath());
-		// 	file1.update(*save->getFile1());
-		// });
-		// file1.onSave().connect_front([&](nana::arg_click){
-		// 	file1.update(*save->getFile1());
-		// });
+		file1.onReload().connect_front([&](nana::arg_click){
+			callbacks.onReadSection(save->getFile1(), path.getPath());
+			file1.update(*save->getFile1());
+		});
+		file1.onSave().connect_front([&](nana::arg_click){
+			file1.get(*save->getFile1());
+			callbacks.onWriteSection(save->getFile1(), path.getPath());
+		});
+		file2.onReload().connect_front([&](nana::arg_click click){
+			callbacks.onReadSection(save->getFile2(), path.getPath());
+			file2.update(*save->getFile2());
+		});
+		file2.onSave().connect_front([&](nana::arg_click){
+			file2.get(*save->getFile2());
+			callbacks.onWriteSection(save->getFile2(), path.getPath());
+		});
+		file3.onReload().connect_front([&](nana::arg_click click){
+			callbacks.onReadSection(save->getFile3(), path.getPath());
+			file3.update(*save->getFile3());
+		});
+		file3.onSave().connect_front([&](nana::arg_click){
+			file3.get(*save->getFile3());
+			callbacks.onWriteSection(save->getFile3(), path.getPath());
+		});
+		path.reloadFile.events().click.connect_front([&](nana::arg_click){
+			Types::Error error = callbacks.onReadIni(save, path.getPath());
+			//TODO show error
+			update(*save);
+		});
+		path.saveFile.events().click.connect_front([&](nana::arg_click){
+			file1.get(*save->getFile1());
+			file2.get(*save->getFile2());
+			file3.get(*save->getFile3());
+			Types::Error error = callbacks.onWriteIni(save, path.getPath());
+			//TODO show error
+		});
 	}
 
 	void TabFiles::update(INI::Save& save)
-	{
+	{//TODO unify update / get | INI::& / INI::*
 		file1.update(*save.getFile1());
 		file2.update(*save.getFile2());
 		file3.update(*save.getFile3());
