@@ -273,7 +273,13 @@ namespace WhipseeySaveManager::Types
 
 	public:
 		Error() = default;
-		Error(Code code) : codes{code} { }
+		Error(Code code) : codes{code}
+		{
+			if(codes.front() == Types::Error::Code::Nothing)
+			{
+				codes.clear();
+			}
+		}
 
 		/**
 		 * @brief conversion to bool
@@ -293,7 +299,11 @@ namespace WhipseeySaveManager::Types
 		 */
 		Error& operator=(const Error::Code& code)
 		{
-			if(code == Code::Nothing) return *this;
+			if(code == Code::Nothing)
+			{
+				codes.clear();
+				return *this;
+			}
 			codes.assign(1, code);
 			return *this;
 		}
