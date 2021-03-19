@@ -249,7 +249,7 @@ namespace WhipseeySaveManager::Types
 	 * 
 	 */
 	class Error
-	{//TODO tests
+	{
 	public:
 		/**
 		 * @brief the type of error

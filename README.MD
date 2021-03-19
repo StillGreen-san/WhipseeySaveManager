@@ -1,27 +1,26 @@
 # Whipseey Save Manager
 
--------------------------
-
-**! WIP !**
-
--------------------------
-
 **GUI for modifying *some* Values in 'Whipseey and the Lost Atlas' Savegames and Settings**
 
-<!-- ![Picture](WhipseeySaveManager.png) -->
+![Picture](WhipseeySaveManager.gif)
 
-Intended to aid with Speedrun practice. Does not allow to modify all values present in the Savegame.
+Intended to aid with Speedrun practice. Does not allow to modify *all* values present in the Savegame.
 
 Game needs to be restarted to load a modified Savegame or Settings. Autosaving ingame will override all Slots in Savegame.
 
 ## Features
 
-- ???
+- Set Save-Slot values
+  - Level-Progress, Lives, etc
+- Change Options
+  - Language, Volume, etc
+- Enable Cheats
 
 ## Warnings
 
 - Windows only
 - only tested on Windows 10 (2004) x64
+- still no darkmode!
 
 ## Code
 
