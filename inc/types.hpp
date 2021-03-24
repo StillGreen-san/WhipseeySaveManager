@@ -179,7 +179,7 @@ namespace WhipseeySaveManager::Types
 		Snow = 8,
 		Moon = 16,
 		Castle = 32
-	};//TODO something
+	};
 
 	/**
 	 * @brief individual level progress associated with there savegame values

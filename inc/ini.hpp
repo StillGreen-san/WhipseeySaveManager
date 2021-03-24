@@ -54,10 +54,17 @@ namespace WhipseeySaveManager::INI
 				&& mNumber == other.mNumber;
 		}
 
+		/**
+		 * @brief returns the value as int
+		 */
 		int asInt() const
 		{
 			return static_cast<int>(mValue);
 		}
+
+		/**
+		 * @brief returns the value as float
+		 */
 		float asFloat() const
 		{
 			return mValue;
@@ -470,7 +477,6 @@ namespace WhipseeySaveManager::INI
 		{
 			return static_cast<Types::BossNoDamage>(mValue);
 		}
-	private:
 		static constexpr std::string_view name = "boss_no_damage_progress";
 	};
 

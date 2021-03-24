@@ -208,7 +208,7 @@ namespace WhipseeySaveManager::INI
 
 	bool INI::writeFile(const std::filesystem::path& path)
 	{
-		const SI_Error siErr = mIni->SaveFile(path.native().c_str());
+		const SI_Error siErr = mIni->SaveFile(path.native().c_str());//TODO use original spacing & padding
 		if(siErr == SI_Error::SI_OK)
 		{
 			return true;
@@ -243,9 +243,12 @@ namespace WhipseeySaveManager::INI
 			std::string_view value = mIni->GetValue(section->section(), key->key());
 			if(value == INIintern::NOT_FOUND)
 			{
-				key->applyDefaults();
-				mError += Types::Error::Code::KeyNotFound;
-				success = false;
+				if(key->key() != BossNoDamageProgress::name)//! used instead of making IKey virtual
+				{
+					key->applyDefaults();
+					mError += Types::Error::Code::KeyNotFound;
+					success = false;
+				}
 			}
 			else
 			{

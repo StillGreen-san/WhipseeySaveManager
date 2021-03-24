@@ -6,8 +6,6 @@
 using namespace WhipseeySaveManager;
 using WhipseeySaveManager::INI::IKey;
 
-//TODO missing bossnodamage
-
 struct TestKey : public IKey
 {
 	struct InternalData
@@ -406,4 +404,17 @@ TEST_CASE("FileBase")
 		REQUIRE(file.getMoon() == Types::Moon::Locked);
 		REQUIRE(file.getDesert() == Types::Desert::Locked);
 	}
+}
+
+TEST_CASE("BossNoDamageProgress")
+{
+	REQUIRE_EXISTS(Test::Data::fileMissingBossnodamage);
+	INI::INI ini;
+	REQUIRE(ini.loadFile(Test::Data::fileMissingBossnodamage));
+
+	auto file = std::make_shared<INI::File1>();
+
+	REQUIRE(ini.read(file));
+
+	REQUIRE(file->getBossNoDamageProgress() == Types::BossNoDamage::None);
 }
