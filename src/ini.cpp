@@ -2,6 +2,11 @@
 
 #include <SimpleIni.h>
 
+bool isdigt(char chr)
+{
+	return std::isdigit(chr);
+}
+
 namespace WhipseeySaveManager::INI
 {
 	Types::Error IKey::fromString(std::string_view string)
@@ -12,7 +17,7 @@ namespace WhipseeySaveManager::INI
 		{
 		case Number::Int :
 		{
-			if(std::all_of(string.begin(), string.end(), std::isdigit))
+			if(std::all_of(string.begin(), string.end(), isdigit))
 			{
 				newValue = std::strtof(string.data(), nullptr);
 			}
