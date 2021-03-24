@@ -208,7 +208,7 @@ namespace WhipseeySaveManager::INI
 
 	bool INI::writeFile(const std::filesystem::path& path)
 	{
-		const SI_Error siErr = mIni->SaveFile(path.native().c_str());//TODO use original spacing & padding
+		const SI_Error siErr = mIni->SaveFile(path.native().c_str());//TODO use original spacing & padding (still works without)
 		if(siErr == SI_Error::SI_OK)
 		{
 			return true;

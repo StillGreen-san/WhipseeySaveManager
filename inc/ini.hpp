@@ -6,9 +6,7 @@
 
 //TODO remove magic numbers
 //TODO provide namespaces for keys,sections inis ; hide INI
-//TODO not using static_pointer_cast ?
-//TODO comparison operator for IKey, ISection, IIni (update tests after)
-//TODO tests?
+//TODO tests for key types?
 
 namespace WhipseeySaveManager::INI
 {
@@ -421,35 +419,35 @@ namespace WhipseeySaveManager::INI
 		) { }
 		Language& getLanguage()
 		{
-			return *std::static_pointer_cast<Language>(mKeys[0]);
+			return *static_cast<Language*>(mKeys[0].get());
 		}
 		Scale& getScale()
 		{
-			return *std::static_pointer_cast<Scale>(mKeys[1]);
+			return *static_cast<Scale*>(mKeys[1].get());
 		}
 		Fullscreen& getFullscreen()
 		{
-			return *std::static_pointer_cast<Fullscreen>(mKeys[2]);
+			return *static_cast<Fullscreen*>(mKeys[2].get());
 		}
 		LeftHanded& getLeftHanded()
 		{
-			return *std::static_pointer_cast<LeftHanded>(mKeys[3]);
+			return *static_cast<LeftHanded*>(mKeys[3].get());
 		}
 		SoundVolume& getSoundVolume()
 		{
-			return *std::static_pointer_cast<SoundVolume>(mKeys[4]);
+			return *static_cast<SoundVolume*>(mKeys[4].get());
 		}
 		SoundToggle& getSoundToggle()
 		{
-			return *std::static_pointer_cast<SoundToggle>(mKeys[5]);
+			return *static_cast<SoundToggle*>(mKeys[5].get());
 		}
 		MusicVolume& getMusicVolume()
 		{
-			return *std::static_pointer_cast<MusicVolume>(mKeys[6]);
+			return *static_cast<MusicVolume*>(mKeys[6].get());
 		}
 		MusicToggle& getMusicToggle()
 		{
-			return *std::static_pointer_cast<MusicToggle>(mKeys[7]);
+			return *static_cast<MusicToggle*>(mKeys[7].get());
 		}
 	private:
 		static constexpr std::string_view name = "options";
@@ -742,49 +740,49 @@ namespace WhipseeySaveManager::INI
 	public:
 		BossNoDamageProgress& getBossNoDamageProgress()
 		{
-			return *std::static_pointer_cast<BossNoDamageProgress>(mKeys[0]);
+			return *static_cast<BossNoDamageProgress*>(mKeys[0].get());
 		}
 		EnemiesDefeated& getEnemiesDefeated()
 		{
-			return *std::static_pointer_cast<EnemiesDefeated>(mKeys[1]);
+			return *static_cast<EnemiesDefeated*>(mKeys[1].get());
 		}
 		Castle& getCastle()
 		{
-			return *std::static_pointer_cast<Castle>(mKeys[2]);
+			return *static_cast<Castle*>(mKeys[2].get());
 		}
 		Moon& getMoon()
 		{
-			return *std::static_pointer_cast<Moon>(mKeys[3]);
+			return *static_cast<Moon*>(mKeys[3].get());
 		}
 		Snow& getSnow()
 		{
-			return *std::static_pointer_cast<Snow>(mKeys[4]);
+			return *static_cast<Snow*>(mKeys[4].get());
 		}
 		Desert& getDesert()
 		{
-			return *std::static_pointer_cast<Desert>(mKeys[5]);
+			return *static_cast<Desert*>(mKeys[5].get());
 		}
 		Forest& getForest()
 		{
-			return *std::static_pointer_cast<Forest>(mKeys[6]);
+			return *static_cast<Forest*>(mKeys[6].get());
 		}
 		Types::Level getLevel();
 		void setLevel(Types::Level level);
 		Ending& getEnding()
 		{
-			return *std::static_pointer_cast<Ending>(mKeys[7]);
+			return *static_cast<Ending*>(mKeys[7].get());
 		}
 		Intro& getIntro()
 		{
-			return *std::static_pointer_cast<Intro>(mKeys[8]);
+			return *static_cast<Intro*>(mKeys[8].get());
 		}
 		Lives& getLives()
 		{
-			return *std::static_pointer_cast<Lives>(mKeys[9]);
+			return *static_cast<Lives*>(mKeys[9].get());
 		}
 		Gems& getGems()
 		{
-			return *std::static_pointer_cast<Gems>(mKeys[10]);
+			return *static_cast<Gems*>(mKeys[10].get());
 		}
 	};
 
@@ -880,7 +878,7 @@ namespace WhipseeySaveManager::INI
 		) {}
 		CheatsEnabled& getCheatsEnabled()
 		{
-			return *std::static_pointer_cast<CheatsEnabled>(mKeys[0]);
+			return *static_cast<CheatsEnabled*>(mKeys[0].get());
 		}
 	private:
 		static constexpr std::string_view name = "Cheats";
@@ -898,7 +896,7 @@ namespace WhipseeySaveManager::INI
 		) {}
 		Cheats& getCheats()
 		{
-			return *std::static_pointer_cast<Cheats>(mSections[0]);
+			return *static_cast<Cheats*>(mSections[0].get());
 		}
 	};
 } // namespace WhispseeySaveManager::INI
