@@ -367,24 +367,24 @@ TEST_CASE("INI::INI", "[INI]")
 TEST_CASE("FileBase")
 {
 	INI::File1 file;
-	file.getCastle() = Types::Castle::Remaining;
-	file.getMoon() = Types::Moon::Remaining;
-	file.getSnow() = Types::Snow::Remaining;
-	file.getDesert() = Types::Desert::Remaining;
-	file.getForest() = Types::Forest::Remaining;
+	file.getCastle() = Types::Castle::Locked;
+	file.getMoon() = Types::Moon::Locked;
+	file.getSnow() = Types::Snow::Locked;
+	file.getDesert() = Types::Desert::Locked;
+	file.getForest() = Types::Forest::Locked;
 
 	SECTION("getLevel")
 	{
 		REQUIRE(file.getLevel() == Types::Level::Beach);
 
-		file.getDesert() = Types::Desert::Cleared;
-		file.getForest() = Types::Forest::Cleared;
+		file.getDesert() = Types::Desert::Unlocked;
+		file.getForest() = Types::Forest::Unlocked;
 
 		REQUIRE(file.getLevel() == Types::Level::Desert);
 
-		file.getCastle() = Types::Castle::Cleared;
-		file.getMoon() = Types::Moon::Cleared;
-		file.getSnow() = Types::Snow::Cleared;
+		file.getCastle() = Types::Castle::Unlocked;
+		file.getMoon() = Types::Moon::Unlocked;
+		file.getSnow() = Types::Snow::Unlocked;
 
 		REQUIRE(file.getLevel() == Types::Level::Castle);
 	}
@@ -392,18 +392,18 @@ TEST_CASE("FileBase")
 	SECTION("setLevel")
 	{
 		file.setLevel(Types::Level::Desert);
-		REQUIRE(file.getDesert() == Types::Desert::Cleared);
-		REQUIRE(file.getForest() == Types::Forest::Cleared);
+		REQUIRE(file.getDesert() == Types::Desert::Unlocked);
+		REQUIRE(file.getForest() == Types::Forest::Unlocked);
 
 		file.setLevel(Types::Level::Moon);
-		REQUIRE(file.getDesert() == Types::Desert::Cleared);
-		REQUIRE(file.getForest() == Types::Forest::Cleared);
-		REQUIRE(file.getSnow() == Types::Snow::Cleared);
-		REQUIRE(file.getMoon() == Types::Moon::Cleared);
+		REQUIRE(file.getDesert() == Types::Desert::Unlocked);
+		REQUIRE(file.getForest() == Types::Forest::Unlocked);
+		REQUIRE(file.getSnow() == Types::Snow::Unlocked);
+		REQUIRE(file.getMoon() == Types::Moon::Unlocked);
 
 		file.setLevel(Types::Level::Forest);
-		REQUIRE(file.getSnow() == Types::Snow::Remaining);
-		REQUIRE(file.getMoon() == Types::Moon::Remaining);
-		REQUIRE(file.getDesert() == Types::Desert::Remaining);
+		REQUIRE(file.getSnow() == Types::Snow::Locked);
+		REQUIRE(file.getMoon() == Types::Moon::Locked);
+		REQUIRE(file.getDesert() == Types::Desert::Locked);
 	}
 }

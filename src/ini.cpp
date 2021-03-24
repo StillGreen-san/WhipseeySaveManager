@@ -120,23 +120,23 @@ namespace WhipseeySaveManager::INI
 	
 	Types::Level FileBase::getLevel()
 	{
-			if(getCastle() == Types::Castle::Cleared)
+			if(getCastle() == Types::Castle::Unlocked)
 		{
 			return Types::Level::Castle;
 		}
-		else if(getMoon() == Types::Moon::Cleared)
+		else if(getMoon() == Types::Moon::Unlocked)
 		{
 			return Types::Level::Moon;
 		}
-		else if(getSnow() == Types::Snow::Cleared)
+		else if(getSnow() == Types::Snow::Unlocked)
 		{
 			return Types::Level::Snow;
 		}
-		else if(getDesert() == Types::Desert::Cleared)
+		else if(getDesert() == Types::Desert::Unlocked)
 		{
 			return Types::Level::Desert;
 		}
-		else if(getForest() == Types::Forest::Cleared)
+		else if(getForest() == Types::Forest::Unlocked)
 		{
 			return Types::Level::Forest;
 		}
@@ -148,27 +148,27 @@ namespace WhipseeySaveManager::INI
 	
 	void FileBase::setLevel(Types::Level level) 
 	{
-		getCastle() = Types::Castle::Remaining;
-		getMoon() = Types::Moon::Remaining;
-		getSnow() = Types::Snow::Remaining;
-		getDesert() = Types::Desert::Remaining;
-		getForest() = Types::Forest::Remaining;
+		getCastle() = Types::Castle::Locked;
+		getMoon() = Types::Moon::Locked;
+		getSnow() = Types::Snow::Locked;
+		getDesert() = Types::Desert::Locked;
+		getForest() = Types::Forest::Locked;
 		switch(level)
 		{
 		case Types::Level::Castle :
-			getCastle() = Types::Castle::Cleared;
+			getCastle() = Types::Castle::Unlocked;
 			[[fallthrough]];
 		case Types::Level::Moon :
-			getMoon() = Types::Moon::Cleared;
+			getMoon() = Types::Moon::Unlocked;
 			[[fallthrough]];
 		case Types::Level::Snow :
-			getSnow() = Types::Snow::Cleared;
+			getSnow() = Types::Snow::Unlocked;
 			[[fallthrough]];
 		case Types::Level::Desert :
-			getDesert() = Types::Desert::Cleared;
+			getDesert() = Types::Desert::Unlocked;
 			[[fallthrough]];
 		case Types::Level::Forest :
-			getForest() = Types::Forest::Cleared;
+			getForest() = Types::Forest::Unlocked;
 		}
 	}
 

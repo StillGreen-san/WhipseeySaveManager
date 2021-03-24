@@ -187,9 +187,9 @@ namespace WhipseeySaveManager::Types
 	 */
 	enum class Castle : uint8_t
 	{
-		Remaining = 0,
-		Cleared = 32
-	};//TODO change to un/locked
+		Locked = 0,
+		Unlocked = 32
+	};
 	
 	/**
 	 * @brief individual level progress associated with there savegame values
@@ -197,8 +197,8 @@ namespace WhipseeySaveManager::Types
 	 */
 	enum class Moon : uint8_t
 	{
-		Remaining = 0,
-		Cleared = 16
+		Locked = 0,
+		Unlocked = 16
 	};
 	
 	/**
@@ -207,8 +207,8 @@ namespace WhipseeySaveManager::Types
 	 */
 	enum class Snow : uint8_t
 	{
-		Remaining = 0,
-		Cleared = 8
+		Locked = 0,
+		Unlocked = 8
 	};
 	
 	/**
@@ -217,8 +217,8 @@ namespace WhipseeySaveManager::Types
 	 */
 	enum class Desert : uint8_t
 	{
-		Remaining = 0,
-		Cleared = 4
+		Locked = 0,
+		Unlocked = 4
 	};
 	
 	/**
@@ -227,8 +227,8 @@ namespace WhipseeySaveManager::Types
 	 */
 	enum class Forest : uint8_t
 	{
-		Remaining = 0,
-		Cleared = 2
+		Locked = 0,
+		Unlocked = 2
 	};
 
 	using Gems = uint8_t;

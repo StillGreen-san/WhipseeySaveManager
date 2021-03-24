@@ -503,11 +503,11 @@ namespace WhipseeySaveManager::INI
 	public:
 		Castle() : IKey(
 			name,
-			static_cast<float>(Types::Castle::Remaining),
+			static_cast<float>(Types::Castle::Locked),
 			Limits::EitherOr,
 			Number::StringInt,
-			static_cast<float>(Types::Castle::Remaining),
-			static_cast<float>(Types::Castle::Cleared)
+			static_cast<float>(Types::Castle::Locked),
+			static_cast<float>(Types::Castle::Unlocked)
 		) { }
 		Castle& operator=(Types::Castle value)
 		{
@@ -527,11 +527,11 @@ namespace WhipseeySaveManager::INI
 	public:
 		Moon() : IKey(
 			name,
-			static_cast<float>(Types::Moon::Remaining),
+			static_cast<float>(Types::Moon::Locked),
 			Limits::EitherOr,
 			Number::StringInt,
-			static_cast<float>(Types::Moon::Remaining),
-			static_cast<float>(Types::Moon::Cleared)
+			static_cast<float>(Types::Moon::Locked),
+			static_cast<float>(Types::Moon::Unlocked)
 		) { }
 		Moon& operator=(Types::Moon value)
 		{
@@ -551,11 +551,11 @@ namespace WhipseeySaveManager::INI
 	public:
 		Snow() : IKey(
 			name,
-			static_cast<float>(Types::Snow::Remaining),
+			static_cast<float>(Types::Snow::Locked),
 			Limits::EitherOr,
 			Number::StringInt,
-			static_cast<float>(Types::Snow::Remaining),
-			static_cast<float>(Types::Snow::Cleared)
+			static_cast<float>(Types::Snow::Locked),
+			static_cast<float>(Types::Snow::Unlocked)
 		) { }
 		Snow& operator=(Types::Snow value)
 		{
@@ -575,11 +575,11 @@ namespace WhipseeySaveManager::INI
 	public:
 		Desert() : IKey(
 			name,
-			static_cast<float>(Types::Desert::Remaining),
+			static_cast<float>(Types::Desert::Locked),
 			Limits::EitherOr,
 			Number::StringInt,
-			static_cast<float>(Types::Desert::Remaining),
-			static_cast<float>(Types::Desert::Cleared)
+			static_cast<float>(Types::Desert::Locked),
+			static_cast<float>(Types::Desert::Unlocked)
 		) { }
 		Desert& operator=(Types::Desert value)
 		{
@@ -599,11 +599,11 @@ namespace WhipseeySaveManager::INI
 	public:
 		Forest() : IKey(
 			name,
-			static_cast<float>(Types::Forest::Remaining),
+			static_cast<float>(Types::Forest::Locked),
 			Limits::EitherOr,
 			Number::StringInt,
-			static_cast<float>(Types::Forest::Remaining),
-			static_cast<float>(Types::Forest::Cleared)
+			static_cast<float>(Types::Forest::Locked),
+			static_cast<float>(Types::Forest::Unlocked)
 		) { }
 		Forest& operator=(Types::Forest value)
 		{
