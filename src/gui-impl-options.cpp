@@ -157,44 +157,16 @@ namespace WhipseeySaveManager::GUI
 		musictoggle.update(options);
 	}
 	
-	nana::basic_event<nana::arg_combox>& OptionsBox::onLanguageChanged() 
+	void OptionsBox::get(INI::Options& options) 
 	{
-		return language.combo.events().text_changed;
-	}
-	
-	nana::basic_event<nana::arg_combox>& OptionsBox::onScaleChanged() 
-	{
-		return scale.combo.events().text_changed;
-	}
-	
-	nana::basic_event<nana::arg_combox>& OptionsBox::onFullscreenChanged() 
-	{
-		return fullscreen.combo.events().text_changed;
-	}
-	
-	nana::basic_event<nana::arg_combox>& OptionsBox::onLeftHandedChanged() 
-	{
-		return lefthanded.combo.events().text_changed;
-	}
-	
-	nana::basic_event<nana::arg_combox>& OptionsBox::onSoundVolumeChanged() 
-	{
-		return soundvolume.combo.events().text_changed;
-	}
-	
-	nana::basic_event<nana::arg_combox>& OptionsBox::onSoundToggleChanged() 
-	{
-		return soundtoggle.combo.events().text_changed;
-	}
-	
-	nana::basic_event<nana::arg_combox>& OptionsBox::onMusicVolumeChanged() 
-	{
-		return musicvolume.combo.events().text_changed;
-	}
-	
-	nana::basic_event<nana::arg_combox>& OptionsBox::onMusicToggleChanged() 
-	{
-		return musictoggle.combo.events().text_changed;
+		options.getLanguage() = static_cast<Types::Language>(language.combo.option());
+		options.getScale() = static_cast<Types::Scale>(scale.combo.option() + 2);
+		options.getFullscreen() = static_cast<Types::Fullscreen>(fullscreen.combo.option());
+		options.getLeftHanded() = static_cast<Types::LeftHanded>(lefthanded.combo.option());
+		options.getSoundVolume() = static_cast<Types::SoundVolume>(soundvolume.combo.option());
+		options.getSoundToggle() = static_cast<Types::SoundToggle>(soundtoggle.combo.option());
+		options.getMusicVolume() = static_cast<Types::MusicVolume>(musicvolume.combo.option());
+		options.getMusicToggle() = static_cast<Types::MusicToggle>(musictoggle.combo.option());
 	}
 
 	TabOptions::TabOptions(nana::window wd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks) :
@@ -203,36 +175,13 @@ namespace WhipseeySaveManager::GUI
 		place.div("vert <path gap=5 margin=5 weight=35><options margin=5>");
 		place["path"] << path;
 		place["options"] << options;
-		options.onLanguageChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions()->getLanguage() = static_cast<Types::Language>(cb.widget.option());
-		});//TODO change individual updates to monolithic save/reload event
-		options.onScaleChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions()->getScale() = static_cast<Types::Scale>(cb.widget.option() + 2);
-		});
-		options.onFullscreenChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions()->getFullscreen() = static_cast<Types::Fullscreen>(cb.widget.option());
-		});
-		options.onLeftHandedChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions()->getLeftHanded() = static_cast<Types::LeftHanded>(cb.widget.option());
-		});
-		options.onSoundVolumeChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions()->getSoundVolume() = static_cast<Types::SoundVolume>(cb.widget.option());
-		});
-		options.onSoundToggleChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions()->getSoundToggle() = static_cast<Types::SoundToggle>(cb.widget.option());
-		});
-		options.onMusicVolumeChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions()->getMusicVolume() = static_cast<Types::MusicVolume>(cb.widget.option());
-		});
-		options.onMusicToggleChanged().connect_front([&](nana::arg_combox cb){
-			save->getOptions()->getMusicToggle() = static_cast<Types::MusicToggle>(cb.widget.option());
-		});
 		onReload().connect_front([&](nana::arg_click){
 			Types::Error error = callbacks.onReadSection(save->getOptions(), path.getPath());
 			//TODO show error
 			options.update(*save->getOptions());
 		});
 		onSave().connect_front([&](nana::arg_click){
+			options.get(*save->getOptions());
 			Types::Error error = callbacks.onWriteSection(save->getOptions(), path.getPath());
 			//TODO show error
 		});

@@ -310,7 +310,7 @@ namespace WhipseeySaveManager::INI
 		) { }
 		SoundVolume& operator=(Types::SoundVolume value)
 		{
-			mValue = static_cast<float>(value);
+			mValue = static_cast<float>(value) / 10;
 			return *this;
 		}
 		operator Types::SoundVolume() const
@@ -362,7 +362,7 @@ namespace WhipseeySaveManager::INI
 		) { }
 		MusicVolume& operator=(Types::MusicVolume value)
 		{
-			mValue = static_cast<float>(value);
+			mValue = static_cast<float>(value) / 10;
 			return *this;
 		}
 		operator Types::MusicVolume() const

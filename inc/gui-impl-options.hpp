@@ -89,14 +89,7 @@ namespace WhipseeySaveManager::GUI
 		OptionsBox(nana::window wd);
 
 		void update(INI::Options& options);
-		nana::basic_event<nana::arg_combox>& onLanguageChanged();
-		nana::basic_event<nana::arg_combox>& onScaleChanged();
-		nana::basic_event<nana::arg_combox>& onFullscreenChanged();
-		nana::basic_event<nana::arg_combox>& onLeftHandedChanged();
-		nana::basic_event<nana::arg_combox>& onSoundVolumeChanged();
-		nana::basic_event<nana::arg_combox>& onSoundToggleChanged();
-		nana::basic_event<nana::arg_combox>& onMusicVolumeChanged();
-		nana::basic_event<nana::arg_combox>& onMusicToggleChanged();
+		void get(INI::Options& options);
 	};
 
 	class TabOptions : public nana::panel<false>
