@@ -14,6 +14,7 @@ endif( )
 
 set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
+set( CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE )
 
 find_package( nana 1.8 REQUIRED CONFIG NAMES nana unofficial-nana )
 find_package( Catch2 CONFIG REQUIRED )
@@ -44,7 +45,6 @@ target_include_directories( ${MAIN_TARGET} PRIVATE ${WSM_INC_DIR} )
 target_include_directories( ${MAIN_TARGET} SYSTEM PRIVATE ${WINREG_INCLUDE_DIRS} ${SIMPLEINI_INCLUDE_DIRS} )
 target_link_libraries( ${MAIN_TARGET} PRIVATE unofficial::nana::nana )
 target_sources( ${MAIN_TARGET} PRIVATE ${MAIN_SOURCES} ${COMMON_SOURCES} )
-set_property( TARGET ${MAIN_TARGET} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" )
 
 set( TEST_SOURCES
 	${WSM_TEST_DIR}/system-test.cpp
@@ -58,7 +58,6 @@ target_include_directories( ${TEST_TARGET} PRIVATE ${WSM_INC_DIR} )
 target_include_directories( ${TEST_TARGET} SYSTEM PRIVATE ${Catch2_INCLUDE_DIRS} ${WINREG_INCLUDE_DIRS} ${SIMPLEINI_INCLUDE_DIRS} )
 target_sources( ${TEST_TARGET} PRIVATE ${TEST_SOURCES} ${COMMON_SOURCES} )
 target_link_libraries( ${TEST_TARGET} PRIVATE Catch2::Catch2 )
-set_property( TARGET ${TEST_TARGET} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" )
 add_custom_command( TARGET ${TEST_TARGET} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${WSM_TEST_DIR}/data/ $<TARGET_FILE_DIR:${TEST_TARGET}>/data
 )

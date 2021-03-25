@@ -2,6 +2,8 @@
 
 #include <cwctype>
 
+//TODO delegate reset to INI types
+
 namespace WhipseeySaveManager::GUI
 {
 	void FileGroup::update(INI::FileBase& file)

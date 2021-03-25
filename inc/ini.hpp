@@ -5,7 +5,7 @@
 #include <memory>
 
 //TODO remove magic numbers
-//TODO provide namespaces for keys,sections inis ; hide INI
+//TODO provide namespaces for keys,sections inis ; hide INI ?
 //TODO tests for key types?
 
 namespace WhipseeySaveManager::INI

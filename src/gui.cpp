@@ -5,7 +5,6 @@
 
 #include <nana/gui/widgets/tabbar.hpp>
 
-//TODO delegate reset&max to INI types
 //TODO connect vs connect_front
 
 namespace WhipseeySaveManager::GUI
