@@ -89,22 +89,27 @@ TEST_CASE("INI::IKey", "[INI]")
 		auto valStr = Test::stringify(KeyType::max);
 		Types::Error fromStringMax = key.fromString(valStr);
 		CHECK(fromStringMax == Types::Error::Code::Nothing);
+		CHECK(key.asFloat() == KeyType::max);
 
 		valStr = Test::stringify(KeyType::min);
 		Types::Error fromStringMin = key.fromString(valStr);
 		CHECK(fromStringMin == Types::Error::Code::Nothing);
+		CHECK(key.asFloat() == KeyType::min);
 
 		valStr = Test::stringify(KeyType::min+1);
 		Types::Error fromStringBetween = key.fromString(valStr);
 		CHECK(fromStringBetween == Types::Error::Code::Nothing);
+		CHECK(key.asFloat() == KeyType::min+1);
 
 		valStr = Test::stringify(KeyType::max+1);
 		Types::Error fromStringLarger = key.fromString(valStr);
 		CHECK(fromStringLarger == Types::Error::Code::InvalidValue);
+		CHECK(key.asFloat() == KeyType::default);
 
 		valStr = Test::stringify(KeyType::min-1);
 		Types::Error fromStringSmaller = key.fromString(valStr);
 		CHECK(fromStringSmaller == Types::Error::Code::InvalidValue);
+		CHECK(key.asFloat() == KeyType::default);
 	}
 	
 	SECTION("EitherOr")
@@ -115,14 +120,17 @@ TEST_CASE("INI::IKey", "[INI]")
 		auto valStr = Test::stringify(KeyType::or);
 		Types::Error fromStringOr = key.fromString(valStr);
 		CHECK(fromStringOr == Types::Error::Code::Nothing);
+		CHECK(key.asFloat() == KeyType::or);
 
 		valStr = Test::stringify(KeyType::either);
 		Types::Error fromStringEither = key.fromString(valStr);
 		CHECK(fromStringEither == Types::Error::Code::Nothing);
+		CHECK(key.asFloat() == KeyType::either);
 
 		valStr = Test::stringify(KeyType::either+1);
 		Types::Error fromStringWrong = key.fromString(valStr);
 		CHECK(fromStringWrong == Types::Error::Code::InvalidValue);
+		CHECK(key.asFloat() == KeyType::default);
 	}
 
 	SECTION("Int")
@@ -138,10 +146,14 @@ TEST_CASE("INI::IKey", "[INI]")
 		valStr = std::to_string(KeyType::default+.3f);
 		Types::Error fromStringFloat = key.fromString(valStr);
 		CHECK(fromStringFloat == Types::Error::Code::InvalidFormat);
+		valStr = std::to_string(static_cast<int>(KeyType::default));
+		CHECK(key.toString() == valStr);
 
 		valStr = Test::stringify(KeyType::default);
 		Types::Error fromStringString = key.fromString(valStr);
 		CHECK(fromStringString == Types::Error::Code::InvalidFormat);
+		valStr = std::to_string(static_cast<int>(KeyType::default));
+		CHECK(key.toString() == valStr);
 	}
 
 	SECTION("StringFloat")
@@ -157,10 +169,14 @@ TEST_CASE("INI::IKey", "[INI]")
 		valStr = std::to_string(KeyType::default);
 		Types::Error fromStringWrong = key.fromString(valStr);
 		CHECK(fromStringWrong == Types::Error::Code::InvalidFormat);
+		valStr = Test::stringify(KeyType::default);
+		CHECK(key.toString() == valStr);
 
 		valStr = "\"0.000\"";
 		Types::Error fromStringFractionalShort = key.fromString(valStr);
 		CHECK(fromStringFractionalShort == Types::Error::Code::InvalidFormat);
+		valStr = Test::stringify(KeyType::default);
+		CHECK(key.toString() == valStr);
 	}
 
 	SECTION("StringInt")
@@ -176,18 +192,25 @@ TEST_CASE("INI::IKey", "[INI]")
 		valStr = Test::stringify(KeyType::default+1);
 		Types::Error fromStringInt = key.fromString(valStr);
 		CHECK(fromStringInt == Types::Error::Code::Nothing);
+		CHECK(key.toString() == valStr);
 
 		valStr = Test::stringify(KeyType::default+.3f);
 		Types::Error fromStringFloat = key.fromString(valStr);
 		CHECK(fromStringFloat == Types::Error::Code::InvalidValue);
+		valStr = Test::stringify(KeyType::default);
+		CHECK(key.toString() == valStr);
 
 		valStr = std::to_string(KeyType::default);
 		Types::Error fromStringString = key.fromString(valStr);
 		CHECK(fromStringString == Types::Error::Code::InvalidFormat);
+		valStr = Test::stringify(KeyType::default);
+		CHECK(key.toString() == valStr);
 
 		valStr = "\"0.00000000\"";
 		Types::Error fromStringFractionalLong = key.fromString(valStr);
 		CHECK(fromStringFractionalLong == Types::Error::Code::InvalidFormat);
+		valStr = Test::stringify(KeyType::default);
+		CHECK(key.toString() == valStr);
 	}
 }
 
@@ -417,4 +440,80 @@ TEST_CASE("BossNoDamageProgress")
 	REQUIRE(ini.read(file));
 
 	REQUIRE(file->getBossNoDamageProgress() == Types::BossNoDamage::None);
+}
+
+// ##########
+
+TEST_CASE("Language:IKey")
+{
+	INI::Language language;
+
+	CHECK(language == Types::Language::English);
+	CHECK(language.key() == "language");
+	
+	language = Types::Language::Japanese;
+	language.applyDefaults();
+	CHECK(static_cast<Types::Language>(language) == Types::Language::English);
+	CHECK(language.asFloat() == static_cast<float>(Types::Language::English));
+
+	const auto LANGUAGES = {
+		Types::Language::Chinese,Types::Language::English,Types::Language::French,Types::Language::German,
+		Types::Language::Italian,Types::Language::Japanese,Types::Language::Portogese,
+		Types::Language::Russian,Types::Language::Spanish,Types::Language::Swedish
+	};
+
+	for(Types::Language LANG : LANGUAGES)
+	{
+		language = LANG;
+		CHECK(static_cast<Types::Language>(language) == LANG);
+		CHECK(language.asFloat() == static_cast<float>(LANG));
+	}
+}
+
+TEST_CASE("Scale:IKey")
+{
+	INI::Scale scale;
+
+	CHECK(scale == Types::Scale::R768x432);
+	CHECK(scale.key() == "scale");
+	
+	scale = Types::Scale::R1536x864;
+	scale.applyDefaults();
+	CHECK(static_cast<Types::Scale>(scale) == Types::Scale::R768x432);
+	CHECK(scale.asFloat() == static_cast<float>(Types::Scale::R768x432));
+
+	const auto SCALES = {
+		Types::Scale::R1152x648,Types::Scale::R1536x864,Types::Scale::R768x432
+	};
+
+	for(Types::Scale SCALE : SCALES)
+	{
+		scale = SCALE;
+		CHECK(static_cast<Types::Scale>(scale) == SCALE);
+		CHECK(scale.asFloat() == static_cast<float>(SCALE));
+	}
+}
+
+TEST_CASE("Fullscreen:IKey")
+{
+	INI::Fullscreen fullscreen;
+
+	CHECK(fullscreen == Types::Fullscreen::Enabled);
+	CHECK(fullscreen.key() == "fullscreen");
+	
+	fullscreen = Types::Fullscreen::Disabled;
+	fullscreen.applyDefaults();
+	CHECK(static_cast<Types::Fullscreen>(fullscreen) == Types::Fullscreen::Enabled);
+	CHECK(fullscreen.asFloat() == static_cast<float>(Types::Fullscreen::Enabled));
+
+	const auto FULLSCREENS = {
+		Types::Fullscreen::Disabled,Types::Fullscreen::Enabled
+	};
+
+	for(Types::Fullscreen FS : FULLSCREENS)
+	{
+		fullscreen = FS;
+		CHECK(static_cast<Types::Fullscreen>(fullscreen) == FS);
+		CHECK(fullscreen.asFloat() == static_cast<float>(FS));
+	}
 }
