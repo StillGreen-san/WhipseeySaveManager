@@ -31,8 +31,6 @@ namespace WhipseeySaveManager::GUI
 		);
 		std::filesystem::path getPath() const;
 		void setPath(const std::filesystem::path& path);
-		nana::basic_event<nana::arg_click>& onSave();
-		nana::basic_event<nana::arg_click>& onReload();
 		void open();
 	};
 }

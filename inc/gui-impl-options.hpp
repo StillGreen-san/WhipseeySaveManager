@@ -106,7 +106,6 @@ namespace WhipseeySaveManager::GUI
 		PathControls path{*this, {{"Save (*.sav)", "*.sav"}}};
 		OptionsBox options{*this};
 		TabOptions(nana::window wd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks);
-		void update(INI::Save& save);
 		nana::basic_event<nana::arg_click>& onReload();
 		nana::basic_event<nana::arg_click>& onSave();
 	};

@@ -242,11 +242,6 @@ namespace WhipseeySaveManager::GUI
 			path.setPath(*savePath);
 		}
 	}
-
-	void TabOptions::update(INI::Save& save)
-	{
-		options.update(*save.getOptions());//TODO remove unused functions
-	}
 	
 	nana::basic_event<nana::arg_click>& TabOptions::onReload() 
 	{

@@ -51,16 +51,6 @@ namespace WhipseeySaveManager::GUI
 		varifyPath(path);
 	}
 
-	nana::basic_event<nana::arg_click>& PathControls::onSave()
-	{
-		return saveFile.events().click;
-	}
-
-	nana::basic_event<nana::arg_click>& PathControls::onReload()
-	{
-		return reloadFile.events().click;
-	}
-
 	void PathControls::open()
 	{
 		nana::filebox ofd(*this, true);
