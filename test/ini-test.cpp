@@ -429,19 +429,6 @@ TEST_CASE("FileBase")
 	}
 }
 
-TEST_CASE("BossNoDamageProgress")
-{
-	REQUIRE_EXISTS(Test::Data::fileMissingBossnodamage);
-	INI::INI ini;
-	REQUIRE(ini.loadFile(Test::Data::fileMissingBossnodamage));
-
-	auto file = std::make_shared<INI::File1>();
-
-	REQUIRE(ini.read(file));
-
-	REQUIRE(file->getBossNoDamageProgress() == Types::BossNoDamage::None);
-}
-
 // ##########
 
 TEST_CASE("Language:IKey")
@@ -639,5 +626,239 @@ TEST_CASE("MusicToggle:IKey")
 		musicToggle = MTOGGLE;
 		CHECK(static_cast<Types::MusicToggle>(musicToggle) == MTOGGLE);
 		CHECK(musicToggle.asFloat() == static_cast<float>(MTOGGLE));
+	}
+}
+
+
+TEST_CASE("BossNoDamageProgress:IKey")
+{
+	SECTION("missing")
+	{
+		REQUIRE_EXISTS(Test::Data::fileMissingBossnodamage);
+		INI::INI ini;
+		REQUIRE(ini.loadFile(Test::Data::fileMissingBossnodamage));
+
+		auto file = std::make_shared<INI::File1>();
+
+		CHECK(ini.read(file));
+
+		REQUIRE(file->getBossNoDamageProgress() == Types::BossNoDamage::None);
+	}
+	
+	SECTION("IKey")
+	{
+		INI::BossNoDamageProgress bossProgress;
+
+		CHECK(bossProgress == Types::BossNoDamage::None);
+		CHECK(bossProgress.key() == "boss_no_damage_progress");
+		
+		bossProgress = Types::BossNoDamage::Castle;
+		bossProgress.applyDefaults();
+		CHECK(static_cast<Types::BossNoDamage>(bossProgress) == Types::BossNoDamage::None);
+		CHECK(bossProgress.asFloat() == static_cast<float>(Types::BossNoDamage::None));
+
+		const auto VALUES = {
+			Types::BossNoDamage::All,Types::BossNoDamage::Castle,Types::BossNoDamage::Desert,
+			Types::BossNoDamage::Forest,Types::BossNoDamage::None
+		};
+
+		for(Types::BossNoDamage PROGRESS : VALUES)
+		{
+			bossProgress = PROGRESS;
+			CHECK(static_cast<Types::BossNoDamage>(bossProgress) == PROGRESS);
+			CHECK(bossProgress.asFloat() == static_cast<float>(PROGRESS));
+		}
+	}
+}
+
+TEST_CASE("Castle:IKey")
+{
+	INI::Castle castle;
+
+	CHECK(castle == Types::Castle::Locked);
+	CHECK(castle.key() == "castle");
+	
+	castle = Types::Castle::Unlocked;
+	castle.applyDefaults();
+	CHECK(static_cast<Types::Castle>(castle) == Types::Castle::Locked);
+	CHECK(castle.asFloat() == static_cast<float>(Types::Castle::Locked));
+
+	const auto VALUES = {
+		Types::Castle::Unlocked,Types::Castle::Locked
+	};
+
+	for(Types::Castle STATUS : VALUES)
+	{
+		castle = STATUS;
+		CHECK(static_cast<Types::Castle>(castle) == STATUS);
+		CHECK(castle.asFloat() == static_cast<float>(STATUS));
+	}
+}
+
+TEST_CASE("Moon:IKey")
+{
+	INI::Moon moon;
+
+	CHECK(moon == Types::Moon::Locked);
+	CHECK(moon.key() == "moon");
+	
+	moon = Types::Moon::Unlocked;
+	moon.applyDefaults();
+	CHECK(static_cast<Types::Moon>(moon) == Types::Moon::Locked);
+	CHECK(moon.asFloat() == static_cast<float>(Types::Moon::Locked));
+
+	const auto VALUES = {
+		Types::Moon::Unlocked,Types::Moon::Locked
+	};
+
+	for(Types::Moon STATUS : VALUES)
+	{
+		moon = STATUS;
+		CHECK(static_cast<Types::Moon>(moon) == STATUS);
+		CHECK(moon.asFloat() == static_cast<float>(STATUS));
+	}
+}
+
+TEST_CASE("Snow:IKey")
+{
+	INI::Snow snow;
+
+	CHECK(snow == Types::Snow::Locked);
+	CHECK(snow.key() == "snow");
+	
+	snow = Types::Snow::Unlocked;
+	snow.applyDefaults();
+	CHECK(static_cast<Types::Snow>(snow) == Types::Snow::Locked);
+	CHECK(snow.asFloat() == static_cast<float>(Types::Snow::Locked));
+
+	const auto VALUES = {
+		Types::Snow::Unlocked,Types::Snow::Locked
+	};
+
+	for(Types::Snow STATUS : VALUES)
+	{
+		snow = STATUS;
+		CHECK(static_cast<Types::Snow>(snow) == STATUS);
+		CHECK(snow.asFloat() == static_cast<float>(STATUS));
+	}
+}
+
+TEST_CASE("Desert:IKey")
+{
+	INI::Desert desert;
+
+	CHECK(desert == Types::Desert::Locked);
+	CHECK(desert.key() == "desert");
+	
+	desert = Types::Desert::Unlocked;
+	desert.applyDefaults();
+	CHECK(static_cast<Types::Desert>(desert) == Types::Desert::Locked);
+	CHECK(desert.asFloat() == static_cast<float>(Types::Desert::Locked));
+
+	const auto VALUES = {
+		Types::Desert::Unlocked,Types::Desert::Locked
+	};
+
+	for(Types::Desert STATUS : VALUES)
+	{
+		desert = STATUS;
+		CHECK(static_cast<Types::Desert>(desert) == STATUS);
+		CHECK(desert.asFloat() == static_cast<float>(STATUS));
+	}
+}
+
+TEST_CASE("Forest:IKey")
+{
+	INI::Forest forest;
+
+	CHECK(forest == Types::Forest::Locked);
+	CHECK(forest.key() == "forest");
+	
+	forest = Types::Forest::Unlocked;
+	forest.applyDefaults();
+	CHECK(static_cast<Types::Forest>(forest) == Types::Forest::Locked);
+	CHECK(forest.asFloat() == static_cast<float>(Types::Forest::Locked));
+
+	const auto VALUES = {
+		Types::Forest::Unlocked,Types::Forest::Locked
+	};
+
+	for(Types::Forest STATUS : VALUES)
+	{
+		forest = STATUS;
+		CHECK(static_cast<Types::Forest>(forest) == STATUS);
+		CHECK(forest.asFloat() == static_cast<float>(STATUS));
+	}
+}
+
+TEST_CASE("Ending:IKey")
+{
+	INI::Ending ending;
+
+	CHECK(ending == Types::Ending::Unwatched);
+	CHECK(ending.key() == "ending");
+	
+	ending = Types::Ending::Watched;
+	ending.applyDefaults();
+	CHECK(static_cast<Types::Ending>(ending) == Types::Ending::Unwatched);
+	CHECK(ending.asFloat() == static_cast<float>(Types::Ending::Unwatched));
+
+	const auto VALUES = {
+		Types::Ending::Watched,Types::Ending::Unwatched
+	};
+
+	for(Types::Ending STATUS : VALUES)
+	{
+		ending = STATUS;
+		CHECK(static_cast<Types::Ending>(ending) == STATUS);
+		CHECK(ending.asFloat() == static_cast<float>(STATUS));
+	}
+}
+
+TEST_CASE("Intro:IKey")
+{
+	INI::Intro intro;
+
+	CHECK(intro == Types::Intro::Unwatched);
+	CHECK(intro.key() == "intro");
+	
+	intro = Types::Intro::Watched;
+	intro.applyDefaults();
+	CHECK(static_cast<Types::Intro>(intro) == Types::Intro::Unwatched);
+	CHECK(intro.asFloat() == static_cast<float>(Types::Intro::Unwatched));
+
+	const auto VALUES = {
+		Types::Intro::Watched,Types::Intro::Unwatched
+	};
+
+	for(Types::Intro STATUS : VALUES)
+	{
+		intro = STATUS;
+		CHECK(static_cast<Types::Intro>(intro) == STATUS);
+		CHECK(intro.asFloat() == static_cast<float>(STATUS));
+	}
+}
+
+TEST_CASE("CheatsEnabled:IKey")
+{
+	INI::CheatsEnabled intro;
+
+	CHECK(intro == Types::CheatsEnabled::Disabled);
+	CHECK(intro.key() == "cheats_enabled");
+	
+	intro = Types::CheatsEnabled::Enabled;
+	intro.applyDefaults();
+	CHECK(static_cast<Types::CheatsEnabled>(intro) == Types::CheatsEnabled::Disabled);
+	CHECK(intro.asFloat() == static_cast<float>(Types::CheatsEnabled::Disabled));
+
+	const auto VALUES = {
+		Types::CheatsEnabled::Enabled,Types::CheatsEnabled::Disabled
+	};
+
+	for(Types::CheatsEnabled STATUS : VALUES)
+	{
+		intro = STATUS;
+		CHECK(static_cast<Types::CheatsEnabled>(intro) == STATUS);
+		CHECK(intro.asFloat() == static_cast<float>(STATUS));
 	}
 }
