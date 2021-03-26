@@ -203,6 +203,33 @@ TEST_CASE("MusicToggle:IKey")
 	}
 }
 
+TEST_CASE("Options:ISection")
+{
+	INI::Options options;
+
+	CHECK(options.section() == "options");
+
+	CHECK(options.getLanguage().key() == "language");
+	CHECK(options.getScale().key() == "scale");
+	CHECK(options.getFullscreen().key() == "fullscreen");
+	CHECK(options.getLeftHanded().key() == "left_handed");
+	CHECK(options.getSoundVolume().key() == "sound_volume");
+	CHECK(options.getSoundToggle().key() == "sound_toggle");
+	CHECK(options.getMusicVolume().key() == "music_volume");
+	CHECK(options.getMusicToggle().key() == "music_toggle");
+
+	const auto& ikeys = options.keys();
+
+	CHECK(ikeys[0]->key() == "language");
+	CHECK(ikeys[1]->key() == "scale");
+	CHECK(ikeys[2]->key() == "fullscreen");
+	CHECK(ikeys[3]->key() == "left_handed");
+	CHECK(ikeys[4]->key() == "sound_volume");
+	CHECK(ikeys[5]->key() == "sound_toggle");
+	CHECK(ikeys[6]->key() == "music_volume");
+	CHECK(ikeys[7]->key() == "music_toggle");
+}
+
 
 TEST_CASE("BossNoDamageProgress:IKey")
 {
@@ -413,6 +440,81 @@ TEST_CASE("Intro:IKey")
 	}
 }
 
+TEST_CASE("FileBase:ISection")
+{
+	struct FileBaseMock : public INI::FileBase
+	{
+		FileBaseMock() : INI::FileBase("TEST") {}
+	};
+	FileBaseMock file;
+
+	CHECK(file.section() == "TEST");
+
+	CHECK(file.getBossNoDamageProgress().key() == "boss_no_damage_progress");
+	CHECK(file.getEnemiesDefeated().key() == "enemies_defeated");
+	CHECK(file.getCastle().key() == "castle");
+	CHECK(file.getMoon().key() == "moon");
+	CHECK(file.getSnow().key() == "snow");
+	CHECK(file.getDesert().key() == "desert");
+	CHECK(file.getForest().key() == "forest");
+	CHECK(file.getEnding().key() == "ending");
+	CHECK(file.getIntro().key() == "intro");
+	CHECK(file.getLives().key() == "lives");
+	CHECK(file.getGems().key() == "gems");
+
+	const auto& ikeys = file.keys();
+
+	CHECK(ikeys[0]->key() == "boss_no_damage_progress");
+	CHECK(ikeys[1]->key() == "enemies_defeated");
+	CHECK(ikeys[2]->key() == "castle");
+	CHECK(ikeys[3]->key() == "moon");
+	CHECK(ikeys[4]->key() == "snow");
+	CHECK(ikeys[5]->key() == "desert");
+	CHECK(ikeys[6]->key() == "forest");
+	CHECK(ikeys[7]->key() == "ending");
+	CHECK(ikeys[8]->key() == "intro");
+	CHECK(ikeys[9]->key() == "lives");
+	CHECK(ikeys[10]->key() == "gems");
+}
+
+TEST_CASE("FileX:ISection")
+{
+	SECTION("File1")
+	{
+		INI::File1 file1;
+		CHECK(file1.section() == "file1");
+	}
+
+	SECTION("File2")
+	{
+		INI::File2 file2;
+		CHECK(file2.section() == "file2");
+	}
+
+	SECTION("File3")
+	{
+		INI::File3 file3;
+		CHECK(file3.section() == "file3");
+	}
+}
+
+TEST_CASE("Save:IIni")
+{
+	INI::Save save;
+
+	CHECK(save.getOptions()->section() == "options");
+	CHECK(save.getFile1()->section() == "file1");
+	CHECK(save.getFile2()->section() == "file2");
+	CHECK(save.getFile3()->section() == "file3");
+
+	const auto& ikeys = save.sections();
+
+	CHECK(ikeys[0]->section() == "options");
+	CHECK(ikeys[1]->section() == "file1");
+	CHECK(ikeys[2]->section() == "file2");
+	CHECK(ikeys[3]->section() == "file3");
+}
+
 
 TEST_CASE("CheatsEnabled:IKey")
 {
@@ -436,4 +538,28 @@ TEST_CASE("CheatsEnabled:IKey")
 		CHECK(static_cast<Types::CheatsEnabled>(intro) == STATUS);
 		CHECK(intro.asFloat() == static_cast<float>(STATUS));
 	}
+}
+
+TEST_CASE("Cheats:ISection")
+{
+	INI::Cheats cheats;
+
+	CHECK(cheats.section() == "Cheats");
+
+	CHECK(cheats.getCheatsEnabled().key() == "cheats_enabled");
+
+	const auto& ikeys = cheats.keys();
+
+	CHECK(ikeys[0]->key() == "cheats_enabled");
+}
+
+TEST_CASE("Cheats:IIni")
+{
+	INI::Settings settings;
+
+	CHECK(settings.getCheats().section() == "Cheats");
+
+	const auto& ikeys = settings.sections();
+
+	CHECK(ikeys[0]->section() == "Cheats");
 }

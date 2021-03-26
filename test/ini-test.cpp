@@ -387,7 +387,11 @@ TEST_CASE("INI::INI", "[INI]")
 
 TEST_CASE("FileBase")
 {
-	INI::File1 file;
+	struct FileBaseMock : public INI::FileBase
+	{
+		FileBaseMock() : INI::FileBase("TEST") {}
+	};
+	FileBaseMock file;
 	file.getCastle() = Types::Castle::Locked;
 	file.getMoon() = Types::Moon::Locked;
 	file.getSnow() = Types::Snow::Locked;
