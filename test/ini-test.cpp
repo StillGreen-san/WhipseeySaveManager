@@ -385,7 +385,7 @@ TEST_CASE("INI::INI", "[INI]")
 	}
 }
 
-TEST_CASE("FileBase")
+TEST_CASE("FileBase", "[INI]")
 {
 	struct FileBaseMock : public INI::FileBase
 	{

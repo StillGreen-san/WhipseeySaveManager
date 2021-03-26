@@ -5,8 +5,6 @@
 
 #include <nana/gui/widgets/tabbar.hpp>
 
-//TODO connect vs connect_front
-
 namespace WhipseeySaveManager::GUI
 {
 	Types::Error GUI::run()

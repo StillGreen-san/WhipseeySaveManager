@@ -2,7 +2,7 @@
 
 using namespace WhipseeySaveManager;
 
-TEST_CASE("Error")
+TEST_CASE("Error", "[Types]")
 {
 	SECTION("bool")
 	{

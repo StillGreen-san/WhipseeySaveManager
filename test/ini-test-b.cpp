@@ -5,7 +5,7 @@
 
 using namespace WhipseeySaveManager;
 
-TEST_CASE("Language:IKey")
+TEST_CASE("Language:IKey", "[INI]")
 {
 	INI::Language language;
 
@@ -31,7 +31,7 @@ TEST_CASE("Language:IKey")
 	}
 }
 
-TEST_CASE("Scale:IKey")
+TEST_CASE("Scale:IKey", "[INI]")
 {
 	INI::Scale scale;
 
@@ -55,7 +55,7 @@ TEST_CASE("Scale:IKey")
 	}
 }
 
-TEST_CASE("Fullscreen:IKey")
+TEST_CASE("Fullscreen:IKey", "[INI]")
 {
 	INI::Fullscreen fullscreen;
 
@@ -79,7 +79,7 @@ TEST_CASE("Fullscreen:IKey")
 	}
 }
 
-TEST_CASE("LeftHanded:IKey")
+TEST_CASE("LeftHanded:IKey", "[INI]")
 {
 	INI::LeftHanded leftHanded;
 
@@ -103,7 +103,7 @@ TEST_CASE("LeftHanded:IKey")
 	}
 }
 
-TEST_CASE("SoundVolume:IKey")
+TEST_CASE("SoundVolume:IKey", "[INI]")
 {
 	INI::SoundVolume soundVolume;
 
@@ -129,7 +129,7 @@ TEST_CASE("SoundVolume:IKey")
 	}
 }
 
-TEST_CASE("SoundToggle:IKey")
+TEST_CASE("SoundToggle:IKey", "[INI]")
 {
 	INI::SoundToggle soundToggle;
 
@@ -153,7 +153,7 @@ TEST_CASE("SoundToggle:IKey")
 	}
 }
 
-TEST_CASE("MusicVolume:IKey")
+TEST_CASE("MusicVolume:IKey", "[INI]")
 {
 	INI::MusicVolume musicVolume;
 
@@ -179,7 +179,7 @@ TEST_CASE("MusicVolume:IKey")
 	}
 }
 
-TEST_CASE("MusicToggle:IKey")
+TEST_CASE("MusicToggle:IKey", "[INI]")
 {
 	INI::MusicToggle musicToggle;
 
@@ -203,7 +203,7 @@ TEST_CASE("MusicToggle:IKey")
 	}
 }
 
-TEST_CASE("Options:ISection")
+TEST_CASE("Options:ISection", "[INI]")
 {
 	INI::Options options;
 
@@ -231,7 +231,7 @@ TEST_CASE("Options:ISection")
 }
 
 
-TEST_CASE("BossNoDamageProgress:IKey")
+TEST_CASE("BossNoDamageProgress:IKey", "[INI]")
 {
 	SECTION("missing")
 	{
@@ -272,7 +272,7 @@ TEST_CASE("BossNoDamageProgress:IKey")
 	}
 }
 
-TEST_CASE("Castle:IKey")
+TEST_CASE("Castle:IKey", "[INI]")
 {
 	INI::Castle castle;
 
@@ -296,7 +296,7 @@ TEST_CASE("Castle:IKey")
 	}
 }
 
-TEST_CASE("Moon:IKey")
+TEST_CASE("Moon:IKey", "[INI]")
 {
 	INI::Moon moon;
 
@@ -320,7 +320,7 @@ TEST_CASE("Moon:IKey")
 	}
 }
 
-TEST_CASE("Snow:IKey")
+TEST_CASE("Snow:IKey", "[INI]")
 {
 	INI::Snow snow;
 
@@ -344,7 +344,7 @@ TEST_CASE("Snow:IKey")
 	}
 }
 
-TEST_CASE("Desert:IKey")
+TEST_CASE("Desert:IKey", "[INI]")
 {
 	INI::Desert desert;
 
@@ -368,7 +368,7 @@ TEST_CASE("Desert:IKey")
 	}
 }
 
-TEST_CASE("Forest:IKey")
+TEST_CASE("Forest:IKey", "[INI]")
 {
 	INI::Forest forest;
 
@@ -392,7 +392,7 @@ TEST_CASE("Forest:IKey")
 	}
 }
 
-TEST_CASE("Ending:IKey")
+TEST_CASE("Ending:IKey", "[INI]")
 {
 	INI::Ending ending;
 
@@ -416,7 +416,7 @@ TEST_CASE("Ending:IKey")
 	}
 }
 
-TEST_CASE("Intro:IKey")
+TEST_CASE("Intro:IKey", "[INI]")
 {
 	INI::Intro intro;
 
@@ -440,7 +440,7 @@ TEST_CASE("Intro:IKey")
 	}
 }
 
-TEST_CASE("FileBase:ISection")
+TEST_CASE("FileBase:ISection", "[INI]")
 {
 	struct FileBaseMock : public INI::FileBase
 	{
@@ -477,7 +477,7 @@ TEST_CASE("FileBase:ISection")
 	CHECK(ikeys[10]->key() == "gems");
 }
 
-TEST_CASE("FileX:ISection")
+TEST_CASE("FileX:ISection", "[INI]")
 {
 	SECTION("File1")
 	{
@@ -498,7 +498,7 @@ TEST_CASE("FileX:ISection")
 	}
 }
 
-TEST_CASE("Save:IIni")
+TEST_CASE("Save:IIni", "[INI]")
 {
 	INI::Save save;
 
@@ -516,7 +516,7 @@ TEST_CASE("Save:IIni")
 }
 
 
-TEST_CASE("CheatsEnabled:IKey")
+TEST_CASE("CheatsEnabled:IKey", "[INI]")
 {
 	INI::CheatsEnabled intro;
 
@@ -540,7 +540,7 @@ TEST_CASE("CheatsEnabled:IKey")
 	}
 }
 
-TEST_CASE("Cheats:ISection")
+TEST_CASE("Cheats:ISection", "[INI]")
 {
 	INI::Cheats cheats;
 
@@ -553,7 +553,7 @@ TEST_CASE("Cheats:ISection")
 	CHECK(ikeys[0]->key() == "cheats_enabled");
 }
 
-TEST_CASE("Cheats:IIni")
+TEST_CASE("Cheats:IIni", "[INI]")
 {
 	INI::Settings settings;
 

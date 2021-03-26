@@ -85,7 +85,7 @@ namespace WhipseeySaveManager::GUI
 		group.collocate();
 		place.div("this");
 		place["this"] << group;
-		bgems.events().click.connect([&](nana::arg_click){
+		bgems.events().click.connect_front([&](nana::arg_click){
 			if(tgems.caption() == "99")
 			{
 				tgems.caption("0");
@@ -95,7 +95,7 @@ namespace WhipseeySaveManager::GUI
 				tgems.caption("99");
 			}
 		});
-		blives.events().click.connect([&](nana::arg_click){
+		blives.events().click.connect_front([&](nana::arg_click){
 			const std::string lives = tlives.caption();
 			if(lives == "9999")
 			{
@@ -110,14 +110,14 @@ namespace WhipseeySaveManager::GUI
 				tlives.caption("99");
 			}
 		});
-		reset.events().click.connect([&](nana::arg_click){
+		reset.events().click.connect_front([&](nana::arg_click){
 			tgems.caption("0");
 			tlives.caption("5");
 			intro.check(false);
 			ending.check(false);
 			progress.option_check(Types::Level::Beach);
 		});
-		max.events().click.connect([&](nana::arg_click){
+		max.events().click.connect_front([&](nana::arg_click){
 			tgems.caption("99");
 			tlives.caption("9999");
 			intro.check(true);
