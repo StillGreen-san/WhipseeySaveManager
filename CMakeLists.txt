@@ -49,6 +49,7 @@ target_sources( ${MAIN_TARGET} PRIVATE ${MAIN_SOURCES} ${COMMON_SOURCES} )
 set( TEST_SOURCES
 	${WSM_TEST_DIR}/system-test.cpp
 	${WSM_TEST_DIR}/ini-test.cpp
+	${WSM_TEST_DIR}/ini-test-b.cpp
 	${WSM_TEST_DIR}/testhelper.cpp
 	${WSM_TEST_DIR}/types-test.cpp
 )
