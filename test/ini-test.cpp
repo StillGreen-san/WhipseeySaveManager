@@ -456,13 +456,13 @@ TEST_CASE("Language:IKey")
 	CHECK(static_cast<Types::Language>(language) == Types::Language::English);
 	CHECK(language.asFloat() == static_cast<float>(Types::Language::English));
 
-	const auto LANGUAGES = {
+	const auto VALUES = {
 		Types::Language::Chinese,Types::Language::English,Types::Language::French,Types::Language::German,
 		Types::Language::Italian,Types::Language::Japanese,Types::Language::Portogese,
 		Types::Language::Russian,Types::Language::Spanish,Types::Language::Swedish
 	};
 
-	for(Types::Language LANG : LANGUAGES)
+	for(Types::Language LANG : VALUES)
 	{
 		language = LANG;
 		CHECK(static_cast<Types::Language>(language) == LANG);
@@ -482,11 +482,11 @@ TEST_CASE("Scale:IKey")
 	CHECK(static_cast<Types::Scale>(scale) == Types::Scale::R768x432);
 	CHECK(scale.asFloat() == static_cast<float>(Types::Scale::R768x432));
 
-	const auto SCALES = {
+	const auto VALUES = {
 		Types::Scale::R1152x648,Types::Scale::R1536x864,Types::Scale::R768x432
 	};
 
-	for(Types::Scale SCALE : SCALES)
+	for(Types::Scale SCALE : VALUES)
 	{
 		scale = SCALE;
 		CHECK(static_cast<Types::Scale>(scale) == SCALE);
@@ -506,14 +506,138 @@ TEST_CASE("Fullscreen:IKey")
 	CHECK(static_cast<Types::Fullscreen>(fullscreen) == Types::Fullscreen::Enabled);
 	CHECK(fullscreen.asFloat() == static_cast<float>(Types::Fullscreen::Enabled));
 
-	const auto FULLSCREENS = {
+	const auto VALUES = {
 		Types::Fullscreen::Disabled,Types::Fullscreen::Enabled
 	};
 
-	for(Types::Fullscreen FS : FULLSCREENS)
+	for(Types::Fullscreen FS : VALUES)
 	{
 		fullscreen = FS;
 		CHECK(static_cast<Types::Fullscreen>(fullscreen) == FS);
 		CHECK(fullscreen.asFloat() == static_cast<float>(FS));
+	}
+}
+
+TEST_CASE("LeftHanded:IKey")
+{
+	INI::LeftHanded leftHanded;
+
+	CHECK(leftHanded == Types::LeftHanded::Enabled);
+	CHECK(leftHanded.key() == "left_handed");
+	
+	leftHanded = Types::LeftHanded::Disabled;
+	leftHanded.applyDefaults();
+	CHECK(static_cast<Types::LeftHanded>(leftHanded) == Types::LeftHanded::Enabled);
+	CHECK(leftHanded.asFloat() == static_cast<float>(Types::LeftHanded::Enabled));
+
+	const auto VALUES = {
+		Types::LeftHanded::Disabled,Types::LeftHanded::Enabled
+	};
+
+	for(Types::LeftHanded HANDED : VALUES)
+	{
+		leftHanded = HANDED;
+		CHECK(static_cast<Types::LeftHanded>(leftHanded) == HANDED);
+		CHECK(leftHanded.asFloat() == static_cast<float>(HANDED));
+	}
+}
+
+TEST_CASE("SoundVolume:IKey")
+{
+	INI::SoundVolume soundVolume;
+
+	CHECK(soundVolume == Types::SoundVolume::V100);
+	CHECK(soundVolume.key() == "sound_volume");
+	
+	soundVolume = Types::SoundVolume::V0;
+	soundVolume.applyDefaults();
+	CHECK(static_cast<Types::SoundVolume>(soundVolume) == Types::SoundVolume::V100);
+	CHECK(soundVolume.asFloat() == static_cast<float>(Types::SoundVolume::V100) / 10);
+
+	const auto VALUES = {
+		Types::SoundVolume::V0,Types::SoundVolume::V10,Types::SoundVolume::V20,Types::SoundVolume::V30,
+		Types::SoundVolume::V40,Types::SoundVolume::V50,Types::SoundVolume::V60,Types::SoundVolume::V70,
+		Types::SoundVolume::V80,Types::SoundVolume::V90,Types::SoundVolume::V100
+	};
+
+	for(Types::SoundVolume SVOLUME : VALUES)
+	{
+		soundVolume = SVOLUME;
+		CHECK(static_cast<Types::SoundVolume>(soundVolume) == SVOLUME);
+		CHECK(soundVolume.asFloat() == static_cast<float>(SVOLUME) / 10);
+	}
+}
+
+TEST_CASE("SoundToggle:IKey")
+{
+	INI::SoundToggle soundToggle;
+
+	CHECK(soundToggle == Types::SoundToggle::Enabled);
+	CHECK(soundToggle.key() == "sound_toggle");
+	
+	soundToggle = Types::SoundToggle::Disabled;
+	soundToggle.applyDefaults();
+	CHECK(static_cast<Types::SoundToggle>(soundToggle) == Types::SoundToggle::Enabled);
+	CHECK(soundToggle.asFloat() == static_cast<float>(Types::SoundToggle::Enabled));
+
+	const auto VALUES = {
+		Types::SoundToggle::Disabled,Types::SoundToggle::Enabled
+	};
+
+	for(Types::SoundToggle STOGGLE : VALUES)
+	{
+		soundToggle = STOGGLE;
+		CHECK(static_cast<Types::SoundToggle>(soundToggle) == STOGGLE);
+		CHECK(soundToggle.asFloat() == static_cast<float>(STOGGLE));
+	}
+}
+
+TEST_CASE("MusicVolume:IKey")
+{
+	INI::MusicVolume musicVolume;
+
+	CHECK(musicVolume == Types::MusicVolume::V100);
+	CHECK(musicVolume.key() == "music_volume");
+	
+	musicVolume = Types::MusicVolume::V0;
+	musicVolume.applyDefaults();
+	CHECK(static_cast<Types::MusicVolume>(musicVolume) == Types::MusicVolume::V100);
+	CHECK(musicVolume.asFloat() == static_cast<float>(Types::MusicVolume::V100) / 10);
+
+	const auto VALUES = {
+		Types::MusicVolume::V0,Types::MusicVolume::V10,Types::MusicVolume::V20,Types::MusicVolume::V30,
+		Types::MusicVolume::V40,Types::MusicVolume::V50,Types::MusicVolume::V60,Types::MusicVolume::V70,
+		Types::MusicVolume::V80,Types::MusicVolume::V90,Types::MusicVolume::V100
+	};
+
+	for(Types::MusicVolume MVOLUME : VALUES)
+	{
+		musicVolume = MVOLUME;
+		CHECK(static_cast<Types::MusicVolume>(musicVolume) == MVOLUME);
+		CHECK(musicVolume.asFloat() == static_cast<float>(MVOLUME) / 10);
+	}
+}
+
+TEST_CASE("MusicToggle:IKey")
+{
+	INI::MusicToggle musicToggle;
+
+	CHECK(musicToggle == Types::MusicToggle::Enabled);
+	CHECK(musicToggle.key() == "music_toggle");
+	
+	musicToggle = Types::MusicToggle::Disabled;
+	musicToggle.applyDefaults();
+	CHECK(static_cast<Types::MusicToggle>(musicToggle) == Types::MusicToggle::Enabled);
+	CHECK(musicToggle.asFloat() == static_cast<float>(Types::MusicToggle::Enabled));
+
+	const auto VALUES = {
+		Types::MusicToggle::Disabled,Types::MusicToggle::Enabled
+	};
+
+	for(Types::MusicToggle MTOGGLE : VALUES)
+	{
+		musicToggle = MTOGGLE;
+		CHECK(static_cast<Types::MusicToggle>(musicToggle) == MTOGGLE);
+		CHECK(musicToggle.asFloat() == static_cast<float>(MTOGGLE));
 	}
 }

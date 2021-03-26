@@ -302,11 +302,11 @@ namespace WhipseeySaveManager::INI
 	public:
 		SoundVolume() : IKey(
 			name,
-			static_cast<float>(Types::SoundVolume::V100),
+			static_cast<float>(Types::SoundVolume::V100) / 10,
 			Limits::MinMax,
 			Number::StringFloat,
-			static_cast<float>(Types::SoundVolume::V0),
-			static_cast<float>(Types::SoundVolume::V100)
+			static_cast<float>(Types::SoundVolume::V0) / 10,
+			static_cast<float>(Types::SoundVolume::V100) / 10
 		) { }
 		SoundVolume& operator=(Types::SoundVolume value)
 		{
@@ -354,11 +354,11 @@ namespace WhipseeySaveManager::INI
 	public:
 		MusicVolume() : IKey(
 			name,
-			static_cast<float>(Types::MusicVolume::V100),
+			static_cast<float>(Types::MusicVolume::V100) / 10,
 			Limits::MinMax,
 			Number::StringFloat,
-			static_cast<float>(Types::MusicVolume::V0),
-			static_cast<float>(Types::MusicVolume::V100)
+			static_cast<float>(Types::MusicVolume::V0) / 10,
+			static_cast<float>(Types::MusicVolume::V100) / 10
 		) { }
 		MusicVolume& operator=(Types::MusicVolume value)
 		{
