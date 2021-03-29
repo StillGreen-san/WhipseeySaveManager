@@ -186,16 +186,14 @@ namespace WhipseeySaveManager::GUI
 			callbacks.onWriteSection(save->getFile3(), path.getPath());
 		});
 		path.reloadFile.events().click.connect_front([&](nana::arg_click){
-			Types::Error error = callbacks.onReadIni(save, path.getPath());
-			//TODO show error
+			showErrorMsg(callbacks.onReadIni(save, path.getPath()));
 			update(*save);
 		});
 		path.saveFile.events().click.connect_front([&](nana::arg_click){
 			file1.get(*save->getFile1());
 			file2.get(*save->getFile2());
 			file3.get(*save->getFile3());
-			Types::Error error = callbacks.onWriteIni(save, path.getPath());
-			//TODO show error
+			showErrorMsg(callbacks.onWriteIni(save, path.getPath()));
 		});
 		std::optional<std::filesystem::path> savePath = callbacks.onDefaultSavePath();
 		if(savePath)

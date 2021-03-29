@@ -264,10 +264,11 @@ namespace WhipseeySaveManager::Types
 			SectionNotFound,// the section was not found in the file, default values used
 			KeyNotFound,// the key was not found in the file, default value used
 			FailedToLoadFile,// the file could not be read, check existence and permissions
-			FailedToWriteFile,// the file could not be written, check existence or permissions
+			FailedToWriteFile,// the file could not be written, check permissions
 			MissingCallback// one or more gui callback where not specified, gui not initialized
 		};
 
+		using CodeContainer = std::vector<Code>;
 	private:
 		std::vector<Code> codes;
 
@@ -275,10 +276,14 @@ namespace WhipseeySaveManager::Types
 		Error() = default;
 		Error(Code code) : codes{code}
 		{
-			if(codes.front() == Types::Error::Code::Nothing)
+			if(codes.front() == Code::Nothing)
 			{
 				codes.clear();
 			}
+		}
+		Error(std::initializer_list<Code> codesList) : codes{codesList}
+		{
+			codes.erase(std::remove(codes.begin(), codes.end(), Code::Nothing), codes.end());
 		}
 
 		/**
@@ -297,7 +302,7 @@ namespace WhipseeySaveManager::Types
 		 * @param code the code to assign
 		 * @return Error& reference to this object
 		 */
-		Error& operator=(const Error::Code& code)
+		Error& operator=(const Code& code)
 		{
 			if(code == Code::Nothing)
 			{
@@ -314,7 +319,7 @@ namespace WhipseeySaveManager::Types
 		 * @param code the code to add
 		 * @return Error& reference to this object
 		 */
-		Error& operator+=(const Error::Code& code)
+		Error& operator+=(const Code& code)
 		{
 			if(code == Code::Nothing) return *this;
 			codes.emplace_back(code);
@@ -364,11 +369,29 @@ namespace WhipseeySaveManager::Types
 		 * @param code the code to check
 		 * @return true if this only conatins the code passed in
 		 */
-		bool operator==(const Error::Code& code) const
+		bool operator==(const Code& code) const
 		{
 			if(code == Code::Nothing) return codes.empty();
 			if(codes.size() > 1) return false;
 			return codes[0] == code;
+		}
+
+		/**
+		 * @brief return an const iterator to the begin of the internal code container
+		 * 
+		 */
+		CodeContainer::const_iterator begin() const
+		{
+			return codes.cbegin();
+		}
+
+		/**
+		 * @brief return an const iterator to the end of the internal code container
+		 * 
+		 */
+		CodeContainer::const_iterator end() const
+		{
+			return codes.cend();
 		}
 	};
 } // namespace WhipseeySaveManager::Types

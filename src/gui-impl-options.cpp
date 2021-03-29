@@ -176,14 +176,12 @@ namespace WhipseeySaveManager::GUI
 		place["path"] << path;
 		place["options"] << options;
 		onReload().connect_front([&](nana::arg_click){
-			Types::Error error = callbacks.onReadSection(save->getOptions(), path.getPath());
-			//TODO show error
+			showErrorMsg(callbacks.onReadSection(save->getOptions(), path.getPath()));
 			options.update(*save->getOptions());
 		});
 		onSave().connect_front([&](nana::arg_click){
 			options.get(*save->getOptions());
-			Types::Error error = callbacks.onWriteSection(save->getOptions(), path.getPath());
-			//TODO show error
+			showErrorMsg(callbacks.onWriteSection(save->getOptions(), path.getPath()));
 		});
 		std::optional<std::filesystem::path> savePath = callbacks.onDefaultSavePath();
 		if(savePath)

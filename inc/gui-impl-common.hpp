@@ -33,4 +33,6 @@ namespace WhipseeySaveManager::GUI
 		void setPath(const std::filesystem::path& path);
 		void open();
 	};
+
+	void showErrorMsg(const Types::Error& error);
 }

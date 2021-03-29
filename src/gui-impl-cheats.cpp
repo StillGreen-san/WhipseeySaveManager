@@ -28,13 +28,11 @@ namespace WhipseeySaveManager::GUI
 			sttngs->getCheats().getCheatsEnabled() = static_cast<Types::CheatsEnabled>(cb.widget->checked());
 		});
 		onReload().connect_front([&](nana::arg_click){
-			Types::Error error = callbacks.onReadIni(sttngs, path.getPath());
-			//TODO show error
+			showErrorMsg(callbacks.onReadIni(sttngs, path.getPath()));
 			cheats.update(sttngs->getCheats());
 		});
 		onSave().connect_front([&](nana::arg_click){
-			Types::Error error = callbacks.onWriteIni(sttngs, path.getPath());
-			//TODO show error
+			showErrorMsg(callbacks.onWriteIni(sttngs, path.getPath()));
 		});
 		std::optional<std::filesystem::path> sttngsPath = callbacks.onDefaultSettingsPath();
 		if(sttngsPath)
