@@ -106,7 +106,7 @@ namespace WhipseeySaveManager::GUI
 	}
 
 	OptionMusicVolume::OptionMusicVolume(nana::window wd) : OptionBase(wd, "MusicVolume")
-	{
+	{//TODO move combo to volumebase
 		combo
 			.push_back("0%")
 			.push_back("10%")
