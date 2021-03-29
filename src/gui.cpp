@@ -5,6 +5,8 @@
 
 #include <nana/gui/widgets/tabbar.hpp>
 
+//TODO add tooltips to things
+
 namespace WhipseeySaveManager::GUI
 {
 	Types::Error GUI::run()
@@ -18,13 +20,13 @@ namespace WhipseeySaveManager::GUI
 			|| !callbacks.onWriteSection
 		)
 		{
+			showErrorMsg(Types::Error::Code::MissingCallback);
 			return Types::Error::Code::MissingCallback;
 		}
 		
 		nana::form mainForm(nana::api::make_center(615, 255));
 		mainForm.caption("Whipseey Save Manager");
 
-		//TODO check shared_ptr usage in gui impl (reference lifetime lamdas)
 		auto save = std::make_shared<INI::Save>();
 		auto settings = std::make_shared<INI::Settings>();
 

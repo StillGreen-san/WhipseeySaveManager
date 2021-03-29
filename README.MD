@@ -20,13 +20,13 @@ Game needs to be restarted to load a modified Savegame or Settings. Autosaving i
 
 - Windows only
 - only tested on Windows 10 (2004) x64
-- still no darkmode!
+- still no darkmode! 😞
 
 ## Code
 
-written in/with C++ 17
-
-uses cmake
+- written in/with C++ 17
+- uses cmake (find_package / find_path)
+- C++ rewrite mostly intended as an exercise, thus somewhat over engineered compared to the previous AutoIT version
 
 ### Dependencies
 

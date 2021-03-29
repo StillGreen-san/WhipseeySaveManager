@@ -31,7 +31,7 @@ set( TEST_TARGET ${CMAKE_PROJECT_NAME}-Tests )
 set( COMMON_SOURCES
 	${WSM_SRC_DIR}/system.cpp
 	${WSM_SRC_DIR}/ini.cpp
-)
+)#TODO use lib to avoid double compile
 set( MAIN_SOURCES
 	${WSM_SRC_DIR}/gui.cpp
 	${WSM_SRC_DIR}/gui-impl-common.cpp

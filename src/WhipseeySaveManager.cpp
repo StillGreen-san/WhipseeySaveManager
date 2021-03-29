@@ -8,6 +8,8 @@
 
 using namespace WhipseeySaveManager;
 
+//TODO rethink shared_pointer usage
+
 int WinMain()
 {
 	GUI::GUI gui;

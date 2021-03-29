@@ -205,7 +205,7 @@ namespace WhipseeySaveManager::GUI
 	}
 
 	void TabFiles::update(INI::Save& save)
-	{//TODO unify update / get | INI::& / INI::*
+	{
 		file1.update(*save.getFile1());
 		file2.update(*save.getFile2());
 		file3.update(*save.getFile3());
