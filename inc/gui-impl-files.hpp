@@ -26,9 +26,9 @@ namespace WhipseeySaveManager::GUI
 
 	class NumericTextbox : public nana::textbox
 	{
+	public:
 		int min;
 		int max;
-	public:
 		NumericTextbox(nana::window parent, int minVal, int maxVal);
 	};
 

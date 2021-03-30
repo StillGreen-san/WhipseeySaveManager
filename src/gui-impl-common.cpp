@@ -16,6 +16,7 @@ namespace WhipseeySaveManager::GUI
 	{
 		place.div("this fit gap=5");
 		place["this"] << filePath << openFile << saveFile << reloadFile;
+		openFile.tooltip("Open and Load a new File");
 		openFile.events().click.connect_front([&](nana::arg_click click){
 			open();
 		});
@@ -23,6 +24,8 @@ namespace WhipseeySaveManager::GUI
 		filePath.events().text_changed.connect_front([&](nana::arg_textbox tb){
 			varifyPath(getPath());
 		});
+		saveFile.tooltip("Save current Values to File");
+		reloadFile.tooltip("Reload Values from File");
 	}
 
 	std::filesystem::path PathControls::getPath() const

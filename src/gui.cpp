@@ -5,8 +5,6 @@
 
 #include <nana/gui/widgets/tabbar.hpp>
 
-//TODO add tooltips to things
-
 namespace WhipseeySaveManager::GUI
 {
 	Types::Error GUI::run()

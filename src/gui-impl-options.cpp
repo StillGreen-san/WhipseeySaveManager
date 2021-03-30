@@ -61,7 +61,7 @@ namespace WhipseeySaveManager::GUI
 		combo.option(options.getFullscreen().asInt());
 	}
 
-	OptionLeftHanded::OptionLeftHanded(nana::window wd) : OptionBase(wd, "LeftHanded")
+	OptionLeftHanded::OptionLeftHanded(nana::window wd) : OptionBase(wd, "Left Handed")
 	{
 		combo
 			.push_back("Disabled")
@@ -73,7 +73,7 @@ namespace WhipseeySaveManager::GUI
 		combo.option(options.getLeftHanded().asInt());
 	}
 
-	OptionSoundVolume::OptionSoundVolume(nana::window wd) : OptionBase(wd, "SoundVolume")
+	OptionSoundVolume::OptionSoundVolume(nana::window wd) : OptionBase(wd, "Sound Volume")
 	{
 		combo
 			.push_back("0%")
@@ -94,7 +94,7 @@ namespace WhipseeySaveManager::GUI
 		combo.option(options.getSoundVolume().asInt());
 	}
 
-	OptionSoundToggle::OptionSoundToggle(nana::window wd) : OptionBase(wd, "SoundToggle")
+	OptionSoundToggle::OptionSoundToggle(nana::window wd) : OptionBase(wd, "Sound Toggle")
 	{
 		combo
 			.push_back("Disabled")
@@ -105,7 +105,7 @@ namespace WhipseeySaveManager::GUI
 		combo.option(options.getSoundToggle().asInt());
 	}
 
-	OptionMusicVolume::OptionMusicVolume(nana::window wd) : OptionBase(wd, "MusicVolume")
+	OptionMusicVolume::OptionMusicVolume(nana::window wd) : OptionBase(wd, "Music Volume")
 	{
 		combo
 			.push_back("0%")
@@ -126,7 +126,7 @@ namespace WhipseeySaveManager::GUI
 		combo.option(options.getMusicVolume().asInt());
 	}
 
-	OptionMusicToggle::OptionMusicToggle(nana::window wd) : OptionBase(wd, "MusicToggle")
+	OptionMusicToggle::OptionMusicToggle(nana::window wd) : OptionBase(wd, "Music Toggle")
 	{
 		combo
 			.push_back("Disabled")

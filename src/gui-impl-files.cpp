@@ -161,6 +161,9 @@ namespace WhipseeySaveManager::GUI
 		group.collocate();
 		place.div("this");
 		place["this"] << group;
+		intro.tooltip("Will skip Intro if checked");
+		tgems.tooltip(std::to_string(tgems.min).append(" - ").append(std::to_string(tgems.max)));
+		bgems.tooltip("Set Gems to 0 or 99");
 		bgems.events().click.connect_front([&](nana::arg_click){
 			if(tgems.caption() == "99")
 			{
@@ -171,6 +174,9 @@ namespace WhipseeySaveManager::GUI
 				tgems.caption("99");
 			}
 		});
+		ending.tooltip("Only used to calculate %Progress");
+		tlives.tooltip(std::to_string(tlives.min).append(" - ").append(std::to_string(tlives.max)));
+		blives.tooltip("Set Lives to 0, 99 or 9999");
 		blives.events().click.connect_front([&](nana::arg_click){
 			const std::string lives = tlives.caption();
 			if(lives == "9999")
@@ -186,6 +192,7 @@ namespace WhipseeySaveManager::GUI
 				tlives.caption("99");
 			}
 		});
+		reset.tooltip("New File");
 		reset.events().click.connect_front([&](nana::arg_click){
 			tgems.caption("0");
 			tlives.caption("5");
@@ -193,6 +200,7 @@ namespace WhipseeySaveManager::GUI
 			ending.check(false);
 			progress.option_check(Types::Level::Beach);
 		});
+		max.tooltip("100% File with 9999 Lives");
 		max.events().click.connect_front([&](nana::arg_click){
 			tgems.caption("99");
 			tlives.caption("9999");
@@ -200,6 +208,8 @@ namespace WhipseeySaveManager::GUI
 			ending.check(true);
 			progress.option_check(Types::Level::Castle);
 		});
+		save.tooltip("Save current Values to File for this Group");
+		reload.tooltip("Reload Values from File for this Group");
 	}
 
 	void FileBox::update(INI::FileBase& file)
