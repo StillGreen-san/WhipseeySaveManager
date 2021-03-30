@@ -73,32 +73,66 @@ namespace WhipseeySaveManager::GUI
 		max{maxVal}
 	{
 		set_accept([&](wchar_t chr)->bool{
-			if(chr == BACKSPACE)
+			if(!this->selected())
 			{
-				if(this->to_int() / 10 >= min) return true;
-				this->from(min);
-				return false;
-			}
-			if(chr == DELETE)
-			{
-				std::string value = this->text();
-				if(value.size() > 1)
+				if(chr == BACKSPACE)
 				{
-					value.erase(this->caret_pos().x, 1);
-					if(std::stoi(value) >= min) return true;
+					if(this->to_int() / 10 >= min) return true;
+					this->from(min);
+					return false;
 				}
-				this->from(min);
-				return false;
+				if(chr == DELETE)
+				{
+					std::string value = this->text();
+					if(value.size() > 1)
+					{
+						value.erase(this->caret_pos().x, 1);
+						if(std::stoi(value) >= min) return true;
+					}
+					this->from(min);
+					return false;
+				}
+				if(std::iswdigit(chr))
+				{
+					std::string value = this->text();
+					value.insert(this->caret_pos().x, 1, static_cast<char>(chr));
+					if(std::stoi(value) <= max) return true;
+					this->from(max);
+					return false;
+				}
 			}
-			if(std::iswdigit(chr))
+			else
 			{
+				std::pair<nana::upoint, nana::upoint> range = this->selection();
 				std::string value = this->text();
-				value.insert(this->caret_pos().x, 1, static_cast<char>(chr));
-				if(std::stoi(value) <= max) return true;
-				this->from(max);
-				return false;
+				if(chr == DELETE || chr == BACKSPACE)
+				{
+					if(value.size() > 1)
+					{
+						value.erase(range.first.x, range.second.x - range.first.x);
+						if(std::stoi(value) >= min) return true;
+					}
+					this->from(min);
+					return false;
+				}
+				if(std::iswdigit(chr))
+				{
+					value.erase(range.first.x + 1, (range.second.x - range.first.x) - 1);
+					value[range.first.x] = static_cast<char>(chr);
+					int newValue = std::stoi(value);
+					if(newValue > max)
+					{
+						this->from(max);
+						return false;
+					}
+					if(newValue < min)
+					{
+						this->from(min);
+						return false;
+					}
+					return true;
+				}
 			}
-			//TODO handle selection
 			return false;
 		});
 	}
