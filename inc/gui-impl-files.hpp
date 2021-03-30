@@ -26,8 +26,10 @@ namespace WhipseeySaveManager::GUI
 
 	class NumericTextbox : public nana::textbox
 	{
+		int min;
+		int max;
 	public:
-		NumericTextbox(nana::window parent, std::string_view text);
+		NumericTextbox(nana::window parent, int minVal, int maxVal);
 	};
 
 	class FileBox : public nana::panel<false>
@@ -40,8 +42,8 @@ namespace WhipseeySaveManager::GUI
 		nana::checkbox ending{group, "Ending"};
 		nana::label lgems{group, "Gems"};
 		nana::label llives{group, "Lives"};
-		NumericTextbox tgems{group, "99"};
-		NumericTextbox tlives{group, "9999"};
+		NumericTextbox tgems{group, 0, 99};
+		NumericTextbox tlives{group, 1, 16777215};
 		nana::button bgems{group, "cycle"};
 		nana::button blives{group, "cycle"};
 		nana::button max{group, "max"};

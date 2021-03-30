@@ -63,14 +63,44 @@ namespace WhipseeySaveManager::GUI
 	{
 		option_check(levelToIndex(level), true);
 	}
+
+	constexpr wchar_t BACKSPACE = 0x08;
+	constexpr wchar_t DELETE = 0x7f;
 	
-	NumericTextbox::NumericTextbox(nana::window parent, std::string_view text) :
-		nana::textbox{parent, text}
+	NumericTextbox::NumericTextbox(nana::window parent, int minVal, int maxVal) :
+		nana::textbox{parent, ""},
+		min{minVal},
+		max{maxVal}
 	{
-		set_accept([](wchar_t chr)->bool{
-			return std::iswdigit(chr);
+		set_accept([&](wchar_t chr)->bool{
+			if(chr == BACKSPACE)
+			{
+				if(this->to_int() / 10 >= min) return true;
+				this->from(min);
+				return false;
+			}
+			if(chr == DELETE)
+			{
+				std::string value = this->text();
+				if(value.size() > 1)
+				{
+					value.erase(this->caret_pos().x, 1);
+					if(std::stoi(value) >= min) return true;
+				}
+				this->from(min);
+				return false;
+			}
+			if(std::iswdigit(chr))
+			{
+				std::string value = this->text();
+				value.insert(this->caret_pos().x, 1, static_cast<char>(chr));
+				if(std::stoi(value) <= max) return true;
+				this->from(max);
+				return false;
+			}
+			//TODO handle selection
+			return false;
 		});
-		
 	}
 
 	FileBox::FileBox(nana::window wd) : nana::panel<false>(wd)
