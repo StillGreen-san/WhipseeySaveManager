@@ -1,0 +1,20 @@
+BasedOnStyle: Microsoft
+
+UseTab: ForIndentation
+UseCRLF: true
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterUnion: true
+  BeforeLambdaBody: true
+  SplitEmptyNamespace: false
+SpaceAfterTemplateKeyword: false
+AlwaysBreakTemplateDeclarations: Yes
+AccessModifierOffset: -4
+PointerAlignment: Left
+AllowShortLambdasOnASingleLine: None
+SpaceBeforeParens: Never
+BreakConstructorInitializers: BeforeComma
+AlignAfterOpenBracket: AlwaysBreak
+BinPackParameters: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortBlocksOnASingleLine: Empty

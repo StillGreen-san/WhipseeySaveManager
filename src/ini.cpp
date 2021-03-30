@@ -187,6 +187,7 @@ namespace WhipseeySaveManager::INI
 	};
 
 	INI::INI() : mIni(std::make_unique<INIintern>()) { }
+
 	INI::~INI() = default;
 
 	Types::Error INI::extractError()
@@ -207,8 +208,8 @@ namespace WhipseeySaveManager::INI
 	}
 
 	bool INI::writeFile(const std::filesystem::path& path)
-	{
-		const SI_Error siErr = mIni->SaveFile(path.native().c_str());//TODO use original spacing & padding (still works without)
+	{//TODO use original spacing & padding (still works without)
+		const SI_Error siErr = mIni->SaveFile(path.native().c_str());
 		if(siErr == SI_Error::SI_OK)
 		{
 			return true;

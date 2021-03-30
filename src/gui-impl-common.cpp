@@ -74,7 +74,10 @@ namespace WhipseeySaveManager::GUI
 	
 	void showErrorMsg(const Types::Error& error) 
 	{
-		if(!error) return;
+		if(!error)
+		{
+			return;
+		}
 
 		std::set<Types::Error::Code> uniqueCodes(error.begin(), error.end());
 
