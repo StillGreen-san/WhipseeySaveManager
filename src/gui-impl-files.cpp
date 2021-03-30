@@ -96,7 +96,15 @@ namespace WhipseeySaveManager::GUI
 				{
 					std::string value = this->text();
 					value.insert(this->caret_pos().x, 1, static_cast<char>(chr));
-					if(std::stoi(value) <= max) return true;
+					int newValue = std::stoi(value);
+					if(newValue <= max)
+					{
+						if(value.front() == '0') {
+							this->from(newValue);
+							return false;
+						}
+						return true;
+					}
 					this->from(max);
 					return false;
 				}
@@ -128,6 +136,10 @@ namespace WhipseeySaveManager::GUI
 					if(newValue < min)
 					{
 						this->from(min);
+						return false;
+					}
+					if(value.front() == '0') {
+						this->from(newValue);
 						return false;
 					}
 					return true;
