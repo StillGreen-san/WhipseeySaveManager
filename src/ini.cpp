@@ -2,6 +2,8 @@
 
 #include <SimpleIni.h>
 
+#include <fstream>
+
 bool isdigt(char chr)
 {
 	return std::isdigit(chr);
@@ -186,7 +188,10 @@ namespace WhipseeySaveManager::INI
 		}
 	};
 
-	INI::INI() : mIni(std::make_unique<INIintern>()) { }
+	INI::INI() : mIni(std::make_unique<INIintern>())
+	{
+		mIni->SetSpaces(false);
+	}
 
 	INI::~INI() = default;
 
@@ -208,14 +213,29 @@ namespace WhipseeySaveManager::INI
 	}
 
 	bool INI::writeFile(const std::filesystem::path& path)
-	{//TODO use original spacing & padding (still works without)
-		const SI_Error siErr = mIni->SaveFile(path.native().c_str());
-		if(siErr == SI_Error::SI_OK)
+	{
+		constexpr size_t ORG_FILESIZE = 1024;// the savefile is padded to 1kb by the game
+		constexpr const char* SI_SECTION_END = "\r\n\r\n\r\n";// SimpleIni adds two extra line end after a section
+		std::string buffer;
+		buffer.reserve(ORG_FILESIZE);
+		if(mIni->Save(buffer) == SI_Error::SI_OK)
 		{
-			return true;
+			size_t sectionEnd = buffer.find(SI_SECTION_END);
+			while(sectionEnd != std::string::npos)
+			{
+				buffer.erase(sectionEnd, 4);
+				sectionEnd = buffer.find(SI_SECTION_END);
+			}
+			buffer.resize(ORG_FILESIZE);
 		}
-		mError += Types::Error::Code::FailedToWriteFile;
-		return false;
+		std::ofstream out(path, std::ios_base::binary);// binary to avoid extra newlines added by ofstream
+		out << buffer;
+		if(out.fail())
+		{
+			mError += Types::Error::Code::FailedToWriteFile;
+			return false;
+		}
+		return true;
 	}
 
 	bool INI::has(const std::shared_ptr<ISection>& section)
