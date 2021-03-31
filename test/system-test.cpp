@@ -1,8 +1,8 @@
 #include "system.hpp"
 #include "testhelper.hpp"
 
-#include <sstream>
 #include <ios>
+#include <sstream>
 
 using namespace WhipseeySaveManager;
 
@@ -19,8 +19,8 @@ TEST_CASE("System::systemTheme", "[.][System][Manual]")
 	}
 	std::stringstream msg;
 	msg << "Theme status must be check manually!"
-		<< "\nDarkmode: " << (ret->darkmode == Types::Darkmode::Enabled ? "Enabled" : "Disabled")
-		<< "\nAccent  : 0x" << std::hex << ret->accent;
+	    << "\nDarkmode: " << (ret->darkmode == Types::Darkmode::Enabled ? "Enabled" : "Disabled") << "\nAccent  : 0x"
+	    << std::hex << ret->accent;
 	WARN(msg.str());
 }
 
@@ -180,7 +180,7 @@ TEST_CASE("System::write ISection", "[System]")
 		auto cheatsDefault = std::make_shared<INI::Cheats>();
 		System::read(cheatsDefault, Test::Data::write);
 		CHECK(cheatsDefault->getCheatsEnabled() == cheatsWrite->getCheatsEnabled());
-		
+
 		REMOVE(Test::Data::write);
 	}
 

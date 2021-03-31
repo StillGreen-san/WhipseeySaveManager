@@ -3,12 +3,12 @@
  * @brief this is the main file for WhispeeySaveManager, tying all functionality together
  */
 
-#include "system.hpp"
 #include "gui.hpp"
+#include "system.hpp"
 
 using namespace WhipseeySaveManager;
 
-//TODO rethink shared_pointer usage
+// TODO rethink shared_pointer usage
 
 int WinMain()
 {
