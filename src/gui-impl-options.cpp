@@ -2,7 +2,8 @@
 
 namespace WhipseeySaveManager::GUI
 {
-OptionBase::OptionBase(nana::window wd, std::string_view labelText) : nana::panel<false>(wd), label{*this, labelText}
+OptionBase::OptionBase(nana::window wd, std::string_view labelText) :
+    nana::panel<false>(wd), label{*this, labelText.data()}
 {
 	label.text_align(nana::align::right, nana::align_v::center);
 	place.div("things gap=8 arrange=[190,300]");

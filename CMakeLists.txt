@@ -16,7 +16,7 @@ set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE )
 
-find_package( nana 1.8 REQUIRED CONFIG NAMES nana unofficial-nana )
+find_package( nana REQUIRED CONFIG NAMES nana unofficial-nana )
 find_package( Catch2 CONFIG REQUIRED )
 find_path( WINREG_INCLUDE_DIRS "winreg/WinReg.hpp" REQUIRED )
 find_path( SIMPLEINI_INCLUDE_DIRS "ConvertUTF.c" REQUIRED )
@@ -34,7 +34,7 @@ set( LIB_SOURCES
 	${WSM_SRC_DIR}/ini.cpp
 )
 
-add_library( ${LIB_TARGET} STATIC ${LIB_SOURCES} )#TODO forces static build for everything?
+add_library( ${LIB_TARGET} STATIC ${LIB_SOURCES} )
 target_include_directories( ${LIB_TARGET} PUBLIC ${WSM_INC_DIR} )
 target_include_directories( ${LIB_TARGET} SYSTEM PRIVATE ${WINREG_INCLUDE_DIRS} ${SIMPLEINI_INCLUDE_DIRS} )
 
