@@ -185,6 +185,11 @@ public:
 	{
 		CSimpleIniA::SetValue(section.data(), key.data(), value.data());
 	}
+	const std::multimap<CSimpleIniA::Entry, const char*, CSimpleIniA::Entry::KeyOrder>* GetSection(
+	    std::string_view section)
+	{
+		return CSimpleIniA::GetSection(section.data());
+	}
 };
 
 INI::INI() : mIni(std::make_unique<INIintern>())
@@ -213,28 +218,38 @@ bool INI::loadFile(const std::filesystem::path& path)
 
 bool INI::writeFile(const std::filesystem::path& path)
 {
-	constexpr size_t ORG_FILESIZE = 1024;                  // the savefile is padded to 1kb by the game
-	constexpr const char* SI_SECTION_END = "\r\n\r\n\r\n"; // SimpleIni adds two extra line end after a section
-	std::string buffer;
-	buffer.reserve(ORG_FILESIZE);
-	if(mIni->Save(buffer) == SI_Error::SI_OK)
+	if(mIni->GetSection(Cheats::name))
 	{
-		size_t sectionEnd = buffer.find(SI_SECTION_END);
-		while(sectionEnd != std::string::npos)
+		if(mIni->SaveFile(path.native().c_str()) == SI_Error::SI_OK)
 		{
-			buffer.erase(sectionEnd, 4);
-			sectionEnd = buffer.find(SI_SECTION_END);
+			return true;
 		}
-		buffer.resize(ORG_FILESIZE);
 	}
-	std::ofstream out(path, std::ios_base::binary); // binary to avoid extra newlines added by ofstream
-	out << buffer;
-	if(out.fail())
+	else
 	{
-		mError += Types::Error::Code::FailedToWriteFile;
-		return false;
+		constexpr size_t ORG_FILESIZE = 1024;                  // the savefile is padded to 1kb by the game
+		constexpr const char* SI_SECTION_END = "\r\n\r\n\r\n"; // SimpleIni adds two extra line end after a section
+		std::string buffer;
+		buffer.reserve(ORG_FILESIZE);
+		if(mIni->Save(buffer) == SI_Error::SI_OK)
+		{
+			size_t sectionEnd = buffer.find(SI_SECTION_END);
+			while(sectionEnd != std::string::npos)
+			{
+				buffer.erase(sectionEnd, 4);
+				sectionEnd = buffer.find(SI_SECTION_END);
+			}
+			buffer.resize(ORG_FILESIZE);
+			std::ofstream out(path, std::ios_base::binary); // binary to avoid extra newlines added by ofstream
+			out << buffer;
+			if(out.good())
+			{
+				return true;
+			}
+		}
 	}
-	return true;
+	mError += Types::Error::Code::FailedToWriteFile;
+	return false;
 }
 
 bool INI::has(const std::shared_ptr<ISection>& section)

@@ -80,9 +80,8 @@ protected:
 		StringInt,
 		Int
 	} const mNumber;
-	explicit IKey(std::string_view name, float value, Limits limits, Number number, float minOrA, float maxOrB)
-	    : mMinOrA{minOrA}, mMaxOrB{maxOrB}, mValue{value}, mDefault{value}, mName{name}, mLimits{limits}, mNumber{
-	                                                                                                          number}
+	explicit IKey(std::string_view name, float value, Limits limits, Number number, float minOrA, float maxOrB) :
+	    mMinOrA{minOrA}, mMaxOrB{maxOrB}, mValue{value}, mDefault{value}, mName{name}, mLimits{limits}, mNumber{number}
 	{
 	}
 };
@@ -204,10 +203,10 @@ private:
 class Language final : public IKey
 {
 public:
-	Language()
-	    : IKey(
-	          name, static_cast<float>(Types::Language::English), Limits::MinMax, Number::StringInt,
-	          static_cast<float>(Types::Language::English), static_cast<float>(Types::Language::Portogese))
+	Language() :
+	    IKey(
+	        name, static_cast<float>(Types::Language::English), Limits::MinMax, Number::StringInt,
+	        static_cast<float>(Types::Language::English), static_cast<float>(Types::Language::Portogese))
 	{
 	}
 	Language& operator=(Types::Language value)
@@ -227,10 +226,10 @@ private:
 class Scale final : public IKey
 {
 public:
-	Scale()
-	    : IKey(
-	          name, static_cast<float>(Types::Scale::R768x432), Limits::MinMax, Number::StringInt,
-	          static_cast<float>(Types::Scale::R768x432), static_cast<float>(Types::Scale::R1536x864))
+	Scale() :
+	    IKey(
+	        name, static_cast<float>(Types::Scale::R768x432), Limits::MinMax, Number::StringInt,
+	        static_cast<float>(Types::Scale::R768x432), static_cast<float>(Types::Scale::R1536x864))
 	{
 	}
 	Scale& operator=(Types::Scale value)
@@ -250,10 +249,10 @@ private:
 class Fullscreen final : public IKey
 {
 public:
-	Fullscreen()
-	    : IKey(
-	          name, static_cast<float>(Types::Fullscreen::Enabled), Limits::EitherOr, Number::StringInt,
-	          static_cast<float>(Types::Fullscreen::Disabled), static_cast<float>(Types::Fullscreen::Enabled))
+	Fullscreen() :
+	    IKey(
+	        name, static_cast<float>(Types::Fullscreen::Enabled), Limits::EitherOr, Number::StringInt,
+	        static_cast<float>(Types::Fullscreen::Disabled), static_cast<float>(Types::Fullscreen::Enabled))
 	{
 	}
 	Fullscreen& operator=(Types::Fullscreen value)
@@ -273,10 +272,10 @@ private:
 class LeftHanded final : public IKey
 {
 public:
-	LeftHanded()
-	    : IKey(
-	          name, static_cast<float>(Types::LeftHanded::Enabled), Limits::EitherOr, Number::StringInt,
-	          static_cast<float>(Types::LeftHanded::Disabled), static_cast<float>(Types::LeftHanded::Enabled))
+	LeftHanded() :
+	    IKey(
+	        name, static_cast<float>(Types::LeftHanded::Enabled), Limits::EitherOr, Number::StringInt,
+	        static_cast<float>(Types::LeftHanded::Disabled), static_cast<float>(Types::LeftHanded::Enabled))
 	{
 	}
 	LeftHanded& operator=(Types::LeftHanded value)
@@ -296,10 +295,10 @@ private:
 class SoundVolume final : public IKey
 {
 public:
-	SoundVolume()
-	    : IKey(
-	          name, static_cast<float>(Types::SoundVolume::V100) / 10, Limits::MinMax, Number::StringFloat,
-	          static_cast<float>(Types::SoundVolume::V0) / 10, static_cast<float>(Types::SoundVolume::V100) / 10)
+	SoundVolume() :
+	    IKey(
+	        name, static_cast<float>(Types::SoundVolume::V100) / 10, Limits::MinMax, Number::StringFloat,
+	        static_cast<float>(Types::SoundVolume::V0) / 10, static_cast<float>(Types::SoundVolume::V100) / 10)
 	{
 	}
 	SoundVolume& operator=(Types::SoundVolume value)
@@ -323,10 +322,10 @@ private:
 class SoundToggle final : public IKey
 {
 public:
-	SoundToggle()
-	    : IKey(
-	          name, static_cast<float>(Types::SoundToggle::Enabled), Limits::EitherOr, Number::StringInt,
-	          static_cast<float>(Types::SoundToggle::Disabled), static_cast<float>(Types::SoundToggle::Enabled))
+	SoundToggle() :
+	    IKey(
+	        name, static_cast<float>(Types::SoundToggle::Enabled), Limits::EitherOr, Number::StringInt,
+	        static_cast<float>(Types::SoundToggle::Disabled), static_cast<float>(Types::SoundToggle::Enabled))
 	{
 	}
 	SoundToggle& operator=(Types::SoundToggle value)
@@ -346,10 +345,10 @@ private:
 class MusicVolume final : public IKey
 {
 public:
-	MusicVolume()
-	    : IKey(
-	          name, static_cast<float>(Types::MusicVolume::V100) / 10, Limits::MinMax, Number::StringFloat,
-	          static_cast<float>(Types::MusicVolume::V0) / 10, static_cast<float>(Types::MusicVolume::V100) / 10)
+	MusicVolume() :
+	    IKey(
+	        name, static_cast<float>(Types::MusicVolume::V100) / 10, Limits::MinMax, Number::StringFloat,
+	        static_cast<float>(Types::MusicVolume::V0) / 10, static_cast<float>(Types::MusicVolume::V100) / 10)
 	{
 	}
 	MusicVolume& operator=(Types::MusicVolume value)
@@ -373,10 +372,10 @@ private:
 class MusicToggle final : public IKey
 {
 public:
-	MusicToggle()
-	    : IKey(
-	          name, static_cast<float>(Types::MusicToggle::Enabled), Limits::EitherOr, Number::StringInt,
-	          static_cast<float>(Types::MusicToggle::Disabled), static_cast<float>(Types::MusicToggle::Enabled))
+	MusicToggle() :
+	    IKey(
+	        name, static_cast<float>(Types::MusicToggle::Enabled), Limits::EitherOr, Number::StringInt,
+	        static_cast<float>(Types::MusicToggle::Disabled), static_cast<float>(Types::MusicToggle::Enabled))
 	{
 	}
 	MusicToggle& operator=(Types::MusicToggle value)
@@ -396,11 +395,11 @@ private:
 class Options final : public ISection
 {
 public:
-	Options()
-	    : ISection(
-	          name, {std::make_shared<Language>(), std::make_shared<Scale>(), std::make_shared<Fullscreen>(),
-	                 std::make_shared<LeftHanded>(), std::make_shared<SoundVolume>(), std::make_shared<SoundToggle>(),
-	                 std::make_shared<MusicVolume>(), std::make_shared<MusicToggle>()})
+	Options() :
+	    ISection(
+	        name, {std::make_shared<Language>(), std::make_shared<Scale>(), std::make_shared<Fullscreen>(),
+	               std::make_shared<LeftHanded>(), std::make_shared<SoundVolume>(), std::make_shared<SoundToggle>(),
+	               std::make_shared<MusicVolume>(), std::make_shared<MusicToggle>()})
 	{
 	}
 	Language& getLanguage()
@@ -443,10 +442,10 @@ private:
 class BossNoDamageProgress final : public IKey
 {
 public:
-	BossNoDamageProgress()
-	    : IKey(
-	          name, static_cast<float>(Types::BossNoDamage::None), Limits::MinMax, Number::StringInt,
-	          static_cast<float>(Types::BossNoDamage::None), static_cast<float>(Types::BossNoDamage::All))
+	BossNoDamageProgress() :
+	    IKey(
+	        name, static_cast<float>(Types::BossNoDamage::None), Limits::MinMax, Number::StringInt,
+	        static_cast<float>(Types::BossNoDamage::None), static_cast<float>(Types::BossNoDamage::All))
 	{
 	}
 	BossNoDamageProgress& operator=(Types::BossNoDamage value)
@@ -484,10 +483,10 @@ private:
 class Castle final : public IKey
 {
 public:
-	Castle()
-	    : IKey(
-	          name, static_cast<float>(Types::Castle::Locked), Limits::EitherOr, Number::StringInt,
-	          static_cast<float>(Types::Castle::Locked), static_cast<float>(Types::Castle::Unlocked))
+	Castle() :
+	    IKey(
+	        name, static_cast<float>(Types::Castle::Locked), Limits::EitherOr, Number::StringInt,
+	        static_cast<float>(Types::Castle::Locked), static_cast<float>(Types::Castle::Unlocked))
 	{
 	}
 	Castle& operator=(Types::Castle value)
@@ -507,10 +506,10 @@ private:
 class Moon final : public IKey
 {
 public:
-	Moon()
-	    : IKey(
-	          name, static_cast<float>(Types::Moon::Locked), Limits::EitherOr, Number::StringInt,
-	          static_cast<float>(Types::Moon::Locked), static_cast<float>(Types::Moon::Unlocked))
+	Moon() :
+	    IKey(
+	        name, static_cast<float>(Types::Moon::Locked), Limits::EitherOr, Number::StringInt,
+	        static_cast<float>(Types::Moon::Locked), static_cast<float>(Types::Moon::Unlocked))
 	{
 	}
 	Moon& operator=(Types::Moon value)
@@ -530,10 +529,10 @@ private:
 class Snow final : public IKey
 {
 public:
-	Snow()
-	    : IKey(
-	          name, static_cast<float>(Types::Snow::Locked), Limits::EitherOr, Number::StringInt,
-	          static_cast<float>(Types::Snow::Locked), static_cast<float>(Types::Snow::Unlocked))
+	Snow() :
+	    IKey(
+	        name, static_cast<float>(Types::Snow::Locked), Limits::EitherOr, Number::StringInt,
+	        static_cast<float>(Types::Snow::Locked), static_cast<float>(Types::Snow::Unlocked))
 	{
 	}
 	Snow& operator=(Types::Snow value)
@@ -553,10 +552,10 @@ private:
 class Desert final : public IKey
 {
 public:
-	Desert()
-	    : IKey(
-	          name, static_cast<float>(Types::Desert::Locked), Limits::EitherOr, Number::StringInt,
-	          static_cast<float>(Types::Desert::Locked), static_cast<float>(Types::Desert::Unlocked))
+	Desert() :
+	    IKey(
+	        name, static_cast<float>(Types::Desert::Locked), Limits::EitherOr, Number::StringInt,
+	        static_cast<float>(Types::Desert::Locked), static_cast<float>(Types::Desert::Unlocked))
 	{
 	}
 	Desert& operator=(Types::Desert value)
@@ -576,10 +575,10 @@ private:
 class Forest final : public IKey
 {
 public:
-	Forest()
-	    : IKey(
-	          name, static_cast<float>(Types::Forest::Locked), Limits::EitherOr, Number::StringInt,
-	          static_cast<float>(Types::Forest::Locked), static_cast<float>(Types::Forest::Unlocked))
+	Forest() :
+	    IKey(
+	        name, static_cast<float>(Types::Forest::Locked), Limits::EitherOr, Number::StringInt,
+	        static_cast<float>(Types::Forest::Locked), static_cast<float>(Types::Forest::Unlocked))
 	{
 	}
 	Forest& operator=(Types::Forest value)
@@ -599,10 +598,10 @@ private:
 class Ending final : public IKey
 {
 public:
-	Ending()
-	    : IKey(
-	          name, static_cast<float>(Types::Ending::Unwatched), Limits::EitherOr, Number::StringInt,
-	          static_cast<float>(Types::Ending::Unwatched), static_cast<float>(Types::Ending::Watched))
+	Ending() :
+	    IKey(
+	        name, static_cast<float>(Types::Ending::Unwatched), Limits::EitherOr, Number::StringInt,
+	        static_cast<float>(Types::Ending::Unwatched), static_cast<float>(Types::Ending::Watched))
 	{
 	}
 	Ending& operator=(Types::Ending value)
@@ -622,10 +621,10 @@ private:
 class Intro final : public IKey
 {
 public:
-	Intro()
-	    : IKey(
-	          name, static_cast<float>(Types::Intro::Unwatched), Limits::EitherOr, Number::StringInt,
-	          static_cast<float>(Types::Intro::Unwatched), static_cast<float>(Types::Intro::Watched))
+	Intro() :
+	    IKey(
+	        name, static_cast<float>(Types::Intro::Unwatched), Limits::EitherOr, Number::StringInt,
+	        static_cast<float>(Types::Intro::Unwatched), static_cast<float>(Types::Intro::Watched))
 	{
 	}
 	Intro& operator=(Types::Intro value)
@@ -685,12 +684,12 @@ private:
 class FileBase : public ISection
 {
 protected:
-	explicit FileBase(std::string_view name)
-	    : ISection(
-	          name, {std::make_shared<BossNoDamageProgress>(), std::make_shared<EnemiesDefeated>(),
-	                 std::make_shared<Castle>(), std::make_shared<Moon>(), std::make_shared<Snow>(),
-	                 std::make_shared<Desert>(), std::make_shared<Forest>(), std::make_shared<Ending>(),
-	                 std::make_shared<Intro>(), std::make_shared<Lives>(), std::make_shared<Gems>()})
+	explicit FileBase(std::string_view name) :
+	    ISection(
+	        name, {std::make_shared<BossNoDamageProgress>(), std::make_shared<EnemiesDefeated>(),
+	               std::make_shared<Castle>(), std::make_shared<Moon>(), std::make_shared<Snow>(),
+	               std::make_shared<Desert>(), std::make_shared<Forest>(), std::make_shared<Ending>(),
+	               std::make_shared<Intro>(), std::make_shared<Lives>(), std::make_shared<Gems>()})
 	{
 	}
 
@@ -779,10 +778,10 @@ private:
 class Save final : public IIni
 {
 public:
-	Save()
-	    : IIni(
-	          {std::make_shared<Options>(), std::make_shared<File1>(), std::make_shared<File2>(),
-	           std::make_shared<File3>()})
+	Save() :
+	    IIni(
+	        {std::make_shared<Options>(), std::make_shared<File1>(), std::make_shared<File2>(),
+	         std::make_shared<File3>()})
 	{
 	}
 	std::shared_ptr<Options> getOptions()
@@ -806,10 +805,10 @@ public:
 class CheatsEnabled final : public IKey
 {
 public:
-	CheatsEnabled()
-	    : IKey(
-	          name, static_cast<float>(Types::CheatsEnabled::Disabled), Limits::EitherOr, Number::Int,
-	          static_cast<float>(Types::CheatsEnabled::Disabled), static_cast<float>(Types::CheatsEnabled::Enabled))
+	CheatsEnabled() :
+	    IKey(
+	        name, static_cast<float>(Types::CheatsEnabled::Disabled), Limits::EitherOr, Number::Int,
+	        static_cast<float>(Types::CheatsEnabled::Disabled), static_cast<float>(Types::CheatsEnabled::Enabled))
 	{
 	}
 	CheatsEnabled& operator=(Types::CheatsEnabled value)
@@ -836,8 +835,6 @@ public:
 	{
 		return *static_cast<CheatsEnabled*>(mKeys[0].get());
 	}
-
-private:
 	static constexpr std::string_view name = "Cheats";
 };
 
