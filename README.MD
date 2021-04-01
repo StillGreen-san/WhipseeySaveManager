@@ -21,12 +21,14 @@ Game needs to be restarted to load a modified Savegame or Settings. Autosaving i
 - Windows only
 - only tested on Windows 10 (2004) x64
 - still no darkmode! 😞
+- all IO actions will block the GUI, so it may hang a bit if you store your files on a floppy
 
 ## Code
 
 - written in/with C++ 17
 - uses cmake (find_package / find_path)
 - C++ rewrite mostly intended as an exercise, thus somewhat over engineered compared to the previous AutoIT version
+- previous AutoIT version can be found in au3 branch
 
 ### Dependencies
 

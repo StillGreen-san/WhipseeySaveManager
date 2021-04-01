@@ -34,7 +34,7 @@ set( LIB_SOURCES
 	${WSM_SRC_DIR}/ini.cpp
 )
 
-add_library( ${LIB_TARGET} STATIC ${LIB_SOURCES} )
+add_library( ${LIB_TARGET} STATIC ${LIB_SOURCES} )#TODO forces static build for everything?
 target_include_directories( ${LIB_TARGET} PUBLIC ${WSM_INC_DIR} )
 target_include_directories( ${LIB_TARGET} SYSTEM PRIVATE ${WINREG_INCLUDE_DIRS} ${SIMPLEINI_INCLUDE_DIRS} )
 
