@@ -54,7 +54,6 @@ void PathControls::varifyPath(const std::filesystem::path& path)
 void PathControls::setPath(const std::filesystem::path& path)
 {
 	filePath.caption(path.native());
-	varifyPath(path);
 }
 
 void PathControls::open()
@@ -114,7 +113,8 @@ void showErrorMsg(const Types::Error& error)
 			msgbox << "Unknown: Yell at the developer if this happens in a shipping build!\n";
 		}
 	}
-	msgbox << "\nSaving here will return the file to a valid state. Saving in game will only work for the save game.";
+	msgbox << "\nMake sure you have selected the right file!"
+	          "\nSaving here will return the file to a valid state. Saving in game will only work for the save game.";
 
 	msgbox.show();
 }
