@@ -16,7 +16,8 @@ Types::Error GUI::run()
 		return Types::Error::Code::MissingCallback;
 	}
 
-	nana::form mainForm(nana::API::make_center(615, 255));
+	nana::form mainForm(
+	    nana::API::make_center(615, 255), nana::appear::decorate<nana::appear::minimize, nana::appear::taskbar>());
 	mainForm.caption("Whipseey Save Manager");
 
 	auto save = std::make_shared<INI::Save>();
