@@ -1,0 +1,9 @@
+Checks: >
+  *,
+  -llvm*,
+  -fuchsia-default-arguments-calls,
+  -fuchsia-default-arguments-declarations,
+  -modernize-use-trailing-return-type,
+  -readability-else-after-return,
+  -readability-implicit-bool-conversion
+WarningsAsErrors: 'true'

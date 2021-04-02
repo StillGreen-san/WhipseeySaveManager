@@ -1,0 +1,20 @@
+Language: Cpp
+BasedOnStyle: Microsoft
+
+AccessModifierOffset: -4
+AlignAfterOpenBracket: AlwaysBreak
+AlignEscapedNewlines: DontAlign
+AllowShortBlocksOnASingleLine: Empty
+AllowShortLambdasOnASingleLine: None
+AlwaysBreakTemplateDeclarations: Yes
+BreakConstructorInitializers: AfterColon
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterUnion: true
+  BeforeLambdaBody: true
+  SplitEmptyNamespace: false
+PointerAlignment: Left
+SpaceAfterTemplateKeyword: false
+SpaceBeforeParens: Never
+UseCRLF: true
+UseTab: ForIndentation
