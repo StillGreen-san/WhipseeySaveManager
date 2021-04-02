@@ -112,7 +112,7 @@ std::optional<std::filesystem::path> defaultSavePath()
 	}
 
 	path += R"(\Whipseey\savedata\whipseey.sav)";
-	if(std::filesystem::exists(path) == false)
+	if(!std::filesystem::exists(path))
 	{
 		return {};
 	}
@@ -155,7 +155,7 @@ std::optional<std::filesystem::path> defaultSettingsPath()
 
 	const std::filesystem::path librariesFilePath(steamPath / "steamapps/libraryfolders.vdf");
 
-	if(std::filesystem::exists(librariesFilePath) == false)
+	if(!std::filesystem::exists(librariesFilePath))
 	{
 		return {};
 	}

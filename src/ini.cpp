@@ -170,6 +170,8 @@ void FileBase::setLevel(Types::Level level)
 		[[fallthrough]];
 	case Types::Level::Forest:
 		getForest() = Types::Forest::Unlocked;
+	case Types::Level::Beach:
+		break;
 	}
 }
 
@@ -267,13 +269,13 @@ bool INI::read(const std::shared_ptr<ISection>& section)
 	bool success = has(section);
 	if(!success)
 	{
-		for(auto& key : section->keys())
+		for(const auto& key : section->keys())
 		{
 			key->applyDefaults();
 		}
 		return success;
 	}
-	for(auto& key : section->keys())
+	for(const auto& key : section->keys())
 	{
 		std::string_view value = mIni->GetValue(section->section(), key->key());
 		if(value == INIintern::NOT_FOUND)
@@ -301,7 +303,7 @@ bool INI::read(const std::shared_ptr<ISection>& section)
 bool INI::read(const std::shared_ptr<IIni>& ini)
 {
 	bool success = true;
-	for(auto& section : ini->sections())
+	for(const auto& section : ini->sections())
 	{
 		success &= read(section);
 	}
@@ -310,7 +312,7 @@ bool INI::read(const std::shared_ptr<IIni>& ini)
 
 void INI::write(const std::shared_ptr<ISection>& section)
 {
-	for(auto& key : section->keys())
+	for(const auto& key : section->keys())
 	{
 		mIni->SetValue(section->section(), key->key(), key->toString());
 	}
@@ -318,7 +320,7 @@ void INI::write(const std::shared_ptr<ISection>& section)
 
 void INI::write(const std::shared_ptr<IIni>& ini)
 {
-	for(auto& section : ini->sections())
+	for(const auto& section : ini->sections())
 	{
 		write(section);
 	}
