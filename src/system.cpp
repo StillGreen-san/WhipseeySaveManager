@@ -62,6 +62,19 @@ template<typename T>
 class CoTaskMem
 {
 public:
+	CoTaskMem() = default;
+	CoTaskMem(const CoTaskMem&) = delete;
+	CoTaskMem(CoTaskMem&& other) noexcept
+	{
+		pointer = other.pointer;
+		other.pointer = nullptr;
+	}
+	CoTaskMem& operator=(const CoTaskMem&) = delete;
+	CoTaskMem& operator=(CoTaskMem&& other) noexcept
+	{
+		pointer = other.pointer;
+		other.pointer = nullptr;
+	}
 	void Alloc(size_t elements)
 	{
 		Free();
@@ -80,7 +93,7 @@ public:
 	{
 		Free();
 	}
-	T* Get()
+	T* Get() const
 	{
 		return pointer;
 	}

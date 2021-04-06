@@ -64,7 +64,7 @@ public:
 	}
 
 protected:
-	const float mMinOrA;
+	const float mMinOrA; // TODO const member bad?
 	const float mMaxOrB;
 	const float mDefault;
 	float mValue;

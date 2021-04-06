@@ -15,7 +15,7 @@ endif( )
 set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE )
-# set( CMAKE_CXX_CLANG_TIDY clang-tidy )
+set( CMAKE_CXX_CLANG_TIDY clang-tidy )
 
 find_package( nana REQUIRED CONFIG NAMES nana unofficial-nana )
 find_package( Catch2 CONFIG REQUIRED )

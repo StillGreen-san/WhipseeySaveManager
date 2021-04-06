@@ -15,13 +15,13 @@ PathControls::PathControls(
 	place["this"] << filePath << openFile << saveFile << reloadFile;
 	openFile.tooltip("Open and Load a new File");
 	openFile.events().click.connect_front(
-	    [&](nana::arg_click click)
+	    [&](nana::arg_click)
 	    {
 		    open();
 	    });
 	setPath(path);
 	filePath.events().text_changed.connect_front(
-	    [&](nana::arg_textbox tb)
+	    [&](nana::arg_textbox)
 	    {
 		    varifyPath(getPath());
 	    });

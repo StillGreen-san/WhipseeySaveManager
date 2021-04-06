@@ -102,7 +102,9 @@ NumericTextbox::NumericTextbox(nana::window parent, int minVal, int maxVal) :
 				    {
 					    value.erase(this->caret_pos().x, 1);
 					    if(std::stoi(value) >= min)
+					    {
 						    return true;
+					    }
 				    }
 				    this->from(min);
 				    return false;
@@ -135,7 +137,9 @@ NumericTextbox::NumericTextbox(nana::window parent, int minVal, int maxVal) :
 				    {
 					    value.erase(range.first.x, range.second.x - range.first.x);
 					    if(std::stoi(value) >= min)
+					    {
 						    return true;
+					    }
 				    }
 				    this->from(min);
 				    return false;
@@ -285,7 +289,7 @@ TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, cons
 		    callbacks.onWriteSection(save->getFile1(), path.getPath());
 	    });
 	file2.onReload().connect_front(
-	    [&](nana::arg_click click)
+	    [&](nana::arg_click)
 	    {
 		    callbacks.onReadSection(save->getFile2(), path.getPath());
 		    file2.update(*save->getFile2());
@@ -297,7 +301,7 @@ TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, cons
 		    callbacks.onWriteSection(save->getFile2(), path.getPath());
 	    });
 	file3.onReload().connect_front(
-	    [&](nana::arg_click click)
+	    [&](nana::arg_click)
 	    {
 		    callbacks.onReadSection(save->getFile3(), path.getPath());
 		    file3.update(*save->getFile3());

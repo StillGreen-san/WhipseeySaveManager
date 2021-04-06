@@ -33,12 +33,13 @@ Types::Error IKey::fromString(std::string_view string)
 	case Number::StringInt:
 	default:
 	{
-		auto fractionalPrecision = 0;
-		auto ifFloatPart = [hasDot = bool(false), &fractionalPrecision](char chr) mutable
+		constexpr unsigned expectedFractionalPrecision = 6;
+		unsigned fractionalPrecision = 0;
+		auto ifFloatPart = [hasDot = bool(false), &fractionalPrecision, &expectedFractionalPrecision](char chr) mutable
 		{
 			if(chr == '.')
 			{
-				if(hasDot == true)
+				if(hasDot)
 				{
 					return false;
 				}
@@ -54,7 +55,7 @@ Types::Error IKey::fromString(std::string_view string)
 				{
 					++fractionalPrecision;
 				}
-				if(fractionalPrecision > 6)
+				if(fractionalPrecision > expectedFractionalPrecision)
 				{
 					return false;
 				}
@@ -62,7 +63,8 @@ Types::Error IKey::fromString(std::string_view string)
 			}
 		};
 		if((string.front() == '"' && string.back() == '"') &&
-		   std::all_of(++string.begin(), --string.end(), ifFloatPart) && fractionalPrecision == 6)
+		   std::all_of(++string.begin(), --string.end(), ifFloatPart) &&
+		   fractionalPrecision == expectedFractionalPrecision)
 		{
 			newValue = std::strtof(string.data() + 1, nullptr);
 			if(mNumber == Number::StringInt)
@@ -179,9 +181,9 @@ class INI::INIintern final : public CSimpleIniA
 {
 public:
 	static constexpr std::string_view NOT_FOUND = "%INVALID%";
-	std::string_view GetValue(std::string_view section, std::string_view key, std::string_view default = NOT_FOUND)
+	std::string_view GetValue(std::string_view section, std::string_view key, std::string_view defaultVal = NOT_FOUND)
 	{
-		return CSimpleIniA::GetValue(section.data(), key.data(), default.data());
+		return CSimpleIniA::GetValue(section.data(), key.data(), defaultVal.data());
 	}
 	void SetValue(std::string_view section, std::string_view key, std::string&& value)
 	{

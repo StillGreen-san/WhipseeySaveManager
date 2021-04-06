@@ -17,8 +17,8 @@ class ProgressGroup : public nana::group
 {
 public:
 	ProgressGroup(nana::window wd);
-	size_t levelToIndex(Types::Level level);
-	Types::Level indexToLevel(size_t index);
+	static size_t levelToIndex(Types::Level level);
+	static Types::Level indexToLevel(size_t index);
 	void update(INI::FileBase& file);
 	using nana::group::option_check;
 	void option_check(Types::Level level);

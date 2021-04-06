@@ -16,8 +16,11 @@ Types::Error GUI::run()
 		return Types::Error::Code::MissingCallback;
 	}
 
+	constexpr unsigned WINDOW_HIGHT = 615;
+	constexpr unsigned WINDOW_WIDTH = 615;
 	nana::form mainForm(
-	    nana::API::make_center(615, 255), nana::appear::decorate<nana::appear::minimize, nana::appear::taskbar>());
+	    nana::API::make_center(WINDOW_HIGHT, WINDOW_WIDTH),
+	    nana::appear::decorate<nana::appear::minimize, nana::appear::taskbar>());
 	mainForm.caption("Whipseey Save Manager");
 
 	auto save = std::make_shared<INI::Save>();
@@ -46,36 +49,36 @@ Types::Error GUI::run()
 
 void GUI::connectOnSystemTheme(std::function<GUI::ThemeSignature> func)
 {
-	callbacks.onSystemTheme = func;
+	callbacks.onSystemTheme = std::move(func);
 }
 
 void GUI::connectOnDefaultSavePath(std::function<GUI::PathSignature> func)
 {
-	callbacks.onDefaultSavePath = func;
+	callbacks.onDefaultSavePath = std::move(func);
 }
 
 void GUI::connectOnDefaultSettingsPath(std::function<GUI::PathSignature> func)
 {
-	callbacks.onDefaultSettingsPath = func;
+	callbacks.onDefaultSettingsPath = std::move(func);
 }
 
 void GUI::connectOnReadSection(std::function<GUI::SectionSignature> func)
 {
-	callbacks.onReadSection = func;
+	callbacks.onReadSection = std::move(func);
 }
 
 void GUI::connectOnReadIni(std::function<GUI::IniSignature> func)
 {
-	callbacks.onReadIni = func;
+	callbacks.onReadIni = std::move(func);
 }
 
 void GUI::connectOnWriteSection(std::function<GUI::SectionSignature> func)
 {
-	callbacks.onWriteSection = func;
+	callbacks.onWriteSection = std::move(func);
 }
 
 void GUI::connectOnWriteIni(std::function<GUI::IniSignature> func)
 {
-	callbacks.onWriteIni = func;
+	callbacks.onWriteIni = std::move(func);
 }
 } // namespace WhipseeySaveManager::GUI
