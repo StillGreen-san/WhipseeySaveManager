@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.16.0 )
 
-project( WhipseeySaveManager )
+project( WhipseeySaveManager LANGUAGES CXX )
 
 if( NOT WIN32 )
 	message( FATAL_ERROR "Windows Required" )
@@ -15,7 +15,11 @@ endif( )
 set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE )
-set( CMAKE_CXX_CLANG_TIDY clang-tidy )
+
+option( USE_CLANG_TIDY "" OFF )
+if( USE_CLANG_TIDY )
+	set( CMAKE_CXX_CLANG_TIDY clang-tidy )
+endif( )
 
 find_package( nana REQUIRED CONFIG NAMES nana unofficial-nana )
 find_package( Catch2 CONFIG REQUIRED )
