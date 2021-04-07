@@ -7,12 +7,17 @@ OptionBase::OptionBase(nana::window wd, std::string_view labelText) :
 {
 	label.text_align(nana::align::right, nana::align_v::center);
 	place.div("things gap=8 arrange=[190,300]");
-	place[FIELD] << label << combo;
+	place["things"] << label << combo;
 }
 
 nana::basic_event<nana::arg_combox>& OptionBase::onChanged()
 {
 	return combo.events().text_changed;
+}
+
+size_t OptionBase::option()
+{
+	return combo.option();
 }
 
 OptionLanguage::OptionLanguage(nana::window wd) : OptionBase(wd, "Language")
@@ -144,14 +149,14 @@ void OptionsBox::update(INI::Options& options)
 
 void OptionsBox::get(INI::Options& options)
 {
-	options.getLanguage() = static_cast<Types::Language>(language.combo.option());
-	options.getScale() = static_cast<Types::Scale>(scale.combo.option() + 2);
-	options.getFullscreen() = static_cast<Types::Fullscreen>(fullscreen.combo.option());
-	options.getLeftHanded() = static_cast<Types::LeftHanded>(lefthanded.combo.option());
-	options.getSoundVolume() = static_cast<Types::SoundVolume>(soundvolume.combo.option());
-	options.getSoundToggle() = static_cast<Types::SoundToggle>(soundtoggle.combo.option());
-	options.getMusicVolume() = static_cast<Types::MusicVolume>(musicvolume.combo.option());
-	options.getMusicToggle() = static_cast<Types::MusicToggle>(musictoggle.combo.option());
+	options.getLanguage() = static_cast<Types::Language>(language.option());
+	options.getScale() = static_cast<Types::Scale>(scale.option() + 2);
+	options.getFullscreen() = static_cast<Types::Fullscreen>(fullscreen.option());
+	options.getLeftHanded() = static_cast<Types::LeftHanded>(lefthanded.option());
+	options.getSoundVolume() = static_cast<Types::SoundVolume>(soundvolume.option());
+	options.getSoundToggle() = static_cast<Types::SoundToggle>(soundtoggle.option());
+	options.getMusicVolume() = static_cast<Types::MusicVolume>(musicvolume.option());
+	options.getMusicToggle() = static_cast<Types::MusicToggle>(musictoggle.option());
 }
 
 TabOptions::TabOptions(nana::window wd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks) :
@@ -160,18 +165,21 @@ TabOptions::TabOptions(nana::window wd, const std::shared_ptr<INI::Save>& save, 
 	place.div("vert <path gap=5 margin=5 weight=35><options margin=5>");
 	place["path"] << path;
 	place["options"] << options;
+
 	path.onReload().connect_front(
 	    [&](nana::arg_click)
 	    {
 		    showErrorMsg(callbacks.onReadSection(save->getOptions(), path.getPath()));
 		    options.update(*save->getOptions());
 	    });
+
 	path.onSave().connect_front(
 	    [&](nana::arg_click)
 	    {
 		    options.get(*save->getOptions());
 		    showErrorMsg(callbacks.onWriteSection(save->getOptions(), path.getPath()));
 	    });
+
 	std::optional<std::filesystem::path> savePath = callbacks.onDefaultSavePath();
 	if(savePath)
 	{
