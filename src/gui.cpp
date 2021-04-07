@@ -17,7 +17,7 @@ Types::Error GUI::run()
 	}
 
 	constexpr unsigned WINDOW_HIGHT = 615;
-	constexpr unsigned WINDOW_WIDTH = 615;
+	constexpr unsigned WINDOW_WIDTH = 255;
 	nana::form mainForm(
 	    nana::API::make_center(WINDOW_HIGHT, WINDOW_WIDTH),
 	    nana::appear::decorate<nana::appear::minimize, nana::appear::taskbar>());
