@@ -1,10 +1,4 @@
 /**
- * @file core.hpp
- * @brief base include for everything, does not need to be included manually
- *
- */
-
-/**
  * @brief General Project Namespace
  *
  */

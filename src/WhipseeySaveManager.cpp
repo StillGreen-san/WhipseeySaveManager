@@ -1,8 +1,3 @@
-/**
- * @file WhipseeySaveManager.cpp
- * @brief this is the main file for WhispeeySaveManager, tying all functionality together
- */
-
 #include "gui.hpp"
 #include "system.hpp"
 
