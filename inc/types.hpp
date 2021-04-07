@@ -271,11 +271,11 @@ public:
 	using CodeContainer = std::vector<Code>;
 
 private:
-	std::vector<Code> codes;
+	CodeContainer codes;
 
 public:
 	Error() = default;
-	Error(Code code) : codes{code}
+	Error(Code code) : codes{1, code}
 	{
 		if(codes.front() == Code::Nothing)
 		{
@@ -290,11 +290,11 @@ public:
 	/**
 	 * @brief conversion to bool
 	 *
-	 * @return true if an error occurred, false if == Nowhere && Nothing
+	 * @return true if an error occurred
 	 */
 	operator bool() const
 	{
-		return codes.empty() == false;
+		return !codes.empty();
 	}
 
 	/**
@@ -326,7 +326,7 @@ public:
 		{
 			return *this;
 		}
-		codes.emplace_back(code);
+		codes.push_back(code);
 		return *this;
 	}
 
@@ -365,7 +365,7 @@ public:
 					break;
 				}
 			}
-			if(found == false)
+			if(!found)
 			{
 				return false;
 			}
