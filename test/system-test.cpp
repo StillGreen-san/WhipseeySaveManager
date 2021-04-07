@@ -30,7 +30,7 @@ TEST_CASE("System::defaultSavePath", "[.][System][Save]")
 	if(ret)
 	{
 		REQUIRE(std::filesystem::exists(*ret));
-		CHECK(ret->filename() == "whipseey.sav");
+		REQUIRE(ret->filename() == "whipseey.sav");
 		SUCCEED("path retrieved");
 	}
 	else

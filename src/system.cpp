@@ -124,8 +124,9 @@ std::optional<std::filesystem::path> defaultSavePath()
 		return {};
 	}
 
-	const std::filesystem::path saveRelativePath(R"(\Whipseey\savedata\whipseey.sav)");
-	if(!std::filesystem::exists(path / saveRelativePath))
+	const std::filesystem::path saveRelativePath(R"(Whipseey\savedata\whipseey.sav)");
+	path /= saveRelativePath;
+	if(!std::filesystem::exists(path))
 	{
 		return {};
 	}
