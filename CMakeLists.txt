@@ -1,6 +1,6 @@
-cmake_minimum_required( VERSION 3.16.0 )
+cmake_minimum_required( VERSION 3.17.0 )
 
-project( WhipseeySaveManager )
+project( WhipseeySaveManager LANGUAGES CXX )
 
 if( NOT WIN32 )
 	message( FATAL_ERROR "Windows Required" )
@@ -69,3 +69,4 @@ target_link_libraries( ${TEST_TARGET} PRIVATE ${LIB_TARGET} Catch2::Catch2 )
 add_custom_command( TARGET ${TEST_TARGET} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${WSM_TEST_DIR}/data/ $<TARGET_FILE_DIR:${TEST_TARGET}>/data
 )
+set_target_properties( ${TEST_TARGET} PROPERTIES ADDITIONAL_CLEAN_FILES $<TARGET_FILE_DIR:${TEST_TARGET}>/data/ )
