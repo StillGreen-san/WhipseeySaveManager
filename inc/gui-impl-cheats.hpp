@@ -6,9 +6,12 @@
 
 namespace WhipseeySaveManager::GUI
 {
+/**
+ * @brief control containing a checkbox and (long) description label for cheats
+ *
+ */
 class CheatsBox : public nana::panel<false>
 {
-public:
 	nana::place place{*this};
 	nana::checkbox cheatsEnabled{*this, "cheats enabled"};
 	nana::label description{
@@ -21,19 +24,32 @@ public:
 	           "\n, , , .  : disable hud"
 	           "\n, , , ,  : invincibility"};
 
-	CheatsBox(nana::window wd);
-	nana::basic_event<nana::arg_checkbox>& onEnabledChanged();
 	void update(INI::Cheats& cheats);
+
+public:
+	/**
+	 * @brief returns event reference to checkbox changed
+	 *
+	 * @return nana::basic_event<nana::arg_checkbox>& the event ref
+	 */
+	nana::basic_event<nana::arg_checkbox>& onEnabledChanged();
+
+	CheatsBox(nana::window wd);
+
+	friend class TabCheats;
 };
 
+/**
+ * @brief tab control with PathControls & CheatsBox
+ *
+ */
 class TabCheats : public nana::panel<false>
 {
-public:
 	nana::place place{*this};
 	PathControls path{*this, {{"INI (*.ini)", "*.ini"}}};
 	CheatsBox cheats{*this};
+
+public:
 	TabCheats(nana::window wd, const std::shared_ptr<INI::Settings>& sttngs, const GUI::FunctionStore& callbacks);
-	nana::basic_event<nana::arg_click>& onReload();
-	nana::basic_event<nana::arg_click>& onSave();
 };
 } // namespace WhipseeySaveManager::GUI

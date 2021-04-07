@@ -13,18 +13,21 @@ PathControls::PathControls(
 {
 	place.div("this fit gap=5");
 	place["this"] << filePath << openFile << saveFile << reloadFile;
-	openFile.tooltip("Open and Load a new File");
-	openFile.events().click.connect_front(
-	    [&](nana::arg_click)
-	    {
-		    open();
-	    });
+
 	setPath(path);
 	filePath.events().text_changed.connect_front(
 	    [&](nana::arg_textbox)
 	    {
 		    varifyPath(getPath());
 	    });
+
+	openFile.tooltip("Open and Load a new File");
+	openFile.events().click.connect_front(
+	    [&](nana::arg_click)
+	    {
+		    open();
+	    });
+
 	saveFile.tooltip("Save current Values to File");
 	reloadFile.tooltip("Reload Values from File");
 }
@@ -33,6 +36,9 @@ std::filesystem::path PathControls::getPath() const
 {
 	return filePath.caption_native();
 }
+
+constexpr nana::colors validBG = nana::colors::white;
+constexpr nana::colors invalidBG = nana::colors::firebrick;
 
 void PathControls::varifyPath(const std::filesystem::path& path)
 {
@@ -56,6 +62,16 @@ void PathControls::setPath(const std::filesystem::path& path)
 	filePath.caption(path.native());
 }
 
+nana::basic_event<nana::arg_click>& PathControls::onReload()
+{
+	return reloadFile.events().click;
+}
+
+nana::basic_event<nana::arg_click>& PathControls::onSave()
+{
+	return saveFile.events().click;
+}
+
 void PathControls::open()
 {
 	nana::filebox ofd(*this, true);
@@ -65,7 +81,9 @@ void PathControls::open()
 	}
 	ofd.add_filter(additianalFilters);
 	ofd.add_filter("All (*.*)", "*.*");
+
 	auto paths = ofd.show();
+
 	if(paths.size() == 1)
 	{
 		setPath(paths[0]);

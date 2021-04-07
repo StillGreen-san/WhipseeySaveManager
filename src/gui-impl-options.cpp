@@ -160,13 +160,13 @@ TabOptions::TabOptions(nana::window wd, const std::shared_ptr<INI::Save>& save, 
 	place.div("vert <path gap=5 margin=5 weight=35><options margin=5>");
 	place["path"] << path;
 	place["options"] << options;
-	onReload().connect_front(
+	path.onReload().connect_front(
 	    [&](nana::arg_click)
 	    {
 		    showErrorMsg(callbacks.onReadSection(save->getOptions(), path.getPath()));
 		    options.update(*save->getOptions());
 	    });
-	onSave().connect_front(
+	path.onSave().connect_front(
 	    [&](nana::arg_click)
 	    {
 		    options.get(*save->getOptions());
@@ -177,15 +177,5 @@ TabOptions::TabOptions(nana::window wd, const std::shared_ptr<INI::Save>& save, 
 	{
 		path.setPath(*savePath);
 	}
-}
-
-nana::basic_event<nana::arg_click>& TabOptions::onReload()
-{
-	return path.reloadFile.events().click;
-}
-
-nana::basic_event<nana::arg_click>& TabOptions::onSave()
-{
-	return path.saveFile.events().click;
 }
 } // namespace WhipseeySaveManager::GUI

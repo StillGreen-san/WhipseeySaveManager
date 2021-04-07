@@ -312,13 +312,13 @@ TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, cons
 		    file3.get(*save->getFile3());
 		    callbacks.onWriteSection(save->getFile3(), path.getPath());
 	    });
-	path.reloadFile.events().click.connect_front(
+	path.onReload().connect_front(
 	    [&](nana::arg_click)
 	    {
 		    showErrorMsg(callbacks.onReadIni(save, path.getPath()));
 		    update(*save);
 	    });
-	path.saveFile.events().click.connect_front(
+	path.onSave().connect_front(
 	    [&](nana::arg_click)
 	    {
 		    file1.get(*save->getFile1());

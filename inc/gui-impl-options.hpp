@@ -99,7 +99,5 @@ public:
 	PathControls path{*this, {{"Save (*.sav)", "*.sav"}}};
 	OptionsBox options{*this};
 	TabOptions(nana::window wd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks);
-	nana::basic_event<nana::arg_click>& onReload();
-	nana::basic_event<nana::arg_click>& onSave();
 };
 } // namespace WhipseeySaveManager::GUI
