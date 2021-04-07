@@ -27,49 +27,49 @@ public:
 	using IniSignature = Types::Error(std::shared_ptr<INI::IIni>, std::filesystem::path);
 
 	/**
-	 * @brief provide callback to supply a Theme object
+	 * @brief assigns callback to supply a Theme object
 	 *
 	 * @param func see GUI::ThemeSignature
 	 */
 	void connectOnSystemTheme(std::function<ThemeSignature> func);
 
 	/**
-	 * @brief provide callback to supply a path for INI::Save
+	 * @brief assigns callback to supply a path for INI::Save
 	 *
 	 * @param func see GUI::PathSignature
 	 */
 	void connectOnDefaultSavePath(std::function<PathSignature> func);
 
 	/**
-	 * @brief provide callback to supply a path for INI::Settings
+	 * @brief assigns callback to supply a path for INI::Settings
 	 *
 	 * @param func see GUI::PathSignature
 	 */
 	void connectOnDefaultSettingsPath(std::function<PathSignature> func);
 
 	/**
-	 * @brief provide callback for reading INI::ISection
+	 * @brief assigns callback for reading INI::ISection
 	 *
 	 * @param func see GUI::SectionSignature
 	 */
 	void connectOnReadSection(std::function<SectionSignature> func);
 
 	/**
-	 * @brief provide callback for reading INI::IIni
+	 * @brief assigns callback for reading INI::IIni
 	 *
 	 * @param func see GUI::IniSignature
 	 */
 	void connectOnReadIni(std::function<IniSignature> func);
 
 	/**
-	 * @brief provide callback for writing INI::ISection
+	 * @brief assigns callback for writing INI::ISection
 	 *
 	 * @param func see GUI::SectionSignature
 	 */
 	void connectOnWriteSection(std::function<SectionSignature> func);
 
 	/**
-	 * @brief provide callback for writing INI::IIni
+	 * @brief assigns callback for writing INI::IIni
 	 *
 	 * @param func see GUI::IniSignature
 	 */

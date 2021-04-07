@@ -13,12 +13,12 @@ namespace WhipseeySaveManager::System
 {
 std::optional<Types::Theme> systemTheme()
 {
-	Types::Theme theme;
 	const std::wstring themeKey = LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize)";
 	const std::wstring themeDW = LR"(AppsUseLightTheme)";
 	const std::wstring colorKey = LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\History\Colors)";
 	const std::wstring colorDW = LR"(ColorHistory0)";
 
+	Types::Theme theme;
 	winreg::RegKey regHandler;
 
 	if(regHandler.TryOpen(HKEY_CURRENT_USER, themeKey, KEY_READ))
@@ -124,8 +124,8 @@ std::optional<std::filesystem::path> defaultSavePath()
 		return {};
 	}
 
-	path += R"(\Whipseey\savedata\whipseey.sav)";
-	if(!std::filesystem::exists(path))
+	const std::filesystem::path saveRelativePath(R"(\Whipseey\savedata\whipseey.sav)");
+	if(!std::filesystem::exists(path / saveRelativePath))
 	{
 		return {};
 	}
@@ -174,12 +174,12 @@ std::optional<std::filesystem::path> defaultSettingsPath()
 	}
 
 	std::ifstream librariesFile(librariesFilePath);
-	const std::regex reg(R"#(.*"\d+".*"(.*)")#", std::regex_constants::optimize);
+	const std::regex libraryEntryReg(R"#(.*"\d+".*"(.*)")#", std::regex_constants::optimize);
 	std::smatch match;
 
 	for(std::string line; std::getline(librariesFile, line);)
 	{
-		if(std::regex_match(line, match, reg) && match.size() == 2)
+		if(std::regex_match(line, match, libraryEntryReg) && match.size() == 2)
 		{
 			settingsPath.assign(match[1].str() / settingsRelativePath);
 			if(std::filesystem::exists(settingsPath))

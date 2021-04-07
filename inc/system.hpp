@@ -5,7 +5,7 @@
 namespace WhipseeySaveManager::System
 {
 /**
- * @brief trys to querie the os for theme info
+ * @brief trys to query the os for theme info
  *
  * @return std::optional<Types::Theme>: if successful contains Theme object
  */

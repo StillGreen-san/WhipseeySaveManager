@@ -181,7 +181,8 @@ class INI::INIintern final : public CSimpleIniA
 {
 public:
 	static constexpr std::string_view NOT_FOUND = "%INVALID%";
-	std::string_view GetValue(std::string_view section, std::string_view key, std::string_view defaultVal = NOT_FOUND)
+	std::string_view GetValue(
+	    std::string_view section, std::string_view key, std::string_view defaultVal = NOT_FOUND) const
 	{
 		return CSimpleIniA::GetValue(section.data(), key.data(), defaultVal.data());
 	}
@@ -190,7 +191,7 @@ public:
 		CSimpleIniA::SetValue(section.data(), key.data(), value.data());
 	}
 	const std::multimap<CSimpleIniA::Entry, const char*, CSimpleIniA::Entry::KeyOrder>* GetSection(
-	    std::string_view section)
+	    std::string_view section) const
 	{
 		return CSimpleIniA::GetSection(section.data());
 	}

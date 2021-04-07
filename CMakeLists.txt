@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.16.0 )
 
-project( WhipseeySaveManager LANGUAGES CXX )
+project( WhipseeySaveManager )
 
 if( NOT WIN32 )
 	message( FATAL_ERROR "Windows Required" )

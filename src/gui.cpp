@@ -16,10 +16,10 @@ Types::Error GUI::run()
 		return Types::Error::Code::MissingCallback;
 	}
 
-	constexpr unsigned WINDOW_HIGHT = 615;
-	constexpr unsigned WINDOW_WIDTH = 255;
+	constexpr unsigned WINDOW_WIDTH = 615;
+	constexpr unsigned WINDOW_HIGHT = 255;
 	nana::form mainForm(
-	    nana::API::make_center(WINDOW_HIGHT, WINDOW_WIDTH),
+	    nana::API::make_center(WINDOW_WIDTH, WINDOW_HIGHT),
 	    nana::appear::decorate<nana::appear::minimize, nana::appear::taskbar>());
 	mainForm.caption("Whipseey Save Manager");
 
