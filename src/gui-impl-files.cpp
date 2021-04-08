@@ -3,6 +3,7 @@
 #include <cwctype>
 
 // TODO delegate reset to INI types
+// TODO const params / decl for get & update (all things)
 
 namespace WhipseeySaveManager::GUI
 {
@@ -19,6 +20,7 @@ void FileGroup::update(INI::FileBase& file)
 ProgressGroup::ProgressGroup(nana::window wd) : nana::group::group(wd, "progress")
 {
 	radio_mode(true);
+
 	add_option("Castle");
 	add_option("Moon");
 	add_option("Snow");
@@ -91,7 +93,9 @@ NumericTextbox::NumericTextbox(nana::window parent, int minVal, int maxVal) :
 			    if(chr == BACKSPACE)
 			    {
 				    if(this->to_int() / 10 >= min)
+				    {
 					    return true;
+				    }
 				    this->from(min);
 				    return false;
 			    }
@@ -180,10 +184,14 @@ FileBox::FileBox(nana::window wd) : nana::panel<false>(wd)
 	group["gems"] << intro << lgems << tgems << bgems << max << save;
 	group["lives"] << ending << llives << tlives << blives << reset << reload;
 	group.collocate();
+
 	place.div("this");
 	place["this"] << group;
+
 	intro.tooltip("Will skip Intro if checked");
+
 	tgems.tooltip(std::to_string(tgems.min).append(" - ").append(std::to_string(tgems.max)));
+
 	bgems.tooltip("Set Gems to 0 or 99");
 	bgems.events().click.connect_front(
 	    [&](nana::arg_click)
@@ -197,8 +205,11 @@ FileBox::FileBox(nana::window wd) : nana::panel<false>(wd)
 			    tgems.caption("99");
 		    }
 	    });
+
 	ending.tooltip("Only used to calculate %Progress");
+
 	tlives.tooltip(std::to_string(tlives.min).append(" - ").append(std::to_string(tlives.max)));
+
 	blives.tooltip("Set Lives to 0, 99 or 9999");
 	blives.events().click.connect_front(
 	    [&](nana::arg_click)
@@ -217,6 +228,7 @@ FileBox::FileBox(nana::window wd) : nana::panel<false>(wd)
 			    tlives.caption("99");
 		    }
 	    });
+
 	reset.tooltip("New File");
 	reset.events().click.connect_front(
 	    [&](nana::arg_click)
@@ -227,6 +239,7 @@ FileBox::FileBox(nana::window wd) : nana::panel<false>(wd)
 		    ending.check(false);
 		    progress.option_check(Types::Level::Beach);
 	    });
+
 	max.tooltip("100% File with 9999 Lives");
 	max.events().click.connect_front(
 	    [&](nana::arg_click)
@@ -237,6 +250,7 @@ FileBox::FileBox(nana::window wd) : nana::panel<false>(wd)
 		    ending.check(true);
 		    progress.option_check(Types::Level::Castle);
 	    });
+
 	save.tooltip("Save current Values to File for this Group");
 	reload.tooltip("Reload Values from File for this Group");
 }
@@ -251,7 +265,7 @@ void FileBox::update(INI::FileBase& file)
 	tlives.caption(std::to_string(file.getLives()));
 }
 
-void FileBox::get(INI::FileBase& file)
+void FileBox::get(INI::FileBase& file) const
 {
 	file.getIntro() = static_cast<Types::Intro>(intro.checked());
 	file.getEnding() = static_cast<Types::Ending>(ending.checked());
@@ -276,6 +290,7 @@ TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, cons
 	place.div("vert <path gap=5 margin=5 weight=35><files gap=3 margin=5>");
 	place["path"] << path;
 	place["files"] << file1 << file2 << file3;
+
 	file1.onReload().connect_front(
 	    [&](nana::arg_click)
 	    {
@@ -288,6 +303,7 @@ TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, cons
 		    file1.get(*save->getFile1());
 		    callbacks.onWriteSection(save->getFile1(), path.getPath());
 	    });
+
 	file2.onReload().connect_front(
 	    [&](nana::arg_click)
 	    {
@@ -300,6 +316,7 @@ TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, cons
 		    file2.get(*save->getFile2());
 		    callbacks.onWriteSection(save->getFile2(), path.getPath());
 	    });
+
 	file3.onReload().connect_front(
 	    [&](nana::arg_click)
 	    {
@@ -312,6 +329,7 @@ TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, cons
 		    file3.get(*save->getFile3());
 		    callbacks.onWriteSection(save->getFile3(), path.getPath());
 	    });
+
 	path.onReload().connect_front(
 	    [&](nana::arg_click)
 	    {
@@ -326,6 +344,7 @@ TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, cons
 		    file3.get(*save->getFile3());
 		    showErrorMsg(callbacks.onWriteIni(save, path.getPath()));
 	    });
+
 	std::optional<std::filesystem::path> savePath = callbacks.onDefaultSavePath();
 	if(savePath)
 	{
