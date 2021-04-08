@@ -74,6 +74,7 @@ public:
 	{
 		pointer = other.pointer;
 		other.pointer = nullptr;
+		return *this;
 	}
 	void Alloc(size_t elements)
 	{

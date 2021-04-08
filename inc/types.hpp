@@ -371,7 +371,7 @@ public:
 			}
 		}
 		return true;
-	}
+	} // TODO handle {C1,C2,C2} == {C1,C1,C2}
 
 	/**
 	 * @brief checks if this only conatins the code passed in

@@ -16,9 +16,14 @@ set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE )
 
-option( USE_CLANG_TIDY "" OFF )
+option( USE_CLANG_TIDY "USE_CLANG_TIDY" OFF )
 if( USE_CLANG_TIDY )
 	set( CMAKE_CXX_CLANG_TIDY clang-tidy )
+endif( )
+
+option( USE_CPPCHECK "USE_CPPCHECK" OFF )
+if( USE_CPPCHECK )
+	set( CMAKE_CXX_CPPCHECK cppcheck --suppress=missingInclude --enable=all ${CPPCHECK_USER_ARGS} )
 endif( )
 
 find_package( nana REQUIRED CONFIG NAMES nana unofficial-nana )
