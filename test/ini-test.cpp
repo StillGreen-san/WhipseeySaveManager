@@ -24,7 +24,7 @@ struct TestKey : public IKey
 
 struct MinMaxStringInt final : public TestKey
 {
-	MinMaxStringInt() : TestKey(name, default, Limits::MinMax, Number::StringInt, min, max)
+	MinMaxStringInt() : TestKey(name, default, Limits::MinMax, Format::StringInt, min, max)
 	{
 	}
 	static constexpr std::string_view name = "keynameMinMaxStringInt";
@@ -34,7 +34,7 @@ struct MinMaxStringInt final : public TestKey
 };
 struct EitherOrStringFloat final : public TestKey
 {
-	EitherOrStringFloat() : TestKey(name, default, Limits::EitherOr, Number::StringFloat, either, or)
+	EitherOrStringFloat() : TestKey(name, default, Limits::EitherOr, Format::StringFloat, either, or)
 	{
 	}
 	static constexpr std::string_view name = "keynameEitherOrStringFloat";
@@ -44,7 +44,7 @@ struct EitherOrStringFloat final : public TestKey
 };
 struct EitherOrInt final : public TestKey
 {
-	EitherOrInt() : TestKey(name, default, Limits::EitherOr, Number::Int, either, or)
+	EitherOrInt() : TestKey(name, default, Limits::EitherOr, Format::Int, either, or)
 	{
 	}
 	static constexpr std::string_view name = "keynameEitherOrInt";

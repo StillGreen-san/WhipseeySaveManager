@@ -9,6 +9,11 @@
 
 namespace WhipseeySaveManager::INI
 {
+/**
+ * @brief base class representing a INI key with name name (float) value optionally enclosed in '"",
+ * needs concrete implementaion
+ *
+ */
 class IKey
 {
 public:
@@ -44,7 +49,7 @@ public:
 	bool operator==(const IKey& other) const
 	{
 		return mValue == other.mValue && mDefault == other.mDefault && mMinOrA == other.mMinOrA &&
-		       mMaxOrB == other.mMaxOrB && mLimits == other.mLimits && mNumber == other.mNumber;
+		       mMaxOrB == other.mMaxOrB && mLimits == other.mLimits && mFormat == other.mFormat;
 	}
 
 	/**
@@ -74,14 +79,14 @@ protected:
 		MinMax,
 		EitherOr
 	} const mLimits;
-	enum class Number : uint8_t
+	enum class Format : uint8_t
 	{
 		StringFloat,
 		StringInt,
 		Int
-	} const mNumber;
-	explicit IKey(std::string_view name, float value, Limits limits, Number number, float minOrA, float maxOrB) :
-	    mMinOrA{minOrA}, mMaxOrB{maxOrB}, mValue{value}, mDefault{value}, mName{name}, mLimits{limits}, mNumber{number}
+	} const mFormat;
+	explicit IKey(std::string_view name, float value, Limits limits, Format format, float minOrA, float maxOrB) :
+	    mMinOrA{minOrA}, mMaxOrB{maxOrB}, mValue{value}, mDefault{value}, mName{name}, mLimits{limits}, mFormat{format}
 	{
 	}
 };
@@ -205,7 +210,7 @@ class Language final : public IKey
 public:
 	Language() :
 	    IKey(
-	        name, static_cast<float>(Types::Language::English), Limits::MinMax, Number::StringInt,
+	        name, static_cast<float>(Types::Language::English), Limits::MinMax, Format::StringInt,
 	        static_cast<float>(Types::Language::English), static_cast<float>(Types::Language::Portogese))
 	{
 	}
@@ -228,7 +233,7 @@ class Scale final : public IKey
 public:
 	Scale() :
 	    IKey(
-	        name, static_cast<float>(Types::Scale::R768x432), Limits::MinMax, Number::StringInt,
+	        name, static_cast<float>(Types::Scale::R768x432), Limits::MinMax, Format::StringInt,
 	        static_cast<float>(Types::Scale::R768x432), static_cast<float>(Types::Scale::R1536x864))
 	{
 	}
@@ -251,7 +256,7 @@ class Fullscreen final : public IKey
 public:
 	Fullscreen() :
 	    IKey(
-	        name, static_cast<float>(Types::Fullscreen::Enabled), Limits::EitherOr, Number::StringInt,
+	        name, static_cast<float>(Types::Fullscreen::Enabled), Limits::EitherOr, Format::StringInt,
 	        static_cast<float>(Types::Fullscreen::Disabled), static_cast<float>(Types::Fullscreen::Enabled))
 	{
 	}
@@ -274,7 +279,7 @@ class LeftHanded final : public IKey
 public:
 	LeftHanded() :
 	    IKey(
-	        name, static_cast<float>(Types::LeftHanded::Enabled), Limits::EitherOr, Number::StringInt,
+	        name, static_cast<float>(Types::LeftHanded::Enabled), Limits::EitherOr, Format::StringInt,
 	        static_cast<float>(Types::LeftHanded::Disabled), static_cast<float>(Types::LeftHanded::Enabled))
 	{
 	}
@@ -297,7 +302,7 @@ class SoundVolume final : public IKey
 public:
 	SoundVolume() :
 	    IKey(
-	        name, static_cast<float>(Types::SoundVolume::V100) / 10, Limits::MinMax, Number::StringFloat,
+	        name, static_cast<float>(Types::SoundVolume::V100) / 10, Limits::MinMax, Format::StringFloat,
 	        static_cast<float>(Types::SoundVolume::V0) / 10, static_cast<float>(Types::SoundVolume::V100) / 10)
 	{
 	}
@@ -324,7 +329,7 @@ class SoundToggle final : public IKey
 public:
 	SoundToggle() :
 	    IKey(
-	        name, static_cast<float>(Types::SoundToggle::Enabled), Limits::EitherOr, Number::StringInt,
+	        name, static_cast<float>(Types::SoundToggle::Enabled), Limits::EitherOr, Format::StringInt,
 	        static_cast<float>(Types::SoundToggle::Disabled), static_cast<float>(Types::SoundToggle::Enabled))
 	{
 	}
@@ -347,7 +352,7 @@ class MusicVolume final : public IKey
 public:
 	MusicVolume() :
 	    IKey(
-	        name, static_cast<float>(Types::MusicVolume::V100) / 10, Limits::MinMax, Number::StringFloat,
+	        name, static_cast<float>(Types::MusicVolume::V100) / 10, Limits::MinMax, Format::StringFloat,
 	        static_cast<float>(Types::MusicVolume::V0) / 10, static_cast<float>(Types::MusicVolume::V100) / 10)
 	{
 	}
@@ -374,7 +379,7 @@ class MusicToggle final : public IKey
 public:
 	MusicToggle() :
 	    IKey(
-	        name, static_cast<float>(Types::MusicToggle::Enabled), Limits::EitherOr, Number::StringInt,
+	        name, static_cast<float>(Types::MusicToggle::Enabled), Limits::EitherOr, Format::StringInt,
 	        static_cast<float>(Types::MusicToggle::Disabled), static_cast<float>(Types::MusicToggle::Enabled))
 	{
 	}
@@ -444,7 +449,7 @@ class BossNoDamageProgress final : public IKey
 public:
 	BossNoDamageProgress() :
 	    IKey(
-	        name, static_cast<float>(Types::BossNoDamage::None), Limits::MinMax, Number::StringInt,
+	        name, static_cast<float>(Types::BossNoDamage::None), Limits::MinMax, Format::StringInt,
 	        static_cast<float>(Types::BossNoDamage::None), static_cast<float>(Types::BossNoDamage::All))
 	{
 	}
@@ -463,7 +468,7 @@ public:
 class EnemiesDefeated final : public IKey
 {
 public:
-	EnemiesDefeated() : IKey(name, 0, Limits::MinMax, Number::StringInt, 0, 1677215)
+	EnemiesDefeated() : IKey(name, 0, Limits::MinMax, Format::StringInt, 0, 1677215)
 	{
 	}
 	EnemiesDefeated& operator=(Types::Scale value)
@@ -485,7 +490,7 @@ class Castle final : public IKey
 public:
 	Castle() :
 	    IKey(
-	        name, static_cast<float>(Types::Castle::Locked), Limits::EitherOr, Number::StringInt,
+	        name, static_cast<float>(Types::Castle::Locked), Limits::EitherOr, Format::StringInt,
 	        static_cast<float>(Types::Castle::Locked), static_cast<float>(Types::Castle::Unlocked))
 	{
 	}
@@ -508,7 +513,7 @@ class Moon final : public IKey
 public:
 	Moon() :
 	    IKey(
-	        name, static_cast<float>(Types::Moon::Locked), Limits::EitherOr, Number::StringInt,
+	        name, static_cast<float>(Types::Moon::Locked), Limits::EitherOr, Format::StringInt,
 	        static_cast<float>(Types::Moon::Locked), static_cast<float>(Types::Moon::Unlocked))
 	{
 	}
@@ -531,7 +536,7 @@ class Snow final : public IKey
 public:
 	Snow() :
 	    IKey(
-	        name, static_cast<float>(Types::Snow::Locked), Limits::EitherOr, Number::StringInt,
+	        name, static_cast<float>(Types::Snow::Locked), Limits::EitherOr, Format::StringInt,
 	        static_cast<float>(Types::Snow::Locked), static_cast<float>(Types::Snow::Unlocked))
 	{
 	}
@@ -554,7 +559,7 @@ class Desert final : public IKey
 public:
 	Desert() :
 	    IKey(
-	        name, static_cast<float>(Types::Desert::Locked), Limits::EitherOr, Number::StringInt,
+	        name, static_cast<float>(Types::Desert::Locked), Limits::EitherOr, Format::StringInt,
 	        static_cast<float>(Types::Desert::Locked), static_cast<float>(Types::Desert::Unlocked))
 	{
 	}
@@ -577,7 +582,7 @@ class Forest final : public IKey
 public:
 	Forest() :
 	    IKey(
-	        name, static_cast<float>(Types::Forest::Locked), Limits::EitherOr, Number::StringInt,
+	        name, static_cast<float>(Types::Forest::Locked), Limits::EitherOr, Format::StringInt,
 	        static_cast<float>(Types::Forest::Locked), static_cast<float>(Types::Forest::Unlocked))
 	{
 	}
@@ -600,7 +605,7 @@ class Ending final : public IKey
 public:
 	Ending() :
 	    IKey(
-	        name, static_cast<float>(Types::Ending::Unwatched), Limits::EitherOr, Number::StringInt,
+	        name, static_cast<float>(Types::Ending::Unwatched), Limits::EitherOr, Format::StringInt,
 	        static_cast<float>(Types::Ending::Unwatched), static_cast<float>(Types::Ending::Watched))
 	{
 	}
@@ -623,7 +628,7 @@ class Intro final : public IKey
 public:
 	Intro() :
 	    IKey(
-	        name, static_cast<float>(Types::Intro::Unwatched), Limits::EitherOr, Number::StringInt,
+	        name, static_cast<float>(Types::Intro::Unwatched), Limits::EitherOr, Format::StringInt,
 	        static_cast<float>(Types::Intro::Unwatched), static_cast<float>(Types::Intro::Watched))
 	{
 	}
@@ -644,7 +649,7 @@ private:
 class Lives final : public IKey
 {
 public:
-	Lives() : IKey(name, 5, Limits::MinMax, Number::StringFloat, 1, 16777215)
+	Lives() : IKey(name, 5, Limits::MinMax, Format::StringFloat, 1, 16777215)
 	{
 	}
 	Lives& operator=(Types::Lives value)
@@ -664,7 +669,7 @@ private:
 class Gems final : public IKey
 {
 public:
-	Gems() : IKey(name, 0, Limits::MinMax, Number::StringInt, 0, 99)
+	Gems() : IKey(name, 0, Limits::MinMax, Format::StringInt, 0, 99)
 	{
 	}
 	Gems& operator=(Types::Gems value)
@@ -681,6 +686,10 @@ private:
 	static constexpr std::string_view name = "gems";
 };
 
+/**
+ * @brief base class for file INI key, needs concrete implementation
+ *
+ */
 class FileBase : public ISection
 {
 protected:
@@ -722,7 +731,7 @@ public:
 	{
 		return *static_cast<Forest*>(mKeys[6].get());
 	}
-	Types::Level getLevel();
+	Types::Level getLevel(); // TODO should be const (needs const version of other functions)
 	void setLevel(Types::Level level);
 	Ending& getEnding()
 	{
@@ -807,7 +816,7 @@ class CheatsEnabled final : public IKey
 public:
 	CheatsEnabled() :
 	    IKey(
-	        name, static_cast<float>(Types::CheatsEnabled::Disabled), Limits::EitherOr, Number::Int,
+	        name, static_cast<float>(Types::CheatsEnabled::Disabled), Limits::EitherOr, Format::Int,
 	        static_cast<float>(Types::CheatsEnabled::Disabled), static_cast<float>(Types::CheatsEnabled::Enabled))
 	{
 	}

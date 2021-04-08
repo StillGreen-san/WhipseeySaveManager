@@ -4,6 +4,7 @@
 using namespace WhipseeySaveManager;
 
 // TODO rethink shared_pointer usage
+// TODO inconsistant member naming (value | mValue)
 
 int WinMain()
 {

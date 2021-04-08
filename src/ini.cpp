@@ -15,9 +15,10 @@ Types::Error IKey::fromString(std::string_view string)
 {
 	float newValue = mValue;
 	applyDefaults();
-	switch(mNumber)
+
+	switch(mFormat)
 	{
-	case Number::Int:
+	case Format::Int:
 	{
 		if(std::all_of(string.begin(), string.end(), isdigit))
 		{
@@ -29,13 +30,14 @@ Types::Error IKey::fromString(std::string_view string)
 		}
 		break;
 	}
-	case Number::StringFloat:
-	case Number::StringInt:
+	case Format::StringFloat:
+	case Format::StringInt:
 	default:
 	{
 		constexpr unsigned expectedFractionalPrecision = 6;
 		unsigned fractionalPrecision = 0;
-		auto ifFloatPart = [hasDot = bool(false), &fractionalPrecision, &expectedFractionalPrecision](char chr) mutable
+
+		auto ifFloatPart = [hasDot = bool(false), &fractionalPrecision, expectedFractionalPrecision](char chr) mutable
 		{
 			if(chr == '.')
 			{
@@ -62,12 +64,13 @@ Types::Error IKey::fromString(std::string_view string)
 				return static_cast<bool>(std::isdigit(chr));
 			}
 		};
+
 		if((string.front() == '"' && string.back() == '"') &&
 		   std::all_of(++string.begin(), --string.end(), ifFloatPart) &&
 		   fractionalPrecision == expectedFractionalPrecision)
 		{
 			newValue = std::strtof(string.data() + 1, nullptr);
-			if(mNumber == Number::StringInt)
+			if(mFormat == Format::StringInt)
 			{
 				float asInt = std::floorf(newValue);
 				if(asInt != newValue)
@@ -84,6 +87,7 @@ Types::Error IKey::fromString(std::string_view string)
 		}
 	}
 	}
+
 	switch(mLimits)
 	{
 	case Limits::EitherOr:
@@ -104,18 +108,19 @@ Types::Error IKey::fromString(std::string_view string)
 		break;
 	}
 	}
+
 	mValue = newValue;
 	return {};
 }
 
 std::string IKey::toString() const
 {
-	switch(mNumber)
+	switch(mFormat)
 	{
-	case Number::Int:
+	case Format::Int:
 		return std::to_string(static_cast<int>(mValue));
-	case Number::StringFloat:
-	case Number::StringInt:
+	case Format::StringFloat:
+	case Format::StringInt:
 	default:
 		return std::to_string(mValue).insert(0, 1, '"').append(1, '"');
 	}
@@ -156,6 +161,7 @@ void FileBase::setLevel(Types::Level level)
 	getSnow() = Types::Snow::Locked;
 	getDesert() = Types::Desert::Locked;
 	getForest() = Types::Forest::Locked;
+
 	switch(level)
 	{
 	case Types::Level::Castle:
@@ -199,7 +205,7 @@ public:
 
 INI::INI() : mIni(std::make_unique<INIintern>())
 {
-	mIni->SetSpaces(false);
+	mIni->SetSpaces(false); // to mimick original style of gamefiles
 }
 
 INI::~INI() = default;
@@ -212,8 +218,7 @@ Types::Error INI::extractError()
 bool INI::loadFile(const std::filesystem::path& path)
 {
 	mIni->Reset();
-	const SI_Error siErr = mIni->LoadFile(path.native().c_str());
-	if(siErr == SI_Error::SI_OK)
+	if(mIni->LoadFile(path.native().c_str()) == SI_Error::SI_OK)
 	{
 		return true;
 	}
@@ -232,10 +237,11 @@ bool INI::writeFile(const std::filesystem::path& path)
 	}
 	else
 	{
-		constexpr size_t ORG_FILESIZE = 1024;                  // the savefile is padded to 1kb by the game
-		constexpr const char* SI_SECTION_END = "\r\n\r\n\r\n"; // SimpleIni adds two extra line end after a section
+		constexpr size_t ORG_FILESIZE = 1024;                       // the savefile is padded to 1kb by the game
+		constexpr std::string_view SI_SECTION_END = "\r\n\r\n\r\n"; // SimpleIni adds two extra line end after a section
 		std::string buffer;
 		buffer.reserve(ORG_FILESIZE);
+
 		if(mIni->Save(buffer) == SI_Error::SI_OK)
 		{
 			size_t sectionEnd = buffer.find(SI_SECTION_END);
@@ -244,6 +250,7 @@ bool INI::writeFile(const std::filesystem::path& path)
 				buffer.erase(sectionEnd, 4);
 				sectionEnd = buffer.find(SI_SECTION_END);
 			}
+
 			buffer.resize(ORG_FILESIZE);
 			std::ofstream out(path, std::ios_base::binary); // binary to avoid extra newlines added by ofstream
 			out << buffer;
@@ -259,7 +266,7 @@ bool INI::writeFile(const std::filesystem::path& path)
 
 bool INI::has(const std::shared_ptr<ISection>& section)
 {
-	if(mIni->IsEmpty() || mIni->GetSection(section->section().data()) == nullptr)
+	if(mIni->IsEmpty() || !mIni->GetSection(section->section().data()))
 	{
 		mError += Types::Error::Code::SectionNotFound;
 		return false;
@@ -270,6 +277,7 @@ bool INI::has(const std::shared_ptr<ISection>& section)
 bool INI::read(const std::shared_ptr<ISection>& section)
 {
 	bool success = has(section);
+
 	if(!success)
 	{
 		for(const auto& key : section->keys())
@@ -278,12 +286,13 @@ bool INI::read(const std::shared_ptr<ISection>& section)
 		}
 		return success;
 	}
+
 	for(const auto& key : section->keys())
 	{
 		std::string_view value = mIni->GetValue(section->section(), key->key());
 		if(value == INIintern::NOT_FOUND)
 		{
-			if(key->key() != BossNoDamageProgress::name) //! used instead of making IKey virtual
+			if(key->key() != BossNoDamageProgress::name) //! explicit instead of making changes to IKey
 			{
 				key->applyDefaults();
 				mError += Types::Error::Code::KeyNotFound;
@@ -300,6 +309,7 @@ bool INI::read(const std::shared_ptr<ISection>& section)
 			}
 		}
 	}
+
 	return success;
 }
 
