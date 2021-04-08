@@ -69,22 +69,23 @@ public:
 	}
 
 protected:
-	const float mMinOrA; // TODO const member bad?
-	const float mMaxOrB;
-	const float mDefault;
+	float mMinOrA;
+	float mMaxOrB;
+	float mDefault;
 	float mValue;
-	const std::string_view mName;
+	std::string_view mName;
 	enum class Limits : uint8_t
 	{
 		MinMax,
 		EitherOr
-	} const mLimits;
+	} mLimits;
 	enum class Format : uint8_t
 	{
 		StringFloat,
 		StringInt,
 		Int
-	} const mFormat;
+	} mFormat;
+
 	explicit IKey(std::string_view name, float value, Limits limits, Format format, float minOrA, float maxOrB) :
 	    mMinOrA{minOrA}, mMaxOrB{maxOrB}, mValue{value}, mDefault{value}, mName{name}, mLimits{limits}, mFormat{format}
 	{
@@ -120,7 +121,7 @@ protected:
 	{
 	}
 
-	const std::string_view mName;
+	std::string_view mName;
 	std::vector<std::shared_ptr<IKey>> mKeys;
 };
 
