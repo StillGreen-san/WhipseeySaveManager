@@ -10,7 +10,7 @@
 namespace WhipseeySaveManager::INI
 {
 /**
- * @brief base class representing a INI key with name name (float) value optionally enclosed in '"",
+ * @brief base class representing a INI key with name, value (float) optionally enclosed in '"",
  * needs concrete implementaion
  *
  */
@@ -91,13 +91,14 @@ protected:
 	}
 };
 
+/**
+ * @brief base class representing a INI section with name & keys,
+ * needs concrete implementaion
+ *
+ */
 class ISection
 {
 public:
-	ISection(std::string_view name, std::initializer_list<std::shared_ptr<IKey>> il) : mName{name}, mKeys{il}
-	{
-	}
-
 	/**
 	 * @return std::string_view with the section name
 	 */
@@ -106,28 +107,44 @@ public:
 		return mName;
 	}
 
+	/**
+	 * @return const std::vector<std::shared_ptr<IKey>>& keys stored
+	 */
 	const std::vector<std::shared_ptr<IKey>>& keys()
 	{
 		return mKeys;
 	}
 
 protected:
+	ISection(std::string_view name, std::initializer_list<std::shared_ptr<IKey>> il) : mName{name}, mKeys{il}
+	{
+	}
+
 	const std::string_view mName;
 	std::vector<std::shared_ptr<IKey>> mKeys;
 };
 
+/**
+ * @brief base class representing a INI file with sections,
+ * needs concrete implementaion
+ *
+ */
 class IIni
 {
 public:
-	IIni(std::initializer_list<std::shared_ptr<ISection>> il) : mSections{il}
-	{
-	}
+	/**
+	 * @return const std::vector<std::shared_ptr<ISection>>& sections stored
+	 */
 	const std::vector<std::shared_ptr<ISection>>& sections()
 	{
 		return mSections;
 	}
 
 protected:
+	IIni(std::initializer_list<std::shared_ptr<ISection>> il) : mSections{il}
+	{
+	}
+
 	std::vector<std::shared_ptr<ISection>> mSections;
 };
 
