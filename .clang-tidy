@@ -8,7 +8,8 @@ Checks: >
   -fuchsia-default-arguments-calls,
   -fuchsia-default-arguments-declarations,
   -google-readability-todo,
-  -modernize-use-trailing-return-type,
-  -readability-else-after-return,
-  -readability-implicit-bool-conversion
+  -modernize-use-trailing-return-type
 WarningsAsErrors: 'true'
+CheckOptions:
+  - key: readability-implicit-bool-conversion.AllowPointerConditions
+    value: 'true'

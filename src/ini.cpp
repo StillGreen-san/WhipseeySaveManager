@@ -45,24 +45,20 @@ Types::Error IKey::fromString(std::string_view string)
 				{
 					return false;
 				}
-				else
-				{
-					hasDot = true;
-					return true;
-				}
+
+				hasDot = true;
+				return true;
 			}
-			else
+
+			if(hasDot)
 			{
-				if(hasDot)
-				{
-					++fractionalPrecision;
-				}
-				if(fractionalPrecision > expectedFractionalPrecision)
-				{
-					return false;
-				}
-				return static_cast<bool>(std::isdigit(chr));
+				++fractionalPrecision;
 			}
+			if(fractionalPrecision > expectedFractionalPrecision)
+			{
+				return false;
+			}
+			return static_cast<bool>(std::isdigit(chr));
 		};
 
 		if((string.front() == '"' && string.back() == '"') &&
@@ -81,10 +77,8 @@ Types::Error IKey::fromString(std::string_view string)
 			}
 			break;
 		}
-		else
-		{
-			return Types::Error::Code::InvalidFormat;
-		}
+
+		return Types::Error::Code::InvalidFormat;
 	}
 	}
 
@@ -263,7 +257,7 @@ bool INI::writeFile(const std::filesystem::path& path)
 
 bool INI::has(const std::shared_ptr<ISection>& section)
 {
-	if(mIni->IsEmpty() || !mIni->GetSection(section->section().data()))
+	if(mIni->IsEmpty() || !mIni->GetSection(section->section()))
 	{
 		mError += Types::Error::Code::SectionNotFound;
 		return false;
