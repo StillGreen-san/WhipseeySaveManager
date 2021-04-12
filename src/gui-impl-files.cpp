@@ -194,7 +194,7 @@ FileBox::FileBox(nana::window wd) : nana::panel<false>(wd)
 
 	bgems.tooltip("Set Gems to 0 or 99");
 	bgems.events().click.connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    if(tgems.caption() == "99")
 		    {
@@ -212,7 +212,7 @@ FileBox::FileBox(nana::window wd) : nana::panel<false>(wd)
 
 	blives.tooltip("Set Lives to 0, 99 or 9999");
 	blives.events().click.connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    const std::string lives = tlives.caption();
 		    if(lives == "9999")
@@ -231,7 +231,7 @@ FileBox::FileBox(nana::window wd) : nana::panel<false>(wd)
 
 	reset.tooltip("New File");
 	reset.events().click.connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    tgems.caption("0");
 		    tlives.caption("5");
@@ -242,7 +242,7 @@ FileBox::FileBox(nana::window wd) : nana::panel<false>(wd)
 
 	max.tooltip("100% File with 9999 Lives");
 	max.events().click.connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    tgems.caption("99");
 		    tlives.caption("9999");
@@ -292,52 +292,52 @@ TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, cons
 	place["files"] << file1 << file2 << file3;
 
 	file1.onReload().connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    callbacks.onReadSection(save->getFile1(), path.getPath());
 		    file1.update(*save->getFile1());
 	    });
 	file1.onSave().connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    file1.get(*save->getFile1());
 		    callbacks.onWriteSection(save->getFile1(), path.getPath());
 	    });
 
 	file2.onReload().connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    callbacks.onReadSection(save->getFile2(), path.getPath());
 		    file2.update(*save->getFile2());
 	    });
 	file2.onSave().connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    file2.get(*save->getFile2());
 		    callbacks.onWriteSection(save->getFile2(), path.getPath());
 	    });
 
 	file3.onReload().connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    callbacks.onReadSection(save->getFile3(), path.getPath());
 		    file3.update(*save->getFile3());
 	    });
 	file3.onSave().connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    file3.get(*save->getFile3());
 		    callbacks.onWriteSection(save->getFile3(), path.getPath());
 	    });
 
 	path.onReload().connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    showErrorMsg(callbacks.onReadIni(save, path.getPath()));
 		    update(*save);
 	    });
 	path.onSave().connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    file1.get(*save->getFile1());
 		    file2.get(*save->getFile2());

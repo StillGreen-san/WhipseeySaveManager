@@ -167,14 +167,14 @@ TabOptions::TabOptions(nana::window wd, const std::shared_ptr<INI::Save>& save, 
 	place["options"] << options;
 
 	path.onReload().connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    showErrorMsg(callbacks.onReadSection(save->getOptions(), path.getPath()));
 		    options.update(*save->getOptions());
 	    });
 
 	path.onSave().connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    options.get(*save->getOptions());
 		    showErrorMsg(callbacks.onWriteSection(save->getOptions(), path.getPath()));

@@ -1,6 +1,10 @@
 Checks: >
   *,
-  -llvm*,
+  -llvm-header-guard,
+  -llvm-prefer-isa-or-dyn-cast-in-conditionals,
+  -llvmlibc-callee-namespace,
+  -llvmlibc-implementation-in-namespace,
+  -llvmlibc-restrict-system-libc-headers,
   -fuchsia-default-arguments-calls,
   -fuchsia-default-arguments-declarations,
   -google-readability-todo,

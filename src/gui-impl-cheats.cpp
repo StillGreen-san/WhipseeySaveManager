@@ -27,20 +27,20 @@ TabCheats::TabCheats(
 	place["cheats"] << cheats;
 
 	cheats.onEnabledChanged().connect_front(
-	    [&](nana::arg_checkbox cb)
+	    [&](const nana::arg_checkbox& checkbox)
 	    {
-		    sttngs->getCheats().getCheatsEnabled() = static_cast<Types::CheatsEnabled>(cb.widget->checked());
+		    sttngs->getCheats().getCheatsEnabled() = static_cast<Types::CheatsEnabled>(checkbox.widget->checked());
 	    });
 
 	path.onReload().connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    showErrorMsg(callbacks.onReadIni(sttngs, path.getPath()));
 		    cheats.update(sttngs->getCheats());
 	    });
 
 	path.onSave().connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    showErrorMsg(callbacks.onWriteIni(sttngs, path.getPath()));
 	    });

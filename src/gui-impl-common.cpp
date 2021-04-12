@@ -16,14 +16,14 @@ PathControls::PathControls(
 
 	setPath(path);
 	filePath.events().text_changed.connect_front(
-	    [&](nana::arg_textbox)
+	    [&]([[maybe_unused]] const nana::arg_textbox& textbox)
 	    {
 		    varifyPath(getPath());
 	    });
 
 	openFile.tooltip("Open and Load a new File");
 	openFile.events().click.connect_front(
-	    [&](nana::arg_click)
+	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
 		    open();
 	    });
