@@ -3,6 +3,7 @@
 #include "core.hpp"
 
 #include <filesystem>
+#include <map>
 #include <optional>
 
 namespace WhipseeySaveManager::Types
@@ -255,7 +256,7 @@ public:
 	 * @brief the type of error
 	 *
 	 */
-	enum class Code
+	enum class Code : unsigned
 	{
 		Nothing,           // no error occurred
 		Unknown,           // an unknown error occurred
@@ -296,6 +297,7 @@ public:
 	{
 		return !codes.empty();
 	}
+	// TODO add conversion to numeric error code? (eg exit code for main)
 
 	/**
 	 * @brief resets codes to only the one passed in
@@ -354,24 +356,17 @@ public:
 		{
 			return false;
 		}
+		std::map<Code, unsigned> errCntThis, errCntThat;
 		for(Code code : codes)
 		{
-			bool found = false;
-			for(Code otherCode : other.codes)
-			{
-				if(code == otherCode)
-				{
-					found = true;
-					break;
-				}
-			}
-			if(!found)
-			{
-				return false;
-			}
+			++errCntThis[code];
 		}
-		return true;
-	} // TODO handle {C1,C2,C2} == {C1,C1,C2}
+		for(Code code : other.codes)
+		{
+			++errCntThat[code];
+		}
+		return errCntThis == errCntThat;
+	}
 
 	/**
 	 * @brief checks if this only conatins the code passed in

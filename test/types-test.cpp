@@ -68,6 +68,11 @@ TEST_CASE("Error", "[Types]")
 
 		errorB += Types::Error::Code::Unknown;
 		CHECK_FALSE(errorA == errorB);
+
+		CHECK_FALSE(
+		    Types::Error({Types::Error::Code::Unknown, Types::Error::Code::Unknown, Types::Error::Code::KeyNotFound}) ==
+		    Types::Error(
+		        {Types::Error::Code::Unknown, Types::Error::Code::KeyNotFound, Types::Error::Code::KeyNotFound}));
 	}
 
 	SECTION("=")
