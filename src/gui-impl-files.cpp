@@ -5,6 +5,11 @@
 // TODO delegate reset to INI types
 // TODO const params / decl for get & update (all things)
 
+bool iswdigit(wchar_t chr)
+{
+	return static_cast<bool>(std::iswdigit(chr));
+}
+
 namespace WhipseeySaveManager::GUI
 {
 void FileGroup::update(INI::FileBase& file)
@@ -113,7 +118,7 @@ NumericTextbox::NumericTextbox(nana::window parent, int minVal, int maxVal) :
 				    this->from(min);
 				    return false;
 			    }
-			    if(std::iswdigit(chr))
+			    if(iswdigit(chr))
 			    {
 				    std::string value = this->text();
 				    value.insert(this->caret_pos().x, 1, static_cast<char>(chr));
@@ -148,7 +153,7 @@ NumericTextbox::NumericTextbox(nana::window parent, int minVal, int maxVal) :
 				    this->from(min);
 				    return false;
 			    }
-			    if(std::iswdigit(chr))
+			    if(iswdigit(chr))
 			    {
 				    value.erase(range.first.x + 1, (range.second.x - range.first.x) - 1);
 				    value[range.first.x] = static_cast<char>(chr);

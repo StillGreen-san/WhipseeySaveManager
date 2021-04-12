@@ -6,7 +6,7 @@
 
 bool isdigt(char chr)
 {
-	return std::isdigit(chr);
+	return static_cast<bool>(std::isdigit(static_cast<unsigned char>(chr)));
 }
 
 namespace WhipseeySaveManager::INI
@@ -132,26 +132,23 @@ Types::Level FileBase::getLevel()
 	{
 		return Types::Level::Castle;
 	}
-	else if(getMoon() == Types::Moon::Unlocked)
+	if(getMoon() == Types::Moon::Unlocked)
 	{
 		return Types::Level::Moon;
 	}
-	else if(getSnow() == Types::Snow::Unlocked)
+	if(getSnow() == Types::Snow::Unlocked)
 	{
 		return Types::Level::Snow;
 	}
-	else if(getDesert() == Types::Desert::Unlocked)
+	if(getDesert() == Types::Desert::Unlocked)
 	{
 		return Types::Level::Desert;
 	}
-	else if(getForest() == Types::Forest::Unlocked)
+	if(getForest() == Types::Forest::Unlocked)
 	{
 		return Types::Level::Forest;
 	}
-	else
-	{
-		return Types::Level::Beach;
-	}
+	return Types::Level::Beach;
 }
 
 void FileBase::setLevel(Types::Level level)
