@@ -55,6 +55,7 @@ set( MAIN_SOURCES
 	${WSM_SRC_DIR}/gui-impl-files.cpp
 	${WSM_SRC_DIR}/gui-impl-options.cpp
 	${WSM_SRC_DIR}/gui-impl-cheats.cpp
+	${WSM_SRC_DIR}/VERSIONINFO.rc
 )
 
 add_executable( ${MAIN_TARGET} WIN32 ${MAIN_SOURCES} )

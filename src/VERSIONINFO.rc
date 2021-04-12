@@ -1,0 +1,40 @@
+#pragma once
+#include <Winver.h>
+
+#define VER_PRODUCTVERSION          0,9,0,0
+#define VER_PRODUCTVERSION_STR      "0.9.0.0\0"
+
+#define VER_FILEDESCRIPTION_STR     "GUI for modifying some Values in Whipseey Savegames\0"
+#define VER_PRODUCTNAME_STR         "Whipseey Save Manager\0"
+#define VER_COMMENTS_STR            "Intended for (Speedrun) practice\0"
+
+#ifndef DEBUG
+#define VER_DEBUG                   0
+#else
+#define VER_DEBUG                   VS_FF_DEBUG
+#endif
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     VER_PRODUCTVERSION
+PRODUCTVERSION  VER_PRODUCTVERSION
+FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+FILEFLAGS       VS_FF_PRERELEASE
+FILEOS          VOS_NT
+FILETYPE        VFT_APP
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "Comments",         VER_COMMENTS_STR
+            VALUE "FileDescription",  VER_FILEDESCRIPTION_STR
+            VALUE "FileVersion",      VER_PRODUCTVERSION_STR
+            VALUE "ProductName",      VER_PRODUCTNAME_STR
+            VALUE "ProductVersion",   VER_PRODUCTVERSION_STR
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
