@@ -21,34 +21,28 @@ std::optional<Types::Theme> systemTheme()
 	Types::Theme theme;
 	winreg::RegKey regHandler;
 
-	if(regHandler.TryOpen(HKEY_CURRENT_USER, themeKey, KEY_READ))
+	if(!regHandler.TryOpen(HKEY_CURRENT_USER, themeKey, KEY_READ))
 	{
-		std::optional<DWORD> lightTheme = regHandler.TryGetDwordValue(themeDW);
-		if(lightTheme.has_value())
-		{
-			theme.darkmode = lightTheme.value() ? Types::Darkmode::Disabled : Types::Darkmode::Enabled;
-		}
-		else
-		{
-			return {};
-		}
+		return {};
+	}
+
+	if(std::optional<DWORD> lightTheme = regHandler.TryGetDwordValue(themeDW))
+	{
+		theme.darkmode = lightTheme.value() ? Types::Darkmode::Disabled : Types::Darkmode::Enabled;
 	}
 	else
 	{
 		return {};
 	}
 
-	if(regHandler.TryOpen(HKEY_CURRENT_USER, colorKey, KEY_READ))
+	if(!regHandler.TryOpen(HKEY_CURRENT_USER, colorKey, KEY_READ))
 	{
-		std::optional<DWORD> color = regHandler.TryGetDwordValue(colorDW);
-		if(color.has_value())
-		{
-			theme.accent = color.value();
-		}
-		else
-		{
-			return {};
-		}
+		return {};
+	}
+
+	if(std::optional<DWORD> color = regHandler.TryGetDwordValue(colorDW))
+	{
+		theme.accent = color.value();
 	}
 	else
 	{
@@ -115,15 +109,12 @@ std::optional<std::filesystem::path> defaultSavePath()
 {
 	std::filesystem::path path;
 	CoTaskMem<WCHAR> szPath;
-	HRESULT result = SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_DEFAULT, NULL, szPath);
-	if(result == S_OK)
-	{
-		path.assign(szPath.Get());
-	}
-	else
+	if(SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_DEFAULT, NULL, szPath) != S_OK)
 	{
 		return {};
 	}
+
+	path.assign(szPath.Get());
 
 	const std::filesystem::path saveRelativePath(R"(Whipseey\savedata\whipseey.sav)");
 	path /= saveRelativePath;
@@ -143,17 +134,14 @@ std::optional<std::filesystem::path> defaultSettingsPath()
 	std::filesystem::path steamPath;
 	winreg::RegKey regHandler;
 
-	if(regHandler.TryOpen(HKEY_LOCAL_MACHINE, steamKey, KEY_READ | KEY_WOW64_32KEY))
+	if(!regHandler.TryOpen(HKEY_LOCAL_MACHINE, steamKey, KEY_READ | KEY_WOW64_32KEY))
 	{
-		std::optional<std::wstring> installPath = regHandler.TryGetStringValue(steamSZ);
-		if(installPath.has_value())
-		{
-			steamPath.assign(installPath.value());
-		}
-		else
-		{
-			return {};
-		}
+		return {};
+	}
+
+	if(std::optional<std::wstring> installPath = regHandler.TryGetStringValue(steamSZ))
+	{
+		steamPath.assign(installPath.value());
 	}
 	else
 	{
