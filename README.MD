@@ -36,6 +36,7 @@ Game needs to be restarted to load a modified Savegame or Settings. Autosaving i
 - Registry : [WinReg](https://github.com/GiovanniDicanio/WinReg)
 - INI : [simpleini](https://github.com/brofield/simpleini)
 - GUI : [nana](https://github.com/cnjinhao/nana)
+  - uses vcpkg specific name "unofficial-nana" in CMakeLists.txt
 
 ### Tests
 

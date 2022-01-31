@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.17.0 )
 
-project( WhipseeySaveManager LANGUAGES CXX )
+project( WhipseeySaveManager CXX )
 
 if( NOT WIN32 )
 	message( FATAL_ERROR "Windows Required" )
@@ -26,10 +26,10 @@ if( USE_CPPCHECK )
 	set( CMAKE_CXX_CPPCHECK cppcheck --suppress=missingInclude --enable=all ${CPPCHECK_USER_ARGS} )
 endif( )
 
-find_package( nana REQUIRED CONFIG NAMES nana unofficial-nana )
+find_package( unofficial-nana REQUIRED CONFIG ) #!VCPKG specific
 find_package( Catch2 CONFIG REQUIRED )
 find_path( WINREG_INCLUDE_DIRS "winreg/WinReg.hpp" REQUIRED )
-find_path( SIMPLEINI_INCLUDE_DIRS "ConvertUTF.c" REQUIRED )
+find_path( SIMPLEINI_INCLUDE_DIRS "SimpleIni.h" REQUIRED )
 
 set( WSM_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc )
 set( WSM_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src )

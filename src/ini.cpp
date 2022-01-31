@@ -4,7 +4,7 @@
 
 #include <fstream>
 
-bool isdigt(char chr)
+bool isdigt(char chr) // TODO fix spelling to actually use this !?
 {
 	return static_cast<bool>(std::isdigit(static_cast<unsigned char>(chr)));
 }
