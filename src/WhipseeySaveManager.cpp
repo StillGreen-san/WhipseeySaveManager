@@ -2,7 +2,7 @@
 #include "system.hpp"
 
 // TODO rethink shared_pointer usage
-// TODO inconsistant member naming (value | mValue)
+// TODO inconsistent member naming (value | mValue)
 // TODO use [[nodiscard]]
 
 int WinMain()

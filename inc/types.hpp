@@ -9,7 +9,7 @@
 namespace WhipseeySaveManager::Types
 {
 /**
- * @brief stringly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with there savegame values
  *
  */
 enum class Fullscreen : uint8_t
@@ -19,7 +19,7 @@ enum class Fullscreen : uint8_t
 };
 
 /**
- * @brief stringly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with there savegame values
  *
  */
 enum class LeftHanded : uint8_t
@@ -29,7 +29,7 @@ enum class LeftHanded : uint8_t
 };
 
 /**
- * @brief stringly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with there savegame values
  *
  */
 enum class SoundToggle : uint8_t
@@ -39,7 +39,7 @@ enum class SoundToggle : uint8_t
 };
 
 /**
- * @brief stringly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with there savegame values
  *
  */
 enum class MusicToggle : uint8_t
@@ -49,7 +49,7 @@ enum class MusicToggle : uint8_t
 };
 
 /**
- * @brief stringly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with there savegame values
  *
  */
 enum class Ending : uint8_t
@@ -59,7 +59,7 @@ enum class Ending : uint8_t
 };
 
 /**
- * @brief stringly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with there savegame values
  *
  */
 enum class Intro : uint8_t
@@ -69,7 +69,7 @@ enum class Intro : uint8_t
 };
 
 /**
- * @brief stringly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with there savegame values
  *
  */
 enum class CheatsEnabled : uint8_t
@@ -79,7 +79,7 @@ enum class CheatsEnabled : uint8_t
 };
 
 /**
- * @brief stringly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with there savegame values
  *
  */
 enum class Darkmode : uint8_t
@@ -369,10 +369,10 @@ public:
 	}
 
 	/**
-	 * @brief checks if this only conatins the code passed in
+	 * @brief checks if this only contains the code passed in
 	 *
 	 * @param code the code to check
-	 * @return true if this only conatins the code passed in
+	 * @return true if this only contains the code passed in
 	 */
 	bool operator==(const Code& code) const
 	{

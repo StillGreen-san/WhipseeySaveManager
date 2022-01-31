@@ -45,7 +45,7 @@ public:
 };
 
 /**
- * @brief control with various setting constrols for a 'saveslot'
+ * @brief control with various setting controls for a 'saveslot'
  *
  */
 class FileBox : public nana::panel<false>

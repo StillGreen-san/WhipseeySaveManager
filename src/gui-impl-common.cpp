@@ -9,7 +9,7 @@ namespace WhipseeySaveManager::GUI
 PathControls::PathControls(
     nana::window wd, std::vector<std::pair<std::string, std::string>>&& filters, std::filesystem::path path) :
     nana::panel<false>(wd),
-    additianalFilters{std::move(filters)}
+    additionalFilters{std::move(filters)}
 {
 	place.div("this fit gap=5");
 	place["this"] << filePath << openFile << saveFile << reloadFile;
@@ -18,7 +18,7 @@ PathControls::PathControls(
 	filePath.events().text_changed.connect_front(
 	    [&]([[maybe_unused]] const nana::arg_textbox& textbox)
 	    {
-		    varifyPath(getPath());
+		    verifyPath(getPath());
 	    });
 
 	openFile.tooltip("Open and Load a new File");
@@ -40,7 +40,7 @@ std::filesystem::path PathControls::getPath() const
 constexpr nana::colors validBG = nana::colors::white;
 constexpr nana::colors invalidBG = nana::colors::firebrick;
 
-void PathControls::varifyPath(const std::filesystem::path& path)
+void PathControls::verifyPath(const std::filesystem::path& path)
 {
 	if(std::filesystem::exists(path))
 	{
@@ -79,7 +79,7 @@ void PathControls::open()
 	{
 		ofd.init_file(*path);
 	}
-	ofd.add_filter(additianalFilters);
+	ofd.add_filter(additionalFilters);
 	ofd.add_filter("All (*.*)", "*.*");
 
 	auto paths = ofd.show();
@@ -100,7 +100,7 @@ void showErrorMsg(const Types::Error& error)
 	std::set<Types::Error::Code> uniqueCodes(error.begin(), error.end());
 
 	nana::msgbox msgbox("Error!");
-	msgbox << "The following errors occured at least once:\n\n";
+	msgbox << "The following errors occurred at least once:\n\n";
 
 	for(Types::Error::Code code : uniqueCodes)
 	{

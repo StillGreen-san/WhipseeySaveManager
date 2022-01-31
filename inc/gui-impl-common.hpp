@@ -21,9 +21,9 @@ class PathControls : public nana::panel<false>
 	nana::button openFile{*this, "..."};
 	nana::button saveFile{*this, "save"};
 	nana::button reloadFile{*this, "reload"};
-	std::vector<std::pair<std::string, std::string>> additianalFilters;
+	std::vector<std::pair<std::string, std::string>> additionalFilters;
 
-	void varifyPath(const std::filesystem::path& path);
+	void verifyPath(const std::filesystem::path& path);
 	void open();
 
 public:

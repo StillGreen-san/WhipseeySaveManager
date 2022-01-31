@@ -7,7 +7,7 @@
 namespace WhipseeySaveManager::GUI
 {
 /**
- * @brief base constrol for all options with label & combobox
+ * @brief base control for all options with label & combobox
  *
  */
 class OptionBase : public nana::panel<false>

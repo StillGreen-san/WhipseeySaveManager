@@ -31,7 +31,7 @@ OptionLanguage::OptionLanguage(nana::window wd) : OptionBase(wd, "Language")
 	    .push_back("Swedish")
 	    .push_back("Japanese")
 	    .push_back("Chinese")
-	    .push_back("Portogese");
+	    .push_back("Portuguese");
 }
 
 void OptionLanguage::update(INI::Options& options)

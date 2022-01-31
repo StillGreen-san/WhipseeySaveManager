@@ -4,7 +4,7 @@
 
 #include <fstream>
 
-bool isdigt(char chr) // TODO fix spelling to actually use this !?
+bool isDigit(char chr)
 {
 	return static_cast<bool>(std::isdigit(static_cast<unsigned char>(chr)));
 }
@@ -20,7 +20,7 @@ Types::Error IKey::fromString(std::string_view string)
 	{
 	case Format::Int:
 	{
-		if(std::all_of(string.begin(), string.end(), isdigit))
+		if(std::all_of(string.begin(), string.end(), isDigit))
 		{
 			newValue = std::strtof(string.data(), nullptr);
 		}
@@ -196,7 +196,7 @@ public:
 
 INI::INI() : mIni(std::make_unique<INIintern>())
 {
-	mIni->SetSpaces(false); // to mimick original style of gamefiles
+	mIni->SetSpaces(false); // to mimic original style of gamefiles
 }
 
 INI::~INI() = default;

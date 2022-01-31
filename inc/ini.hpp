@@ -11,7 +11,7 @@ namespace WhipseeySaveManager::INI
 {
 /**
  * @brief base class representing a INI key with name, value (float) optionally enclosed in '"",
- * needs concrete implementaion
+ * needs concrete implementation
  *
  */
 class IKey
@@ -94,7 +94,7 @@ protected:
 
 /**
  * @brief base class representing a INI section with name & keys,
- * needs concrete implementaion
+ * needs concrete implementation
  *
  */
 class ISection
@@ -127,7 +127,7 @@ protected:
 
 /**
  * @brief base class representing a INI file with sections,
- * needs concrete implementaion
+ * needs concrete implementation
  *
  */
 class IIni
@@ -151,14 +151,14 @@ protected:
 
 /**
  * @brief internal helper object to load, check, read, write an ini file,
- * holds an Error onj containing all error that occured during operation
+ * holds an Error onj containing all error that occurred during operation
  *
  */
 class INI
 {
 public:
 	/**
-	 * @brief extracts an error object containing all errors that occured when calling other funtions of this object
+	 * @brief extracts an error object containing all errors that occurred when calling other functions of this object
 	 *
 	 * @return Types::Error see other functions for possible values
 	 */
