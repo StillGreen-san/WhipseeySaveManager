@@ -1,3 +1,4 @@
+#include "gui-impl-about.hpp"
 #include "gui-impl-cheats.hpp"
 #include "gui-impl-common.hpp"
 #include "gui-impl-files.hpp"
@@ -29,16 +30,18 @@ Types::Error GUI::run()
 	TabFiles files(mainForm, save, callbacks);
 	TabOptions options(mainForm, save, callbacks);
 	TabCheats cheats(mainForm, settings, callbacks);
+	TabAbout about(mainForm);
 
 	nana::tabbar<size_t> tabs(mainForm);
 	tabs.append("Files", files);
 	tabs.append("Options", options);
 	tabs.append("Cheats", cheats);
+	tabs.append("About", about);
 	tabs.activated(0);
 
 	mainForm.div("vertical<tabbar weight=28><tabframe>");
 	mainForm["tabbar"] << tabs;
-	mainForm["tabframe"].fasten(files).fasten(options).fasten(cheats);
+	mainForm["tabframe"].fasten(files).fasten(options).fasten(cheats).fasten(about);
 	mainForm.collocate();
 
 	mainForm.show();
