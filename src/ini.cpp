@@ -209,7 +209,7 @@ Types::Error INI::extractError()
 bool INI::loadFile(const std::filesystem::path& path)
 {
 	mIni->Reset();
-	if(mIni->LoadFile(path.native().c_str()) == SI_Error::SI_OK)
+	if(mIni->LoadFile(path.native().c_str()) == SI_OK)
 	{
 		return true;
 	}
@@ -221,7 +221,7 @@ bool INI::writeFile(const std::filesystem::path& path)
 {
 	if(mIni->GetSection(Cheats::name))
 	{
-		if(mIni->SaveFile(path.native().c_str()) == SI_Error::SI_OK)
+		if(mIni->SaveFile(path.native().c_str()) == SI_OK)
 		{
 			return true;
 		}
@@ -233,7 +233,7 @@ bool INI::writeFile(const std::filesystem::path& path)
 		std::string buffer;
 		buffer.reserve(ORG_FILESIZE);
 
-		if(mIni->Save(buffer) == SI_Error::SI_OK)
+		if(mIni->Save(buffer) == SI_OK)
 		{
 			size_t sectionEnd = buffer.find(SI_SECTION_END);
 			while(sectionEnd != std::string::npos)
