@@ -1,7 +1,7 @@
 #pragma once
 
 #include "types.hpp"
-#include <catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 namespace WhipseeySaveManager::Test
 {

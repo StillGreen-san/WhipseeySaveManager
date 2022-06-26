@@ -27,7 +27,7 @@ if( USE_CPPCHECK )
 endif( )
 
 find_package( unofficial-nana REQUIRED CONFIG ) #!VCPKG specific
-find_package( Catch2 CONFIG REQUIRED )
+find_package( Catch2 3 CONFIG REQUIRED )
 find_path( WINREG_INCLUDE_DIRS "winreg/WinReg.hpp" REQUIRED )
 find_path( SIMPLEINI_INCLUDE_DIRS "SimpleIni.h" REQUIRED )
 
@@ -62,7 +62,6 @@ add_executable( ${MAIN_TARGET} WIN32 ${MAIN_SOURCES} )
 target_link_libraries( ${MAIN_TARGET} PRIVATE ${LIB_TARGET} unofficial::nana::nana )
 
 set( TEST_SOURCES
-	${WSM_TEST_DIR}/${TEST_TARGET}.cpp
 	${WSM_TEST_DIR}/system-test.cpp
 	${WSM_TEST_DIR}/ini-test.cpp
 	${WSM_TEST_DIR}/ini-test-b.cpp
@@ -71,7 +70,7 @@ set( TEST_SOURCES
 )
 
 add_executable( ${TEST_TARGET} ${TEST_SOURCES} )
-target_link_libraries( ${TEST_TARGET} PRIVATE ${LIB_TARGET} Catch2::Catch2 )
+target_link_libraries( ${TEST_TARGET} PRIVATE ${LIB_TARGET} Catch2::Catch2 Catch2::Catch2WithMain )
 add_custom_command( TARGET ${TEST_TARGET} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${WSM_TEST_DIR}/data/ $<TARGET_FILE_DIR:${TEST_TARGET}>/data
 )
