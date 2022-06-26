@@ -9,7 +9,7 @@
 namespace WhipseeySaveManager::Types
 {
 /**
- * @brief strongly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with their savegame values
  *
  */
 enum class Fullscreen : uint8_t
@@ -19,7 +19,7 @@ enum class Fullscreen : uint8_t
 };
 
 /**
- * @brief strongly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with their savegame values
  *
  */
 enum class LeftHanded : uint8_t
@@ -29,7 +29,7 @@ enum class LeftHanded : uint8_t
 };
 
 /**
- * @brief strongly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with their savegame values
  *
  */
 enum class SoundToggle : uint8_t
@@ -39,7 +39,7 @@ enum class SoundToggle : uint8_t
 };
 
 /**
- * @brief strongly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with their savegame values
  *
  */
 enum class MusicToggle : uint8_t
@@ -49,7 +49,7 @@ enum class MusicToggle : uint8_t
 };
 
 /**
- * @brief strongly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with their savegame values
  *
  */
 enum class Ending : uint8_t
@@ -59,7 +59,7 @@ enum class Ending : uint8_t
 };
 
 /**
- * @brief strongly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with their savegame values
  *
  */
 enum class Intro : uint8_t
@@ -69,7 +69,7 @@ enum class Intro : uint8_t
 };
 
 /**
- * @brief strongly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with their savegame values
  *
  */
 enum class CheatsEnabled : uint8_t
@@ -79,7 +79,7 @@ enum class CheatsEnabled : uint8_t
 };
 
 /**
- * @brief strongly typed toggle associated with there savegame values
+ * @brief strongly typed toggle associated with their savegame values
  *
  */
 enum class Darkmode : uint8_t
@@ -89,7 +89,7 @@ enum class Darkmode : uint8_t
 };
 
 /**
- * @brief selectable languages associated with there savegame values
+ * @brief selectable languages associated with their savegame values
  *
  */
 enum class Language : uint8_t
@@ -107,7 +107,7 @@ enum class Language : uint8_t
 };
 
 /**
- * @brief resolutions in windowed mode associated with there savegame values
+ * @brief resolutions in windowed mode associated with their savegame values
  *
  */
 enum class Scale : uint8_t
@@ -118,7 +118,7 @@ enum class Scale : uint8_t
 };
 
 /**
- * @brief selectable volume steps roughly associated with there savegame values (div by 10.f to get real)
+ * @brief selectable volume steps roughly associated with their savegame values (div by 10.f to get real)
  *
  */
 enum class SoundVolume : uint8_t
@@ -137,7 +137,7 @@ enum class SoundVolume : uint8_t
 };
 
 /**
- * @brief selectable volume steps roughly associated with there savegame values (div by 10.f to get real)
+ * @brief selectable volume steps roughly associated with their savegame values (div by 10.f to get real)
  *
  */
 enum class MusicVolume : uint8_t
@@ -156,7 +156,7 @@ enum class MusicVolume : uint8_t
 };
 
 /**
- * @brief boss no damage progress bitfield associated with there savegame values
+ * @brief boss no damage progress bitfield associated with their savegame values
  *
  */
 enum class BossNoDamage : uint8_t
@@ -183,7 +183,7 @@ enum class Level : uint8_t
 };
 
 /**
- * @brief individual level progress associated with there savegame values
+ * @brief individual level progress associated with their savegame values
  *
  */
 enum class Castle : uint8_t
@@ -193,7 +193,7 @@ enum class Castle : uint8_t
 };
 
 /**
- * @brief individual level progress associated with there savegame values
+ * @brief individual level progress associated with their savegame values
  *
  */
 enum class Moon : uint8_t
@@ -203,7 +203,7 @@ enum class Moon : uint8_t
 };
 
 /**
- * @brief individual level progress associated with there savegame values
+ * @brief individual level progress associated with their savegame values
  *
  */
 enum class Snow : uint8_t
@@ -213,7 +213,7 @@ enum class Snow : uint8_t
 };
 
 /**
- * @brief individual level progress associated with there savegame values
+ * @brief individual level progress associated with their savegame values
  *
  */
 enum class Desert : uint8_t
@@ -223,7 +223,7 @@ enum class Desert : uint8_t
 };
 
 /**
- * @brief individual level progress associated with there savegame values
+ * @brief individual level progress associated with their savegame values
  *
  */
 enum class Forest : uint8_t
