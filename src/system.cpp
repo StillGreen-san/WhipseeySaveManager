@@ -132,34 +132,6 @@ std::optional<std::filesystem::path> defaultSavePath()
 	return path.make_preferred();
 }
 
-std::optional<std::filesystem::path> findGameInLibraries(const std::filesystem::path& librariesFilePath,
-    const std::filesystem::path& settingsRelativePath, const char* regEx)
-{
-	std::ifstream librariesFile(librariesFilePath);
-
-	if(!librariesFile.is_open())
-	{
-		return {};
-	}
-
-	const std::regex libraryEntryReg(regEx, std::regex_constants::optimize);
-	std::smatch match;
-
-	for(std::string line; std::getline(librariesFile, line);)
-	{
-		if(std::regex_match(line, match, libraryEntryReg) && match.size() == 2)
-		{
-			std::filesystem::path settingsPath(match[1].str() / settingsRelativePath);
-			if(std::filesystem::exists(settingsPath))
-			{
-				return settingsPath.make_preferred().lexically_normal();
-			}
-		}
-	}
-
-	return {};
-}
-
 std::optional<std::filesystem::path> defaultSettingsPath()
 {
 	const std::wstring steamKey = LR"(SOFTWARE\Valve\Steam)";
