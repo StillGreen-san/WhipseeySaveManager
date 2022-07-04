@@ -9,21 +9,21 @@ namespace WhipseeySaveManager::System
  *
  * @return std::optional<Types::Theme>: if successful contains Theme object
  */
-std::optional<Types::Theme> systemTheme();
+[[nodiscard]] std::optional<Types::Theme> systemTheme();
 
 /**
  * @brief trys to find the default whipseey.sav path
  *
  * @return std::optional<std::filesystem::path>: if successful contains path
  */
-std::optional<std::filesystem::path> defaultSavePath();
+[[nodiscard]] std::optional<std::filesystem::path> defaultSavePath();
 
 /**
  * @brief trys to find the default bfs_settings.ini path
  *
  * @return std::optional<std::filesystem::path>: if successful contains path
  */
-std::optional<std::filesystem::path> defaultSettingsPath();
+[[nodiscard]] std::optional<std::filesystem::path> defaultSettingsPath();
 
 /**
  * @brief reads all keys defined in ISection from file into ini
@@ -32,7 +32,7 @@ std::optional<std::filesystem::path> defaultSettingsPath();
  * @param file path to file to read from
  * @return Types::Error if failed one or more FailedToLoadFile, KeyNotFound, SectionNotFound
  */
-Types::Error read(std::shared_ptr<INI::ISection> section, std::filesystem::path file);
+Types::Error read(const std::shared_ptr<INI::ISection>& section, const std::filesystem::path& file);
 
 /**
  * @brief reads all keys defined in IIni from file into ini
@@ -41,7 +41,7 @@ Types::Error read(std::shared_ptr<INI::ISection> section, std::filesystem::path 
  * @param file path to file to read from
  * @return Types::Error if failed one or more FailedToLoadFile, KeyNotFound, SectionNotFound
  */
-Types::Error read(std::shared_ptr<INI::IIni> ini, std::filesystem::path file);
+Types::Error read(const std::shared_ptr<INI::IIni>& ini, const std::filesystem::path& file);
 
 /**
  * @brief writes all keys defined in ISection to file, trys to load file first to keep other sections
@@ -50,7 +50,7 @@ Types::Error read(std::shared_ptr<INI::IIni> ini, std::filesystem::path file);
  * @param file path to file to write to
  * @return Types::Error if failed FailedToLoadFile, FailedToWriteFile
  */
-Types::Error write(std::shared_ptr<INI::ISection> section, std::filesystem::path file);
+Types::Error write(const std::shared_ptr<INI::ISection>& section, const std::filesystem::path& file);
 
 /**
  * @brief writes all keys defined in IIni to file
@@ -59,5 +59,5 @@ Types::Error write(std::shared_ptr<INI::ISection> section, std::filesystem::path
  * @param file path to file to write to
  * @return Types::Error if failed FailedToWriteFile
  */
-Types::Error write(std::shared_ptr<INI::IIni> ini, std::filesystem::path file);
+Types::Error write(const std::shared_ptr<INI::IIni>& ini, const std::filesystem::path& file);
 } // namespace WhipseeySaveManager::System

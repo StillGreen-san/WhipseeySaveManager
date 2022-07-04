@@ -7,7 +7,13 @@
 #include <fstream>
 #include <regex>
 
-#include <SimpleIni.h>
+namespace
+{
+const HKEY HKeyCurrentUser = HKEY_CURRENT_USER;   // NOLINT
+const HKEY HKeyLocalMachine = HKEY_LOCAL_MACHINE; // NOLINT
+constexpr REGSAM KeyRead = KEY_READ;              // NOLINT
+constexpr REGSAM KeyWow6432 = KEY_WOW64_32KEY;    // NOLINT
+} // namespace
 
 namespace WhipseeySaveManager::System
 {
@@ -21,21 +27,21 @@ std::optional<Types::Theme> systemTheme()
 	Types::Theme theme;
 	winreg::RegKey regHandler;
 
-	if(!regHandler.TryOpen(HKEY_CURRENT_USER, themeKey, KEY_READ))
+	if(!regHandler.TryOpen(HKeyCurrentUser, themeKey, KeyRead))
 	{
 		return {};
 	}
 
 	if(std::optional<DWORD> lightTheme = regHandler.TryGetDwordValue(themeDW))
 	{
-		theme.darkmode = lightTheme.value() ? Types::Darkmode::Disabled : Types::Darkmode::Enabled;
+		theme.darkmode = lightTheme.value() != 0U ? Types::Darkmode::Disabled : Types::Darkmode::Enabled;
 	}
 	else
 	{
 		return {};
 	}
 
-	if(!regHandler.TryOpen(HKEY_CURRENT_USER, colorKey, KEY_READ))
+	if(!regHandler.TryOpen(HKeyCurrentUser, colorKey, KeyRead))
 	{
 		return {};
 	}
@@ -60,7 +66,7 @@ public:
 	CoTaskMem(const CoTaskMem&) = delete;
 	CoTaskMem(CoTaskMem&& other) noexcept
 	{
-		pointer = other.pointer;
+		pointer = other.pointer; // NOLINT(cppcoreguidelines-prefer-member-initializer)
 		other.pointer = nullptr;
 	}
 	CoTaskMem& operator=(const CoTaskMem&) = delete;
@@ -82,34 +88,34 @@ public:
 	void Free()
 	{
 		CoTaskMemFree(pointer);
-		pointer = NULL;
+		pointer = nullptr;
 	}
 	~CoTaskMem()
 	{
 		Free();
 	}
-	T* Get() const
+	[[nodiscard]] T* Get() const
 	{
 		return pointer;
 	}
-	operator T*()
+	[[nodiscard]] operator T*() // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return pointer;
 	}
-	operator T**()
+	[[nodiscard]] operator T**() // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return &pointer;
 	}
 
 private:
-	T* pointer = NULL;
+	T* pointer = nullptr;
 };
 
 std::optional<std::filesystem::path> defaultSavePath()
 {
 	std::filesystem::path path;
 	CoTaskMem<WCHAR> szPath;
-	if(SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_DEFAULT, NULL, szPath) != S_OK)
+	if(SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_DEFAULT, nullptr, szPath) != S_OK)
 	{
 		return {};
 	}
@@ -162,7 +168,7 @@ std::optional<std::filesystem::path> defaultSettingsPath()
 	std::filesystem::path steamPath;
 	winreg::RegKey regHandler;
 
-	if(!regHandler.TryOpen(HKEY_LOCAL_MACHINE, steamKey, KEY_READ | KEY_WOW64_32KEY))
+	if(!regHandler.TryOpen(HKeyLocalMachine, steamKey, KeyRead | KeyWow6432))
 	{
 		return {};
 	}
@@ -215,7 +221,7 @@ std::optional<std::filesystem::path> defaultSettingsPath()
 	return {};
 }
 
-Types::Error read(std::shared_ptr<INI::ISection> section, std::filesystem::path file)
+Types::Error read(const std::shared_ptr<INI::ISection>& section, const std::filesystem::path& file)
 {
 	INI::INI ini;
 	if(!ini.loadFile(file))
@@ -226,7 +232,7 @@ Types::Error read(std::shared_ptr<INI::ISection> section, std::filesystem::path 
 	return ini.extractError();
 }
 
-Types::Error read(std::shared_ptr<INI::IIni> ini, std::filesystem::path file)
+Types::Error read(const std::shared_ptr<INI::IIni>& ini, const std::filesystem::path& file)
 {
 	INI::INI sIni;
 	if(!sIni.loadFile(file))
@@ -237,7 +243,7 @@ Types::Error read(std::shared_ptr<INI::IIni> ini, std::filesystem::path file)
 	return sIni.extractError();
 }
 
-Types::Error write(std::shared_ptr<INI::ISection> section, std::filesystem::path file)
+Types::Error write(const std::shared_ptr<INI::ISection>& section, const std::filesystem::path& file)
 {
 	INI::INI ini;
 	if(std::filesystem::exists(file))
@@ -249,7 +255,7 @@ Types::Error write(std::shared_ptr<INI::ISection> section, std::filesystem::path
 	return ini.extractError();
 }
 
-Types::Error write(std::shared_ptr<INI::IIni> ini, std::filesystem::path file)
+Types::Error write(const std::shared_ptr<INI::IIni>& ini, const std::filesystem::path& file)
 {
 	INI::INI sIni;
 	sIni.write(ini);

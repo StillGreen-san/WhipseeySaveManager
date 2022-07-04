@@ -23,8 +23,8 @@ public:
 
 	using ThemeSignature = std::optional<Types::Theme>();
 	using PathSignature = std::optional<std::filesystem::path>();
-	using SectionSignature = Types::Error(std::shared_ptr<INI::ISection>, std::filesystem::path);
-	using IniSignature = Types::Error(std::shared_ptr<INI::IIni>, std::filesystem::path);
+	using SectionSignature = Types::Error(const std::shared_ptr<INI::ISection>&, const std::filesystem::path&);
+	using IniSignature = Types::Error(const std::shared_ptr<INI::IIni>&, const std::filesystem::path&);
 
 	/**
 	 * @brief assigns callback to supply a Theme object
