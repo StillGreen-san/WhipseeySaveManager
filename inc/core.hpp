@@ -10,7 +10,7 @@ namespace WhipseeySaveManager
  *
  */
 namespace Types
-{}
+{} // namespace Types
 
 /**
  * @brief contains objects/functions that represent/interacts with ini files,
@@ -18,7 +18,7 @@ namespace Types
  *
  */
 namespace INI
-{}
+{} // namespace INI
 
 /**
  * @brief contains functions that interact with the OS,
@@ -26,7 +26,7 @@ namespace INI
  *
  */
 namespace System
-{}
+{} // namespace System
 
 /**
  * @brief contains the gui class,
@@ -34,7 +34,7 @@ namespace System
  *
  */
 namespace GUI
-{}
+{} // namespace GUI
 
 /**
  * @brief contains functions used in testing,
@@ -42,5 +42,5 @@ namespace GUI
  *
  */
 namespace Test
-{}
+{} // namespace Test
 } // namespace WhipseeySaveManager

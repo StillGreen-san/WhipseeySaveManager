@@ -20,7 +20,7 @@ public:
 	/**
 	 * @return std::string_view with the key name
 	 */
-	std::string_view key() const
+	[[nodiscard]] std::string_view key() const
 	{
 		return mName;
 	}
@@ -36,7 +36,7 @@ public:
 	/**
 	 * @return std::string the value in raw format
 	 */
-	std::string toString() const;
+	[[nodiscard]] std::string toString() const;
 
 	/**
 	 * @brief resets the value to its default
@@ -55,7 +55,7 @@ public:
 	/**
 	 * @brief returns the value as int
 	 */
-	int asInt() const
+	[[nodiscard]] int asInt() const
 	{
 		return static_cast<int>(mValue);
 	}
@@ -63,7 +63,7 @@ public:
 	/**
 	 * @brief returns the value as float
 	 */
-	float asFloat() const
+	[[nodiscard]] float asFloat() const
 	{
 		return mValue;
 	}
@@ -103,7 +103,7 @@ public:
 	/**
 	 * @return std::string_view with the section name
 	 */
-	std::string_view section() const
+	[[nodiscard]] std::string_view section() const
 	{
 		return mName;
 	}
@@ -117,7 +117,7 @@ public:
 	}
 
 protected:
-	ISection(std::string_view name, std::initializer_list<std::shared_ptr<IKey>> il) : mName{name}, mKeys{il}
+	ISection(std::string_view name, std::initializer_list<std::shared_ptr<IKey>> keyList) : mName{name}, mKeys{keyList}
 	{
 	}
 
@@ -142,7 +142,7 @@ public:
 	}
 
 protected:
-	IIni(std::initializer_list<std::shared_ptr<ISection>> il) : mSections{il}
+	IIni(std::initializer_list<std::shared_ptr<ISection>> sectionList) : mSections{sectionList}
 	{
 	}
 
@@ -237,7 +237,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::Language() const
+	operator Types::Language() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::Language>(mValue);
 	}
@@ -260,7 +260,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::Scale() const
+	operator Types::Scale() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::Scale>(mValue);
 	}
@@ -283,7 +283,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::Fullscreen() const
+	operator Types::Fullscreen() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::Fullscreen>(mValue);
 	}
@@ -306,7 +306,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::LeftHanded() const
+	operator Types::LeftHanded() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::LeftHanded>(mValue);
 	}
@@ -329,7 +329,7 @@ public:
 		mValue = static_cast<float>(value) / 10;
 		return *this;
 	}
-	operator Types::SoundVolume() const
+	operator Types::SoundVolume() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::SoundVolume>(mValue * 10);
 	}
@@ -356,7 +356,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::SoundToggle() const
+	operator Types::SoundToggle() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::SoundToggle>(mValue);
 	}
@@ -379,7 +379,7 @@ public:
 		mValue = static_cast<float>(value) / 10;
 		return *this;
 	}
-	operator Types::MusicVolume() const
+	operator Types::MusicVolume() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::MusicVolume>(mValue * 10);
 	}
@@ -406,7 +406,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::MusicToggle() const
+	operator Types::MusicToggle() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::MusicToggle>(mValue);
 	}
@@ -476,7 +476,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::BossNoDamage() const
+	operator Types::BossNoDamage() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::BossNoDamage>(mValue);
 	}
@@ -494,7 +494,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator uint32_t()
+	operator uint32_t() // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<uint32_t>(mValue);
 	}
@@ -517,7 +517,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::Castle() const
+	operator Types::Castle() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::Castle>(mValue);
 	}
@@ -540,7 +540,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::Moon() const
+	operator Types::Moon() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::Moon>(mValue);
 	}
@@ -563,7 +563,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::Snow() const
+	operator Types::Snow() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::Snow>(mValue);
 	}
@@ -586,7 +586,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::Desert() const
+	operator Types::Desert() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::Desert>(mValue);
 	}
@@ -609,7 +609,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::Forest() const
+	operator Types::Forest() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::Forest>(mValue);
 	}
@@ -632,7 +632,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::Ending() const
+	operator Types::Ending() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::Ending>(mValue);
 	}
@@ -655,7 +655,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::Intro() const
+	operator Types::Intro() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::Intro>(mValue);
 	}
@@ -675,7 +675,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::Lives()
+	operator Types::Lives() // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::Lives>(mValue);
 	}
@@ -695,7 +695,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::Gems()
+	operator Types::Gems() // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::Gems>(mValue);
 	}
@@ -843,7 +843,7 @@ public:
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator Types::CheatsEnabled() const
+	operator Types::CheatsEnabled() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<Types::CheatsEnabled>(mValue);
 	}

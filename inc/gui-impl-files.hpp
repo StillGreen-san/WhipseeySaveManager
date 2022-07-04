@@ -49,7 +49,7 @@ public:
  *
  */
 class FileBox : public nana::panel<false>
-{
+{ // TODO use def,min,max values from ini.hpp or add other common defines
 	nana::place place{*this};
 	FileGroup group{*this, "FileX  0 - 0"}; //! placeholder text required
 	ProgressGroup progress{group};
