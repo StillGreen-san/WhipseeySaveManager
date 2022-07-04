@@ -2,8 +2,8 @@
 
 namespace WhipseeySaveManager::GUI
 {
-OptionBase::OptionBase(nana::window wd, std::string_view labelText) :
-    nana::panel<false>(wd), label{*this, labelText.data()}
+OptionBase::OptionBase(nana::window wnd, std::string_view labelText) :
+    nana::panel<false>(wnd), label{*this, labelText.data()}
 {
 	label.text_align(nana::align::right, nana::align_v::center);
 	place.div("things gap=8 arrange=[190,300]");
@@ -20,7 +20,7 @@ size_t OptionBase::option()
 	return combo.option();
 }
 
-OptionLanguage::OptionLanguage(nana::window wd) : OptionBase(wd, "Language")
+OptionLanguage::OptionLanguage(nana::window wnd) : OptionBase(wnd, "Language")
 {
 	combo.push_back("English")
 	    .push_back("Spanish")
@@ -39,7 +39,7 @@ void OptionLanguage::update(INI::Options& options)
 	combo.option(options.getLanguage().asInt());
 }
 
-OptionScale::OptionScale(nana::window wd) : OptionBase(wd, "Scale")
+OptionScale::OptionScale(nana::window wnd) : OptionBase(wnd, "Scale")
 {
 	combo.push_back("R768x432").push_back("R1152x648").push_back("R1536x864");
 }
@@ -49,7 +49,7 @@ void OptionScale::update(INI::Options& options)
 	combo.option(options.getScale().asInt() - 2);
 }
 
-OptionFullscreen::OptionFullscreen(nana::window wd) : OptionBase(wd, "Fullscreen")
+OptionFullscreen::OptionFullscreen(nana::window wnd) : OptionBase(wnd, "Fullscreen")
 {
 	combo.push_back("Disabled").push_back("Enabled");
 }
@@ -59,7 +59,7 @@ void OptionFullscreen::update(INI::Options& options)
 	combo.option(options.getFullscreen().asInt());
 }
 
-OptionLeftHanded::OptionLeftHanded(nana::window wd) : OptionBase(wd, "Left Handed")
+OptionLeftHanded::OptionLeftHanded(nana::window wnd) : OptionBase(wnd, "Left Handed")
 {
 	combo.push_back("Disabled").push_back("Enabled");
 }
@@ -69,7 +69,7 @@ void OptionLeftHanded::update(INI::Options& options)
 	combo.option(options.getLeftHanded().asInt());
 }
 
-OptionSoundVolume::OptionSoundVolume(nana::window wd) : OptionBase(wd, "Sound Volume")
+OptionSoundVolume::OptionSoundVolume(nana::window wnd) : OptionBase(wnd, "Sound Volume")
 {
 	combo.push_back("0%")
 	    .push_back("10%")
@@ -89,7 +89,7 @@ void OptionSoundVolume::update(INI::Options& options)
 	combo.option(options.getSoundVolume().asInt());
 }
 
-OptionSoundToggle::OptionSoundToggle(nana::window wd) : OptionBase(wd, "Sound Toggle")
+OptionSoundToggle::OptionSoundToggle(nana::window wnd) : OptionBase(wnd, "Sound Toggle")
 {
 	combo.push_back("Disabled").push_back("Enabled");
 }
@@ -98,7 +98,7 @@ void OptionSoundToggle::update(INI::Options& options)
 	combo.option(options.getSoundToggle().asInt());
 }
 
-OptionMusicVolume::OptionMusicVolume(nana::window wd) : OptionBase(wd, "Music Volume")
+OptionMusicVolume::OptionMusicVolume(nana::window wnd) : OptionBase(wnd, "Music Volume")
 {
 	combo.push_back("0%")
 	    .push_back("10%")
@@ -118,7 +118,7 @@ void OptionMusicVolume::update(INI::Options& options)
 	combo.option(options.getMusicVolume().asInt());
 }
 
-OptionMusicToggle::OptionMusicToggle(nana::window wd) : OptionBase(wd, "Music Toggle")
+OptionMusicToggle::OptionMusicToggle(nana::window wnd) : OptionBase(wnd, "Music Toggle")
 {
 	combo.push_back("Disabled").push_back("Enabled");
 }
@@ -128,7 +128,7 @@ void OptionMusicToggle::update(INI::Options& options)
 	combo.option(options.getMusicToggle().asInt());
 }
 
-OptionsBox::OptionsBox(nana::window wd) : nana::panel<false>(wd)
+OptionsBox::OptionsBox(nana::window wnd) : nana::panel<false>(wnd)
 {
 	place.div("vert things gap=2");
 	place["things"] << language << scale << fullscreen << lefthanded << soundvolume << soundtoggle << musicvolume
@@ -159,8 +159,8 @@ void OptionsBox::get(INI::Options& options)
 	options.getMusicToggle() = static_cast<Types::MusicToggle>(musictoggle.option());
 }
 
-TabOptions::TabOptions(nana::window wd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks) :
-    nana::panel<false>(wd)
+TabOptions::TabOptions(nana::window wnd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks) :
+    nana::panel<false>(wnd)
 {
 	place.div("vert <path gap=5 margin=5 weight=35><options margin=5>");
 	place["path"] << path;

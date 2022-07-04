@@ -2,7 +2,7 @@
 
 namespace WhipseeySaveManager::GUI
 {
-CheatsBox::CheatsBox(nana::window wd) : nana::panel<false>(wd)
+CheatsBox::CheatsBox(nana::window wnd) : nana::panel<false>(wnd)
 {
 	place.div("vert things margin=[0, 50] arrange=[40,variable]");
 	place["things"] << cheatsEnabled << description;
@@ -19,8 +19,8 @@ void CheatsBox::update(INI::Cheats& cheats)
 }
 
 TabCheats::TabCheats(
-    nana::window wd, const std::shared_ptr<INI::Settings>& sttngs, const GUI::FunctionStore& callbacks) :
-    nana::panel<false>(wd)
+    nana::window wnd, const std::shared_ptr<INI::Settings>& sttngs, const GUI::FunctionStore& callbacks) :
+    nana::panel<false>(wnd)
 {
 	place.div("vert <path gap=5 margin=5 weight=35><cheats margin=5>");
 	place["path"] << path;

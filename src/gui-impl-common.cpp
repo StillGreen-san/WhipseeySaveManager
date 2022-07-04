@@ -1,14 +1,15 @@
 #include "gui-impl-common.hpp"
 
 #include <nana/gui/filebox.hpp>
+#include <nana/gui/msgbox.hpp>
 
 #include <set>
 
 namespace WhipseeySaveManager::GUI
 {
 PathControls::PathControls(
-    nana::window wd, std::vector<std::pair<std::string, std::string>>&& filters, std::filesystem::path path) :
-    nana::panel<false>(wd),
+    nana::window wnd, std::vector<std::pair<std::string, std::string>>&& filters, const std::filesystem::path& path) :
+    nana::panel<false>(wnd),
     additionalFilters{std::move(filters)}
 {
 	place.div("this fit gap=5");

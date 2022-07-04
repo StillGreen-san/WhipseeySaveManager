@@ -4,6 +4,7 @@
 #include "gui-impl-files.hpp"
 #include "gui-impl-options.hpp"
 
+#include <nana/gui.hpp>
 #include <nana/gui/widgets/tabbar.hpp>
 
 namespace WhipseeySaveManager::GUI

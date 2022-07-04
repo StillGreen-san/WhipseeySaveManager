@@ -24,7 +24,7 @@ public:
 class ProgressGroup : public nana::group
 {
 public:
-	ProgressGroup(nana::window wd);
+	explicit ProgressGroup(nana::window wnd);
 	static size_t levelToIndex(Types::Level level);
 	static Types::Level indexToLevel(size_t index);
 	void update(INI::FileBase& file);
@@ -57,8 +57,9 @@ class FileBox : public nana::panel<false>
 	nana::checkbox ending{group, "Ending"};
 	nana::label lgems{group, "Gems"};
 	nana::label llives{group, "Lives"};
-	NumericTextbox tgems{group, 0, 99};
-	NumericTextbox tlives{group, 1, 16777215};
+	NumericTextbox tgems{group, 0, 99}; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+	NumericTextbox tlives{
+	    group, 1, 16777215}; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 	nana::button bgems{group, "cycle"};
 	nana::button blives{group, "cycle"};
 	nana::button max{group, "max"};
@@ -72,7 +73,7 @@ class FileBox : public nana::panel<false>
 	nana::basic_event<nana::arg_click>& onReload();
 
 public:
-	FileBox(nana::window wd);
+	explicit FileBox(nana::window wnd);
 
 	friend class TabFiles;
 };
@@ -92,6 +93,6 @@ class TabFiles : public nana::panel<false>
 	void update(INI::Save& save);
 
 public:
-	TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks);
+	TabFiles(nana::window wnd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks);
 };
 } // namespace WhipseeySaveManager::GUI

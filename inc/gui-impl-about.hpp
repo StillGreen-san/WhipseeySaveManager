@@ -23,7 +23,7 @@ class TabAbout : public nana::panel<false>
 	           "\n</>"};
 
 public:
-	TabAbout(nana::window wd) : nana::panel<false>(wd)
+	explicit TabAbout(nana::window wnd) : nana::panel<false>(wnd)
 	{
 		info.format(true);
 		info.text_align(nana::align::center, nana::align_v::center);

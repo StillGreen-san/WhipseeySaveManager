@@ -22,7 +22,7 @@ void FileGroup::update(INI::FileBase& file)
 	caption(title);
 }
 
-ProgressGroup::ProgressGroup(nana::window wd) : nana::group::group(wd, "progress")
+ProgressGroup::ProgressGroup(nana::window wnd) : nana::group::group(wnd, "progress")
 {
 	radio_mode(true);
 
@@ -50,7 +50,7 @@ size_t ProgressGroup::levelToIndex(Types::Level level)
 		return 4;
 	case Types::Level::Beach:
 	default:
-		return 5;
+		return 5; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 	}
 }
 
@@ -68,7 +68,7 @@ Types::Level ProgressGroup::indexToLevel(size_t index)
 		return Types::Level::Desert;
 	case 4:
 		return Types::Level::Forest;
-	case 5:
+	case 5: // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 	default:
 		return Types::Level::Beach;
 	}
@@ -87,17 +87,20 @@ void ProgressGroup::option_check(Types::Level level)
 constexpr wchar_t BACKSPACE = 0x08;
 constexpr wchar_t DELETE = 0x7f;
 
-NumericTextbox::NumericTextbox(nana::window parent, int minVal, int maxVal) :
-    nana::textbox{parent, ""}, min{minVal}, max{maxVal}
+NumericTextbox::NumericTextbox( // NOLINT(readability-function-cognitive-complexity)
+    nana::window parent, int minVal, int maxVal) /* NOLINT(bugprone-easily-swappable-parameters)*/ :
+    nana::textbox{parent, ""},
+    min{minVal}, max{maxVal}
 {
 	set_accept(
-	    [&](wchar_t chr) -> bool
+	    [&](wchar_t chr) -> bool // NOLINT(readability-function-cognitive-complexity)
 	    {
 		    if(!this->selected())
 		    {
 			    if(chr == BACKSPACE)
 			    {
-				    if(this->to_int() / 10 >= min)
+				    if(this->to_int() / 10 // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+				       >= min)
 				    {
 					    return true;
 				    }
@@ -180,7 +183,7 @@ NumericTextbox::NumericTextbox(nana::window parent, int minVal, int maxVal) :
 	    });
 }
 
-FileBox::FileBox(nana::window wd) : nana::panel<false>(wd)
+FileBox::FileBox(nana::window wnd) : nana::panel<false>(wnd)
 {
 	group.div("<progress weight=80 margin=[5,5,5,5]>"
 	          "<vert gems weight=45 margin=[14,0,5,0] gap=5 arrange=[14,12,21,21,21,21]>"
@@ -289,8 +292,8 @@ nana::basic_event<nana::arg_click>& FileBox::onReload()
 	return reload.events().click;
 }
 
-TabFiles::TabFiles(nana::window wd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks) :
-    nana::panel<false>(wd)
+TabFiles::TabFiles(nana::window wnd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks) :
+    nana::panel<false>(wnd)
 {
 	place.div("vert <path gap=5 margin=5 weight=35><files gap=3 margin=5>");
 	place["path"] << path;

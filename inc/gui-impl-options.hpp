@@ -16,7 +16,7 @@ protected:
 	nana::place place{*this};
 	nana::label label;
 	nana::combox combo{*this};
-	OptionBase(nana::window wd, std::string_view labelText);
+	OptionBase(nana::window wnd, std::string_view labelText);
 
 	/**
 	 * @brief returns event reference to combobox changed
@@ -41,7 +41,7 @@ public:
 class OptionLanguage : public OptionBase
 {
 public:
-	OptionLanguage(nana::window wd);
+	explicit OptionLanguage(nana::window wnd);
 	void update(INI::Options& options);
 };
 
@@ -52,7 +52,7 @@ public:
 class OptionScale : public OptionBase
 {
 public:
-	OptionScale(nana::window wd);
+	explicit OptionScale(nana::window wnd);
 	void update(INI::Options& options);
 };
 
@@ -63,7 +63,7 @@ public:
 class OptionFullscreen : public OptionBase
 {
 public:
-	OptionFullscreen(nana::window wd);
+	explicit OptionFullscreen(nana::window wnd);
 	void update(INI::Options& options);
 };
 
@@ -74,7 +74,7 @@ public:
 class OptionLeftHanded : public OptionBase
 {
 public:
-	OptionLeftHanded(nana::window wd);
+	explicit OptionLeftHanded(nana::window wnd);
 	void update(INI::Options& options);
 };
 
@@ -85,7 +85,7 @@ public:
 class OptionSoundVolume : public OptionBase
 {
 public:
-	OptionSoundVolume(nana::window wd);
+	explicit OptionSoundVolume(nana::window wnd);
 	void update(INI::Options& options);
 };
 
@@ -96,7 +96,7 @@ public:
 class OptionSoundToggle : public OptionBase
 {
 public:
-	OptionSoundToggle(nana::window wd);
+	explicit OptionSoundToggle(nana::window wnd);
 	void update(INI::Options& options);
 };
 
@@ -107,7 +107,7 @@ public:
 class OptionMusicVolume : public OptionBase
 {
 public:
-	OptionMusicVolume(nana::window wd);
+	explicit OptionMusicVolume(nana::window wnd);
 	void update(INI::Options& options);
 };
 
@@ -118,7 +118,7 @@ public:
 class OptionMusicToggle : public OptionBase
 {
 public:
-	OptionMusicToggle(nana::window wd);
+	explicit OptionMusicToggle(nana::window wnd);
 	void update(INI::Options& options);
 };
 
@@ -143,7 +143,7 @@ class OptionsBox : public nana::panel<false>
 	void get(INI::Options& options);
 
 public:
-	OptionsBox(nana::window wd);
+	explicit OptionsBox(nana::window wnd);
 
 	friend class TabOptions;
 };
@@ -159,6 +159,6 @@ class TabOptions : public nana::panel<false>
 	OptionsBox options{*this};
 
 public:
-	TabOptions(nana::window wd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks);
+	TabOptions(nana::window wnd, const std::shared_ptr<INI::Save>& save, const GUI::FunctionStore& callbacks);
 };
 } // namespace WhipseeySaveManager::GUI

@@ -2,7 +2,7 @@
 
 #include "gui.hpp"
 
-#include <nana/gui.hpp>
+#include <nana/gui/place.hpp>
 #include <nana/gui/widgets/button.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/panel.hpp>
@@ -30,20 +30,20 @@ public:
 	/**
 	 * @brief Construct a new Path Controls object
 	 *
-	 * @param wd parent window
+	 * @param wnd parent window
 	 * @param filters filetype filter for file open, pair<name, filter>. to specify multiple filters, use a semicolon
 	 * ("*.TXT;*.DOC;*.BAK"), filter for all file supplied by default
 	 * @param path the initial path
 	 */
 	PathControls(
-	    nana::window wd, std::vector<std::pair<std::string, std::string>>&& filters, std::filesystem::path path = {});
+	    nana::window wnd, std::vector<std::pair<std::string, std::string>>&& filters, const std::filesystem::path& path = {});
 
 	/**
 	 * @brief returns the path currently entered in the textbox
 	 *
 	 * @return std::filesystem::path the path
 	 */
-	std::filesystem::path getPath() const;
+	[[nodiscard]] std::filesystem::path getPath() const;
 
 	/**
 	 * @brief sets the path in the textbox

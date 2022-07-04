@@ -34,7 +34,7 @@ public:
 	 */
 	nana::basic_event<nana::arg_checkbox>& onEnabledChanged();
 
-	CheatsBox(nana::window wd);
+	explicit CheatsBox(nana::window wnd);
 
 	friend class TabCheats;
 };
@@ -50,6 +50,6 @@ class TabCheats : public nana::panel<false>
 	CheatsBox cheats{*this};
 
 public:
-	TabCheats(nana::window wd, const std::shared_ptr<INI::Settings>& sttngs, const GUI::FunctionStore& callbacks);
+	TabCheats(nana::window wnd, const std::shared_ptr<INI::Settings>& sttngs, const GUI::FunctionStore& callbacks);
 };
 } // namespace WhipseeySaveManager::GUI
