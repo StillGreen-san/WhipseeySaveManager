@@ -218,7 +218,7 @@ FileBox::FileBox(nana::window wnd) : nana::panel<false>(wnd)
 
 	tlives.tooltip(std::to_string(tlives.min).append(" - ").append(std::to_string(tlives.max)));
 
-	blives.tooltip("Set Lives to 0, 99 or 9999");
+	blives.tooltip("Set Lives to 5, 99 or 9999");
 	blives.events().click.connect_front(
 	    [&]([[maybe_unused]] const nana::arg_click& click)
 	    {
