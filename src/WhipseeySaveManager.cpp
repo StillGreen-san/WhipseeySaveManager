@@ -19,5 +19,5 @@ int WinMain()
 	gui.connectOnWriteSection(static_cast<GUI::GUI::SectionSignature*>(System::write));
 	gui.connectOnWriteIni(static_cast<GUI::GUI::IniSignature*>(System::write));
 
-	return gui.run();
+	return gui.run().getReturnCode();
 }

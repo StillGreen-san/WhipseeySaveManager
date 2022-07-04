@@ -257,17 +257,17 @@ public:
 	 *
 	 */
 	enum class Code : unsigned
-	{
-		Nothing,           // no error occurred
-		Unknown,           // an unknown error occurred
-		InvalidFormat,     // the value of the key was in the wrong format, default value used
-		InvalidValue,      // the value read was not valid for this key, default value used
-		SectionNotFound,   // the section was not found in the file, default values used
-		KeyNotFound,       // the key was not found in the file, default value used
-		FailedToLoadFile,  // the file could not be read, check existence and permissions
-		FailedToWriteFile, // the file could not be written, check permissions
-		MissingCallback    // one or more gui callback where not specified, gui not initialized
-	};
+	{                           //! do not change code values, do not use 2147483648 as value
+		Nothing = 0,            // no error occurred
+		InvalidFormat = 1,      // the value of the key was in the wrong format, default value used
+		InvalidValue = 2,       // the value read was not valid for this key, default value used
+		SectionNotFound = 4,    // the section was not found in the file, default values used
+		KeyNotFound = 8,        // the key was not found in the file, default value used
+		FailedToLoadFile = 16,  // the file could not be read, check existence and permissions
+		FailedToWriteFile = 32, // the file could not be written, check permissions
+		MissingCallback = 64,   // one or more gui callback where not specified, gui not initialized
+		Unknown = 1073741824    // an unknown error occurred
+	};                          // TODO change Error to use Code as bitfield instead of vector?
 
 	using CodeContainer = std::vector<Code>;
 
@@ -297,7 +297,16 @@ public:
 	{
 		return !codes.empty();
 	}
-	// TODO add conversion to numeric error code? (eg exit code for main)
+
+	int getReturnCode() const
+	{
+		unsigned combined = 0;
+		for(Code code : codes)
+		{
+			combined |= static_cast<unsigned>(code);
+		}
+		return static_cast<int>(combined);
+	}
 
 	/**
 	 * @brief resets codes to only the one passed in
