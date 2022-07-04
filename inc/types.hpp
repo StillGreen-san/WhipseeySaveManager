@@ -242,7 +242,7 @@ using Lives = uint32_t;
 struct Theme
 {
 	Darkmode darkmode = Darkmode::Disabled;
-	uint32_t accent = 0x0078d7;
+	uint32_t accent = 0x0078d7; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 };
 
 /**
@@ -276,7 +276,7 @@ private:
 
 public:
 	Error() = default;
-	Error(Code code) : codes{1, code}
+	Error(Code code) : codes{1, code} // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		if(codes.front() == Code::Nothing)
 		{
@@ -293,12 +293,12 @@ public:
 	 *
 	 * @return true if an error occurred
 	 */
-	operator bool() const
+	[[nodiscard]] explicit operator bool() const
 	{
 		return !codes.empty();
 	}
 
-	int getReturnCode() const
+	[[nodiscard]] int getReturnCode() const
 	{
 		unsigned combined = 0;
 		for(Code code : codes)
@@ -359,13 +359,14 @@ public:
 	 * @param other the error class to compare to
 	 * @return true if both contain the same errors (order does not matter)
 	 */
-	bool operator==(const Error& other) const
+	[[nodiscard]] bool operator==(const Error& other) const
 	{
 		if(codes.size() != other.codes.size())
 		{
 			return false;
 		}
-		std::map<Code, unsigned> errCntThis, errCntThat;
+		std::map<Code, unsigned> errCntThis;
+		std::map<Code, unsigned> errCntThat;
 		for(Code code : codes)
 		{
 			++errCntThis[code];
@@ -383,7 +384,7 @@ public:
 	 * @param code the code to check
 	 * @return true if this only contains the code passed in
 	 */
-	bool operator==(const Code& code) const
+	[[nodiscard]] bool operator==(const Code& code) const
 	{
 		if(code == Code::Nothing)
 		{
@@ -400,7 +401,7 @@ public:
 	 * @brief return an const iterator to the begin of the internal code container
 	 *
 	 */
-	CodeContainer::const_iterator begin() const
+	[[nodiscard]] CodeContainer::const_iterator begin() const
 	{
 		return codes.cbegin();
 	}
@@ -409,7 +410,7 @@ public:
 	 * @brief return an const iterator to the end of the internal code container
 	 *
 	 */
-	CodeContainer::const_iterator end() const
+	[[nodiscard]] CodeContainer::const_iterator end() const
 	{
 		return codes.cend();
 	}
