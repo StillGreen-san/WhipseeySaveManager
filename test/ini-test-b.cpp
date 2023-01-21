@@ -1,8 +1,6 @@
 #include "ini.hpp"
 #include "testhelper.hpp"
 
-#include <catch.hpp>
-
 using namespace WhipseeySaveManager;
 
 TEST_CASE("Language:IKey", "[INI]")
