@@ -32,9 +32,9 @@ std::optional<Types::Theme> systemTheme()
 		return {};
 	}
 
-	if(std::optional<DWORD> lightTheme = regHandler.TryGetDwordValue(themeDW))
+	if(const winreg::RegExpected<DWORD> lightTheme = regHandler.TryGetDwordValue(themeDW))
 	{
-		theme.darkmode = lightTheme.value() != 0U ? Types::Darkmode::Disabled : Types::Darkmode::Enabled;
+		theme.darkmode = lightTheme.GetValue() != 0U ? Types::Darkmode::Disabled : Types::Darkmode::Enabled;
 	}
 	else
 	{
@@ -46,9 +46,9 @@ std::optional<Types::Theme> systemTheme()
 		return {};
 	}
 
-	if(std::optional<DWORD> color = regHandler.TryGetDwordValue(colorDW))
+	if(const winreg::RegExpected<DWORD> color = regHandler.TryGetDwordValue(colorDW))
 	{
-		theme.accent = color.value();
+		theme.accent = color.GetValue();
 	}
 	else
 	{
@@ -145,9 +145,9 @@ std::optional<std::filesystem::path> defaultSettingsPath()
 		return {};
 	}
 
-	if(std::optional<std::wstring> installPath = regHandler.TryGetStringValue(steamSZ))
+	if(const winreg::RegExpected<std::wstring> installPath = regHandler.TryGetStringValue(steamSZ))
 	{
-		steamPath.assign(installPath.value());
+		steamPath.assign(installPath.GetValue());
 	}
 	else
 	{
