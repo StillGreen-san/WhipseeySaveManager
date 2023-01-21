@@ -12,7 +12,7 @@ struct TestKey : public IKey
 	{
 		float minOrA;
 		float maxOrB;
-		float default;
+		float base;
 		float value;
 	};
 	InternalData getInternalData()
@@ -24,33 +24,33 @@ struct TestKey : public IKey
 
 struct MinMaxStringInt final : public TestKey
 {
-	MinMaxStringInt() : TestKey(name, default, Limits::MinMax, Format::StringInt, min, max)
+	MinMaxStringInt() : TestKey(name, base, Limits::MinMax, Format::StringInt, min, max)
 	{
 	}
 	static constexpr std::string_view name = "keynameMinMaxStringInt";
-	static constexpr float default = 42.f;
+	static constexpr float base = 42.f;
 	static constexpr float min = 5.f;
 	static constexpr float max = 99.f;
 };
 struct EitherOrStringFloat final : public TestKey
 {
-	EitherOrStringFloat() : TestKey(name, default, Limits::EitherOr, Format::StringFloat, either, or)
+	EitherOrStringFloat() : TestKey(name, base, Limits::EitherOr, Format::StringFloat, odds, ends)
 	{
 	}
 	static constexpr std::string_view name = "keynameEitherOrStringFloat";
-	static constexpr float default = 5.5f;
-	static constexpr float either = 5.5f;
-	static constexpr float or = 99.9f;
+	static constexpr float base = 5.5f;
+	static constexpr float odds = 5.5f;
+	static constexpr float ends = 99.9f;
 };
 struct EitherOrInt final : public TestKey
 {
-	EitherOrInt() : TestKey(name, default, Limits::EitherOr, Format::Int, either, or)
+	EitherOrInt() : TestKey(name, base, Limits::EitherOr, Format::Int, odds, ends)
 	{
 	}
 	static constexpr std::string_view name = "keynameEitherOrInt";
-	static constexpr float default = 5.f;
-	static constexpr float either = 5.f;
-	static constexpr float or = 99.f;
+	static constexpr float base = 5.f;
+	static constexpr float odds = 5.f;
+	static constexpr float ends = 99.f;
 };
 
 TEST_CASE("INI::IKey", "[INI]")
@@ -63,8 +63,8 @@ TEST_CASE("INI::IKey", "[INI]")
 		CHECK(key.key() == KeyType::name);
 		CHECK(iData.minOrA == KeyType::min);
 		CHECK(iData.maxOrB == KeyType::max);
-		CHECK(iData.default == KeyType::default);
-		CHECK(iData.value == KeyType::default);
+		CHECK(iData.base == KeyType::base);
+		CHECK(iData.value == KeyType::base);
 	}
 
 	SECTION("MinMax")
@@ -90,12 +90,12 @@ TEST_CASE("INI::IKey", "[INI]")
 		valStr = Test::stringify(KeyType::max + 1);
 		Types::Error fromStringLarger = key.fromString(valStr);
 		CHECK(fromStringLarger == Types::Error::Code::InvalidValue);
-		CHECK(key.asFloat() == KeyType::default);
+		CHECK(key.asFloat() == KeyType::base);
 
 		valStr = Test::stringify(KeyType::min - 1);
 		Types::Error fromStringSmaller = key.fromString(valStr);
 		CHECK(fromStringSmaller == Types::Error::Code::InvalidValue);
-		CHECK(key.asFloat() == KeyType::default);
+		CHECK(key.asFloat() == KeyType::base);
 	}
 
 	SECTION("EitherOr")
@@ -103,20 +103,20 @@ TEST_CASE("INI::IKey", "[INI]")
 		using KeyType = EitherOrStringFloat;
 		KeyType key;
 
-		auto valStr = Test::stringify(KeyType:: or);
+		auto valStr = Test::stringify(KeyType::ends);
 		Types::Error fromStringOr = key.fromString(valStr);
 		CHECK(fromStringOr == Types::Error::Code::Nothing);
-		CHECK(key.asFloat() == KeyType:: or);
+		CHECK(key.asFloat() == KeyType::ends);
 
-		valStr = Test::stringify(KeyType::either);
+		valStr = Test::stringify(KeyType::odds);
 		Types::Error fromStringEither = key.fromString(valStr);
 		CHECK(fromStringEither == Types::Error::Code::Nothing);
-		CHECK(key.asFloat() == KeyType::either);
+		CHECK(key.asFloat() == KeyType::odds);
 
-		valStr = Test::stringify(KeyType::either + 1);
+		valStr = Test::stringify(KeyType::odds + 1);
 		Types::Error fromStringWrong = key.fromString(valStr);
 		CHECK(fromStringWrong == Types::Error::Code::InvalidValue);
-		CHECK(key.asFloat() == KeyType::default);
+		CHECK(key.asFloat() == KeyType::base);
 	}
 
 	SECTION("Int")
@@ -124,21 +124,21 @@ TEST_CASE("INI::IKey", "[INI]")
 		using KeyType = EitherOrInt;
 		KeyType key;
 
-		auto valStr = std::to_string(static_cast<int>(KeyType::default));
+		auto valStr = std::to_string(static_cast<int>(KeyType::base));
 		Types::Error fromStringDefault = key.fromString(valStr);
 		CHECK(fromStringDefault == Types::Error::Code::Nothing);
 		CHECK(key.toString() == valStr);
 
-		valStr = std::to_string(KeyType::default + .3f);
+		valStr = std::to_string(KeyType::base + .3f);
 		Types::Error fromStringFloat = key.fromString(valStr);
 		CHECK(fromStringFloat == Types::Error::Code::InvalidFormat);
-		valStr = std::to_string(static_cast<int>(KeyType::default));
+		valStr = std::to_string(static_cast<int>(KeyType::base));
 		CHECK(key.toString() == valStr);
 
-		valStr = Test::stringify(KeyType::default);
+		valStr = Test::stringify(KeyType::base);
 		Types::Error fromStringString = key.fromString(valStr);
 		CHECK(fromStringString == Types::Error::Code::InvalidFormat);
-		valStr = std::to_string(static_cast<int>(KeyType::default));
+		valStr = std::to_string(static_cast<int>(KeyType::base));
 		CHECK(key.toString() == valStr);
 	}
 
@@ -147,21 +147,21 @@ TEST_CASE("INI::IKey", "[INI]")
 		using KeyType = EitherOrStringFloat;
 		KeyType key;
 
-		auto valStr = Test::stringify(KeyType::default);
+		auto valStr = Test::stringify(KeyType::base);
 		Types::Error fromStringFloat = key.fromString(valStr);
 		CHECK(fromStringFloat == Types::Error::Code::Nothing);
 		CHECK(key.toString() == valStr);
 
-		valStr = std::to_string(KeyType::default);
+		valStr = std::to_string(KeyType::base);
 		Types::Error fromStringWrong = key.fromString(valStr);
 		CHECK(fromStringWrong == Types::Error::Code::InvalidFormat);
-		valStr = Test::stringify(KeyType::default);
+		valStr = Test::stringify(KeyType::base);
 		CHECK(key.toString() == valStr);
 
 		valStr = "\"0.000\"";
 		Types::Error fromStringFractionalShort = key.fromString(valStr);
 		CHECK(fromStringFractionalShort == Types::Error::Code::InvalidFormat);
-		valStr = Test::stringify(KeyType::default);
+		valStr = Test::stringify(KeyType::base);
 		CHECK(key.toString() == valStr);
 	}
 
@@ -170,32 +170,32 @@ TEST_CASE("INI::IKey", "[INI]")
 		using KeyType = MinMaxStringInt;
 		KeyType key;
 
-		auto valStr = Test::stringify(KeyType::default);
+		auto valStr = Test::stringify(KeyType::base);
 		Types::Error fromStringDefault = key.fromString(valStr);
 		CHECK(fromStringDefault == Types::Error::Code::Nothing);
 		CHECK(key.toString() == valStr);
 
-		valStr = Test::stringify(KeyType::default + 1);
+		valStr = Test::stringify(KeyType::base + 1);
 		Types::Error fromStringInt = key.fromString(valStr);
 		CHECK(fromStringInt == Types::Error::Code::Nothing);
 		CHECK(key.toString() == valStr);
 
-		valStr = Test::stringify(KeyType::default + .3f);
+		valStr = Test::stringify(KeyType::base + .3f);
 		Types::Error fromStringFloat = key.fromString(valStr);
 		CHECK(fromStringFloat == Types::Error::Code::InvalidValue);
-		valStr = Test::stringify(KeyType::default);
+		valStr = Test::stringify(KeyType::base);
 		CHECK(key.toString() == valStr);
 
-		valStr = std::to_string(KeyType::default);
+		valStr = std::to_string(KeyType::base);
 		Types::Error fromStringString = key.fromString(valStr);
 		CHECK(fromStringString == Types::Error::Code::InvalidFormat);
-		valStr = Test::stringify(KeyType::default);
+		valStr = Test::stringify(KeyType::base);
 		CHECK(key.toString() == valStr);
 
 		valStr = "\"0.00000000\"";
 		Types::Error fromStringFractionalLong = key.fromString(valStr);
 		CHECK(fromStringFractionalLong == Types::Error::Code::InvalidFormat);
-		valStr = Test::stringify(KeyType::default);
+		valStr = Test::stringify(KeyType::base);
 		CHECK(key.toString() == valStr);
 	}
 }
