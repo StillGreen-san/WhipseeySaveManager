@@ -24,4 +24,4 @@ Game needs to be restarted to load a modified Savegame. Autosaving ingame will o
 - Code is a bit messy
 - Written in AutoIT, so some Antivirus tools may complain
 - no dark mode
-- see master branch for newer version in C++
+- see master branch for newest version and other branches for versions in other languages
