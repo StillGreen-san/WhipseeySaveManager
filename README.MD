@@ -28,7 +28,7 @@ The Game needs to be restarted to load a modified Savegame or Settings. Autosavi
 - written in/with C++ 17
 - uses cmake (find_package / find_path)
 - C++ rewrite mostly intended as an exercise, thus somewhat over engineered compared to the previous AutoIT version
-- previous AutoIT version can be found in au3 branch
+- see master branch for newest version and other branches for versions in other languages
 
 ### Dependencies
 
