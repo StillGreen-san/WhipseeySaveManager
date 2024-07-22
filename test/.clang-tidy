@@ -1,9 +1,0 @@
-InheritParentConfig: true
-Checks: >
-  -cppcoreguidelines-avoid-do-while,
-  -cppcoreguidelines-avoid-magic-numbers,
-  -fuchsia-statically-constructed-objects,
-  -google-build-using-namespace,
-  -misc-use-anonymous-namespace,
-  -readability-function-cognitive-complexity,
-  -readability-magic-numbers,
