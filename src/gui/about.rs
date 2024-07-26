@@ -50,6 +50,7 @@ impl Tab for About {
                 "https://github.com/WilliamVenner/steamlocate-rs",
             ))
             .push(self.library("rust-ini [MIT]", "https://github.com/zonyitoo/rust-ini"))
+            .push(self.library("opener [MIT]", "https://github.com/Seeker14491/opener"))
             .into()
     }
 }
