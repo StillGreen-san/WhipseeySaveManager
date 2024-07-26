@@ -12,7 +12,7 @@ pub enum Message {
 pub struct About;
 
 impl About {
-    // TODO hyperlink, open link
+    // TODO hyperlink
     fn library(
         &self,
         label: &'static str,
@@ -26,6 +26,8 @@ impl About {
 }
 
 impl Tab for About {
+    type InMessage = Message;
+
     fn title(&self) -> String {
         "About".into()
     }
@@ -34,7 +36,12 @@ impl Tab for About {
         TabLabel::Text(self.title())
     }
 
-    fn update(&mut self, message: super::Message) -> Command<super::Message> {
+    fn update(&mut self, message: Self::InMessage) -> Command<super::Message> {
+        match message {
+            Message::Link(link) => {
+                opener::open(link).unwrap(); // TODO error handling
+            }
+        }
         Command::none()
     }
 

@@ -4,6 +4,9 @@ use iced_aw::{TabLabel, Tabs};
 use crate::gui::about::About;
 
 pub mod about;
+pub mod cheats;
+pub mod files;
+pub mod options;
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 enum TabId {
@@ -40,7 +43,13 @@ impl Application for Gui {
     }
 
     fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
-        Command::none()
+        match message {
+            Message::TabSelected(id) => {
+                self.active_tab = id;
+                Command::none()
+            }
+            Message::About(message) => self.about.update(message),
+        }
     }
 
     fn view(&self) -> Element<'_, Self::Message, Self::Theme, Renderer> {
@@ -52,11 +61,13 @@ impl Application for Gui {
 }
 
 trait Tab {
+    type InMessage;
+
     fn title(&self) -> String;
 
     fn tab_label(&self) -> TabLabel;
 
-    fn update(&mut self, message: Message) -> Command<Message>;
+    fn update(&mut self, message: Self::InMessage) -> Command<Message>;
 
     fn view(&self) -> Element<'_, Message, Theme, Renderer>;
 }
