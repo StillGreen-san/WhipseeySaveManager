@@ -1,10 +1,27 @@
-use iced::widget::Space;
 use iced::{Application, Command, Element, Renderer};
+use iced_aw::{TabLabel, Tabs};
 
-#[derive(Debug)]
-pub enum Message {}
+use crate::gui::about::About;
 
-pub struct Gui {}
+pub mod about;
+
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+enum TabId {
+    #[default]
+    About,
+}
+
+#[derive(Debug, Clone)]
+pub enum Message {
+    TabSelected(TabId),
+    About(about::Message),
+}
+
+#[derive(Default)]
+pub struct Gui {
+    active_tab: TabId,
+    about: About,
+}
 
 type Theme = iced::Theme;
 
@@ -15,7 +32,7 @@ impl Application for Gui {
     type Flags = ();
 
     fn new(_flags: Self::Flags) -> (Self, Command<Self::Message>) {
-        (Self {}, Command::none())
+        (Default::default(), Command::none())
     }
 
     fn title(&self) -> String {
@@ -27,6 +44,19 @@ impl Application for Gui {
     }
 
     fn view(&self) -> Element<'_, Self::Message, Self::Theme, Renderer> {
-        Space::new(200, 100).into()
+        Tabs::new(Message::TabSelected)
+            .set_active_tab(&self.active_tab)
+            .push(TabId::About, self.about.tab_label(), self.about.view())
+            .into()
     }
+}
+
+trait Tab {
+    fn title(&self) -> String;
+
+    fn tab_label(&self) -> TabLabel;
+
+    fn update(&mut self, message: Message) -> Command<Message>;
+
+    fn view(&self) -> Element<'_, Message, Theme, Renderer>;
 }

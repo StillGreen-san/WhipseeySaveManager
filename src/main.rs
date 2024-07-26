@@ -4,7 +4,7 @@ mod gui;
 
 fn main() -> Result<(), iced::Error> {
     let window = window::Settings {
-        size: Size::from([480, 256]),
+        size: Size::from([512, 256]),
         position: Default::default(),
         min_size: None,
         max_size: None,
