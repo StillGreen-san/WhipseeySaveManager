@@ -5,6 +5,7 @@ use crate::gui::about::About;
 
 pub mod about;
 pub mod cheats;
+pub mod file;
 pub mod files;
 pub mod options;
 
@@ -14,10 +15,17 @@ enum TabId {
     About,
 }
 
+#[derive(Debug, Clone, Copy)]
+pub enum FileId {
+    Save,
+    Bfs,
+}
+
 #[derive(Debug, Clone)]
 pub enum Message {
     TabSelected(TabId),
     About(about::Message),
+    File(FileId, file::Message),
 }
 
 #[derive(Default)]
@@ -49,6 +57,7 @@ impl Application for Gui {
                 Command::none()
             }
             Message::About(message) => self.about.update(message),
+            Message::File(id, message) => todo!(),
         }
     }
 
