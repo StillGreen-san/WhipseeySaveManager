@@ -1,3 +1,4 @@
+use std::future::ready;
 use std::path::PathBuf;
 
 use iced::widget::{Button, Row, Text, TextInput};
@@ -46,15 +47,37 @@ impl File {
 
     pub fn update(&mut self, message: Message) -> Command<super::Message> {
         match message {
-            Message::PathChanged(_) => todo!(),
+            Message::PathChanged(str_path) => {
+                self.path = PathBuf::from(str_path);
+                Command::none()
+            }
             Message::Open => {
                 let id = self.id;
                 let dialog = Self::build_file_dialog(&self.display_strings);
                 Command::perform(Self::run_file_dialog(dialog), move |msg| msg.pack(id))
             }
-            Message::Opened(_) => todo!(),
-            Message::Save => todo!(),
-            Message::Reload => todo!(),
+            Message::Opened(opt_path) => match opt_path {
+                None => Command::none(),
+                Some(path) => {
+                    let id = self.id;
+                    self.path = path;
+                    Command::perform(ready(self.path.clone()), move |path| {
+                        super::Message::Open(id, path)
+                    })
+                }
+            },
+            Message::Save => {
+                let id = self.id;
+                Command::perform(ready(self.path.clone()), move |path| {
+                    super::Message::Save(id, path)
+                })
+            }
+            Message::Reload => {
+                let id = self.id;
+                Command::perform(ready(self.path.clone()), move |path| {
+                    super::Message::Reload(id, path)
+                })
+            }
         }
     }
 

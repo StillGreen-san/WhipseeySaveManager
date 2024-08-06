@@ -1,5 +1,6 @@
 use iced::{Application, Command, Element, Renderer};
 use iced_aw::{TabLabel, Tabs};
+use std::path::PathBuf;
 
 use crate::gui::about::About;
 
@@ -26,6 +27,9 @@ pub enum Message {
     TabSelected(TabId),
     About(about::Message),
     File(FileId, file::Message),
+    Save(FileId, PathBuf),
+    Open(FileId, PathBuf),
+    Reload(FileId, PathBuf),
 }
 
 #[derive(Default)]
