@@ -59,6 +59,7 @@ impl Tab for About {
             .push(self.library("rust-ini [MIT]", "https://github.com/zonyitoo/rust-ini"))
             .push(self.library("opener [MIT]", "https://github.com/Seeker14491/opener"))
             .push(self.library("rfd [MIT]", "https://github.com/PolyMeilex/rfd"))
+            .push(self.library("num_enum [MIT]", "https://github.com/illicitonion/num_enum"))
             .into()
     }
 }
