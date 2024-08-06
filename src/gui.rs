@@ -4,7 +4,7 @@ use iced_aw::{TabLabel, Tabs};
 use std::path::PathBuf;
 
 use crate::gui::about::About;
-use crate::gui::file::DisplayStrings;
+use crate::gui::cheats::Cheats;
 
 pub mod about;
 pub mod cheats;
@@ -16,6 +16,7 @@ pub mod options;
 pub enum TabId {
     #[default]
     About,
+    Cheats,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -32,13 +33,15 @@ pub enum Message {
     Save(FileId, PathBuf),
     Open(FileId, PathBuf),
     Reload(FileId, PathBuf),
+    Cheats(cheats::Message),
 }
 
 pub struct Gui {
-    active_tab: TabId,
-    about: About,
     save: file::File,
     bfs: file::File,
+    active_tab: TabId,
+    about: About,
+    cheats: Cheats,
 }
 
 type Theme = iced::Theme;
@@ -50,7 +53,7 @@ impl Application for Gui {
     type Flags = ();
 
     fn new(_flags: Self::Flags) -> (Self, Command<Self::Message>) {
-        let save_strings = DisplayStrings {
+        let save_strings = file::DisplayStrings {
             placeholder: "save game",
             open: "...",
             save: "save",
@@ -59,10 +62,21 @@ impl Application for Gui {
             dialog_filter_save: "save",
             dialog_filter_all: "all",
         }; // TODO localize
-        let bfs_strings = DisplayStrings {
+        let bfs_strings = file::DisplayStrings {
             placeholder: "bfs settings",
             dialog_title: "bfs settings",
             ..save_strings
+        };
+        let cheats_strings = cheats::DisplayStrings {
+            checkbox: "cheats enabled",
+            description: "checking \"cheats enabled\" will enable some hotkeys in game:\
+                          \nR  : restart room\
+                          \nN  : next room\
+                          \nP  : toggle fullscreen\
+                          \n, . , .  : infinite flight\
+                          \n, . , ,  : unlock all levels\
+                          \n, , , .  : disable hud\
+                          \n, , , ,  : invincibility",
         };
         (
             Self {
@@ -70,6 +84,7 @@ impl Application for Gui {
                 about: Default::default(),
                 save: file::File::new(FileId::Save, save_strings),
                 bfs: file::File::new(FileId::Bfs, bfs_strings),
+                cheats: Cheats::new(cheats_strings),
             },
             Command::none(),
         )
@@ -93,6 +108,7 @@ impl Application for Gui {
             Message::Save(_, _) => todo!(),
             Message::Open(_, _) => todo!(),
             Message::Reload(_, _) => todo!(),
+            Message::Cheats(message) => self.cheats.update(message),
         }
     }
 
@@ -102,8 +118,9 @@ impl Application for Gui {
             .push(self.bfs.view())
             .push(
                 Tabs::new(Message::TabSelected)
-                    .set_active_tab(&self.active_tab)
-                    .push(TabId::About, self.about.tab_label(), self.about.view()),
+                    .push(TabId::Cheats, self.cheats.tab_label(), self.cheats.view())
+                    .push(TabId::About, self.about.tab_label(), self.about.view())
+                    .set_active_tab(&self.active_tab),
             )
             .into()
     }
