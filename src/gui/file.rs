@@ -1,14 +1,12 @@
-use crate::gui::Theme;
+use std::path::PathBuf;
+
 use iced::widget::{Button, Row, Text, TextInput};
 use iced::{Command, Element, Renderer};
-use rfd::{AsyncFileDialog, FileHandle};
-use std::future::Future;
-use std::path::PathBuf;
+use rfd::AsyncFileDialog;
 
 pub struct File {
     path: PathBuf,
     display_strings: DisplayStrings,
-    state: State,
     id: super::FileId,
 }
 
@@ -27,7 +25,6 @@ impl File {
         Self {
             path: Default::default(),
             display_strings,
-            state: Default::default(),
             id,
         }
     }
@@ -36,23 +33,20 @@ impl File {
         message.pack(self.id)
     }
 
-    async fn run_file_dialog(dialog: impl Future<Output = Option<FileHandle>> + Sized) -> Message {
-        Message::Opened(dialog.await.map(|path_buf| path_buf.into()))
+    async fn run_file_dialog(dialog: AsyncFileDialog) -> Message {
+        Message::Opened(dialog.pick_file().await.map(|path_buf| path_buf.into()))
     }
 
-    fn build_file_dialog(
-        display_strings: &DisplayStrings,
-    ) -> impl Future<Output = Option<FileHandle>> + Sized {
+    fn build_file_dialog(display_strings: &DisplayStrings) -> AsyncFileDialog {
         AsyncFileDialog::new()
             .set_title(display_strings.dialog_title)
             .add_filter(display_strings.dialog_filter_save, &["sav"])
             .add_filter(display_strings.dialog_filter_all, &["*"])
-            .pick_file()
     }
 
     pub fn update(&mut self, message: Message) -> Command<super::Message> {
         match message {
-            Message::PathChanged(path) => todo!(),
+            Message::PathChanged(_) => todo!(),
             Message::Open => {
                 let id = self.id;
                 let dialog = Self::build_file_dialog(&self.display_strings);
@@ -64,7 +58,7 @@ impl File {
         }
     }
 
-    pub fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
+    pub fn view(&self) -> Element<'_, super::Message, super::Theme, Renderer> {
         Row::new()
             .push(
                 TextInput::new(
@@ -102,13 +96,4 @@ impl Message {
     fn pack(self, id: super::FileId) -> super::Message {
         super::Message::File(id, self)
     }
-}
-
-#[derive(Default)]
-enum State {
-    #[default]
-    NoPath,
-    ValidPath,
-    FilesystemError,
-    ApplicationError,
 }
