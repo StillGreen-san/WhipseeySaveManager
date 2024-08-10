@@ -8,6 +8,7 @@ use iced_aw::TabLabel;
 #[derive(Debug, Clone)]
 pub enum Message {
     CheatsToggled(bool),
+    Cheats(data::Cheats),
 }
 
 pub struct Cheats {
@@ -44,6 +45,10 @@ impl Tab for Cheats {
         match message {
             Message::CheatsToggled(state) => {
                 self.cheats_state.cheats_enabled = CheatsEnabled::try_from(state as u8).unwrap();
+                Command::none()
+            }
+            Message::Cheats(cheats) => {
+                self.cheats_state = cheats;
                 Command::none()
             }
         }

@@ -1,5 +1,6 @@
 use iced::{window, Application, Pixels, Settings, Size};
 
+pub mod data;
 mod gui;
 mod system;
 

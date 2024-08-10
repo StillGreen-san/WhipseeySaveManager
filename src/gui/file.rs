@@ -62,7 +62,7 @@ impl File {
                     let id = self.id;
                     self.path = path;
                     Command::perform(ready(self.path.clone()), move |path| {
-                        super::Message::Open(id, path)
+                        super::Message::Load(id, path)
                     })
                 }
             },
@@ -75,7 +75,7 @@ impl File {
             Message::Reload => {
                 let id = self.id;
                 Command::perform(ready(self.path.clone()), move |path| {
-                    super::Message::Reload(id, path)
+                    super::Message::Load(id, path)
                 })
             }
         }

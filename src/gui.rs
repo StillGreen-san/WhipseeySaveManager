@@ -1,10 +1,10 @@
+use crate::gui::about::About;
+use crate::gui::cheats::Cheats;
+use crate::{data, system};
 use iced::widget::Column;
 use iced::{Application, Command, Element, Renderer};
 use iced_aw::{TabLabel, Tabs};
 use std::path::PathBuf;
-
-use crate::gui::about::About;
-use crate::gui::cheats::Cheats;
 
 pub mod about;
 pub mod cheats;
@@ -31,8 +31,8 @@ pub enum Message {
     About(about::Message),
     File(FileId, file::Message),
     Save(FileId, PathBuf),
-    Open(FileId, PathBuf),
-    Reload(FileId, PathBuf),
+    Load(FileId, PathBuf),
+    LoadedBfs(data::Result<data::BfsSettings>),
     Cheats(cheats::Message),
 }
 
@@ -106,8 +106,16 @@ impl Application for Gui {
                 FileId::Bfs => self.bfs.update(message),
             },
             Message::Save(_, _) => todo!(),
-            Message::Open(_, _) => todo!(),
-            Message::Reload(_, _) => todo!(),
+            Message::Load(id, path) => match id {
+                FileId::Save => todo!(),
+                FileId::Bfs => Command::perform(
+                    async { system::file::load_ini_file(path).await?.try_into() },
+                    Message::LoadedBfs,
+                ),
+            },
+            Message::LoadedBfs(result) => self
+                .cheats // TODO error handling
+                .update(cheats::Message::Cheats(result.unwrap().cheats)),
             Message::Cheats(message) => self.cheats.update(message),
         }
     }
