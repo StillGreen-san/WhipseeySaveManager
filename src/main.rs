@@ -1,6 +1,7 @@
 use iced::{window, Application, Pixels, Settings, Size};
 
 mod gui;
+mod system;
 
 fn main() -> Result<(), iced::Error> {
     let window = window::Settings {
