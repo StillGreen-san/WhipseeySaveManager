@@ -1,16 +1,30 @@
-use std::path::PathBuf;
 use crate::data::cheats::CheatsEnabled;
+use ini::Ini;
 use num_enum::{TryFromPrimitive, TryFromPrimitiveError};
 use std::num::ParseIntError;
 use thiserror::Error;
+
+pub mod cheats;
 
 pub use cheats::Cheats;
 
 pub mod cheats;
 
+#[derive(Clone, Debug)]
 pub struct BfsSettings {
-    path: PathBuf,
-    cheats: Cheats,
+    pub cheats: Cheats,
+}
+
+impl TryFrom<Ini> for BfsSettings {
+    type Error = Error;
+
+    fn try_from(value: Ini) -> Result<Self> {
+        Ok(BfsSettings {
+            cheats: Cheats {
+                cheats_enabled: CheatsEnabled::try_from(&value)?,
+            },
+        })
+    }
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
