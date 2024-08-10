@@ -12,3 +12,4 @@ opener = "0.7.1"
 rfd = "0.14.1"
 num_enum = "0.7.3"
 tokio = { version = "1.39.2", features = ["fs"] }
+thiserror = "1.0.63"
