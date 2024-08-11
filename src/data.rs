@@ -27,6 +27,22 @@ impl TryFrom<Ini> for BfsSettings {
     }
 }
 
+trait IniSectionStr {
+    const INI_SECTION_STR: &'static str;
+
+    fn ini_section_str(&self) -> &'static str {
+        Self::INI_SECTION_STR
+    }
+}
+
+trait IniKeyStr: IniSectionStr {
+    const INI_KEY_STR: &'static str;
+
+    fn ini_key_str(&self) -> &'static str {
+        Self::INI_KEY_STR
+    }
+}
+
 pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Error, Debug, Clone)]
