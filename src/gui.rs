@@ -117,7 +117,7 @@ impl Application for Gui {
                     };
                     let ini = bfs.into();
                     Command::perform(
-                        async move { system::file::write_ini_file(path, &ini).await },
+                        async move { system::write_ini_file(path, &ini).await },
                         |_| Message::Saved(FileId::Bfs),
                     )
                 }
@@ -126,7 +126,7 @@ impl Application for Gui {
             Message::Load(id, path) => match id {
                 FileId::Save => todo!(),
                 FileId::Bfs => Command::perform(
-                    async { system::file::load_ini_file(path).await?.try_into() },
+                    async { system::load_ini_file(path).await?.try_into() },
                     Message::LoadedBfs,
                 ),
             },
