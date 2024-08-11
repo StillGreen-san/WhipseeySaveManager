@@ -17,7 +17,8 @@ pub struct DisplayStrings {
     pub save: &'static str,
     pub reload: &'static str,
     pub dialog_title: &'static str,
-    pub dialog_filter_save: &'static str,
+    pub dialog_filter_file: &'static str,
+    pub dialog_filter_ext: &'static str,
     pub dialog_filter_all: &'static str,
 }
 
@@ -41,7 +42,10 @@ impl File {
     fn build_file_dialog(display_strings: &DisplayStrings) -> AsyncFileDialog {
         AsyncFileDialog::new()
             .set_title(display_strings.dialog_title)
-            .add_filter(display_strings.dialog_filter_save, &["sav"])
+            .add_filter(
+                display_strings.dialog_filter_file,
+                &[display_strings.dialog_filter_ext],
+            )
             .add_filter(display_strings.dialog_filter_all, &["*"])
     }
 

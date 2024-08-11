@@ -60,12 +60,15 @@ impl Application for Gui {
             save: "save",
             reload: "reload",
             dialog_title: "save game",
-            dialog_filter_save: "save",
+            dialog_filter_file: "save",
+            dialog_filter_ext: "sav",
             dialog_filter_all: "all",
         }; // TODO localize
         let bfs_strings = file::DisplayStrings {
             placeholder: "bfs settings",
             dialog_title: "bfs settings",
+            dialog_filter_file: "ini",
+            dialog_filter_ext: "ini",
             ..save_strings
         };
         let cheats_strings = cheats::DisplayStrings {
