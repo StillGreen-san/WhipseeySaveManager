@@ -27,6 +27,15 @@ impl TryFrom<Ini> for BfsSettings {
     }
 }
 
+impl Into<Ini> for BfsSettings {
+    fn into(self) -> Ini {
+        let mut ini = Ini::new();
+        ini.entry(Some(self.cheats.ini_section_str().into()))
+            .or_insert(self.cheats.into());
+        ini
+    }
+}
+
 trait IniSectionStr {
     const INI_SECTION_STR: &'static str;
 

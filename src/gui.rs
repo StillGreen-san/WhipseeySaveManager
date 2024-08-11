@@ -33,6 +33,7 @@ pub enum Message {
     Save(FileId, PathBuf),
     Load(FileId, PathBuf),
     LoadedBfs(data::Result<data::BfsSettings>),
+    Saved(FileId),
     Cheats(cheats::Message),
 }
 
@@ -105,7 +106,20 @@ impl Application for Gui {
                 FileId::Save => self.save.update(message),
                 FileId::Bfs => self.bfs.update(message),
             },
-            Message::Save(_, _) => todo!(),
+            Message::Save(id, path) => match id {
+                FileId::Save => todo!(),
+                FileId::Bfs => {
+                    let bfs = data::BfsSettings {
+                        cheats: self.cheats.get_state(),
+                    };
+                    let ini = bfs.into();
+                    Command::perform(
+                        async move { system::file::write_ini_file(path, &ini).await },
+                        |_| Message::Saved(FileId::Bfs),
+                    )
+                }
+            },
+            Message::Saved(_) => Command::none(), // TODO?
             Message::Load(id, path) => match id {
                 FileId::Save => todo!(),
                 FileId::Bfs => Command::perform(

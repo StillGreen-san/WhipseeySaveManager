@@ -1,6 +1,6 @@
 use crate::data;
-use ini::Ini;
 use crate::data::{IniKeyStr, IniSectionStr};
+use ini::{Ini, Properties};
 use num_enum::TryFromPrimitive;
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive)]
@@ -41,5 +41,16 @@ impl TryFrom<&Ini> for CheatsEnabled {
         let val: u8 = val_str.parse()?;
         let cheats_enabled = val.try_into()?;
         Ok(cheats_enabled)
+    }
+}
+
+impl Into<Properties> for Cheats {
+    fn into(self) -> Properties {
+        let mut props = Properties::new();
+        props.insert(
+            self.cheats_enabled.ini_key_str(),
+            (self.cheats_enabled as u8).to_string(),
+        );
+        props
     }
 }
