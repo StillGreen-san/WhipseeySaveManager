@@ -113,9 +113,10 @@ impl Application for Gui {
                     Message::LoadedBfs,
                 ),
             },
-            Message::LoadedBfs(result) => self
-                .cheats // TODO error handling
-                .update(cheats::Message::Cheats(result.unwrap().cheats)),
+            Message::LoadedBfs(result) => {
+                self.cheats.set_state(result.unwrap().cheats); // TODO error handling
+                Command::none()
+            }
             Message::Cheats(message) => self.cheats.update(message),
         }
     }
@@ -144,4 +145,12 @@ trait Tab {
     fn update(&mut self, message: Self::InMessage) -> Command<Message>;
 
     fn view(&self) -> Element<'_, Message, Theme, Renderer>;
+}
+
+trait TabState {
+    type State;
+
+    fn get_state(&self) -> Self::State;
+
+    fn set_state(&mut self, state: Self::State);
 }

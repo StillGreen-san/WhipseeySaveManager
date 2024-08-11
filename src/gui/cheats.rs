@@ -1,6 +1,6 @@
 use crate::data;
 use crate::data::cheats::CheatsEnabled;
-use crate::gui::{Tab, Theme};
+use crate::gui::{Tab, TabState, Theme};
 use iced::widget::{Checkbox, Column, Space, Text};
 use iced::{Command, Element, Renderer};
 use iced_aw::TabLabel;
@@ -8,7 +8,6 @@ use iced_aw::TabLabel;
 #[derive(Debug, Clone)]
 pub enum Message {
     CheatsToggled(bool),
-    Cheats(data::Cheats),
 }
 
 pub struct Cheats {
@@ -47,10 +46,6 @@ impl Tab for Cheats {
                 self.cheats_state.cheats_enabled = CheatsEnabled::try_from(state as u8).unwrap();
                 Command::none()
             }
-            Message::Cheats(cheats) => {
-                self.cheats_state = cheats;
-                Command::none()
-            }
         }
     }
 
@@ -66,5 +61,17 @@ impl Tab for Cheats {
             .push(Space::with_height(16.0))
             .push(Text::new(self.display_strings.description))
             .into()
+    }
+}
+
+impl TabState for Cheats {
+    type State = data::Cheats;
+
+    fn get_state(&self) -> Self::State {
+        self.cheats_state.clone()
+    }
+
+    fn set_state(&mut self, state: Self::State) {
+        self.cheats_state = state;
     }
 }
