@@ -1,9 +1,9 @@
 use crate::data;
 use crate::data::{IniKeyStr, IniSectionStr};
 use ini::{Ini, Properties};
-use num_enum::TryFromPrimitive;
+use num_enum::{IntoPrimitive, TryFromPrimitive};
 
-#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum CheatsEnabled {
     #[default]
@@ -49,7 +49,7 @@ impl From<Cheats> for Properties {
         let mut props = Properties::new();
         props.insert(
             value.cheats_enabled.ini_key_str(),
-            (value.cheats_enabled as u8).to_string(),
+            u8::from(value.cheats_enabled).to_string(),
         );
         props
     }
