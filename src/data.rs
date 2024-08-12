@@ -27,11 +27,11 @@ impl TryFrom<Ini> for BfsSettings {
     }
 }
 
-impl Into<Ini> for BfsSettings {
-    fn into(self) -> Ini {
+impl From<BfsSettings> for Ini {
+    fn from(value: BfsSettings) -> Self {
         let mut ini = Ini::new();
-        ini.entry(Some(self.cheats.ini_section_str().into()))
-            .or_insert(self.cheats.into());
+        ini.entry(Some(value.cheats.ini_section_str().into()))
+            .or_insert(value.cheats.into());
         ini
     }
 }

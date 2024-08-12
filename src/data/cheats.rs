@@ -44,12 +44,12 @@ impl TryFrom<&Ini> for CheatsEnabled {
     }
 }
 
-impl Into<Properties> for Cheats {
-    fn into(self) -> Properties {
+impl From<Cheats> for Properties {
+    fn from(value: Cheats) -> Self {
         let mut props = Properties::new();
         props.insert(
-            self.cheats_enabled.ini_key_str(),
-            (self.cheats_enabled as u8).to_string(),
+            value.cheats_enabled.ini_key_str(),
+            (value.cheats_enabled as u8).to_string(),
         );
         props
     }
