@@ -63,7 +63,9 @@ pub enum Error {
     #[error(transparent)]
     ParseIntError(#[from] ParseIntError),
     #[error("{0}")]
-    IniError(String),
+    IniParse(String),
+    #[error("{0}")]
+    Io(String),
     #[error("{0}")]
     TryFromPrimitive(String),
 }
@@ -77,8 +79,8 @@ impl<Enum: TryFromPrimitive> From<TryFromPrimitiveError<Enum>> for Error {
 impl From<ini::Error> for Error {
     fn from(value: ini::Error) -> Self {
         match value {
-            ini::Error::Io(err) => Error::IniError(err.to_string()),
-            ini::Error::Parse(err) => Error::IniError(err.to_string()),
+            ini::Error::Io(err) => Error::Io(err.to_string()),
+            ini::Error::Parse(err) => Error::IniParse(err.to_string()),
         }
     }
 }
