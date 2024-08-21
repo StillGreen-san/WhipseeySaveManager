@@ -66,6 +66,7 @@ impl Tab for About {
                 "https://github.com/meithecatte/enumflags2",
             ))
             .push(self.library("tokio [MIT]", "https://github.com/tokio-rs/tokio"))
+            .push(self.library("strum [MIT]", "https://github.com/Peternator7/strum"))
             .into()
     }
 }
