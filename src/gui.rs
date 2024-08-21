@@ -1,5 +1,6 @@
 use crate::gui::about::About;
 use crate::gui::cheats::Cheats;
+use crate::gui::options::Options;
 use crate::{data, system};
 use iced::widget::Column;
 use iced::{Application, Command, Element, Renderer};
@@ -35,6 +36,7 @@ pub enum Message {
     LoadedBfs(data::Result<data::BfsSettings>),
     Saved(FileId),
     Cheats(cheats::Message),
+    Options(options::Message),
 }
 
 pub struct Gui {
@@ -135,6 +137,7 @@ impl Application for Gui {
                 Command::none()
             }
             Message::Cheats(message) => self.cheats.update(message),
+            Message::Options(_message) => todo!(),
         }
     }
 
