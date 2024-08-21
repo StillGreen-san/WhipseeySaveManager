@@ -46,7 +46,19 @@ impl Message {
     }
 }
 
+pub struct DisplayStrings {
+    pub language: &'static str,
+    pub scale: &'static str,
+    pub fullscreen: &'static str,
+    pub left_handed: &'static str,
+    pub sound_volume: &'static str,
+    pub sound_toggle: &'static str,
+    pub music_volume: &'static str,
+    pub music_toggle: &'static str,
+}
+
 pub struct Options {
+    display_strings: DisplayStrings,
     options_state: data::Options,
     language_state: combo_box::State<options::Language>,
     scale_state: combo_box::State<options::Scale>,
@@ -58,9 +70,10 @@ pub struct Options {
     music_toggle_state: combo_box::State<options::MusicToggle>,
 }
 
-impl Default for Options {
-    fn default() -> Self {
+impl Options {
+    pub fn new(display_strings: DisplayStrings) -> Self {
         Self {
+            display_strings,
             options_state: Default::default(),
             language_state: combo_box::State::new(Vec::from(options::Language::VARIANTS)),
             scale_state: combo_box::State::new(Vec::from(options::Scale::VARIANTS)),
@@ -124,70 +137,82 @@ impl Tab for Options {
 
     fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
         Column::new()
-            .push(Row::new().push(Text::new("Language")).push(ComboBox::new(
-                &self.language_state,
-                "Language",
-                Some(&self.options_state.language),
-                Message::super_language_selected,
-            )))
-            .push(Row::new().push(Text::new("Scale")).push(ComboBox::new(
-                &self.scale_state,
-                "Scale",
-                Some(&self.options_state.scale),
-                Message::super_scale_selected,
-            )))
-            .push(Row::new().push(Text::new("Fullscreen")).push(ComboBox::new(
-                &self.fullscreen_state,
-                "Fullscreen",
-                Some(&self.options_state.fullscreen),
-                Message::super_fullscreen_selected,
-            )))
             .push(
                 Row::new()
-                    .push(Text::new("Left Handed"))
+                    .push(Text::new(self.display_strings.language))
+                    .push(ComboBox::new(
+                        &self.language_state,
+                        self.display_strings.language,
+                        Some(&self.options_state.language),
+                        Message::super_language_selected,
+                    )),
+            )
+            .push(
+                Row::new()
+                    .push(Text::new(self.display_strings.scale))
+                    .push(ComboBox::new(
+                        &self.scale_state,
+                        self.display_strings.scale,
+                        Some(&self.options_state.scale),
+                        Message::super_scale_selected,
+                    )),
+            )
+            .push(
+                Row::new()
+                    .push(Text::new(self.display_strings.fullscreen))
+                    .push(ComboBox::new(
+                        &self.fullscreen_state,
+                        self.display_strings.fullscreen,
+                        Some(&self.options_state.fullscreen),
+                        Message::super_fullscreen_selected,
+                    )),
+            )
+            .push(
+                Row::new()
+                    .push(Text::new(self.display_strings.left_handed))
                     .push(ComboBox::new(
                         &self.left_handed_state,
-                        "Left Handed",
+                        self.display_strings.left_handed,
                         Some(&self.options_state.left_handed),
                         Message::super_left_handed_selected,
                     )),
             )
             .push(
                 Row::new()
-                    .push(Text::new("Sound Volume"))
+                    .push(Text::new(self.display_strings.sound_volume))
                     .push(ComboBox::new(
                         &self.sound_volume_state,
-                        "Sound Volume",
+                        self.display_strings.sound_volume,
                         Some(&self.options_state.sound_volume),
                         Message::super_sound_volume_selected,
                     )),
             )
             .push(
                 Row::new()
-                    .push(Text::new("Sound Toggle"))
+                    .push(Text::new(self.display_strings.sound_toggle))
                     .push(ComboBox::new(
                         &self.sound_toggle_state,
-                        "Sound Toggle",
+                        self.display_strings.sound_toggle,
                         Some(&self.options_state.sound_toggle),
                         Message::super_sound_toggle_selected,
                     )),
             )
             .push(
                 Row::new()
-                    .push(Text::new("Music Volume"))
+                    .push(Text::new(self.display_strings.music_volume))
                     .push(ComboBox::new(
                         &self.music_volume_state,
-                        "Music Volume",
+                        self.display_strings.music_volume,
                         Some(&self.options_state.music_volume),
                         Message::super_music_volume_selected,
                     )),
             )
             .push(
                 Row::new()
-                    .push(Text::new("Music Toggle"))
+                    .push(Text::new(self.display_strings.music_toggle))
                     .push(ComboBox::new(
                         &self.music_toggle_state,
-                        "Music Toggle",
+                        self.display_strings.music_toggle,
                         Some(&self.options_state.music_toggle),
                         Message::super_music_toggle_selected,
                     )),
