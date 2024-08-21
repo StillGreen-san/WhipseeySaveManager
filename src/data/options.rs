@@ -15,7 +15,7 @@ pub enum Language {
     Portuguese = 9,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Display, VariantArray)]
 pub enum Scale {
     #[default]
     R768x432 = 2,
@@ -23,21 +23,21 @@ pub enum Scale {
     R1536x864 = 4,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Display, VariantArray)]
 pub enum Fullscreen {
     Disabled = 0,
     #[default]
     Enabled = 1,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Display, VariantArray)]
 pub enum LeftHanded {
     Disabled = 0,
     #[default]
     Enabled = 1,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Display, VariantArray)]
 pub enum SoundVolume {
     V0 = 0,
     V10 = 10,
@@ -53,14 +53,14 @@ pub enum SoundVolume {
     V100 = 100,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Display, VariantArray)]
 pub enum SoundToggle {
     Disabled = 0,
     #[default]
     Enabled = 1,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Display, VariantArray)]
 pub enum MusicVolume {
     V0 = 0,
     V10 = 10,
@@ -76,7 +76,7 @@ pub enum MusicVolume {
     V100 = 100,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Display, VariantArray)]
 pub enum MusicToggle {
     Disabled = 0,
     #[default]
@@ -85,12 +85,12 @@ pub enum MusicToggle {
 
 #[derive(Clone, Default)]
 pub struct Options {
-    language: Language,
-    scale: Scale,
-    fullscreen: Fullscreen,
-    left_handed: LeftHanded,
-    sound_volume: SoundVolume,
-    sound_toggle: SoundToggle,
-    music_volume: MusicVolume,
-    music_toggle: MusicToggle,
+    pub language: Language,
+    pub scale: Scale,
+    pub fullscreen: Fullscreen,
+    pub left_handed: LeftHanded,
+    pub sound_volume: SoundVolume,
+    pub sound_toggle: SoundToggle,
+    pub music_volume: MusicVolume,
+    pub music_toggle: MusicToggle,
 }
