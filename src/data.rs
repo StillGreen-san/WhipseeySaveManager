@@ -5,8 +5,10 @@ use std::num::ParseIntError;
 use thiserror::Error;
 
 pub mod cheats;
+pub mod options;
 
 pub use cheats::Cheats;
+pub use options::Options;
 
 pub mod cheats;
 
