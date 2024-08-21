@@ -18,6 +18,7 @@ pub enum TabId {
     #[default]
     About,
     Cheats,
+    Options,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -45,6 +46,7 @@ pub struct Gui {
     active_tab: TabId,
     about: About,
     cheats: Cheats,
+    options: Options,
 }
 
 type Theme = iced::Theme;
@@ -65,7 +67,7 @@ impl Application for Gui {
             dialog_filter_file: "save",
             dialog_filter_ext: "sav",
             dialog_filter_all: "all",
-        }; // TODO localize
+        }; // TODO localize (these and in general)
         let bfs_strings = file::DisplayStrings {
             placeholder: "bfs settings",
             dialog_title: "bfs settings",
@@ -84,6 +86,16 @@ impl Application for Gui {
                           \n, , , .  : disable hud\
                           \n, , , ,  : invincibility",
         };
+        let opt_strings = options::DisplayStrings {
+            language: "Language",
+            scale: "Scale",
+            fullscreen: "Fullscreen",
+            left_handed: "Left Handed",
+            sound_volume: "Sound Volume",
+            sound_toggle: "Sound Toggle",
+            music_volume: "Music Volume",
+            music_toggle: "Music Toggle",
+        };
         (
             Self {
                 active_tab: Default::default(),
@@ -91,6 +103,7 @@ impl Application for Gui {
                 save: file::File::new(FileId::Save, save_strings),
                 bfs: file::File::new(FileId::Bfs, bfs_strings),
                 cheats: Cheats::new(cheats_strings),
+                options: Options::new(opt_strings),
             },
             Command::none(),
         )
@@ -137,7 +150,7 @@ impl Application for Gui {
                 Command::none()
             }
             Message::Cheats(message) => self.cheats.update(message),
-            Message::Options(_message) => todo!(),
+            Message::Options(message) => self.options.update(message),
         }
     }
 
@@ -147,6 +160,11 @@ impl Application for Gui {
             .push(self.bfs.view())
             .push(
                 Tabs::new(Message::TabSelected)
+                    .push(
+                        TabId::Options,
+                        self.options.tab_label(),
+                        self.options.view(),
+                    )
                     .push(TabId::Cheats, self.cheats.tab_label(), self.cheats.view())
                     .push(TabId::About, self.about.tab_label(), self.about.view())
                     .set_active_tab(&self.active_tab),
