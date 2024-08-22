@@ -11,7 +11,7 @@ fn main() -> Result<(), iced::Error> {
         min_size: None,
         max_size: None,
         visible: true,
-        resizable: false,
+        resizable: true,
         decorations: true,
         transparent: false,
         level: Default::default(),

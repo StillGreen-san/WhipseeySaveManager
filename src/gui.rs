@@ -38,6 +38,7 @@ pub enum Message {
     Saved(FileId),
     Cheats(cheats::Message),
     Options(options::Message),
+    Files(files::Message),
 }
 
 pub struct Gui {
@@ -151,6 +152,7 @@ impl Application for Gui {
             }
             Message::Cheats(message) => self.cheats.update(message),
             Message::Options(message) => self.options.update(message),
+            Message::Files(_message) => todo!(),
         }
     }
 
