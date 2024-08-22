@@ -8,8 +8,20 @@ pub enum Message {
     Link(&'static str),
 }
 
-#[derive(Default)]
-pub struct About;
+pub struct DisplayStrings {
+    pub title: &'static str,
+    pub description: &'static str,
+}
+
+pub struct About {
+    display_strings: DisplayStrings,
+}
+
+impl About {
+    pub fn new(display_strings: DisplayStrings) -> Self {
+        Self { display_strings }
+    }
+}
 
 impl About {
     // TODO hyperlink
@@ -29,7 +41,7 @@ impl Tab for About {
     type InMessage = Message;
 
     fn title(&self) -> String {
-        "About".into()
+        self.display_strings.title.into()
     }
 
     fn tab_label(&self) -> TabLabel {
@@ -48,7 +60,7 @@ impl Tab for About {
     // TODO dynamic loading, layout
     fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
         Column::new()
-            .push(Text::new("this program uses the following libraries:"))
+            .push(Text::new(self.display_strings.description))
             .push(Space::with_height(16.0))
             .push(self.library("iced [MIT]", "https://github.com/iced-rs/iced"))
             .push(self.library("iced_aw [MIT]", "https://github.com/iced-rs/iced_aw"))

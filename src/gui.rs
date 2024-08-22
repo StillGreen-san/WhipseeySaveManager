@@ -59,6 +59,10 @@ impl Application for Gui {
     type Flags = ();
 
     fn new(_flags: Self::Flags) -> (Self, Command<Self::Message>) {
+        let about_strings = about::DisplayStrings {
+            title: "About",
+            description: "this program uses the following libraries:",
+        };
         let save_strings = file::DisplayStrings {
             placeholder: "save game",
             open: "...",
@@ -77,6 +81,7 @@ impl Application for Gui {
             ..save_strings
         };
         let cheats_strings = cheats::DisplayStrings {
+            title: "Cheats",
             checkbox: "cheats enabled",
             description: "checking \"cheats enabled\" will enable some hotkeys in game:\
                           \nR  : restart room\
@@ -88,6 +93,7 @@ impl Application for Gui {
                           \n, , , ,  : invincibility",
         };
         let opt_strings = options::DisplayStrings {
+            title: "Options",
             language: "Language",
             scale: "Scale",
             fullscreen: "Fullscreen",
@@ -100,7 +106,7 @@ impl Application for Gui {
         (
             Self {
                 active_tab: Default::default(),
-                about: Default::default(),
+                about: About::new(about_strings),
                 save: file::File::new(FileId::Save, save_strings),
                 bfs: file::File::new(FileId::Bfs, bfs_strings),
                 cheats: Cheats::new(cheats_strings),

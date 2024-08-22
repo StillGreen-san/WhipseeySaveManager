@@ -47,6 +47,7 @@ impl Message {
 }
 
 pub struct DisplayStrings {
+    pub title: &'static str,
     pub language: &'static str,
     pub scale: &'static str,
     pub fullscreen: &'static str,
@@ -91,7 +92,7 @@ impl Tab for Options {
     type InMessage = Message;
 
     fn title(&self) -> String {
-        "Options".into()
+        self.display_strings.title.into()
     }
 
     fn tab_label(&self) -> TabLabel {

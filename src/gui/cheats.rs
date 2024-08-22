@@ -16,6 +16,7 @@ pub struct Cheats {
 }
 
 pub struct DisplayStrings {
+    pub title: &'static str,
     pub checkbox: &'static str,
     pub description: &'static str,
 }
@@ -33,7 +34,7 @@ impl Tab for Cheats {
     type InMessage = Message;
 
     fn title(&self) -> String {
-        "Cheats".into()
+        self.display_strings.title.into()
     }
 
     fn tab_label(&self) -> TabLabel {
