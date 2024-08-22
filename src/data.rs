@@ -5,12 +5,17 @@ use std::num::ParseIntError;
 use thiserror::Error;
 
 pub mod cheats;
+pub mod file;
 pub mod options;
 
 pub use cheats::Cheats;
+pub use file::File;
 pub use options::Options;
 
-pub mod cheats;
+pub struct WhipseeySaveData {
+    pub options: Options,
+    pub files: [File; 3],
+}
 
 #[derive(Clone, Debug)]
 pub struct BfsSettings {
