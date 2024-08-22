@@ -5,7 +5,7 @@ use iced::widget::{Button, Row, Text, TextInput};
 use iced::{Command, Element, Renderer};
 use rfd::AsyncFileDialog;
 
-pub struct File {
+pub struct FileSelect {
     path: PathBuf,
     display_strings: DisplayStrings,
     id: super::FileId,
@@ -22,7 +22,7 @@ pub struct DisplayStrings {
     pub dialog_filter_all: &'static str,
 }
 
-impl File {
+impl FileSelect {
     pub fn new(id: super::FileId, display_strings: DisplayStrings) -> Self {
         Self {
             path: Default::default(),
@@ -121,6 +121,6 @@ pub enum Message {
 
 impl Message {
     fn pack(self, id: super::FileId) -> super::Message {
-        super::Message::File(id, self)
+        super::Message::FileSelect(id, self)
     }
 }

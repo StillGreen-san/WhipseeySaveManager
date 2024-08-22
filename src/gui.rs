@@ -1,20 +1,22 @@
-use crate::gui::about::About;
-use crate::gui::cheats::Cheats;
-use crate::gui::options::Options;
 use crate::{data, system};
 use iced::widget::Column;
 use iced::{Application, Command, Element, Renderer};
 use iced_aw::{TabLabel, Tabs};
 use std::path::PathBuf;
 
-pub mod about;
-pub mod cheats;
-pub mod file;
-pub mod files;
-pub mod options;
+mod about;
+mod cheats;
+mod file_select;
+mod files;
+mod options;
+
+use about::About;
+use cheats::Cheats;
+use file_select::FileSelect;
+use options::Options;
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
-pub enum TabId {
+enum TabId {
     #[default]
     About,
     Cheats,
@@ -22,7 +24,7 @@ pub enum TabId {
 }
 
 #[derive(Debug, Clone, Copy)]
-pub enum FileId {
+enum FileId {
     Save,
     Bfs,
 }
@@ -31,7 +33,7 @@ pub enum FileId {
 pub enum Message {
     TabSelected(TabId),
     About(about::Message),
-    File(FileId, file::Message),
+    FileSelect(FileId, file_select::Message),
     Save(FileId, PathBuf),
     Load(FileId, PathBuf),
     LoadedBfs(data::Result<data::BfsSettings>),
@@ -42,8 +44,8 @@ pub enum Message {
 }
 
 pub struct Gui {
-    save: file::File,
-    bfs: file::File,
+    save: FileSelect,
+    bfs: FileSelect,
     active_tab: TabId,
     about: About,
     cheats: Cheats,
@@ -63,7 +65,7 @@ impl Application for Gui {
             title: "About",
             description: "this program uses the following libraries:",
         };
-        let save_strings = file::DisplayStrings {
+        let save_strings = file_select::DisplayStrings {
             placeholder: "save game",
             open: "...",
             save: "save",
@@ -73,7 +75,7 @@ impl Application for Gui {
             dialog_filter_ext: "sav",
             dialog_filter_all: "all",
         }; // TODO localize (these and in general)
-        let bfs_strings = file::DisplayStrings {
+        let bfs_strings = file_select::DisplayStrings {
             placeholder: "bfs settings",
             dialog_title: "bfs settings",
             dialog_filter_file: "ini",
@@ -107,8 +109,8 @@ impl Application for Gui {
             Self {
                 active_tab: Default::default(),
                 about: About::new(about_strings),
-                save: file::File::new(FileId::Save, save_strings),
-                bfs: file::File::new(FileId::Bfs, bfs_strings),
+                save: FileSelect::new(FileId::Save, save_strings),
+                bfs: FileSelect::new(FileId::Bfs, bfs_strings),
                 cheats: Cheats::new(cheats_strings),
                 options: Options::new(opt_strings),
             },
@@ -127,7 +129,7 @@ impl Application for Gui {
                 Command::none()
             }
             Message::About(message) => self.about.update(message),
-            Message::File(id, message) => match id {
+            Message::FileSelect(id, message) => match id {
                 FileId::Save => self.save.update(message),
                 FileId::Bfs => self.bfs.update(message),
             },
