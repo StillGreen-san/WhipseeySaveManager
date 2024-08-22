@@ -1,4 +1,5 @@
 use enumflags2::{bitflags, BitFlags};
+use strum::{Display, VariantArray};
 
 #[bitflags]
 #[repr(u8)]
@@ -11,17 +12,17 @@ pub enum BossNoDamageFlags {
 type BossNoDamage = BitFlags<BossNoDamageFlags>;
 
 #[derive(Clone, Debug, Default)]
-pub struct EnemiesDefeated(u32);
+pub struct EnemiesDefeated(pub u32);
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Copy, Debug, Default, Display, Eq, PartialEq, VariantArray)]
 pub enum Level {
+    Castle = 32,
+    Moon = 16,
+    Snow = 8,
+    Desert = 4,
+    Forest = 2,
     #[default]
     Beach = 1,
-    Forest = 2,
-    Desert = 4,
-    Snow = 8,
-    Moon = 16,
-    Castle = 32,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -59,13 +60,13 @@ pub enum Forest {
     Unlocked = 2,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub enum Ending {
     #[default]
     Unwatched = 0,
     Watched = 1,
 }
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub enum Intro {
     #[default]
     Unwatched = 0,
@@ -73,7 +74,7 @@ pub enum Intro {
 }
 
 #[derive(Clone, Debug)]
-pub struct Lives(u32);
+pub struct Lives(pub u32);
 
 impl Default for Lives {
     fn default() -> Self {
@@ -82,15 +83,15 @@ impl Default for Lives {
 }
 
 #[derive(Clone, Debug, Default)]
-pub struct Gems(u8);
+pub struct Gems(pub u8);
 
 #[derive(Clone, Debug, Default)]
 pub struct File {
-    boss_no_damage: BossNoDamage,
-    enemies_defeated: EnemiesDefeated,
-    level: Level,
-    ending: Ending,
-    intro: Intro,
-    lives: Lives,
-    gems: Gems,
+    pub boss_no_damage: BossNoDamage,
+    pub enemies_defeated: EnemiesDefeated,
+    pub level: Level,
+    pub ending: Ending,
+    pub intro: Intro,
+    pub lives: Lives,
+    pub gems: Gems,
 }
