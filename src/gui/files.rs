@@ -26,6 +26,7 @@ pub struct DisplayStrings {
     pub intro_label: &'static str,
     pub intro_tooltip: &'static str,
     pub gems_label: &'static str,
+    pub gems_tooltip: &'static str,
     pub cycle_gems_label: &'static str,
     pub cycle_gems_tooltip: &'static str,
     pub max_label: &'static str,
@@ -35,6 +36,7 @@ pub struct DisplayStrings {
     pub ending_label: &'static str,
     pub ending_tooltip: &'static str,
     pub lives_label: &'static str,
+    pub lives_tooltip: &'static str,
     pub cycle_lives_label: &'static str,
     pub cycle_lives_tooltip: &'static str,
     pub reset_label: &'static str,
@@ -85,9 +87,13 @@ impl Files {
                 Position::FollowCursor,
             ),
             text(self.display_strings.gems_label),
-            number_input(self.files_state[idx].gems.0, 99, move |gems| {
-                super::Message::Files(Message::Gems(idx, gems)) // TODO max from struct
-            }),
+            tooltip(
+                number_input(self.files_state[idx].gems.0, 99, move |gems| {
+                    super::Message::Files(Message::Gems(idx, gems)) // TODO max from struct
+                }),
+                text(self.display_strings.gems_tooltip),
+                Position::FollowCursor
+            ),
             tooltip(
                 button(text(self.display_strings.cycle_gems_label))
                     .on_press(super::Message::Files(Message::CycleGems(idx))),
@@ -118,9 +124,13 @@ impl Files {
                 Position::FollowCursor,
             ),
             text(self.display_strings.lives_label),
-            number_input(self.files_state[idx].lives.0, 99, move |lives| {
-                super::Message::Files(Message::Lives(idx, lives)) // TODO max from struct
-            }),
+            tooltip(
+                number_input(self.files_state[idx].lives.0, 9999, move |lives| {
+                    super::Message::Files(Message::Lives(idx, lives)) // TODO max from struct
+                }),
+                text(self.display_strings.lives_tooltip),
+                Position::FollowCursor
+            ),
             tooltip(
                 button(text(self.display_strings.cycle_lives_label))
                     .on_press(super::Message::Files(Message::CycleLives(idx))),

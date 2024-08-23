@@ -13,6 +13,7 @@ mod options;
 use about::About;
 use cheats::Cheats;
 use file_select::FileSelect;
+use files::Files;
 use options::Options;
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
@@ -21,6 +22,7 @@ enum TabId {
     About,
     Cheats,
     Options,
+    Files,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -50,6 +52,7 @@ pub struct Gui {
     about: About,
     cheats: Cheats,
     options: Options,
+    files: Files,
 }
 
 type Theme = iced::Theme;
@@ -108,6 +111,31 @@ impl Application for Gui {
             music_volume: "Music Volume",
             music_toggle: "Music Toggle",
         };
+        let files_strings = files::DisplayStrings {
+            titel: "Files",
+            progress: "progress",
+            file_titel: "file",
+            intro_label: "Intro",
+            intro_tooltip: "Will skip Intro if checked",
+            gems_label: "Gems",
+            gems_tooltip: "0 - 99",
+            cycle_gems_label: "Cycle",
+            cycle_gems_tooltip: "Set Gems to 0 or 99",
+            max_label: "Max",
+            max_tooltip: "100% File with 9999 Lives",
+            save_label: "Save",
+            save_tooltip: "Save current Values to File for this Group",
+            ending_label: "Ending",
+            ending_tooltip: "Only used to calculate %Progress",
+            lives_label: "Lives",
+            lives_tooltip: "1 - 16777215", // TODO vals from struct
+            cycle_lives_label: "Cycle",
+            cycle_lives_tooltip: "Set Lives to 5, 99 or 9999",
+            reset_label: "Reset",
+            reset_tooltip: "New File",
+            reload_label: "Reload",
+            reload_tooltip: "Reload Values from File for this Group",
+        };
         (
             Self {
                 active_tab: Default::default(),
@@ -116,6 +144,7 @@ impl Application for Gui {
                 bfs: FileSelect::new(FileId::Bfs, bfs_strings),
                 cheats: Cheats::new(cheats_strings),
                 options: Options::new(opt_strings),
+                files: Files::new(files_strings),
             },
             Command::none(),
         )
@@ -163,7 +192,7 @@ impl Application for Gui {
             }
             Message::Cheats(message) => self.cheats.update(message),
             Message::Options(message) => self.options.update(message),
-            Message::Files(_message) => todo!(),
+            Message::Files(message) => self.files.update(message),
         }
     }
 
@@ -173,6 +202,7 @@ impl Application for Gui {
             .push(self.bfs.view())
             .push(
                 Tabs::new(Message::TabSelected)
+                    .push(TabId::Files, self.files.tab_label(), self.files.view())
                     .push(
                         TabId::Options,
                         self.options.tab_label(),
