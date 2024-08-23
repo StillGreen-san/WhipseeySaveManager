@@ -1,7 +1,8 @@
 use std::future::ready;
 use std::path::PathBuf;
 
-use iced::widget::{Button, Row, Text, TextInput};
+use iced::widget::tooltip::Position;
+use iced::widget::{Button, Row, Text, TextInput, Tooltip};
 use iced::{Command, Element, Renderer};
 use rfd::AsyncFileDialog;
 
@@ -13,9 +14,12 @@ pub struct FileSelect {
 
 pub struct DisplayStrings {
     pub placeholder: &'static str,
-    pub open: &'static str,
-    pub save: &'static str,
-    pub reload: &'static str,
+    pub open_label: &'static str,
+    pub open_tooltip: &'static str,
+    pub save_label: &'static str,
+    pub save_tooltip: &'static str,
+    pub reload_label: &'static str,
+    pub reload_tooltip: &'static str,
     pub dialog_title: &'static str,
     pub dialog_filter_file: &'static str,
     pub dialog_filter_ext: &'static str,
@@ -94,18 +98,24 @@ impl FileSelect {
                 )
                 .on_input(|string| self.pack_message(Message::PathChanged(string))),
             )
-            .push(
-                Button::new(Text::new(self.display_strings.open))
+            .push(Tooltip::new(
+                Button::new(Text::new(self.display_strings.open_label))
                     .on_press(self.pack_message(Message::Open)),
-            )
-            .push(
-                Button::new(Text::new(self.display_strings.save))
-                    .on_press(self.pack_message(Message::Save)),
-            )
-            .push(
-                Button::new(Text::new(self.display_strings.reload))
-                    .on_press(self.pack_message(Message::Reload)),
-            )
+                Text::new(self.display_strings.open_tooltip),
+                Position::FollowCursor,
+            ))
+            .push(Tooltip::new(
+                Button::new(Text::new(self.display_strings.save_label))
+                    .on_press(self.pack_message(Message::Open)),
+                Text::new(self.display_strings.save_tooltip),
+                Position::FollowCursor,
+            ))
+            .push(Tooltip::new(
+                Button::new(Text::new(self.display_strings.reload_label))
+                    .on_press(self.pack_message(Message::Open)),
+                Text::new(self.display_strings.reload_tooltip),
+                Position::FollowCursor,
+            ))
             .into()
     }
 }

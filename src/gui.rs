@@ -67,9 +67,12 @@ impl Application for Gui {
         };
         let save_strings = file_select::DisplayStrings {
             placeholder: "save game",
-            open: "...",
-            save: "save",
-            reload: "reload",
+            open_label: "...",
+            open_tooltip: "Open and Load a new File",
+            save_label: "save",
+            save_tooltip: "Save current Values to File",
+            reload_label: "reload",
+            reload_tooltip: "Reload Values from File",
             dialog_title: "save game",
             dialog_filter_file: "save",
             dialog_filter_ext: "sav",
