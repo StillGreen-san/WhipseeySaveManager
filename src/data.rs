@@ -150,14 +150,17 @@ impl From<ini::Error> for Error {
 #[macro_export]
 macro_rules! ini_impl {
     ($self:ty, $section:ident, $key:literal, $scale:literal, $typ:ty) => {
+        impl $self {
+            pub fn value(&self) -> $typ {
+                self.clone().into()
+            }
+        }
         impl $crate::data::IniSectionStr for $self {
             const INI_SECTION_STR: &'static str = $section::INI_SECTION_STR;
         }
-
         impl $crate::data::IniKeyStr for $self {
             const INI_KEY_STR: &'static str = $key;
         }
-
         impl TryFrom<&ini::Properties> for $self {
             type Error = $crate::data::Error;
 
@@ -165,7 +168,6 @@ macro_rules! ini_impl {
                 $crate::data::try_from_scaled::<$self, $typ>(value, $scale)
             }
         }
-
         impl From<$self> for String {
             fn from(value: $self) -> Self {
                 $crate::data::into_quoted_scaled::<$self, $typ>(value, $scale)
@@ -190,8 +192,14 @@ macro_rules! ini_impl {
 macro_rules! primitive_impl {
     ($self:ty, $min:literal, $max:expr, $typ:ty) => {
         impl $self {
-            const MIN: $typ = $min;
-            const MAX: $typ = $max as $typ;
+            pub const MIN: $typ = $min;
+            pub const MAX: $typ = $max as $typ;
+            pub fn min(&self) -> $typ {
+                Self::MIN
+            }
+            pub fn max(&self) -> $typ {
+                Self::MAX
+            }
         }
         impl ::num_enum::TryFromPrimitive for $self {
             type Primitive = $typ;
