@@ -1,7 +1,6 @@
-use crate::data::cheats::CheatsEnabled;
-use ini::Ini;
+use ini::{Ini, Properties};
 use num_enum::{TryFromPrimitive, TryFromPrimitiveError};
-use std::num::ParseIntError;
+use std::num::{ParseFloatError, ParseIntError};
 use thiserror::Error;
 
 pub mod cheats;
@@ -28,7 +27,7 @@ impl TryFrom<Ini> for BfsSettings {
     fn try_from(value: Ini) -> Result<Self> {
         Ok(BfsSettings {
             cheats: Cheats {
-                cheats_enabled: CheatsEnabled::try_from(&value)?,
+                cheats_enabled: try_from(&value)?,
             },
         })
     }
@@ -41,6 +40,26 @@ impl From<BfsSettings> for Ini {
             .or_insert(value.cheats.into());
         ini
     }
+}
+
+fn try_from<'a, T>(value: &'a Ini) -> Result<T>
+where
+    T: IniSectionStr + IniKeyStr + TryFrom<&'a Properties, Error = Error>,
+{
+    value
+        .section(Some(T::INI_SECTION_STR))
+        .ok_or_else(|| Error::SectionMissing(T::INI_SECTION_STR.into()))?
+        .try_into()
+}
+fn try_from_n<'a, T, const N: usize>(value: &'a Ini) -> Result<T>
+where
+    T: IniSectionStr + IniKeyStr + TryFrom<&'a Properties, Error = Error>,
+{
+    let section = format!("{}{}", T::INI_SECTION_STR, N);
+    value
+        .section(Some(&section))
+        .ok_or(Error::SectionMissing(section))?
+        .try_into()
 }
 
 trait IniSectionStr {
@@ -69,6 +88,8 @@ pub enum Error {
     KeyMissing(String),
     #[error(transparent)]
     ParseIntError(#[from] ParseIntError),
+    #[error(transparent)]
+    ParseFloatError(#[from] ParseFloatError),
     #[error("{0}")]
     IniParse(String),
     #[error("{0}")]

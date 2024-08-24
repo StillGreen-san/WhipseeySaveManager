@@ -1,6 +1,6 @@
 use crate::data;
 use crate::data::{IniKeyStr, IniSectionStr};
-use ini::{Ini, Properties};
+use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
@@ -28,14 +28,11 @@ impl IniSectionStr for Cheats {
     const INI_SECTION_STR: &'static str = "Cheats";
 }
 
-impl TryFrom<&Ini> for CheatsEnabled {
+impl TryFrom<&Properties> for CheatsEnabled {
     type Error = data::Error;
 
-    fn try_from(value: &Ini) -> Result<Self, Self::Error> {
-        let section = value
-            .section(Some(Self::INI_SECTION_STR))
-            .ok_or(data::Error::SectionMissing(Self::INI_SECTION_STR.into()))?;
-        let val_str = section
+    fn try_from(value: &Properties) -> Result<Self, Self::Error> {
+        let val_str = value
             .get(Self::INI_KEY_STR)
             .ok_or(data::Error::KeyMissing(Self::INI_KEY_STR.into()))?;
         let val: u8 = val_str.parse()?;
