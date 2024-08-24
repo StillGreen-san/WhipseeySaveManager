@@ -24,7 +24,7 @@ pub struct EnemiesDefeated(u32);
 primitive_impl!(EnemiesDefeated, 0, 1677215, u32);
 ini_impl!(EnemiesDefeated, File, "enemies_defeated", u32);
 
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Ord, PartialOrd)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum Level {
@@ -39,15 +39,46 @@ pub enum Level {
 
 impl Level {
     fn into_parts(self) -> (Castle, Moon, Snow, Desert, Forest) {
-        todo!()
+        let mut parts: (Castle, Moon, Snow, Desert, Forest) = Default::default();
+        if self == Level::Castle {
+            parts.0 = Castle::Unlocked;
+        }
+        if self >= Level::Moon {
+            parts.1 = Moon::Unlocked;
+        }
+        if self >= Level::Snow {
+            parts.2 = Snow::Unlocked;
+        }
+        if self >= Level::Desert {
+            parts.3 = Desert::Unlocked;
+        }
+        if self >= Level::Forest {
+            parts.4 = Forest::Unlocked;
+        }
+        parts
     }
 
     fn from_parts(parts: (Castle, Moon, Snow, Desert, Forest)) -> Self {
-        todo!()
+        if parts.0 == Castle::Unlocked {
+            return Self::Castle;
+        }
+        if parts.1 == Moon::Unlocked {
+            return Self::Moon;
+        }
+        if parts.2 == Snow::Unlocked {
+            return Self::Snow;
+        }
+        if parts.3 == Desert::Unlocked {
+            return Self::Desert;
+        }
+        if parts.4 == Forest::Unlocked {
+            return Self::Forest;
+        }
+        Self::Beach
     }
 }
 
-#[derive(Clone, Debug, Default, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Castle {
     #[default]
@@ -56,7 +87,7 @@ pub enum Castle {
 }
 ini_impl!(Castle, File, "castle");
 
-#[derive(Clone, Debug, Default, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Moon {
     #[default]
@@ -65,7 +96,7 @@ pub enum Moon {
 }
 ini_impl!(Moon, File, "moon");
 
-#[derive(Clone, Debug, Default, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Snow {
     #[default]
@@ -74,7 +105,7 @@ pub enum Snow {
 }
 ini_impl!(Snow, File, "snow");
 
-#[derive(Clone, Debug, Default, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Desert {
     #[default]
@@ -83,7 +114,7 @@ pub enum Desert {
 }
 ini_impl!(Desert, File, "desert");
 
-#[derive(Clone, Debug, Default, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Forest {
     #[default]
