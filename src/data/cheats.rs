@@ -1,5 +1,5 @@
-use crate::data;
 use crate::data::{IniKeyStr, IniSectionStr};
+use crate::{data, ini_impl};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
@@ -10,14 +10,7 @@ pub enum CheatsEnabled {
     Disabled = 0,
     Enabled = 1,
 }
-
-impl IniSectionStr for CheatsEnabled {
-    const INI_SECTION_STR: &'static str = Cheats::INI_SECTION_STR;
-}
-
-impl IniKeyStr for CheatsEnabled {
-    const INI_KEY_STR: &'static str = "cheats_enabled";
-}
+ini_impl!(CheatsEnabled, Cheats, "cheats_enabled");
 
 #[derive(Clone, Debug, Default)]
 pub struct Cheats {
@@ -28,16 +21,13 @@ impl IniSectionStr for Cheats {
     const INI_SECTION_STR: &'static str = "Cheats";
 }
 
-impl TryFrom<&Properties> for CheatsEnabled {
+impl TryFrom<&Properties> for Cheats {
     type Error = data::Error;
 
     fn try_from(value: &Properties) -> Result<Self, Self::Error> {
-        let val_str = value
-            .get(Self::INI_KEY_STR)
-            .ok_or(data::Error::KeyMissing(Self::INI_KEY_STR.into()))?;
-        let val: u8 = val_str.parse()?;
-        let cheats_enabled = val.try_into()?;
-        Ok(cheats_enabled)
+        Ok(Self {
+            cheats_enabled: value.try_into()?,
+        })
     }
 }
 

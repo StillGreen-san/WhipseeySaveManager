@@ -1,4 +1,6 @@
 use ini::{Ini, Properties};
+use num::cast::AsPrimitive;
+use num::NumCast;
 use num_enum::{TryFromPrimitive, TryFromPrimitiveError};
 use std::num::{ParseFloatError, ParseIntError};
 use thiserror::Error;
@@ -26,9 +28,7 @@ impl TryFrom<Ini> for BfsSettings {
 
     fn try_from(value: Ini) -> Result<Self> {
         Ok(BfsSettings {
-            cheats: Cheats {
-                cheats_enabled: try_from(&value)?,
-            },
+            cheats: try_from(&value)?,
         })
     }
 }
@@ -44,22 +44,54 @@ impl From<BfsSettings> for Ini {
 
 fn try_from<'a, T>(value: &'a Ini) -> Result<T>
 where
-    T: IniSectionStr + IniKeyStr + TryFrom<&'a Properties, Error = Error>,
+    T: IniSectionStr + TryFrom<&'a Properties, Error = Error>,
 {
     value
         .section(Some(T::INI_SECTION_STR))
         .ok_or_else(|| Error::SectionMissing(T::INI_SECTION_STR.into()))?
         .try_into()
 }
-fn try_from_n<'a, T, const N: usize>(value: &'a Ini) -> Result<T>
+fn try_from_n<'a, T>(value: &'a Ini, n: usize) -> Result<T>
 where
-    T: IniSectionStr + IniKeyStr + TryFrom<&'a Properties, Error = Error>,
+    T: IniSectionStr + TryFrom<&'a Properties, Error = Error>,
 {
-    let section = format!("{}{}", T::INI_SECTION_STR, N);
+    let section = format!("{}{}", T::INI_SECTION_STR, n);
     value
         .section(Some(&section))
         .ok_or(Error::SectionMissing(section))?
         .try_into()
+}
+
+fn try_from_scaled<T, P>(value: &Properties, scale: f64) -> Result<T>
+where
+    T: IniKeyStr + TryFromPrimitive + TryFrom<P, Error = TryFromPrimitiveError<T>>,
+    P: NumCast,
+{
+    let val_str = value
+        .get(T::INI_KEY_STR)
+        .ok_or(Error::KeyMissing(T::INI_KEY_STR.into()))?;
+    let val: f64 = val_str.trim_matches('"').parse()?;
+    let scaled = val * scale;
+    let primitiv: P = num::cast(scaled).ok_or_else(|| {
+        Error::NumCast(format!(
+            "{} cannot be represented as {}",
+            scaled,
+            std::any::type_name::<P>()
+        ))
+    })?;
+    let cheats_enabled = primitiv.try_into()?;
+    Ok(cheats_enabled)
+}
+
+fn into_quoted_scaled<T, P>(value: T, scale: f64) -> String
+where
+    T: Into<P>,
+    P: AsPrimitive<f64>,
+{
+    let primitiv: P = value.into();
+    let double: f64 = primitiv.as_();
+    let scaled = double / scale;
+    format!("\"{:.6}\"", scaled)
 }
 
 trait IniSectionStr {
@@ -87,9 +119,11 @@ pub enum Error {
     #[error("Key {0} not found")]
     KeyMissing(String),
     #[error(transparent)]
-    ParseIntError(#[from] ParseIntError),
+    ParseInt(#[from] ParseIntError),
     #[error(transparent)]
-    ParseFloatError(#[from] ParseFloatError),
+    ParseFloat(#[from] ParseFloatError),
+    #[error("{0}")]
+    NumCast(String),
     #[error("{0}")]
     IniParse(String),
     #[error("{0}")]
@@ -111,4 +145,43 @@ impl From<ini::Error> for Error {
             ini::Error::Parse(err) => Error::IniParse(err.to_string()),
         }
     }
+}
+
+#[macro_export]
+macro_rules! ini_impl {
+    ($self:ty, $section:ident, $key:literal, $scale:literal, $typ:ty) => {
+        impl $crate::data::IniSectionStr for $self {
+            const INI_SECTION_STR: &'static str = $section::INI_SECTION_STR;
+        }
+
+        impl $crate::data::IniKeyStr for $self {
+            const INI_KEY_STR: &'static str = $key;
+        }
+
+        impl TryFrom<&ini::Properties> for $self {
+            type Error = $crate::data::Error;
+
+            fn try_from(value: &ini::Properties) -> Result<Self, Self::Error> {
+                $crate::data::try_from_scaled::<$self, $typ>(value, $scale)
+            }
+        }
+
+        impl From<$self> for String {
+            fn from(value: $self) -> Self {
+                $crate::data::into_quoted_scaled::<$self, $typ>(value, $scale)
+            }
+        }
+    };
+
+    ($self:ty, $section:ident, $key:literal, $scale:literal) => {
+        $crate::ini_impl!($self, $section, $key, $scale, u8);
+    };
+
+    ($self:ty, $section:ident, $key:literal) => {
+        $crate::ini_impl!($self, $section, $key, 1.0);
+    };
+
+    ($self:ty, $section:ident, $key:literal, $typ:ty) => {
+        $crate::ini_impl!($self, $section, $key, 1.0, $typ);
+    };
 }
