@@ -18,6 +18,21 @@ pub struct WhipseeySaveData {
     pub files: [File; 3],
 }
 
+impl TryFrom<Ini> for WhipseeySaveData {
+    type Error = Error;
+
+    fn try_from(value: Ini) -> Result<Self> {
+        Ok(WhipseeySaveData {
+            options: try_from(&value)?,
+            files: [
+                try_from_n(&value, 1)?,
+                try_from_n(&value, 2)?,
+                try_from_n(&value, 3)?,
+            ],
+        })
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct BfsSettings {
     pub cheats: Cheats,
