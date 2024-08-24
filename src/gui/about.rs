@@ -79,6 +79,7 @@ impl Tab for About {
             ))
             .push(self.library("tokio [MIT]", "https://github.com/tokio-rs/tokio"))
             .push(self.library("strum [MIT]", "https://github.com/Peternator7/strum"))
+            .push(self.library("num [MIT]", "https://github.com/rust-num/num"))
             .into()
     }
 }
