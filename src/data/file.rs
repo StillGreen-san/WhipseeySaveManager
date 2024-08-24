@@ -1,7 +1,5 @@
-use enumflags2::{bitflags, BitFlags};
 use strum::{Display, VariantArray};
 
-#[bitflags]
 #[repr(u8)]
 #[derive(Copy, Clone, Debug)]
 pub enum BossNoDamageFlags {

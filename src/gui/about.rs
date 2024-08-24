@@ -73,10 +73,6 @@ impl Tab for About {
             .push(self.library("rfd [MIT]", "https://github.com/PolyMeilex/rfd"))
             .push(self.library("num_enum [MIT]", "https://github.com/illicitonion/num_enum"))
             .push(self.library("thiserror [MIT]", "https://github.com/dtolnay/thiserror"))
-            .push(self.library(
-                "enumflags2 [MIT]",
-                "https://github.com/meithecatte/enumflags2",
-            ))
             .push(self.library("tokio [MIT]", "https://github.com/tokio-rs/tokio"))
             .push(self.library("strum [MIT]", "https://github.com/Peternator7/strum"))
             .push(self.library("num [MIT]", "https://github.com/rust-num/num"))
