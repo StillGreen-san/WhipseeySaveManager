@@ -185,3 +185,46 @@ macro_rules! ini_impl {
         $crate::ini_impl!($self, $section, $key, 1.0, $typ);
     };
 }
+
+#[macro_export]
+macro_rules! primitive_impl {
+    ($self:ty, $min:literal, $max:expr, $typ:ty) => {
+        impl $self {
+            const MIN: $typ = $min;
+            const MAX: $typ = $max as $typ;
+        }
+        impl ::num_enum::TryFromPrimitive for $self {
+            type Primitive = $typ;
+            type Error = ::num_enum::TryFromPrimitiveError<Self>;
+            const NAME: &'static str = stringify!($self);
+            fn try_from_primitive(
+                number: Self::Primitive,
+            ) -> ::core::result::Result<Self, ::num_enum::TryFromPrimitiveError<Self>> {
+                #[deny(unreachable_patterns)]
+                match number {
+                    Self::MIN..Self::MAX => ::core::result::Result::Ok(Self(number)),
+                    #[allow(unreachable_patterns)]
+                    _ => ::core::result::Result::Err(
+                        ::num_enum::TryFromPrimitiveError::<Self>::new(number),
+                    ),
+                }
+            }
+        }
+        impl ::core::convert::TryFrom<$typ> for $self {
+            type Error = ::num_enum::TryFromPrimitiveError<Self>;
+            #[inline]
+            fn try_from(
+                number: $typ,
+            ) -> ::core::result::Result<Self, ::num_enum::TryFromPrimitiveError<Self>> {
+                ::num_enum::TryFromPrimitive::try_from_primitive(number)
+            }
+        }
+        #[doc(hidden)]
+        impl ::num_enum::CannotDeriveBothFromPrimitiveAndTryFromPrimitive for $self {}
+        impl From<$self> for $typ {
+            fn from(value: $self) -> Self {
+                value.0
+            }
+        }
+    };
+}
