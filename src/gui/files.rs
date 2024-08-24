@@ -1,4 +1,4 @@
-use crate::data::file::{Ending, Intro, Level};
+use crate::data::file::{Ending, Gems, Intro, Level, Lives};
 use crate::data::File;
 use crate::gui::{Tab, TabState, Theme};
 use iced::widget::tooltip::Position;
@@ -88,8 +88,8 @@ impl Files {
             ),
             text(self.display_strings.gems_label),
             tooltip(
-                number_input(self.files_state[idx].gems.0, 99, move |gems| {
-                    super::Message::Files(Message::Gems(idx, gems)) // TODO max from struct
+                number_input(self.files_state[idx].gems.value(), Gems::MAX, move |gems| {
+                    super::Message::Files(Message::Gems(idx, gems))
                 }),
                 text(self.display_strings.gems_tooltip),
                 Position::FollowCursor
@@ -125,9 +125,11 @@ impl Files {
             ),
             text(self.display_strings.lives_label),
             tooltip(
-                number_input(self.files_state[idx].lives.0, 9999, move |lives| {
-                    super::Message::Files(Message::Lives(idx, lives)) // TODO max from struct
-                }),
+                number_input(
+                    self.files_state[idx].lives.value(),
+                    Lives::MAX,
+                    move |lives| { super::Message::Files(Message::Lives(idx, lives)) }
+                ),
                 text(self.display_strings.lives_tooltip),
                 Position::FollowCursor
             ),
@@ -154,8 +156,8 @@ impl Files {
             "{}{} {} - {}",
             self.display_strings.file_titel,
             idx + 1,
-            self.files_state[idx].boss_no_damage.bits(),
-            self.files_state[idx].enemies_defeated.0
+            self.files_state[idx].boss_no_damage.value(),
+            self.files_state[idx].enemies_defeated.value()
         );
         card(text(title), row![progress, intro, ending]).into()
     }
@@ -187,14 +189,14 @@ impl Tab for Files {
                 Command::none()
             }
             Message::Gems(idx, gems) => {
-                self.files_state[idx].gems.0 = gems;
+                self.files_state[idx].gems = gems.try_into().unwrap();
                 Command::none()
             }
             Message::CycleGems(idx) => todo!(),
             Message::CycleLives(idx) => todo!(),
             Message::Max(idx) => todo!(),
             Message::Lives(idx, lives) => {
-                self.files_state[idx].lives.0 = lives;
+                self.files_state[idx].lives = lives.try_into().unwrap();
                 Command::none()
             }
             Message::Reset(idx) => {
