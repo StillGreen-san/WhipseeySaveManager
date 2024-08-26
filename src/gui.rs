@@ -167,7 +167,17 @@ impl Application for Gui {
                 FileId::Bfs => self.bfs.update(message),
             },
             Message::Save(id, path) => match id {
-                FileId::Save => todo!(),
+                FileId::Save => {
+                    let save = data::WhipseeySaveData {
+                        options: self.options.get_state(),
+                        files: self.files.get_state(),
+                    };
+                    let ini = save.into();
+                    Command::perform(
+                        async move { system::write_ini_file_padded(path, &ini).await },
+                        |_| Message::Saved(FileId::Save),
+                    )
+                }
                 FileId::Bfs => {
                     let bfs = data::BfsSettings {
                         cheats: self.cheats.get_state(),

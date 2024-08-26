@@ -34,6 +34,22 @@ impl TryFrom<Ini> for WhipseeySaveData {
     }
 }
 
+impl From<WhipseeySaveData> for Ini {
+    fn from(value: WhipseeySaveData) -> Self {
+        let mut ini = Ini::new();
+        ini.entry(Some(value.options.ini_section_str().into()))
+            .or_insert(value.options.into());
+        let [file1, file2, file3] = value.files;
+        ini.entry(Some(numbered_section::<File>(1)))
+            .or_insert(file1.into());
+        ini.entry(Some(numbered_section::<File>(2)))
+            .or_insert(file2.into());
+        ini.entry(Some(numbered_section::<File>(3)))
+            .or_insert(file3.into());
+        ini
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct BfsSettings {
     pub cheats: Cheats,
@@ -71,11 +87,17 @@ fn try_from_n<'a, T>(value: &'a Ini, n: usize) -> Result<T>
 where
     T: IniSectionStr + TryFrom<&'a Properties, Error = Error>,
 {
-    let section = format!("{}{}", T::INI_SECTION_STR, n);
+    let section = numbered_section::<T>(n);
     value
         .section(Some(&section))
         .ok_or(Error::SectionMissing(section))?
         .try_into()
+}
+fn numbered_section<T>(n: usize) -> String
+where
+    T: IniSectionStr,
+{
+    format!("{}{}", T::INI_SECTION_STR, n)
 }
 
 fn try_from_scaled<T, P>(value: &Properties, scale: f64) -> Result<T>
