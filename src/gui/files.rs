@@ -156,7 +156,7 @@ impl Files {
             "{}{} {} - {}",
             self.display_strings.file_titel,
             idx + 1,
-            self.files_state[idx].boss_no_damage.value(),
+            self.files_state[idx].boss_no_damage_progress.value(),
             self.files_state[idx].enemies_defeated.value()
         );
         card(text(title), row![progress, intro, ending]).into()

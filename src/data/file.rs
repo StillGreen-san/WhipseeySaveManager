@@ -6,7 +6,7 @@ use strum::{Display, VariantArray};
 
 #[repr(u8)]
 #[derive(Copy, Clone, Debug, Default, TryFromPrimitive, IntoPrimitive)]
-pub enum BossNoDamage {
+pub enum BossNoDamageProgress {
     #[default]
     None = 0,
     Forest = 1,
@@ -17,7 +17,7 @@ pub enum BossNoDamage {
     DesertCastle = 6,
     ForstDesertCastle = 7,
 }
-ini_impl!(BossNoDamage, File, "boss_no_damage");
+ini_impl!(BossNoDamageProgress, File, "boss_no_damage_progress");
 
 #[derive(Clone, Debug, Default)]
 pub struct EnemiesDefeated(u32);
@@ -159,7 +159,7 @@ ini_impl!(Gems, File, "gems");
 
 #[derive(Clone, Debug, Default)]
 pub struct File {
-    pub boss_no_damage: BossNoDamage,
+    pub boss_no_damage_progress: BossNoDamageProgress,
     pub enemies_defeated: EnemiesDefeated,
     pub level: Level,
     pub ending: Ending,
@@ -182,7 +182,7 @@ impl TryFrom<&Properties> for File {
         let desert = value.try_into()?;
         let forest = value.try_into()?;
         Ok(Self {
-            boss_no_damage: value.try_into()?,
+            boss_no_damage_progress: value.try_into()?,
             enemies_defeated: value.try_into()?,
             level: Level::from_parts((castle, moon, snow, desert, forest)),
             ending: value.try_into()?,
@@ -196,7 +196,10 @@ impl TryFrom<&Properties> for File {
 impl From<File> for Properties {
     fn from(value: File) -> Self {
         let mut properties = Properties::new();
-        properties.insert(value.boss_no_damage.ini_key_str(), value.boss_no_damage);
+        properties.insert(
+            value.boss_no_damage_progress.ini_key_str(),
+            value.boss_no_damage_progress,
+        );
         properties.insert(value.enemies_defeated.ini_key_str(), value.enemies_defeated);
         let (castle, moon, snow, desert, forest) = value.level.into_parts();
         properties.insert(castle.ini_key_str(), castle);
