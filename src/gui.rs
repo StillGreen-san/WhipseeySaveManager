@@ -1,4 +1,4 @@
-use crate::{data, system};
+use crate::{data, util};
 use iced::widget::Column;
 use iced::{Application, Command, Element, Renderer};
 use iced_aw::{TabLabel, Tabs};
@@ -174,7 +174,7 @@ impl Application for Gui {
                     };
                     let ini = save.into();
                     Command::perform(
-                        async move { system::write_ini_file_padded(path, &ini).await },
+                        async move { util::write_ini_file_padded(path, &ini).await },
                         |_| Message::Saved(FileId::Save),
                     )
                 }
@@ -184,7 +184,7 @@ impl Application for Gui {
                     };
                     let ini = bfs.into();
                     Command::perform(
-                        async move { system::write_ini_file(path, &ini).await },
+                        async move { util::write_ini_file(path, &ini).await },
                         |_| Message::Saved(FileId::Bfs),
                     )
                 }
@@ -192,11 +192,11 @@ impl Application for Gui {
             Message::Saved(_) => Command::none(), // TODO?
             Message::Load(id, path) => match id {
                 FileId::Save => Command::perform(
-                    async { system::load_ini_file(path).await?.try_into() },
+                    async { util::load_ini_file(path).await?.try_into() },
                     Message::LoadedSave,
                 ),
                 FileId::Bfs => Command::perform(
-                    async { system::load_ini_file(path).await?.try_into() },
+                    async { util::load_ini_file(path).await?.try_into() },
                     Message::LoadedBfs,
                 ),
             },

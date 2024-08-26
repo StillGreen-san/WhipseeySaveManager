@@ -2,7 +2,7 @@ use iced::{window, Application, Pixels, Settings, Size};
 
 pub mod data;
 mod gui;
-mod system;
+mod util;
 
 fn main() -> Result<(), iced::Error> {
     let window = window::Settings {
