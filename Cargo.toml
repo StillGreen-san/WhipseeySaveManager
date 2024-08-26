@@ -7,11 +7,11 @@ edition = "2021"
 iced = { version = "0.12.1", features = ["tokio"] }
 iced_aw = "0.9.3"
 steamlocate = "2.0.0-beta.2"
-rust-ini = "0.21.0"
-opener = "0.7.1"
+rust-ini = "0.21.1"
+opener = "0.7.2"
 rfd = "0.14.1"
 num_enum = "0.7.3"
-tokio = { version = "1.39.2", features = ["fs"] }
+tokio = { version = "1.39.3", features = ["fs", "macros"] }
 thiserror = "1.0.63"
 strum = { version = "0.26.3", features = ["derive"] }
 num = "0.4.3"
