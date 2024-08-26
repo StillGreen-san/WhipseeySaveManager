@@ -39,6 +39,7 @@ pub enum Message {
     Save(FileId, PathBuf),
     Load(FileId, PathBuf),
     LoadedBfs(data::Result<data::BfsSettings>),
+    LoadedSave(data::Result<data::WhipseeySaveData>),
     Saved(FileId),
     Cheats(cheats::Message),
     Options(options::Message),
@@ -180,14 +181,23 @@ impl Application for Gui {
             },
             Message::Saved(_) => Command::none(), // TODO?
             Message::Load(id, path) => match id {
-                FileId::Save => todo!(),
+                FileId::Save => Command::perform(
+                    async { system::load_ini_file(path).await?.try_into() },
+                    Message::LoadedSave,
+                ),
                 FileId::Bfs => Command::perform(
                     async { system::load_ini_file(path).await?.try_into() },
                     Message::LoadedBfs,
                 ),
             },
             Message::LoadedBfs(result) => {
-                self.cheats.set_state(result.unwrap().cheats); // TODO error handling
+                self.cheats.set_state(result.unwrap().cheats); // TODO error handling (all unwraps)
+                Command::none()
+            }
+            Message::LoadedSave(result) => {
+                let save = result.unwrap();
+                self.options.set_state(save.options);
+                self.files.set_state(save.files);
                 Command::none()
             }
             Message::Cheats(message) => self.cheats.update(message),

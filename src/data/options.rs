@@ -103,7 +103,7 @@ pub enum MusicToggle {
 }
 ini_impl!(MusicToggle, Options, "music_toggle");
 
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct Options {
     pub language: Language,
     pub scale: Scale,

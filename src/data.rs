@@ -13,6 +13,7 @@ pub use cheats::Cheats;
 pub use file::File;
 pub use options::Options;
 
+#[derive(Clone, Debug)]
 pub struct WhipseeySaveData {
     pub options: Options,
     pub files: [File; 3],
