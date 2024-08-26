@@ -1,6 +1,7 @@
 use crate::gui::{Tab, Theme};
-use iced::widget::{Button, Column, Row, Space, Text};
-use iced::{Command, Element, Renderer};
+use iced::alignment::Horizontal;
+use iced::widget::{Button, Column, Row, Scrollable, Text};
+use iced::{Alignment, Color, Command, Element, Length, Renderer};
 use iced_aw::TabLabel;
 
 #[derive(Debug, Clone)]
@@ -24,15 +25,30 @@ impl About {
 }
 
 impl About {
-    // TODO hyperlink
     fn library(
         &self,
         label: &'static str,
         link: &'static str,
     ) -> Element<'_, super::Message, Theme, Renderer> {
         Row::new()
-            .push(Text::new(label))
-            .push(Button::new(link).on_press(super::Message::About(Message::Link(link))))
+            .push(
+                Text::new(label)
+                    .width(Length::FillPortion(1))
+                    .horizontal_alignment(Horizontal::Right),
+            )
+            .push(
+                Button::new(
+                    Text::new(link)
+                        .horizontal_alignment(Horizontal::Left)
+                        .style(Color::from_rgb8(50, 90, 220)),
+                )
+                .on_press(super::Message::About(Message::Link(link)))
+                .style(iced::theme::Button::Text)
+                .width(Length::FillPortion(2))
+                .height(Length::Shrink),
+            )
+            .align_items(Alignment::Center)
+            .width(Length::Fill)
             .into()
     }
 }
@@ -57,11 +73,9 @@ impl Tab for About {
         Command::none()
     }
 
-    // TODO dynamic loading, layout
+    // TODO dynamic loading
     fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
-        Column::new()
-            .push(Text::new(self.display_strings.description))
-            .push(Space::with_height(16.0))
+        let libraries = Column::new()
             .push(self.library("iced [MIT]", "https://github.com/iced-rs/iced"))
             .push(self.library("iced_aw [MIT]", "https://github.com/iced-rs/iced_aw"))
             .push(self.library(
@@ -76,6 +90,16 @@ impl Tab for About {
             .push(self.library("tokio [MIT]", "https://github.com/tokio-rs/tokio"))
             .push(self.library("strum [MIT]", "https://github.com/Peternator7/strum"))
             .push(self.library("num [MIT]", "https://github.com/rust-num/num"))
+            .width(Length::Fill)
+            .spacing(4.0)
+            .align_items(Alignment::Center);
+        Column::new()
+            .push(Text::new(self.display_strings.description))
+            .push(Scrollable::new(libraries))
+            .width(Length::Fill)
+            .spacing(8.0)
+            .padding([8.0, 0.0])
+            .align_items(Alignment::Center)
             .into()
     }
 }
