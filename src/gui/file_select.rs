@@ -106,13 +106,13 @@ impl FileSelect {
             ))
             .push(Tooltip::new(
                 Button::new(Text::new(self.display_strings.save_label))
-                    .on_press(self.pack_message(Message::Open)),
+                    .on_press(self.pack_message(Message::Save)),
                 Text::new(self.display_strings.save_tooltip),
                 Position::FollowCursor,
             ))
             .push(Tooltip::new(
                 Button::new(Text::new(self.display_strings.reload_label))
-                    .on_press(self.pack_message(Message::Open)),
+                    .on_press(self.pack_message(Message::Reload)),
                 Text::new(self.display_strings.reload_tooltip),
                 Position::FollowCursor,
             ))
