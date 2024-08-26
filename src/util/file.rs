@@ -1,3 +1,4 @@
+use crate::util::for_each_window_mut;
 use ini::Ini;
 use std::cmp::max;
 use std::path::Path;
@@ -22,7 +23,19 @@ pub async fn write_ini_file(path: impl AsRef<Path>, ini: &Ini) -> std::io::Resul
 pub async fn write_ini_file_padded(path: impl AsRef<Path>, ini: &Ini) -> std::io::Result<()> {
     let mut content = Vec::new();
     content.reserve_exact(1024);
-    ini.write_to(&mut content)?;
+    let opt = ini::WriteOption {
+        line_separator: ini::LineSeparator::CRLF,
+        kv_separator: "=",
+        ..Default::default()
+    };
+    ini.write_to_opt(&mut content, opt)?;
+    for_each_window_mut(&mut content, 4, |window| {
+        if window == b"\r\n\r\n" {
+            window[0] = 0;
+            window[1] = 0;
+        }
+    });
+    content.retain(|&c| c != 0);
     content.resize(max(1024, content.len()), 0); // not expected to be > 1kb
     tokio::fs::write(path, &content).await
 }
