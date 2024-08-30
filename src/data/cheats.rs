@@ -17,7 +17,7 @@ impl From<CheatsEnabled> for String {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Cheats {
     pub cheats_enabled: CheatsEnabled,
 }
@@ -41,5 +41,76 @@ impl From<Cheats> for Properties {
         let mut props = Properties::new();
         props.insert(value.cheats_enabled.ini_key_str(), value.cheats_enabled);
         props
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{assert_matches, util};
+    use ini::Ini;
+
+    #[test]
+    fn cheats_into() {
+        let cheats = Cheats {
+            cheats_enabled: CheatsEnabled::Enabled,
+        };
+        let props: Properties = cheats.into();
+        assert_eq!(props.get(CheatsEnabled::INI_KEY_STR), Some("1"));
+    }
+
+    #[test]
+    fn cheats_default() {
+        let ini = Ini::load_from_str(util::test::ini::DEFAULT).unwrap();
+        let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
+        let cheats_loaded = Cheats::try_from(section).unwrap();
+        let cheats_default = Cheats::default();
+        assert_eq!(cheats_loaded, cheats_default);
+    }
+
+    #[test]
+    fn cheats_try_from_valid() {
+        let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
+        let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
+        let cheats = Cheats::try_from(section).unwrap();
+        assert_eq!(cheats.cheats_enabled, CheatsEnabled::Enabled);
+    }
+
+    #[test]
+    fn cheats_trx_from_lenient() {
+        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
+        let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
+        let cheats = Cheats::try_from(section).unwrap();
+        assert_eq!(cheats.cheats_enabled, CheatsEnabled::Enabled);
+    }
+
+    #[test]
+    fn cheats_try_from_invalid_keys() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).unwrap();
+        let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
+        let error = Cheats::try_from(section).unwrap_err();
+        assert_matches!(
+            error,
+            data::Error::KeyMissing(key) if key == CheatsEnabled::INI_KEY_STR
+        );
+    }
+
+    #[test]
+    fn cheats_try_from_invalid_value_ranges() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).unwrap();
+        let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
+        let error = Cheats::try_from(section).unwrap_err();
+        assert_matches!(error, data::Error::TryFromPrimitive(_));
+    }
+
+    #[test]
+    fn cheats_try_from_invalid_value_types() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
+        let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
+        let error = Cheats::try_from(section).unwrap_err();
+        assert_matches!(
+            error,
+            data::Error::NumCast(_) | data::Error::ParseInt(_) | data::Error::ParseFloat(_)
+        );
     }
 }
