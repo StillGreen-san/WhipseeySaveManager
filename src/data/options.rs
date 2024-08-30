@@ -24,8 +24,8 @@ ini_impl_quoted!(Language, Options, "language");
 #[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Scale {
-    #[default]
     R768x432 = 2,
+    #[default]
     R1152x648 = 3,
     R1536x864 = 4,
 }
@@ -43,8 +43,8 @@ ini_impl_quoted!(Fullscreen, Options, "fullscreen");
 #[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum LeftHanded {
-    Disabled = 0,
     #[default]
+    Disabled = 0,
     Enabled = 1,
 }
 ini_impl_quoted!(LeftHanded, Options, "left_handed");
