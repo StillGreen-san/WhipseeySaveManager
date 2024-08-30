@@ -5,7 +5,7 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{Display, VariantArray};
 
 #[repr(u8)]
-#[derive(Copy, Clone, Debug, Default, TryFromPrimitive, IntoPrimitive)]
+#[derive(Copy, Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 pub enum BossNoDamageProgress {
     #[default]
     None = 0,
@@ -19,7 +19,7 @@ pub enum BossNoDamageProgress {
 }
 ini_impl_quoted!(BossNoDamageProgress, File, "boss_no_damage_progress");
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct EnemiesDefeated(u32);
 primitive_impl!(EnemiesDefeated, 0, 1677215, u32);
 ini_impl_quoted!(EnemiesDefeated, File, "enemies_defeated", u32);
@@ -141,7 +141,7 @@ pub enum Intro {
 }
 ini_impl_quoted!(Intro, File, "intro");
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Lives(u32);
 primitive_impl!(Lives, 1, 16777215, u32);
 ini_impl_quoted!(Lives, File, "lives", u32);
@@ -152,12 +152,12 @@ impl Default for Lives {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Gems(u8);
 primitive_impl!(Gems, 0, 99, u8);
 ini_impl_quoted!(Gems, File, "gems");
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct File {
     pub boss_no_damage_progress: BossNoDamageProgress,
     pub enemies_defeated: EnemiesDefeated,
@@ -212,5 +212,183 @@ impl From<File> for Properties {
         properties.insert(value.lives.ini_key_str(), value.lives);
         properties.insert(value.gems.ini_key_str(), value.gems);
         properties
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{assert_matches, util};
+    use ini::Ini;
+
+    #[test]
+    fn file_into() {
+        let file = File {
+            boss_no_damage_progress: BossNoDamageProgress::ForestCastle,
+            enemies_defeated: EnemiesDefeated::try_from(1337).unwrap(),
+            level: Level::Moon,
+            ending: Ending::Watched,
+            intro: Intro::Watched,
+            lives: Lives::try_from(5).unwrap(),
+            gems: Gems::try_from(99).unwrap(),
+        };
+        let props: Properties = file.clone().into();
+        assert_eq!(
+            props.get(BossNoDamageProgress::INI_KEY_STR),
+            Some(String::from(file.boss_no_damage_progress).as_str())
+        );
+        assert_eq!(
+            props.get(EnemiesDefeated::INI_KEY_STR),
+            Some(String::from(file.enemies_defeated).as_str())
+        );
+        let (castle, moon, snow, desert, forest) = file.level.into_parts();
+        assert_eq!(
+            props.get(Castle::INI_KEY_STR),
+            Some(String::from(castle).as_str())
+        );
+        assert_eq!(
+            props.get(Moon::INI_KEY_STR),
+            Some(String::from(moon).as_str())
+        );
+        assert_eq!(
+            props.get(Snow::INI_KEY_STR),
+            Some(String::from(snow).as_str())
+        );
+        assert_eq!(
+            props.get(Desert::INI_KEY_STR),
+            Some(String::from(desert).as_str())
+        );
+        assert_eq!(
+            props.get(Forest::INI_KEY_STR),
+            Some(String::from(forest).as_str())
+        );
+        assert_eq!(
+            props.get(Ending::INI_KEY_STR),
+            Some(String::from(file.ending).as_str())
+        );
+        assert_eq!(
+            props.get(Intro::INI_KEY_STR),
+            Some(String::from(file.intro).as_str())
+        );
+        assert_eq!(
+            props.get(Lives::INI_KEY_STR),
+            Some(String::from(file.lives).as_str())
+        );
+        assert_eq!(
+            props.get(Gems::INI_KEY_STR),
+            Some(String::from(file.gems).as_str())
+        );
+    }
+
+    #[test]
+    fn file_default() {
+        let ini = Ini::load_from_str(util::test::ini::DEFAULT).unwrap();
+        let section = ini.section(Some(File::INI_SECTION_STR)).unwrap();
+        let file_loaded = File::try_from(section).unwrap();
+        let file_default = File::default();
+        assert_eq!(file_loaded, file_default);
+    }
+
+    #[test]
+    fn file_try_from_valid_complete() {
+        let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
+        let section = ini
+            .section(Some(format!("{}{}", File::INI_SECTION_STR, "complete")))
+            .unwrap();
+        let file = File::try_from(section).unwrap();
+        assert_eq!(
+            file.boss_no_damage_progress,
+            BossNoDamageProgress::ForestDesert
+        );
+        assert_eq!(
+            file.enemies_defeated,
+            EnemiesDefeated::try_from(2442).unwrap()
+        );
+        assert_eq!(file.level, Level::Castle);
+        assert_eq!(file.ending, Ending::Watched);
+        assert_eq!(file.intro, Intro::Watched);
+        assert_eq!(file.lives, Lives::try_from(9118).unwrap());
+        assert_eq!(file.gems, Gems::try_from(40).unwrap());
+    }
+
+    // #[test] // TODO allow optional boss_no_damage_progress
+    // fn file_try_from_valid_missing() {
+    //     let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
+    //     let section = ini
+    //         .section(Some(format!("{}{}", File::INI_SECTION_STR, "missing")))
+    //         .unwrap();
+    //     let file = File::try_from(section).unwrap();
+    //     assert_eq!(
+    //         file.enemies_defeated,
+    //         EnemiesDefeated::try_from(2442).unwrap()
+    //     );
+    //     assert_eq!(file.level, Level::Castle);
+    //     assert_eq!(file.ending, Ending::Watched);
+    //     assert_eq!(file.intro, Intro::Watched);
+    //     assert_eq!(file.lives, Lives::try_from(9118).unwrap());
+    //     assert_eq!(file.gems, Gems::try_from(40).unwrap());
+    // }
+
+    #[test]
+    fn file_try_from_lenient_values() {
+        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
+        let section = ini.section(Some(File::INI_SECTION_STR)).unwrap();
+        let file = File::try_from(section).unwrap();
+        assert_eq!(
+            file.boss_no_damage_progress,
+            BossNoDamageProgress::ForestDesert
+        );
+        assert_eq!(
+            file.enemies_defeated,
+            EnemiesDefeated::try_from(2442).unwrap()
+        );
+        assert_eq!(file.level, Level::Castle);
+        assert_eq!(file.ending, Ending::Watched);
+        assert_eq!(file.intro, Intro::Watched);
+        assert_eq!(file.lives, Lives::try_from(9118).unwrap());
+        assert_eq!(file.gems, Gems::try_from(40).unwrap());
+    }
+
+    #[test]
+    fn file_try_from_invalid_keys() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).unwrap();
+        let section = ini.section(Some(File::INI_SECTION_STR)).unwrap();
+        let error = File::try_from(section).unwrap_err();
+        assert_matches!(
+            error,
+            data::Error::KeyMissing(key) if key == BossNoDamageProgress::INI_KEY_STR
+                                        || key == EnemiesDefeated::INI_KEY_STR
+                                        || key == Castle::INI_KEY_STR
+                                        || key == Moon::INI_KEY_STR
+                                        || key == Snow::INI_KEY_STR
+                                        || key == Desert::INI_KEY_STR
+                                        || key == Forest::INI_KEY_STR
+                                        || key == Ending::INI_KEY_STR
+                                        || key == Intro::INI_KEY_STR
+                                        || key == Lives::INI_KEY_STR
+                                        || key == Gems::INI_KEY_STR
+        )
+    }
+
+    #[test]
+    fn file_try_from_invalid_value_ranges() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).unwrap();
+        let section = ini.section(Some(File::INI_SECTION_STR)).unwrap();
+        let error = File::try_from(section).unwrap_err();
+        assert_matches!(
+            error,
+            data::Error::TryFromPrimitive(_) | data::Error::NumCast(_)
+        );
+    }
+
+    #[test]
+    fn file_try_from_invalid_value_types() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
+        let section = ini.section(Some(File::INI_SECTION_STR)).unwrap();
+        let error = File::try_from(section).unwrap_err();
+        assert_matches!(
+            error,
+            data::Error::NumCast(_) | data::Error::ParseInt(_) | data::Error::ParseFloat(_)
+        );
     }
 }
