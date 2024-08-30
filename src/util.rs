@@ -1,5 +1,8 @@
 pub mod file;
 
+#[cfg(test)]
+pub mod test;
+
 pub use file::load_ini_file;
 pub use file::write_ini_file;
 pub use file::write_ini_file_padded;
