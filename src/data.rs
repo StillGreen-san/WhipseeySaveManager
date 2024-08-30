@@ -9,6 +9,7 @@ pub mod cheats;
 pub mod file;
 pub mod options;
 
+use crate::data;
 pub use cheats::Cheats;
 pub use file::File;
 pub use options::Options;
@@ -71,6 +72,17 @@ impl From<BfsSettings> for Ini {
         ini.entry(Some(value.cheats.ini_section_str().into()))
             .or_insert(value.cheats.into());
         ini
+    }
+}
+
+fn try_from_opt_key<'a, R>(value: &'a Properties) -> Result<R>
+where
+    R: Default + TryFrom<&'a Properties, Error = data::Error>,
+{
+    match value.try_into() {
+        Ok(boss_no_damage_progress) => Ok(boss_no_damage_progress),
+        Err(Error::KeyMissing(_)) => Ok(R::default()),
+        Err(err) => Err(err),
     }
 }
 

@@ -1,4 +1,4 @@
-use crate::data::{IniKeyStr, IniSectionStr};
+use crate::data::{try_from_opt_key, Error, IniKeyStr, IniSectionStr};
 use crate::{data, ini_impl_quoted, primitive_impl};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
@@ -182,7 +182,7 @@ impl TryFrom<&Properties> for File {
         let desert = value.try_into()?;
         let forest = value.try_into()?;
         Ok(Self {
-            boss_no_damage_progress: value.try_into()?,
+            boss_no_damage_progress: try_from_opt_key(value)?,
             enemies_defeated: value.try_into()?,
             level: Level::from_parts((castle, moon, snow, desert, forest)),
             ending: value.try_into()?,
@@ -311,23 +311,24 @@ mod tests {
         assert_eq!(file.gems, Gems::try_from(40).unwrap());
     }
 
-    // #[test] // TODO allow optional boss_no_damage_progress
-    // fn file_try_from_valid_missing() {
-    //     let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
-    //     let section = ini
-    //         .section(Some(format!("{}{}", File::INI_SECTION_STR, "missing")))
-    //         .unwrap();
-    //     let file = File::try_from(section).unwrap();
-    //     assert_eq!(
-    //         file.enemies_defeated,
-    //         EnemiesDefeated::try_from(2442).unwrap()
-    //     );
-    //     assert_eq!(file.level, Level::Castle);
-    //     assert_eq!(file.ending, Ending::Watched);
-    //     assert_eq!(file.intro, Intro::Watched);
-    //     assert_eq!(file.lives, Lives::try_from(9118).unwrap());
-    //     assert_eq!(file.gems, Gems::try_from(40).unwrap());
-    // }
+    #[test]
+    fn file_try_from_valid_missing() {
+        let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
+        let section = ini
+            .section(Some(format!("{}{}", File::INI_SECTION_STR, "missing")))
+            .unwrap();
+        let file = File::try_from(section).unwrap();
+        assert_eq!(file.boss_no_damage_progress, BossNoDamageProgress::None);
+        assert_eq!(
+            file.enemies_defeated,
+            EnemiesDefeated::try_from(2442).unwrap()
+        );
+        assert_eq!(file.level, Level::Castle);
+        assert_eq!(file.ending, Ending::Watched);
+        assert_eq!(file.intro, Intro::Watched);
+        assert_eq!(file.lives, Lives::try_from(9118).unwrap());
+        assert_eq!(file.gems, Gems::try_from(40).unwrap());
+    }
 
     #[test]
     fn file_try_from_lenient_values() {
