@@ -26,9 +26,9 @@ impl TryFrom<Ini> for WhipseeySaveData {
         Ok(WhipseeySaveData {
             options: try_from(&value)?,
             files: [
-                try_from_n(&value, 1)?,
-                try_from_n(&value, 2)?,
                 try_from_n(&value, 3)?,
+                try_from_n(&value, 2)?,
+                try_from_n(&value, 1)?,
             ],
         })
     }
@@ -40,12 +40,12 @@ impl From<WhipseeySaveData> for Ini {
         ini.entry(Some(value.options.ini_section_str().into()))
             .or_insert(value.options.into());
         let [file1, file2, file3] = value.files;
-        ini.entry(Some(numbered_section::<File>(1)))
-            .or_insert(file1.into());
-        ini.entry(Some(numbered_section::<File>(2)))
-            .or_insert(file2.into());
         ini.entry(Some(numbered_section::<File>(3)))
             .or_insert(file3.into());
+        ini.entry(Some(numbered_section::<File>(2)))
+            .or_insert(file2.into());
+        ini.entry(Some(numbered_section::<File>(1)))
+            .or_insert(file1.into());
         ini
     }
 }
