@@ -259,7 +259,7 @@ macro_rules! primitive_impl {
             ) -> ::core::result::Result<Self, ::num_enum::TryFromPrimitiveError<Self>> {
                 #[deny(unreachable_patterns)]
                 match number {
-                    Self::MIN..Self::MAX => ::core::result::Result::Ok(Self(number)),
+                    Self::MIN..=Self::MAX => ::core::result::Result::Ok(Self(number)),
                     #[allow(unreachable_patterns)]
                     _ => ::core::result::Result::Err(
                         ::num_enum::TryFromPrimitiveError::<Self>::new(number),
