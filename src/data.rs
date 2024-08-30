@@ -50,7 +50,7 @@ impl From<WhipseeySaveData> for Ini {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct BfsSettings {
     pub cheats: Cheats,
 }
@@ -305,6 +305,14 @@ mod test {
             ini.get_from(Some(Cheats::INI_SECTION_STR), CheatsEnabled::INI_KEY_STR),
             Some(value.as_str())
         );
+    }
+
+    #[test]
+    fn bfs_settings_default() {
+        let ini = Ini::load_from_str(util::test::ini::DEFAULT).unwrap();
+        let settings_loaded = BfsSettings::try_from(ini).unwrap();
+        let settings_default = BfsSettings::default();
+        assert_eq!(settings_loaded, settings_default);
     }
 
     #[test]

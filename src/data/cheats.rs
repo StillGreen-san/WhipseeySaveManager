@@ -55,8 +55,11 @@ mod tests {
         let cheats = Cheats {
             cheats_enabled: CheatsEnabled::Enabled,
         };
-        let props: Properties = cheats.into();
-        assert_eq!(props.get(CheatsEnabled::INI_KEY_STR), Some("1"));
+        let props: Properties = cheats.clone().into();
+        assert_eq!(
+            props.get(CheatsEnabled::INI_KEY_STR),
+            Some(String::from(cheats.cheats_enabled).as_str())
+        );
     }
 
     #[test]
