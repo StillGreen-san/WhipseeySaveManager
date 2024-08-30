@@ -8,7 +8,7 @@ pub fn for_each_window_mut<T, F>(slice: &mut [T], size: usize, mut function: F)
 where
     F: FnMut(&mut [T]),
 {
-    for start in 0..=(slice.len().saturating_sub(size)) {
+    for start in 0..=slice.len().saturating_sub(size) {
         function(&mut slice[start..][..size]);
     }
 }

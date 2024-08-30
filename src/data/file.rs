@@ -1,5 +1,5 @@
 use crate::data::{IniKeyStr, IniSectionStr};
-use crate::{data, ini_impl, primitive_impl};
+use crate::{data, ini_impl_quoted, primitive_impl};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{Display, VariantArray};
@@ -17,12 +17,12 @@ pub enum BossNoDamageProgress {
     DesertCastle = 6,
     ForstDesertCastle = 7,
 }
-ini_impl!(BossNoDamageProgress, File, "boss_no_damage_progress");
+ini_impl_quoted!(BossNoDamageProgress, File, "boss_no_damage_progress");
 
 #[derive(Clone, Debug, Default)]
 pub struct EnemiesDefeated(u32);
 primitive_impl!(EnemiesDefeated, 0, 1677215, u32);
-ini_impl!(EnemiesDefeated, File, "enemies_defeated", u32);
+ini_impl_quoted!(EnemiesDefeated, File, "enemies_defeated", u32);
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Ord, PartialOrd)]
 #[repr(u8)]
@@ -85,7 +85,7 @@ pub enum Castle {
     Locked = 0,
     Unlocked = 32,
 }
-ini_impl!(Castle, File, "castle");
+ini_impl_quoted!(Castle, File, "castle");
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
@@ -94,7 +94,7 @@ pub enum Moon {
     Locked = 0,
     Unlocked = 16,
 }
-ini_impl!(Moon, File, "moon");
+ini_impl_quoted!(Moon, File, "moon");
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
@@ -103,7 +103,7 @@ pub enum Snow {
     Locked = 0,
     Unlocked = 8,
 }
-ini_impl!(Snow, File, "snow");
+ini_impl_quoted!(Snow, File, "snow");
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
@@ -112,7 +112,7 @@ pub enum Desert {
     Locked = 0,
     Unlocked = 4,
 }
-ini_impl!(Desert, File, "desert");
+ini_impl_quoted!(Desert, File, "desert");
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
@@ -121,7 +121,7 @@ pub enum Forest {
     Locked = 0,
     Unlocked = 2,
 }
-ini_impl!(Forest, File, "forest");
+ini_impl_quoted!(Forest, File, "forest");
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
@@ -130,7 +130,7 @@ pub enum Ending {
     Unwatched = 0,
     Watched = 1,
 }
-ini_impl!(Ending, File, "ending");
+ini_impl_quoted!(Ending, File, "ending");
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
@@ -139,12 +139,12 @@ pub enum Intro {
     Unwatched = 0,
     Watched = 1,
 }
-ini_impl!(Intro, File, "intro");
+ini_impl_quoted!(Intro, File, "intro");
 
 #[derive(Clone, Debug)]
 pub struct Lives(u32);
 primitive_impl!(Lives, 0, 16777215, u32);
-ini_impl!(Lives, File, "lives", u32);
+ini_impl_quoted!(Lives, File, "lives", u32);
 
 impl Default for Lives {
     fn default() -> Self {
@@ -155,7 +155,7 @@ impl Default for Lives {
 #[derive(Clone, Debug, Default)]
 pub struct Gems(u8);
 primitive_impl!(Gems, 0, 99, u8);
-ini_impl!(Gems, File, "gems");
+ini_impl_quoted!(Gems, File, "gems");
 
 #[derive(Clone, Debug, Default)]
 pub struct File {

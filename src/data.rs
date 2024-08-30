@@ -121,7 +121,7 @@ where
     Ok(cheats_enabled)
 }
 
-fn into_quoted_scaled<T, P>(value: T, scale: f64) -> String
+fn into_quoted_scaled_float<T, P>(value: T, scale: f64) -> String
 where
     T: Into<P>,
     P: AsPrimitive<f64>,
@@ -186,7 +186,7 @@ impl From<ini::Error> for Error {
 }
 
 #[macro_export]
-macro_rules! ini_impl {
+macro_rules! ini_impl_common {
     ($self:ty, $section:ident, $key:literal, $scale:literal, $typ:ty) => {
         impl $self {
             pub fn value(&self) -> $typ {
@@ -206,23 +206,34 @@ macro_rules! ini_impl {
                 $crate::data::try_from_scaled::<$self, $typ>(value, $scale)
             }
         }
+    };
+
+    ($self:ty, $section:ident, $key:literal) => {
+        $crate::ini_impl_common!($self, $section, $key, 1.0, u8);
+    };
+}
+
+#[macro_export]
+macro_rules! ini_impl_quoted {
+    ($self:ty, $section:ident, $key:literal, $scale:literal, $typ:ty) => {
+        $crate::ini_impl_common!($self, $section, $key, $scale, $typ);
         impl From<$self> for String {
             fn from(value: $self) -> Self {
-                $crate::data::into_quoted_scaled::<$self, $typ>(value, $scale)
+                $crate::data::into_quoted_scaled_float::<$self, $typ>(value, $scale)
             }
         }
     };
 
     ($self:ty, $section:ident, $key:literal, $scale:literal) => {
-        $crate::ini_impl!($self, $section, $key, $scale, u8);
+        $crate::ini_impl_quoted!($self, $section, $key, $scale, u8);
     };
 
     ($self:ty, $section:ident, $key:literal) => {
-        $crate::ini_impl!($self, $section, $key, 1.0);
+        $crate::ini_impl_quoted!($self, $section, $key, 1.0);
     };
 
     ($self:ty, $section:ident, $key:literal, $typ:ty) => {
-        $crate::ini_impl!($self, $section, $key, 1.0, $typ);
+        $crate::ini_impl_quoted!($self, $section, $key, 1.0, $typ);
     };
 }
 

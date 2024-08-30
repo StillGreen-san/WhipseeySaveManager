@@ -1,5 +1,5 @@
 use crate::data::{IniKeyStr, IniSectionStr};
-use crate::{data, ini_impl};
+use crate::{data, ini_impl_common};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
@@ -10,7 +10,12 @@ pub enum CheatsEnabled {
     Disabled = 0,
     Enabled = 1,
 }
-ini_impl!(CheatsEnabled, Cheats, "cheats_enabled");
+ini_impl_common!(CheatsEnabled, Cheats, "cheats_enabled");
+impl From<CheatsEnabled> for String {
+    fn from(value: CheatsEnabled) -> Self {
+        u8::from(value).to_string()
+    }
+}
 
 #[derive(Clone, Debug, Default)]
 pub struct Cheats {
@@ -34,10 +39,7 @@ impl TryFrom<&Properties> for Cheats {
 impl From<Cheats> for Properties {
     fn from(value: Cheats) -> Self {
         let mut props = Properties::new();
-        props.insert(
-            value.cheats_enabled.ini_key_str(),
-            u8::from(value.cheats_enabled).to_string(),
-        );
+        props.insert(value.cheats_enabled.ini_key_str(), value.cheats_enabled);
         props
     }
 }

@@ -1,5 +1,5 @@
 use crate::data::{IniKeyStr, IniSectionStr};
-use crate::{data, ini_impl};
+use crate::{data, ini_impl_quoted};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{Display, VariantArray};
@@ -19,7 +19,7 @@ pub enum Language {
     Chinese = 8,
     Portuguese = 9,
 }
-ini_impl!(Language, Options, "language");
+ini_impl_quoted!(Language, Options, "language");
 
 #[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
@@ -29,7 +29,7 @@ pub enum Scale {
     R1152x648 = 3,
     R1536x864 = 4,
 }
-ini_impl!(Scale, Options, "scale");
+ini_impl_quoted!(Scale, Options, "scale");
 
 #[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
@@ -38,7 +38,7 @@ pub enum Fullscreen {
     #[default]
     Enabled = 1,
 }
-ini_impl!(Fullscreen, Options, "fullscreen");
+ini_impl_quoted!(Fullscreen, Options, "fullscreen");
 
 #[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
@@ -47,7 +47,7 @@ pub enum LeftHanded {
     #[default]
     Enabled = 1,
 }
-ini_impl!(LeftHanded, Options, "left_handed");
+ini_impl_quoted!(LeftHanded, Options, "left_handed");
 
 #[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
@@ -65,7 +65,7 @@ pub enum SoundVolume {
     #[default]
     V100 = 100,
 }
-ini_impl!(SoundVolume, Options, "sound_volume", 100.0);
+ini_impl_quoted!(SoundVolume, Options, "sound_volume", 100.0);
 
 #[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
@@ -74,7 +74,7 @@ pub enum SoundToggle {
     #[default]
     Enabled = 1,
 }
-ini_impl!(SoundToggle, Options, "sound_toggle");
+ini_impl_quoted!(SoundToggle, Options, "sound_toggle");
 
 #[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
@@ -92,7 +92,7 @@ pub enum MusicVolume {
     #[default]
     V100 = 100,
 }
-ini_impl!(MusicVolume, Options, "music_volume", 100.0);
+ini_impl_quoted!(MusicVolume, Options, "music_volume", 100.0);
 
 #[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
@@ -101,7 +101,7 @@ pub enum MusicToggle {
     #[default]
     Enabled = 1,
 }
-ini_impl!(MusicToggle, Options, "music_toggle");
+ini_impl_quoted!(MusicToggle, Options, "music_toggle");
 
 #[derive(Clone, Debug, Default)]
 pub struct Options {
