@@ -4,8 +4,9 @@ use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{Display, VariantArray};
 
-#[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
+#[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum Language {
     #[default]
     English = 0,
@@ -21,8 +22,9 @@ pub enum Language {
 }
 ini_impl_quoted!(Language, Options, "language");
 
-#[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
+#[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum Scale {
     R768x432 = 2,
     #[default]
@@ -31,8 +33,9 @@ pub enum Scale {
 }
 ini_impl_quoted!(Scale, Options, "scale");
 
-#[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
+#[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum Fullscreen {
     Disabled = 0,
     #[default]
@@ -40,8 +43,9 @@ pub enum Fullscreen {
 }
 ini_impl_quoted!(Fullscreen, Options, "fullscreen");
 
-#[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
+#[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum LeftHanded {
     #[default]
     Disabled = 0,
@@ -49,8 +53,9 @@ pub enum LeftHanded {
 }
 ini_impl_quoted!(LeftHanded, Options, "left_handed");
 
-#[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
+#[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum SoundVolume {
     V0 = 0,
     V10 = 10,
@@ -67,8 +72,9 @@ pub enum SoundVolume {
 }
 ini_impl_quoted!(SoundVolume, Options, "sound_volume", 100.0);
 
-#[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
+#[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum SoundToggle {
     Disabled = 0,
     #[default]
@@ -76,8 +82,9 @@ pub enum SoundToggle {
 }
 ini_impl_quoted!(SoundToggle, Options, "sound_toggle");
 
-#[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
+#[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum MusicVolume {
     V0 = 0,
     V10 = 10,
@@ -94,8 +101,9 @@ pub enum MusicVolume {
 }
 ini_impl_quoted!(MusicVolume, Options, "music_volume", 100.0);
 
-#[derive(Clone, Debug, Default, Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
+#[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum MusicToggle {
     Disabled = 0,
     #[default]
@@ -103,7 +111,7 @@ pub enum MusicToggle {
 }
 ini_impl_quoted!(MusicToggle, Options, "music_toggle");
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Options {
     pub language: Language,
     pub scale: Scale,
@@ -148,5 +156,135 @@ impl From<Options> for Properties {
         props.insert(value.music_volume.ini_key_str(), value.music_volume);
         props.insert(value.music_toggle.ini_key_str(), value.music_toggle);
         props
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{assert_matches, util};
+    use ini::Ini;
+
+    #[test]
+    fn options_into() {
+        let options = Options {
+            language: Language::Japanese,
+            scale: Scale::R1152x648,
+            fullscreen: Fullscreen::Disabled,
+            left_handed: LeftHanded::Enabled,
+            sound_volume: SoundVolume::V40,
+            sound_toggle: SoundToggle::Enabled,
+            music_volume: MusicVolume::V0,
+            music_toggle: MusicToggle::Disabled,
+        };
+        let props: Properties = options.clone().into();
+        assert_eq!(
+            props.get(Language::INI_KEY_STR),
+            Some(String::from(options.language).as_str())
+        );
+        assert_eq!(
+            props.get(Scale::INI_KEY_STR),
+            Some(String::from(options.scale).as_str())
+        );
+        assert_eq!(
+            props.get(Fullscreen::INI_KEY_STR),
+            Some(String::from(options.fullscreen).as_str())
+        );
+        assert_eq!(
+            props.get(LeftHanded::INI_KEY_STR),
+            Some(String::from(options.left_handed).as_str())
+        );
+        assert_eq!(
+            props.get(SoundVolume::INI_KEY_STR),
+            Some(String::from(options.sound_volume).as_str())
+        );
+        assert_eq!(
+            props.get(SoundToggle::INI_KEY_STR),
+            Some(String::from(options.sound_toggle).as_str())
+        );
+        assert_eq!(
+            props.get(MusicVolume::INI_KEY_STR),
+            Some(String::from(options.music_volume).as_str())
+        );
+        assert_eq!(
+            props.get(MusicToggle::INI_KEY_STR),
+            Some(String::from(options.music_toggle).as_str())
+        );
+    }
+
+    #[test]
+    fn options_default() {
+        let ini = Ini::load_from_str(util::test::ini::DEFAULT).unwrap();
+        let section = ini.section(Some(Options::INI_SECTION_STR)).unwrap();
+        let options_loaded = Options::try_from(section).unwrap();
+        let options_default = Options::default();
+        assert_eq!(options_loaded, options_default);
+    }
+
+    #[test]
+    fn options_try_from_valid() {
+        let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
+        let section = ini.section(Some(Options::INI_SECTION_STR)).unwrap();
+        let options = Options::try_from(section).unwrap();
+        assert_eq!(options.language, Language::Japanese);
+        assert_eq!(options.scale, Scale::R1536x864);
+        assert_eq!(options.fullscreen, Fullscreen::Disabled);
+        assert_eq!(options.left_handed, LeftHanded::Enabled);
+        assert_eq!(options.sound_volume, SoundVolume::V30);
+        assert_eq!(options.sound_toggle, SoundToggle::Enabled);
+        assert_eq!(options.music_volume, MusicVolume::V0);
+        assert_eq!(options.music_toggle, MusicToggle::Disabled);
+    }
+
+    #[test]
+    fn options_try_from_lenient_values() {
+        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
+        let section = ini.section(Some(Options::INI_SECTION_STR)).unwrap();
+        let options = Options::try_from(section).unwrap();
+        assert_eq!(options.language, Language::Japanese);
+        assert_eq!(options.scale, Scale::R1536x864);
+        assert_eq!(options.fullscreen, Fullscreen::Disabled);
+        assert_eq!(options.left_handed, LeftHanded::Enabled);
+        assert_eq!(options.sound_volume, SoundVolume::V30);
+        assert_eq!(options.sound_toggle, SoundToggle::Enabled);
+        assert_eq!(options.music_volume, MusicVolume::V0);
+        assert_eq!(options.music_toggle, MusicToggle::Disabled);
+    }
+
+    #[test]
+    fn options_try_from_invalid_keys() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).unwrap();
+        let section = ini.section(Some(Options::INI_SECTION_STR)).unwrap();
+        let error = Options::try_from(section).unwrap_err();
+        assert_matches!(
+            error,
+            data::Error::KeyMissing(key) if key == Language::INI_KEY_STR
+                                        || key == Scale::INI_KEY_STR
+                                        || key == Fullscreen::INI_KEY_STR
+                                        || key == LeftHanded::INI_KEY_STR
+                                        || key == SoundVolume::INI_KEY_STR
+                                        || key == SoundToggle::INI_KEY_STR
+                                        || key == MusicVolume::INI_KEY_STR
+                                        || key == MusicToggle::INI_KEY_STR
+        )
+    }
+
+    #[test]
+    fn options_try_from_invalid_value_ranges() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).unwrap();
+        let section = ini.section(Some(Options::INI_SECTION_STR)).unwrap();
+        let error = Options::try_from(section).unwrap_err();
+        assert_matches!(error, data::Error::TryFromPrimitive(_));
+    }
+
+    #[test]
+    fn options_try_from_invalid_value_types() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
+        let section = ini.section(Some(Options::INI_SECTION_STR)).unwrap();
+        let error = Options::try_from(section).unwrap_err();
+        assert_matches!(
+            error,
+            data::Error::NumCast(_) | data::Error::ParseInt(_) | data::Error::ParseFloat(_)
+        );
     }
 }
