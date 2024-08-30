@@ -285,3 +285,70 @@ macro_rules! primitive_impl {
         }
     };
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::{assert_matches, util};
+    use cheats::CheatsEnabled;
+
+    #[test]
+    fn bfs_settings_into() {
+        let settings = BfsSettings {
+            cheats: Cheats {
+                cheats_enabled: CheatsEnabled::Disabled,
+            },
+        };
+        let value: String = settings.cheats.cheats_enabled.clone().into();
+        let ini: Ini = settings.into();
+        assert_eq!(
+            ini.get_from(Some(Cheats::INI_SECTION_STR), CheatsEnabled::INI_KEY_STR),
+            Some(value.as_str())
+        );
+    }
+
+    #[test]
+    fn bfs_settings_try_from_valid() {
+        let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
+        let settings = BfsSettings::try_from(ini).unwrap();
+        assert_eq!(settings.cheats.cheats_enabled, CheatsEnabled::Enabled);
+    }
+
+    #[test]
+    fn bfs_settings_try_from_lenient() {
+        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
+        let settings = BfsSettings::try_from(ini).unwrap();
+        assert_eq!(settings.cheats.cheats_enabled, CheatsEnabled::Enabled);
+    }
+
+    #[test]
+    fn bfs_settings_try_from_invalid_sections() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_SECTIONS).unwrap();
+        let error = BfsSettings::try_from(ini).unwrap_err();
+        assert_matches!(error, Error::SectionMissing(section) if section == Cheats::INI_SECTION_STR);
+    }
+
+    #[test]
+    fn bfs_settings_try_from_invalid_keys() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).unwrap();
+        let error = BfsSettings::try_from(ini).unwrap_err();
+        assert_matches!(error, Error::KeyMissing(key) if key == CheatsEnabled::INI_KEY_STR);
+    }
+
+    #[test]
+    fn bfs_settings_try_from_invalid_value_ranges() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).unwrap();
+        let error = BfsSettings::try_from(ini).unwrap_err();
+        assert_matches!(error, Error::TryFromPrimitive(_));
+    }
+
+    #[test]
+    fn bfs_settings_try_from_invalid_value_types() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
+        let error = BfsSettings::try_from(ini).unwrap_err();
+        assert_matches!(
+            error,
+            Error::NumCast(_) | Error::ParseInt(_) | Error::ParseFloat(_)
+        );
+    }
+}
