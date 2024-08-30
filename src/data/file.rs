@@ -13,9 +13,9 @@ pub enum BossNoDamageProgress {
     Desert = 2,
     ForestDesert = 3,
     Castle = 4,
-    ForstCastle = 5,
+    ForestCastle = 5,
     DesertCastle = 6,
-    ForstDesertCastle = 7,
+    ForestDesertCastle = 7,
 }
 ini_impl_quoted!(BossNoDamageProgress, File, "boss_no_damage_progress");
 
@@ -143,7 +143,7 @@ ini_impl_quoted!(Intro, File, "intro");
 
 #[derive(Clone, Debug)]
 pub struct Lives(u32);
-primitive_impl!(Lives, 0, 16777215, u32);
+primitive_impl!(Lives, 1, 16777215, u32);
 ini_impl_quoted!(Lives, File, "lives", u32);
 
 impl Default for Lives {
