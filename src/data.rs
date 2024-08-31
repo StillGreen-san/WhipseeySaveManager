@@ -14,7 +14,7 @@ pub use cheats::Cheats;
 pub use file::File;
 pub use options::Options;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct WhipseeySaveData {
     pub options: Options,
     pub files: [File; 3],
@@ -303,6 +303,13 @@ mod test {
     use super::*;
     use crate::{assert_matches, util};
     use cheats::CheatsEnabled;
+    use file::{
+        BossNoDamageProgress, Castle, Desert, Ending, EnemiesDefeated, Forest, Gems, Intro, Level,
+        Lives, Moon, Snow,
+    };
+    use options::{
+        Fullscreen, Language, LeftHanded, MusicToggle, MusicVolume, Scale, SoundToggle, SoundVolume,
+    };
 
     #[test]
     fn bfs_settings_into() {
@@ -366,6 +373,206 @@ mod test {
     fn bfs_settings_try_from_invalid_value_types() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
         let error = BfsSettings::try_from(ini).unwrap_err();
+        assert_matches!(
+            error,
+            Error::NumCast(_) | Error::ParseInt(_) | Error::ParseFloat(_)
+        );
+    }
+
+    #[test]
+    fn whipseey_save_data_into() {
+        let file = File {
+            boss_no_damage_progress: BossNoDamageProgress::Desert,
+            enemies_defeated: EnemiesDefeated::try_from(0).unwrap(),
+            level: Level::Beach,
+            ending: Ending::Unwatched,
+            intro: Intro::Unwatched,
+            lives: Lives::try_from(1).unwrap(),
+            gems: Gems::try_from(12).unwrap(),
+        };
+        let data = WhipseeySaveData {
+            options: Options {
+                language: Language::French,
+                scale: Scale::R768x432,
+                fullscreen: Fullscreen::Disabled,
+                left_handed: LeftHanded::Disabled,
+                sound_volume: SoundVolume::V70,
+                sound_toggle: SoundToggle::Disabled,
+                music_volume: MusicVolume::V50,
+                music_toggle: MusicToggle::Enabled,
+            },
+            files: [file.clone(), file.clone(), file],
+        };
+        let ini: Ini = data.clone().into();
+        assert_eq!(
+            ini.get_from(Some(Language::INI_SECTION_STR), Language::INI_KEY_STR),
+            Some(String::from(data.options.language).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(Scale::INI_SECTION_STR), Scale::INI_KEY_STR),
+            Some(String::from(data.options.scale).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(Fullscreen::INI_SECTION_STR), Fullscreen::INI_KEY_STR),
+            Some(String::from(data.options.fullscreen).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(LeftHanded::INI_SECTION_STR), LeftHanded::INI_KEY_STR),
+            Some(String::from(data.options.left_handed).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(SoundVolume::INI_SECTION_STR), SoundVolume::INI_KEY_STR),
+            Some(String::from(data.options.sound_volume).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(SoundToggle::INI_SECTION_STR), SoundToggle::INI_KEY_STR),
+            Some(String::from(data.options.sound_toggle).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(MusicVolume::INI_SECTION_STR), MusicVolume::INI_KEY_STR),
+            Some(String::from(data.options.music_volume).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(MusicToggle::INI_SECTION_STR), MusicToggle::INI_KEY_STR),
+            Some(String::from(data.options.music_toggle).as_str())
+        );
+        let file1_section_str = format!("{}{}", File::INI_SECTION_STR, 1);
+        let file2_section_str = format!("{}{}", File::INI_SECTION_STR, 2);
+        let file3_section_str = format!("{}{}", File::INI_SECTION_STR, 3);
+        let [file1, file2, file3] = data.files;
+        assert_eq!(
+            ini.get_from(Some(&file1_section_str), BossNoDamageProgress::INI_KEY_STR),
+            Some(String::from(file1.boss_no_damage_progress).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(&file2_section_str), EnemiesDefeated::INI_KEY_STR),
+            Some(String::from(file2.enemies_defeated).as_str())
+        );
+        let (_, file1_moon, _, _, file1_forest) = file1.level.into_parts();
+        let (_, _, file2_snow, _, _) = file2.level.into_parts();
+        let (file3_castle, _, _, file3_desert, _) = file3.level.into_parts();
+        assert_eq!(
+            ini.get_from(Some(&file3_section_str), Castle::INI_KEY_STR),
+            Some(String::from(file3_castle).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(&file1_section_str), Moon::INI_KEY_STR),
+            Some(String::from(file1_moon).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(&file2_section_str), Snow::INI_KEY_STR),
+            Some(String::from(file2_snow).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(&file3_section_str), Desert::INI_KEY_STR),
+            Some(String::from(file3_desert).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(&file1_section_str), Forest::INI_KEY_STR),
+            Some(String::from(file1_forest).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(&file2_section_str), Ending::INI_KEY_STR),
+            Some(String::from(file2.ending).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(&file3_section_str), Intro::INI_KEY_STR),
+            Some(String::from(file3.intro).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(&file1_section_str), Lives::INI_KEY_STR),
+            Some(String::from(file1.lives).as_str())
+        );
+        assert_eq!(
+            ini.get_from(Some(&file2_section_str), Gems::INI_KEY_STR),
+            Some(String::from(file2.gems).as_str())
+        );
+    }
+
+    #[test]
+    fn whipseey_save_data_default() {
+        let ini = Ini::load_from_str(util::test::ini::DEFAULT).unwrap();
+        let save_loaded = WhipseeySaveData::try_from(ini).unwrap();
+        let save_default = WhipseeySaveData::default();
+        assert_eq!(save_loaded, save_default);
+    }
+
+    #[test]
+    fn whipseey_save_data_try_from_valid() {
+        let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
+        let save = WhipseeySaveData::try_from(ini).unwrap();
+        assert_eq!(save.options.sound_volume, SoundVolume::V30);
+        assert_eq!(
+            save.files[2].boss_no_damage_progress,
+            BossNoDamageProgress::ForestDesert
+        );
+        assert_eq!(
+            save.files[1].boss_no_damage_progress,
+            BossNoDamageProgress::None
+        );
+        assert_eq!(save.files[0].ending, Ending::Watched);
+    }
+
+    #[test]
+    fn whipseey_save_data_try_from_lenient() {
+        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
+        let save = WhipseeySaveData::try_from(ini).unwrap();
+        assert_eq!(save.options.scale, Scale::R1536x864);
+        assert_eq!(save.files[2].gems, Gems::try_from(40).unwrap());
+        assert_eq!(save.files[1].level, Level::Castle);
+        assert_eq!(save.files[0].ending, Ending::Watched);
+    }
+
+    #[test]
+    fn whipseey_save_data_try_from_invalid_sections() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_SECTIONS).unwrap();
+        let error = WhipseeySaveData::try_from(ini).unwrap_err();
+        assert_matches!(
+            error,
+            Error::SectionMissing(section) if section == Options::INI_SECTION_STR
+                                        || section == File::INI_SECTION_STR
+        );
+    }
+
+    #[test]
+    fn whipseey_save_data_try_from_invalid_keys() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).unwrap();
+        let error = WhipseeySaveData::try_from(ini).unwrap_err();
+        assert_matches!(
+            error,
+            Error::KeyMissing(key) if key == Language::INI_KEY_STR
+                                || key == Scale::INI_KEY_STR
+                                || key == Fullscreen::INI_KEY_STR
+                                || key == LeftHanded::INI_KEY_STR
+                                || key == SoundVolume::INI_KEY_STR
+                                || key == SoundToggle::INI_KEY_STR
+                                || key == MusicVolume::INI_KEY_STR
+                                || key == MusicToggle::INI_KEY_STR
+                                || key == BossNoDamageProgress::INI_KEY_STR
+                                || key == EnemiesDefeated::INI_KEY_STR
+                                || key == Castle::INI_KEY_STR
+                                || key == Moon::INI_KEY_STR
+                                || key == Snow::INI_KEY_STR
+                                || key == Desert::INI_KEY_STR
+                                || key == Forest::INI_KEY_STR
+                                || key == Ending::INI_KEY_STR
+                                || key == Intro::INI_KEY_STR
+                                || key == Lives::INI_KEY_STR
+                                || key == Gems::INI_KEY_STR
+        );
+    }
+
+    #[test]
+    fn whipseey_save_data_try_from_invalid_value_ranges() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).unwrap();
+        let error = WhipseeySaveData::try_from(ini).unwrap_err();
+        assert_matches!(error, Error::TryFromPrimitive(_));
+    }
+
+    #[test]
+    fn whipseey_save_data_try_from_invalid_value_types() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
+        let error = WhipseeySaveData::try_from(ini).unwrap_err();
         assert_matches!(
             error,
             Error::NumCast(_) | Error::ParseInt(_) | Error::ParseFloat(_)

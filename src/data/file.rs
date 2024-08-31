@@ -38,7 +38,7 @@ pub enum Level {
 }
 
 impl Level {
-    fn into_parts(self) -> (Castle, Moon, Snow, Desert, Forest) {
+    pub fn into_parts(self) -> (Castle, Moon, Snow, Desert, Forest) {
         let mut parts: (Castle, Moon, Snow, Desert, Forest) = Default::default();
         if self == Level::Castle {
             parts.0 = Castle::Unlocked;
@@ -58,7 +58,7 @@ impl Level {
         parts
     }
 
-    fn from_parts(parts: (Castle, Moon, Snow, Desert, Forest)) -> Self {
+    pub fn from_parts(parts: (Castle, Moon, Snow, Desert, Forest)) -> Self {
         if parts.0 == Castle::Unlocked {
             return Self::Castle;
         }
