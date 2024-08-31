@@ -218,8 +218,13 @@ impl Application for Gui {
 
     fn view(&self) -> Element<'_, Self::Message, Self::Theme, Renderer> {
         Column::new()
-            .push(self.save.view())
-            .push(self.bfs.view())
+            .push(
+                Column::new()
+                    .push(self.save.view())
+                    .push(self.bfs.view())
+                    .spacing(4)
+                    .padding(4),
+            )
             .push(
                 Tabs::new(Message::TabSelected)
                     .push(TabId::Files, self.files.tab_label(), self.files.view())

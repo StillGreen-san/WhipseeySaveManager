@@ -116,6 +116,7 @@ impl FileSelect {
                 Text::new(self.display_strings.reload_tooltip),
                 Position::FollowCursor,
             ))
+            .spacing(4)
             .into()
     }
 }
