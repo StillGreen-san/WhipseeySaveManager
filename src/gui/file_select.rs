@@ -1,8 +1,9 @@
 use std::future::ready;
 use std::path::PathBuf;
 
+use crate::gui::with_tooltip;
 use iced::widget::tooltip::Position;
-use iced::widget::{Button, Row, Text, TextInput, Tooltip};
+use iced::widget::{Button, Row, Text, TextInput};
 use iced::{Command, Element, Renderer};
 use rfd::AsyncFileDialog;
 
@@ -98,23 +99,23 @@ impl FileSelect {
                 )
                 .on_input(|string| self.pack_message(Message::PathChanged(string))),
             )
-            .push(Tooltip::new(
+            .push(with_tooltip(
                 Button::new(Text::new(self.display_strings.open_label))
                     .on_press(self.pack_message(Message::Open)),
-                Text::new(self.display_strings.open_tooltip),
-                Position::FollowCursor,
+                self.display_strings.open_tooltip,
+                Position::Bottom,
             ))
-            .push(Tooltip::new(
+            .push(with_tooltip(
                 Button::new(Text::new(self.display_strings.save_label))
                     .on_press(self.pack_message(Message::Save)),
-                Text::new(self.display_strings.save_tooltip),
-                Position::FollowCursor,
+                self.display_strings.save_tooltip,
+                Position::Bottom,
             ))
-            .push(Tooltip::new(
+            .push(with_tooltip(
                 Button::new(Text::new(self.display_strings.reload_label))
                     .on_press(self.pack_message(Message::Reload)),
-                Text::new(self.display_strings.reload_tooltip),
-                Position::FollowCursor,
+                self.display_strings.reload_tooltip,
+                Position::Bottom,
             ))
             .spacing(4)
             .into()

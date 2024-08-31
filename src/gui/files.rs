@@ -1,8 +1,8 @@
 use crate::data::file::{Ending, Gems, Intro, Level, Lives};
 use crate::data::File;
-use crate::gui::{Tab, TabState, Theme};
+use crate::gui::{with_tooltip, Tab, TabState, Theme};
 use iced::widget::tooltip::Position;
-use iced::widget::{button, checkbox, column, radio, row, text, tooltip};
+use iced::widget::{button, checkbox, column, radio, row, text};
 use iced::{Command, Element, Renderer};
 use iced_aw::{card, number_input, TabLabel};
 use strum::VariantArray;
@@ -77,79 +77,79 @@ impl Files {
             ),
         );
         let intro = column![
-            tooltip(
+            with_tooltip(
                 checkbox(
                     self.display_strings.intro_label,
                     self.files_state[idx].intro == Intro::Watched,
                 )
                 .on_toggle(move |toggled| super::Message::Files(Message::Checked(idx, toggled))),
-                text(self.display_strings.intro_tooltip),
-                Position::FollowCursor,
+                self.display_strings.intro_tooltip,
+                Position::Top
             ),
             text(self.display_strings.gems_label),
-            tooltip(
+            with_tooltip(
                 number_input(self.files_state[idx].gems.value(), Gems::MAX, move |gems| {
                     super::Message::Files(Message::Gems(idx, gems))
                 }),
-                text(self.display_strings.gems_tooltip),
-                Position::FollowCursor
+                self.display_strings.gems_tooltip,
+                Position::Top
             ),
-            tooltip(
+            with_tooltip(
                 button(text(self.display_strings.cycle_gems_label))
                     .on_press(super::Message::Files(Message::CycleGems(idx))),
-                text(self.display_strings.cycle_gems_tooltip),
-                Position::FollowCursor
+                self.display_strings.cycle_gems_tooltip,
+                Position::Top
             ),
-            tooltip(
+            with_tooltip(
                 button(text(self.display_strings.max_label))
                     .on_press(super::Message::Files(Message::Max(idx))),
-                text(self.display_strings.max_tooltip),
-                Position::FollowCursor
+                self.display_strings.max_tooltip,
+                Position::Top
             ),
-            tooltip(
+            with_tooltip(
                 button(text(self.display_strings.save_label))
                     .on_press(super::Message::Saved(super::FileId::Save)), // TODO per file saving
-                text(self.display_strings.save_tooltip),
-                Position::FollowCursor
+                self.display_strings.save_tooltip,
+                Position::Top
             )
         ];
         let ending = column![
-            tooltip(
+            with_tooltip(
                 checkbox(
                     self.display_strings.ending_label,
                     self.files_state[idx].ending == Ending::Watched,
                 )
                 .on_toggle(move |toggled| super::Message::Files(Message::Checked(idx, toggled))),
-                text(self.display_strings.ending_tooltip),
-                Position::FollowCursor,
+                self.display_strings.ending_tooltip,
+                Position::Top
             ),
             text(self.display_strings.lives_label),
-            tooltip(
+            with_tooltip(
                 number_input(
                     self.files_state[idx].lives.value(),
                     Lives::MAX,
                     move |lives| { super::Message::Files(Message::Lives(idx, lives)) }
                 ),
-                text(self.display_strings.lives_tooltip),
-                Position::FollowCursor
+                self.display_strings.lives_tooltip,
+                Position::Top
             ),
-            tooltip(
+            with_tooltip(
                 button(text(self.display_strings.cycle_lives_label))
                     .on_press(super::Message::Files(Message::CycleLives(idx))),
-                text(self.display_strings.cycle_lives_tooltip),
-                Position::FollowCursor
+                self.display_strings.cycle_lives_tooltip,
+                Position::Top
             ),
-            tooltip(
+            with_tooltip(
                 button(text(self.display_strings.reset_label))
                     .on_press(super::Message::Files(Message::Reset(idx))),
-                text(self.display_strings.reset_tooltip),
-                Position::FollowCursor
+                self.display_strings.reset_tooltip,
+                Position::Top
             ),
-            tooltip(
+            with_tooltip(
                 button(text(self.display_strings.reload_label))
                     .on_press(super::Message::Saved(super::FileId::Save)), // TODO per file reload
-                text(self.display_strings.reload_tooltip),
-                Position::FollowCursor
+                self.display_strings.reload_tooltip,
+                Position::Top
             )
         ];
         let title = format!(

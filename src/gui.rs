@@ -1,7 +1,8 @@
 use crate::{data, util};
-use iced::widget::Column;
-use iced::{Application, Command, Element, Renderer};
+use iced::widget::{tooltip, Column, Text, Tooltip};
+use iced::{theme, Application, Command, Element, Renderer};
 use iced_aw::{TabLabel, Tabs};
+use std::borrow::Cow;
 use std::path::PathBuf;
 
 mod about;
@@ -259,4 +260,12 @@ trait TabState {
     fn get_state(&self) -> Self::State;
 
     fn set_state(&mut self, state: Self::State);
+}
+
+pub fn with_tooltip<'a>(
+    content: impl Into<Element<'a, Message, Theme, Renderer>>,
+    text: impl Into<Cow<'a, str>>,
+    position: tooltip::Position,
+) -> Tooltip<'a, Message, Theme, Renderer> {
+    tooltip(content, Text::new(text), position).style(theme::Container::Box)
 }
