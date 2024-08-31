@@ -251,7 +251,7 @@ class Scale final : public IKey
 public:
 	Scale() :
 	    IKey(
-	        name, static_cast<float>(Types::Scale::R768x432), Limits::MinMax, Format::StringInt,
+	        name, static_cast<float>(Types::Scale::R1152x648), Limits::MinMax, Format::StringInt,
 	        static_cast<float>(Types::Scale::R768x432), static_cast<float>(Types::Scale::R1536x864))
 	{
 	}
@@ -297,7 +297,7 @@ class LeftHanded final : public IKey
 public:
 	LeftHanded() :
 	    IKey(
-	        name, static_cast<float>(Types::LeftHanded::Enabled), Limits::EitherOr, Format::StringInt,
+	        name, static_cast<float>(Types::LeftHanded::Disabled), Limits::EitherOr, Format::StringInt,
 	        static_cast<float>(Types::LeftHanded::Disabled), static_cast<float>(Types::LeftHanded::Enabled))
 	{
 	}
@@ -489,12 +489,12 @@ public:
 	EnemiesDefeated() : IKey(name, 0, Limits::MinMax, Format::StringInt, 0, 1677215)
 	{
 	}
-	EnemiesDefeated& operator=(Types::Scale value)
+	EnemiesDefeated& operator=(Types::EnemiesDefeated value)
 	{
 		mValue = static_cast<float>(value);
 		return *this;
 	}
-	operator uint32_t() // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
+	operator uint32_t() const // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 	{
 		return static_cast<uint32_t>(mValue);
 	}

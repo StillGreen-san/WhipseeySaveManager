@@ -234,6 +234,7 @@ enum class Forest : uint8_t
 
 using Gems = uint8_t;
 using Lives = uint32_t;
+using EnemiesDefeated = uint32_t;
 
 /**
  * @brief contains basic info on a color theme (accent = rgb)

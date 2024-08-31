@@ -32,13 +32,13 @@ TEST_CASE("Scale:IKey", "[INI]")
 {
 	INI::Scale scale;
 
-	CHECK(scale == Types::Scale::R768x432);
+	CHECK(scale == Types::Scale::R1152x648);
 	CHECK(scale.key() == "scale");
 
 	scale = Types::Scale::R1536x864;
 	scale.applyDefaults();
-	CHECK(static_cast<Types::Scale>(scale) == Types::Scale::R768x432);
-	CHECK(scale.asFloat() == static_cast<float>(Types::Scale::R768x432));
+	CHECK(static_cast<Types::Scale>(scale) == Types::Scale::R1152x648);
+	CHECK(scale.asFloat() == static_cast<float>(Types::Scale::R1152x648));
 
 	const auto VALUES = {Types::Scale::R1152x648, Types::Scale::R1536x864, Types::Scale::R768x432};
 
@@ -76,13 +76,13 @@ TEST_CASE("LeftHanded:IKey", "[INI]")
 {
 	INI::LeftHanded leftHanded;
 
-	CHECK(leftHanded == Types::LeftHanded::Enabled);
+	CHECK(leftHanded == Types::LeftHanded::Disabled);
 	CHECK(leftHanded.key() == "left_handed");
 
-	leftHanded = Types::LeftHanded::Disabled;
+	leftHanded = Types::LeftHanded::Enabled;
 	leftHanded.applyDefaults();
-	CHECK(static_cast<Types::LeftHanded>(leftHanded) == Types::LeftHanded::Enabled);
-	CHECK(leftHanded.asFloat() == static_cast<float>(Types::LeftHanded::Enabled));
+	CHECK(static_cast<Types::LeftHanded>(leftHanded) == Types::LeftHanded::Disabled);
+	CHECK(leftHanded.asFloat() == static_cast<float>(Types::LeftHanded::Disabled));
 
 	const auto VALUES = {Types::LeftHanded::Disabled, Types::LeftHanded::Enabled};
 
