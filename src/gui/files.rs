@@ -192,9 +192,9 @@ impl Tab for Files {
                 self.files_state[idx].gems = gems.try_into().unwrap();
                 Command::none()
             }
-            Message::CycleGems(idx) => todo!(),
-            Message::CycleLives(idx) => todo!(),
-            Message::Max(idx) => todo!(),
+            Message::CycleGems(_idx) => todo!(),
+            Message::CycleLives(_idx) => todo!(),
+            Message::Max(_idx) => todo!(),
             Message::Lives(idx, lives) => {
                 self.files_state[idx].lives = lives.try_into().unwrap();
                 Command::none()

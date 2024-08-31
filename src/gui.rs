@@ -17,7 +17,7 @@ use files::Files;
 use options::Options;
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
-enum TabId {
+pub enum TabId {
     #[default]
     About,
     Cheats,
@@ -26,7 +26,7 @@ enum TabId {
 }
 
 #[derive(Debug, Clone, Copy)]
-enum FileId {
+pub enum FileId {
     Save,
     Bfs,
 }
@@ -189,7 +189,7 @@ impl Application for Gui {
                     )
                 }
             },
-            Message::Saved(_) => Command::none(), // TODO?
+            Message::Saved(_id) => Command::none(), // TODO?
             Message::Load(id, path) => match id {
                 FileId::Save => Command::perform(
                     async { util::load_ini_file(path).await?.try_into() },

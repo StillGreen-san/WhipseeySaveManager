@@ -21,7 +21,7 @@ fn main() -> Result<(), iced::Error> {
     };
     let settings = Settings {
         id: Some("WhipseeySaveManager".into()),
-        window: window,
+        window,
         flags: Default::default(),
         fonts: Vec::new(),
         default_font: Default::default(),
