@@ -1,4 +1,4 @@
-use crate::data::{try_from_opt_key, Error, IniKeyStr, IniSectionStr};
+use crate::data::{try_from_opt_key, IniKeyStr, IniSectionStr};
 use crate::{data, ini_impl_quoted, primitive_impl};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
@@ -293,7 +293,7 @@ mod tests {
     fn file_try_from_valid_complete() {
         let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
         let section = ini
-            .section(Some(format!("{}{}", File::INI_SECTION_STR, "complete")))
+            .section(Some(format!("{}{}", File::INI_SECTION_STR, "1")))
             .unwrap();
         let file = File::try_from(section).unwrap();
         assert_eq!(
@@ -315,7 +315,7 @@ mod tests {
     fn file_try_from_valid_missing() {
         let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
         let section = ini
-            .section(Some(format!("{}{}", File::INI_SECTION_STR, "missing")))
+            .section(Some(format!("{}{}", File::INI_SECTION_STR, "3")))
             .unwrap();
         let file = File::try_from(section).unwrap();
         assert_eq!(file.boss_no_damage_progress, BossNoDamageProgress::None);
@@ -333,7 +333,9 @@ mod tests {
     #[test]
     fn file_try_from_lenient_values() {
         let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
-        let section = ini.section(Some(File::INI_SECTION_STR)).unwrap();
+        let section = ini
+            .section(Some(format!("{}{}", File::INI_SECTION_STR, "2")))
+            .unwrap();
         let file = File::try_from(section).unwrap();
         assert_eq!(
             file.boss_no_damage_progress,
