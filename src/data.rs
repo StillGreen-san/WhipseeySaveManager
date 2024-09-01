@@ -10,6 +10,7 @@ pub mod file;
 pub mod options;
 
 use crate::data;
+use crate::data::file::{File1, File2, File3};
 pub use cheats::Cheats;
 pub use file::File;
 pub use options::Options;
@@ -27,9 +28,9 @@ impl TryFrom<Ini> for WhipseeySaveData {
         Ok(WhipseeySaveData {
             options: try_from(&value)?,
             files: [
-                try_from_n(&value, 1)?,
-                try_from_n(&value, 2)?,
-                try_from_n(&value, 3)?,
+                try_from_as::<File1, _>(&value)?,
+                try_from_as::<File2, _>(&value)?,
+                try_from_as::<File3, _>(&value)?,
             ],
         })
     }
@@ -41,11 +42,11 @@ impl From<WhipseeySaveData> for Ini {
         ini.entry(Some(value.options.ini_section_str().into()))
             .or_insert(value.options.into());
         let [file1, file2, file3] = value.files;
-        ini.entry(Some(numbered_section::<File>(3)))
+        ini.entry(Some(File3::INI_SECTION_STR.into()))
             .or_insert(file3.into());
-        ini.entry(Some(numbered_section::<File>(2)))
+        ini.entry(Some(File2::INI_SECTION_STR.into()))
             .or_insert(file2.into());
-        ini.entry(Some(numbered_section::<File>(1)))
+        ini.entry(Some(File1::INI_SECTION_STR.into()))
             .or_insert(file1.into());
         ini
     }
@@ -95,21 +96,15 @@ where
         .ok_or_else(|| Error::SectionMissing(T::INI_SECTION_STR.into()))?
         .try_into()
 }
-fn try_from_n<'a, T>(value: &'a Ini, n: usize) -> Result<T>
+fn try_from_as<'a, S, R>(value: &'a Ini) -> Result<R>
 where
-    T: IniSectionStr + TryFrom<&'a Properties, Error = Error>,
+    R: TryFrom<&'a Properties, Error = Error>,
+    S: IniSectionStr,
 {
-    let section = numbered_section::<T>(n);
     value
-        .section(Some(&section))
-        .ok_or(Error::SectionMissing(section))?
+        .section(Some(S::INI_SECTION_STR))
+        .ok_or_else(|| Error::SectionMissing(S::INI_SECTION_STR.into()))?
         .try_into()
-}
-fn numbered_section<T>(n: usize) -> String
-where
-    T: IniSectionStr,
-{
-    format!("{}{}", T::INI_SECTION_STR, n)
 }
 
 fn try_from_scaled<T, P>(value: &Properties, scale: f64) -> Result<T>
@@ -436,55 +431,55 @@ mod test {
             ini.get_from(Some(MusicToggle::INI_SECTION_STR), MusicToggle::INI_KEY_STR),
             Some(String::from(data.options.music_toggle).as_str())
         );
-        let file1_section_str = format!("{}{}", File::INI_SECTION_STR, 1);
-        let file2_section_str = format!("{}{}", File::INI_SECTION_STR, 2);
-        let file3_section_str = format!("{}{}", File::INI_SECTION_STR, 3);
         let [file1, file2, file3] = data.files;
         assert_eq!(
-            ini.get_from(Some(&file1_section_str), BossNoDamageProgress::INI_KEY_STR),
+            ini.get_from(
+                Some(File1::INI_SECTION_STR),
+                BossNoDamageProgress::INI_KEY_STR
+            ),
             Some(String::from(file1.boss_no_damage_progress).as_str())
         );
         assert_eq!(
-            ini.get_from(Some(&file2_section_str), EnemiesDefeated::INI_KEY_STR),
+            ini.get_from(Some(File2::INI_SECTION_STR), EnemiesDefeated::INI_KEY_STR),
             Some(String::from(file2.enemies_defeated).as_str())
         );
         let (_, file1_moon, _, _, file1_forest) = file1.level.into_parts();
         let (_, _, file2_snow, _, _) = file2.level.into_parts();
         let (file3_castle, _, _, file3_desert, _) = file3.level.into_parts();
         assert_eq!(
-            ini.get_from(Some(&file3_section_str), Castle::INI_KEY_STR),
+            ini.get_from(Some(File3::INI_SECTION_STR), Castle::INI_KEY_STR),
             Some(String::from(file3_castle).as_str())
         );
         assert_eq!(
-            ini.get_from(Some(&file1_section_str), Moon::INI_KEY_STR),
+            ini.get_from(Some(File1::INI_SECTION_STR), Moon::INI_KEY_STR),
             Some(String::from(file1_moon).as_str())
         );
         assert_eq!(
-            ini.get_from(Some(&file2_section_str), Snow::INI_KEY_STR),
+            ini.get_from(Some(File2::INI_SECTION_STR), Snow::INI_KEY_STR),
             Some(String::from(file2_snow).as_str())
         );
         assert_eq!(
-            ini.get_from(Some(&file3_section_str), Desert::INI_KEY_STR),
+            ini.get_from(Some(File3::INI_SECTION_STR), Desert::INI_KEY_STR),
             Some(String::from(file3_desert).as_str())
         );
         assert_eq!(
-            ini.get_from(Some(&file1_section_str), Forest::INI_KEY_STR),
+            ini.get_from(Some(File1::INI_SECTION_STR), Forest::INI_KEY_STR),
             Some(String::from(file1_forest).as_str())
         );
         assert_eq!(
-            ini.get_from(Some(&file2_section_str), Ending::INI_KEY_STR),
+            ini.get_from(Some(File2::INI_SECTION_STR), Ending::INI_KEY_STR),
             Some(String::from(file2.ending).as_str())
         );
         assert_eq!(
-            ini.get_from(Some(&file3_section_str), Intro::INI_KEY_STR),
+            ini.get_from(Some(File3::INI_SECTION_STR), Intro::INI_KEY_STR),
             Some(String::from(file3.intro).as_str())
         );
         assert_eq!(
-            ini.get_from(Some(&file1_section_str), Lives::INI_KEY_STR),
+            ini.get_from(Some(File1::INI_SECTION_STR), Lives::INI_KEY_STR),
             Some(String::from(file1.lives).as_str())
         );
         assert_eq!(
-            ini.get_from(Some(&file2_section_str), Gems::INI_KEY_STR),
+            ini.get_from(Some(File2::INI_SECTION_STR), Gems::INI_KEY_STR),
             Some(String::from(file2.gems).as_str())
         );
     }
@@ -503,14 +498,14 @@ mod test {
         let save = WhipseeySaveData::try_from(ini).unwrap();
         assert_eq!(save.options.sound_volume, SoundVolume::V30);
         assert_eq!(
-            save.files[0].boss_no_damage_progress,
+            save.files[File1].boss_no_damage_progress,
             BossNoDamageProgress::ForestDesert
         );
         assert_eq!(
-            save.files[1].boss_no_damage_progress,
+            save.files[File2].boss_no_damage_progress,
             BossNoDamageProgress::None
         );
-        assert_eq!(save.files[2].ending, Ending::Watched);
+        assert_eq!(save.files[File3].ending, Ending::Watched);
     }
 
     #[test]
@@ -518,9 +513,9 @@ mod test {
         let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
         let save = WhipseeySaveData::try_from(ini).unwrap();
         assert_eq!(save.options.scale, Scale::R1536x864);
-        assert_eq!(save.files[2].gems, Gems::try_from(40).unwrap());
-        assert_eq!(save.files[1].level, Level::Castle);
-        assert_eq!(save.files[0].ending, Ending::Watched);
+        assert_eq!(save.files[File3].gems, Gems::try_from(40).unwrap());
+        assert_eq!(save.files[File2].level, Level::Castle);
+        assert_eq!(save.files[File1].ending, Ending::Watched);
     }
 
     #[test]
@@ -530,7 +525,9 @@ mod test {
         assert_matches!(
             error,
             Error::SectionMissing(section) if section == Options::INI_SECTION_STR
-                                        || section == File::INI_SECTION_STR
+                                        || section == File1::INI_SECTION_STR
+                                        || section == File2::INI_SECTION_STR
+                                        || section == File3::INI_SECTION_STR
         );
     }
 

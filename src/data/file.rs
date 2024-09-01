@@ -2,6 +2,7 @@ use crate::data::{try_from_opt_key, IniKeyStr, IniSectionStr};
 use crate::{data, ini_impl_quoted, primitive_impl};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
+use std::ops::{Index, IndexMut};
 use strum::{Display, VariantArray};
 
 #[repr(u8)]
@@ -215,6 +216,32 @@ impl From<File> for Properties {
     }
 }
 
+#[macro_export]
+macro_rules! make_file_index {
+    ($name:ident, $section:literal, $idx:literal) => {
+        pub struct $name;
+        impl IniSectionStr for $name {
+            const INI_SECTION_STR: &'static str = $section;
+        }
+        impl Index<$name> for [File] {
+            type Output = File;
+            #[inline]
+            fn index(&self, _: $name) -> &Self::Output {
+                self.get($idx).unwrap()
+            }
+        }
+        impl IndexMut<$name> for [File] {
+            #[inline]
+            fn index_mut(&mut self, _: $name) -> &mut Self::Output {
+                self.get_mut($idx).unwrap()
+            }
+        }
+    };
+}
+make_file_index!(File1, "file1", 0);
+make_file_index!(File2, "file2", 1);
+make_file_index!(File3, "file3", 2);
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -283,7 +310,7 @@ mod tests {
     #[test]
     fn file_default() {
         let ini = Ini::load_from_str(util::test::ini::DEFAULT).unwrap();
-        let section = ini.section(Some(File::INI_SECTION_STR)).unwrap();
+        let section = ini.section(Some(File1::INI_SECTION_STR)).unwrap();
         let file_loaded = File::try_from(section).unwrap();
         let file_default = File::default();
         assert_eq!(file_loaded, file_default);
@@ -292,9 +319,7 @@ mod tests {
     #[test]
     fn file_try_from_valid_complete() {
         let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
-        let section = ini
-            .section(Some(format!("{}{}", File::INI_SECTION_STR, "1")))
-            .unwrap();
+        let section = ini.section(Some(File1::INI_SECTION_STR)).unwrap();
         let file = File::try_from(section).unwrap();
         assert_eq!(
             file.boss_no_damage_progress,
@@ -314,9 +339,7 @@ mod tests {
     #[test]
     fn file_try_from_valid_missing() {
         let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
-        let section = ini
-            .section(Some(format!("{}{}", File::INI_SECTION_STR, "3")))
-            .unwrap();
+        let section = ini.section(Some(File3::INI_SECTION_STR)).unwrap();
         let file = File::try_from(section).unwrap();
         assert_eq!(file.boss_no_damage_progress, BossNoDamageProgress::None);
         assert_eq!(
@@ -333,9 +356,7 @@ mod tests {
     #[test]
     fn file_try_from_lenient_values() {
         let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
-        let section = ini
-            .section(Some(format!("{}{}", File::INI_SECTION_STR, "2")))
-            .unwrap();
+        let section = ini.section(Some(File2::INI_SECTION_STR)).unwrap();
         let file = File::try_from(section).unwrap();
         assert_eq!(
             file.boss_no_damage_progress,
@@ -355,7 +376,7 @@ mod tests {
     #[test]
     fn file_try_from_invalid_keys() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).unwrap();
-        let section = ini.section(Some(File::INI_SECTION_STR)).unwrap();
+        let section = ini.section(Some(File1::INI_SECTION_STR)).unwrap();
         let error = File::try_from(section).unwrap_err();
         assert_matches!(
             error,
@@ -376,7 +397,7 @@ mod tests {
     #[test]
     fn file_try_from_invalid_value_ranges() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).unwrap();
-        let section = ini.section(Some(File::INI_SECTION_STR)).unwrap();
+        let section = ini.section(Some(File1::INI_SECTION_STR)).unwrap();
         let error = File::try_from(section).unwrap_err();
         assert_matches!(
             error,
@@ -387,7 +408,7 @@ mod tests {
     #[test]
     fn file_try_from_invalid_value_types() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
-        let section = ini.section(Some(File::INI_SECTION_STR)).unwrap();
+        let section = ini.section(Some(File1::INI_SECTION_STR)).unwrap();
         let error = File::try_from(section).unwrap_err();
         assert_matches!(
             error,
