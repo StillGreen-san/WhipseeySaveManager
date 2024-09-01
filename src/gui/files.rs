@@ -1,4 +1,4 @@
-use crate::data::file::{Ending, Gems, Intro, Level, Lives};
+use crate::data::file::{Ending, File1, File2, File3, FileIndex, Gems, Intro, Level, Lives};
 use crate::data::File;
 use crate::gui::{with_tooltip, Tab, TabState, Theme};
 use iced::alignment::Horizontal;
@@ -8,17 +8,17 @@ use iced::{Alignment, Command, Element, Length, Renderer};
 use iced_aw::{card, number_input, CardStyles, TabLabel};
 use strum::VariantArray;
 
-#[derive(Clone, Debug)] // TODO shrink footprint
+#[derive(Clone, Debug)]
 pub enum Message {
-    Progress(usize, Level),
-    Intro(usize, bool),
-    Ending(usize, bool),
-    Gems(usize, u8),
-    CycleGems(usize),
-    CycleLives(usize),
-    Max(usize),
-    Lives(usize, u32),
-    Reset(usize),
+    Progress(FileIndex, Level),
+    Intro(FileIndex, bool),
+    Ending(FileIndex, bool),
+    Gems(FileIndex, u8),
+    CycleGems(FileIndex),
+    CycleLives(FileIndex),
+    Max(FileIndex),
+    Lives(FileIndex, u32),
+    Reset(FileIndex),
 }
 
 pub struct DisplayStrings {
@@ -60,7 +60,7 @@ impl Files {
         }
     }
 
-    fn file_view(&self, idx: usize) -> Element<'_, super::Message, Theme, Renderer> {
+    fn file_view(&self, idx: FileIndex) -> Element<'_, super::Message, Theme, Renderer> {
         let progress = card(
             text(self.display_strings.progress),
             column(
@@ -200,7 +200,7 @@ impl Files {
         let title = format!(
             "{}{} {} - {}",
             self.display_strings.file_titel,
-            idx + 1,
+            (idx as usize) + 1,
             self.files_state[idx].boss_no_damage_progress.value(),
             self.files_state[idx].enemies_defeated.value()
         );
@@ -258,10 +258,14 @@ impl Tab for Files {
     }
 
     fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
-        row([self.file_view(0), self.file_view(1), self.file_view(2)])
-            .spacing(4)
-            .padding(4)
-            .into()
+        row([
+            self.file_view(File1),
+            self.file_view(File2),
+            self.file_view(File3),
+        ])
+        .spacing(4)
+        .padding(4)
+        .into()
     }
 }
 

@@ -212,6 +212,8 @@ impl From<File> for Properties {
     }
 }
 
+#[derive(Clone, Copy, Debug)]
+#[repr(u8)]
 pub enum FileIndex {
     File1 = 0,
     File2 = 1,
