@@ -11,7 +11,8 @@ use strum::VariantArray;
 #[derive(Clone, Debug)] // TODO shrink footprint
 pub enum Message {
     Progress(usize, Level),
-    Checked(usize, bool),
+    Intro(usize, bool),
+    Ending(usize, bool),
     Gems(usize, u8),
     CycleGems(usize),
     CycleLives(usize),
@@ -86,7 +87,7 @@ impl Files {
                     self.display_strings.intro_label,
                     self.files_state[idx].intro == Intro::Watched,
                 )
-                .on_toggle(move |toggled| super::Message::Files(Message::Checked(idx, toggled)))
+                .on_toggle(move |toggled| super::Message::Files(Message::Intro(idx, toggled)))
                 .size(18),
                 self.display_strings.intro_tooltip,
                 Position::Top
@@ -143,7 +144,7 @@ impl Files {
                     self.display_strings.ending_label,
                     self.files_state[idx].ending == Ending::Watched,
                 )
-                .on_toggle(move |toggled| super::Message::Files(Message::Checked(idx, toggled)))
+                .on_toggle(move |toggled| super::Message::Files(Message::Ending(idx, toggled)))
                 .size(18),
                 self.display_strings.ending_tooltip,
                 Position::Top
@@ -230,12 +231,12 @@ impl Tab for Files {
                 self.files_state[idx].level = level;
                 Command::none()
             }
-            Message::Checked(idx, toggled) => {
-                self.files_state[idx].intro = if toggled {
-                    Intro::Watched
-                } else {
-                    Intro::Unwatched
-                };
+            Message::Intro(idx, toggled) => {
+                self.files_state[idx].intro = (toggled as u8).try_into().unwrap();
+                Command::none()
+            }
+            Message::Ending(idx, toggled) => {
+                self.files_state[idx].ending = (toggled as u8).try_into().unwrap();
                 Command::none()
             }
             Message::Gems(idx, gems) => {
