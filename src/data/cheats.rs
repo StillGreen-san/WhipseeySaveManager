@@ -1,4 +1,4 @@
-use crate::data::{IniKeyStr, IniSectionStr};
+use crate::data::{IniKeyStr, IniSectionStrVal};
 use crate::{data, ini_impl_common};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
@@ -22,7 +22,7 @@ pub struct Cheats {
     pub cheats_enabled: CheatsEnabled,
 }
 
-impl IniSectionStr for Cheats {
+impl IniSectionStrVal for Cheats {
     const INI_SECTION_STR: &'static str = "Cheats";
 }
 

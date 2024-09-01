@@ -89,7 +89,7 @@ where
 
 fn try_from<'a, T>(value: &'a Ini) -> Result<T>
 where
-    T: IniSectionStr + TryFrom<&'a Properties, Error = Error>,
+    T: IniSectionStrVal + TryFrom<&'a Properties, Error = Error>,
 {
     value
         .section(Some(T::INI_SECTION_STR))
@@ -99,7 +99,7 @@ where
 fn try_from_as<'a, S, R>(value: &'a Ini) -> Result<R>
 where
     R: TryFrom<&'a Properties, Error = Error>,
-    S: IniSectionStr,
+    S: IniSectionStrVal,
 {
     value
         .section(Some(S::INI_SECTION_STR))
@@ -139,14 +139,17 @@ where
     format!("\"{:.6}\"", scaled)
 }
 
-trait IniSectionStr {
+trait IniSectionStrVal {
     const INI_SECTION_STR: &'static str;
-
+}
+trait IniSectionStrFn {
+    fn ini_section_str(&self) -> &'static str;
+}
+impl<T: IniSectionStrVal> IniSectionStrFn for T {
     fn ini_section_str(&self) -> &'static str {
         Self::INI_SECTION_STR
     }
 }
-
 trait IniKeyStr {
     const INI_KEY_STR: &'static str;
 
@@ -196,7 +199,7 @@ impl From<ini::Error> for Error {
 macro_rules! ini_impl_common {
     ($self:ty, $section:ident, $key:literal, $scale:literal, $typ:ty) => {
         $crate::ini_impl_common!($self, $key, $scale, $typ);
-        impl $crate::data::IniSectionStr for $self {
+        impl $crate::data::IniSectionStrVal for $self {
             const INI_SECTION_STR: &'static str = $section::INI_SECTION_STR;
         }
     };

@@ -1,4 +1,4 @@
-use crate::data::{IniKeyStr, IniSectionStr};
+use crate::data::{IniKeyStr, IniSectionStrVal};
 use crate::{data, ini_impl_quoted};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
@@ -123,7 +123,7 @@ pub struct Options {
     pub music_toggle: MusicToggle,
 }
 
-impl IniSectionStr for Options {
+impl IniSectionStrVal for Options {
     const INI_SECTION_STR: &'static str = "options";
 }
 

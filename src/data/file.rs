@@ -1,4 +1,4 @@
-use crate::data::{try_from_opt_key, IniKeyStr, IniSectionStr};
+use crate::data::{try_from_opt_key, IniKeyStr, IniSectionStrVal};
 use crate::{data, ini_impl_quoted, primitive_impl};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
@@ -216,7 +216,7 @@ impl From<File> for Properties {
 macro_rules! make_file_index {
     ($name:ident, $section:literal, $idx:literal) => {
         pub struct $name;
-        impl IniSectionStr for $name {
+        impl IniSectionStrVal for $name {
             const INI_SECTION_STR: &'static str = $section;
         }
         impl Index<$name> for [File] {
