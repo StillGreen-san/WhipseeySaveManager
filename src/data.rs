@@ -147,7 +147,7 @@ trait IniSectionStr {
     }
 }
 
-trait IniKeyStr: IniSectionStr {
+trait IniKeyStr {
     const INI_KEY_STR: &'static str;
 
     fn ini_key_str(&self) -> &'static str {
@@ -195,13 +195,17 @@ impl From<ini::Error> for Error {
 #[macro_export]
 macro_rules! ini_impl_common {
     ($self:ty, $section:ident, $key:literal, $scale:literal, $typ:ty) => {
+        $crate::ini_impl_common!($self, $key, $scale, $typ);
+        impl $crate::data::IniSectionStr for $self {
+            const INI_SECTION_STR: &'static str = $section::INI_SECTION_STR;
+        }
+    };
+
+    ($self:ty, $key:literal, $scale:literal, $typ:ty) => {
         impl $self {
             pub fn value(&self) -> $typ {
                 self.clone().into()
             }
-        }
-        impl $crate::data::IniSectionStr for $self {
-            const INI_SECTION_STR: &'static str = $section::INI_SECTION_STR;
         }
         impl $crate::data::IniKeyStr for $self {
             const INI_KEY_STR: &'static str = $key;
@@ -231,6 +235,15 @@ macro_rules! ini_impl_quoted {
         }
     };
 
+    ($self:ty, $key:literal, $scale:literal, $typ:ty) => {
+        $crate::ini_impl_common!($self, $key, $scale, $typ);
+        impl From<$self> for String {
+            fn from(value: $self) -> Self {
+                $crate::data::into_quoted_scaled_float::<$self, $typ>(value, $scale)
+            }
+        }
+    };
+
     ($self:ty, $section:ident, $key:literal, $scale:literal) => {
         $crate::ini_impl_quoted!($self, $section, $key, $scale, u8);
     };
@@ -241,6 +254,14 @@ macro_rules! ini_impl_quoted {
 
     ($self:ty, $section:ident, $key:literal, $typ:ty) => {
         $crate::ini_impl_quoted!($self, $section, $key, 1.0, $typ);
+    };
+
+    ($self:ty, $key:literal) => {
+        $crate::ini_impl_quoted!($self, $key, 1.0, u8);
+    };
+
+    ($self:ty, $key:literal, $typ:ty) => {
+        $crate::ini_impl_quoted!($self, $key, 1.0, $typ);
     };
 }
 
