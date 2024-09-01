@@ -27,9 +27,9 @@ impl TryFrom<Ini> for WhipseeySaveData {
         Ok(WhipseeySaveData {
             options: try_from(&value)?,
             files: [
-                try_from_n(&value, 3)?,
-                try_from_n(&value, 2)?,
                 try_from_n(&value, 1)?,
+                try_from_n(&value, 2)?,
+                try_from_n(&value, 3)?,
             ],
         })
     }
@@ -503,14 +503,14 @@ mod test {
         let save = WhipseeySaveData::try_from(ini).unwrap();
         assert_eq!(save.options.sound_volume, SoundVolume::V30);
         assert_eq!(
-            save.files[2].boss_no_damage_progress,
+            save.files[0].boss_no_damage_progress,
             BossNoDamageProgress::ForestDesert
         );
         assert_eq!(
             save.files[1].boss_no_damage_progress,
             BossNoDamageProgress::None
         );
-        assert_eq!(save.files[0].ending, Ending::Watched);
+        assert_eq!(save.files[2].ending, Ending::Watched);
     }
 
     #[test]
