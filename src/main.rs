@@ -6,12 +6,12 @@ mod util;
 
 fn main() -> Result<(), iced::Error> {
     let window = window::Settings {
-        size: Size::from([678, 342]),
+        size: Size::from([840, 370]),
         position: Default::default(),
         min_size: None,
         max_size: None,
         visible: true,
-        resizable: true,
+        resizable: false,
         decorations: true,
         transparent: false,
         level: Default::default(),

@@ -19,10 +19,10 @@ use options::Options;
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub enum TabId {
-    #[default]
     About,
     Cheats,
     Options,
+    #[default]
     Files,
 }
 
@@ -118,7 +118,7 @@ impl Application for Gui {
             progress: "progress",
             file_titel: "file",
             intro_label: "Intro",
-            intro_tooltip: "Will skip Intro if checked",
+            intro_tooltip: "Will mark Slot as active, skipping Intro",
             gems_label: "Gems",
             gems_tooltip: "0 - 99",
             cycle_gems_label: "Cycle",

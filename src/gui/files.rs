@@ -1,10 +1,11 @@
 use crate::data::file::{Ending, Gems, Intro, Level, Lives};
 use crate::data::File;
 use crate::gui::{with_tooltip, Tab, TabState, Theme};
+use iced::alignment::Horizontal;
 use iced::widget::tooltip::Position;
 use iced::widget::{button, checkbox, column, radio, row, text};
-use iced::{Command, Element, Renderer};
-use iced_aw::{card, number_input, TabLabel};
+use iced::{Alignment, Command, Element, Length, Renderer};
+use iced_aw::{card, number_input, CardStyles, TabLabel};
 use strum::VariantArray;
 
 #[derive(Clone, Debug)] // TODO shrink footprint
@@ -72,86 +73,129 @@ impl Files {
                             Some(self.files_state[idx].level),
                             |level| super::Message::Files(Message::Progress(idx, level)),
                         )
+                        .size(14)
+                        .spacing(4)
                     })
                     .map(Element::from),
             ),
-        );
+        )
+        .style(CardStyles::Secondary);
         let intro = column![
             with_tooltip(
                 checkbox(
                     self.display_strings.intro_label,
                     self.files_state[idx].intro == Intro::Watched,
                 )
-                .on_toggle(move |toggled| super::Message::Files(Message::Checked(idx, toggled))),
+                .on_toggle(move |toggled| super::Message::Files(Message::Checked(idx, toggled)))
+                .size(18),
                 self.display_strings.intro_tooltip,
                 Position::Top
             ),
-            text(self.display_strings.gems_label),
+            column![
+                text(self.display_strings.gems_label),
+                with_tooltip(
+                    number_input(self.files_state[idx].gems.value(), Gems::MAX, move |gems| {
+                        super::Message::Files(Message::Gems(idx, gems))
+                    })
+                    .width(Length::Fill),
+                    self.display_strings.gems_tooltip,
+                    Position::Top
+                )
+            ],
             with_tooltip(
-                number_input(self.files_state[idx].gems.value(), Gems::MAX, move |gems| {
-                    super::Message::Files(Message::Gems(idx, gems))
-                }),
-                self.display_strings.gems_tooltip,
-                Position::Top
-            ),
-            with_tooltip(
-                button(text(self.display_strings.cycle_gems_label))
-                    .on_press(super::Message::Files(Message::CycleGems(idx))),
+                button(
+                    text(self.display_strings.cycle_gems_label)
+                        .horizontal_alignment(Horizontal::Center)
+                        .width(Length::Fill) // TODO abstract common layouting into functions
+                )
+                .on_press(super::Message::Files(Message::CycleGems(idx)))
+                .width(Length::Fill),
                 self.display_strings.cycle_gems_tooltip,
                 Position::Top
             ),
             with_tooltip(
-                button(text(self.display_strings.max_label))
-                    .on_press(super::Message::Files(Message::Max(idx))),
+                button(
+                    text(self.display_strings.max_label)
+                        .horizontal_alignment(Horizontal::Center)
+                        .width(Length::Fill)
+                )
+                .on_press(super::Message::Files(Message::Max(idx)))
+                .width(Length::Fill),
                 self.display_strings.max_tooltip,
                 Position::Top
             ),
             with_tooltip(
-                button(text(self.display_strings.save_label))
-                    .on_press(super::Message::Saved(super::FileId::Save)), // TODO per file saving
+                button(
+                    text(self.display_strings.save_label)
+                        .horizontal_alignment(Horizontal::Center)
+                        .width(Length::Fill)
+                )
+                .on_press(super::Message::Saved(super::FileId::Save))
+                .width(Length::Fill), // TODO per file saving
                 self.display_strings.save_tooltip,
                 Position::Top
             )
-        ];
+        ]
+        .spacing(4);
         let ending = column![
             with_tooltip(
                 checkbox(
                     self.display_strings.ending_label,
                     self.files_state[idx].ending == Ending::Watched,
                 )
-                .on_toggle(move |toggled| super::Message::Files(Message::Checked(idx, toggled))),
+                .on_toggle(move |toggled| super::Message::Files(Message::Checked(idx, toggled)))
+                .size(18),
                 self.display_strings.ending_tooltip,
                 Position::Top
             ),
-            text(self.display_strings.lives_label),
+            column![
+                text(self.display_strings.lives_label),
+                with_tooltip(
+                    number_input(
+                        self.files_state[idx].lives.value(),
+                        Lives::MAX,
+                        move |lives| { super::Message::Files(Message::Lives(idx, lives)) }
+                    )
+                    .width(Length::Fill),
+                    self.display_strings.lives_tooltip,
+                    Position::Top
+                )
+            ],
             with_tooltip(
-                number_input(
-                    self.files_state[idx].lives.value(),
-                    Lives::MAX,
-                    move |lives| { super::Message::Files(Message::Lives(idx, lives)) }
-                ),
-                self.display_strings.lives_tooltip,
-                Position::Top
-            ),
-            with_tooltip(
-                button(text(self.display_strings.cycle_lives_label))
-                    .on_press(super::Message::Files(Message::CycleLives(idx))),
+                button(
+                    text(self.display_strings.cycle_lives_label)
+                        .horizontal_alignment(Horizontal::Center)
+                        .width(Length::Fill)
+                )
+                .on_press(super::Message::Files(Message::CycleLives(idx)))
+                .width(Length::Fill),
                 self.display_strings.cycle_lives_tooltip,
                 Position::Top
             ),
             with_tooltip(
-                button(text(self.display_strings.reset_label))
-                    .on_press(super::Message::Files(Message::Reset(idx))),
+                button(
+                    text(self.display_strings.reset_label)
+                        .horizontal_alignment(Horizontal::Center)
+                        .width(Length::Fill)
+                )
+                .on_press(super::Message::Files(Message::Reset(idx)))
+                .width(Length::Fill),
                 self.display_strings.reset_tooltip,
                 Position::Top
             ),
             with_tooltip(
-                button(text(self.display_strings.reload_label))
-                    .on_press(super::Message::Saved(super::FileId::Save)), // TODO per file reload
+                button(
+                    text(self.display_strings.reload_label)
+                        .horizontal_alignment(Horizontal::Center)
+                        .width(Length::Fill)
+                )
+                .on_press(super::Message::Saved(super::FileId::Save))
+                .width(Length::Fill), // TODO per file reload
                 self.display_strings.reload_tooltip,
                 Position::Top
             )
-        ];
+        ]
+        .spacing(4);
         let title = format!(
             "{}{} {} - {}",
             self.display_strings.file_titel,
@@ -159,7 +203,13 @@ impl Files {
             self.files_state[idx].boss_no_damage_progress.value(),
             self.files_state[idx].enemies_defeated.value()
         );
-        card(text(title), row![progress, intro, ending]).into()
+        card(
+            text(title),
+            row![progress, intro, ending]
+                .spacing(4)
+                .align_items(Alignment::Center),
+        )
+        .into()
     }
 }
 
@@ -207,7 +257,10 @@ impl Tab for Files {
     }
 
     fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
-        row([self.file_view(0), self.file_view(1), self.file_view(2)]).into()
+        row([self.file_view(0), self.file_view(1), self.file_view(2)])
+            .spacing(4)
+            .padding(4)
+            .into()
     }
 }
 
