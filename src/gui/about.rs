@@ -24,30 +24,27 @@ impl About {
     }
 }
 
-impl About {
-    fn library(
-        &self,
-        label: &'static str,
-        link: &'static str,
-    ) -> Element<'_, super::Message, Theme, Renderer> {
-        row![
-            text(label)
-                .width(Length::FillPortion(1))
-                .horizontal_alignment(Horizontal::Right),
-            button(
-                text(link)
-                    .horizontal_alignment(Horizontal::Left)
-                    .style(Color::from_rgb8(50, 90, 220)),
-            )
-            .on_press(super::Message::About(Message::Link(link)))
-            .style(iced::theme::Button::Text)
-            .width(Length::FillPortion(2))
-            .height(Length::Shrink),
-        ]
-        .align_items(Alignment::Center)
-        .width(Length::Fill)
-        .into()
-    }
+fn library(
+    label: &'static str,
+    link: &'static str,
+) -> Element<'static, super::Message, Theme, Renderer> {
+    row![
+        text(label)
+            .width(Length::FillPortion(1))
+            .horizontal_alignment(Horizontal::Right),
+        button(
+            text(link)
+                .horizontal_alignment(Horizontal::Left)
+                .style(Color::from_rgb8(50, 90, 220)),
+        )
+        .on_press(super::Message::About(Message::Link(link)))
+        .style(iced::theme::Button::Text)
+        .width(Length::FillPortion(2))
+        .height(Length::Shrink),
+    ]
+    .align_items(Alignment::Center)
+    .width(Length::Fill)
+    .into()
 }
 
 impl Tab for About {
@@ -73,20 +70,20 @@ impl Tab for About {
     // TODO dynamic loading
     fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
         let libraries = column![
-            self.library("iced [MIT]", "https://github.com/iced-rs/iced"),
-            self.library("iced_aw [MIT]", "https://github.com/iced-rs/iced_aw"),
-            self.library(
+            library("iced [MIT]", "https://github.com/iced-rs/iced"),
+            library("iced_aw [MIT]", "https://github.com/iced-rs/iced_aw"),
+            library(
                 "steamlocate [MIT]",
-                "https://github.com/WilliamVenner/steamlocate-rs",
+                "https://github.com/WilliamVenner/steamlocate-rs"
             ),
-            self.library("rust-ini [MIT]", "https://github.com/zonyitoo/rust-ini"),
-            self.library("opener [MIT]", "https://github.com/Seeker14491/opener"),
-            self.library("rfd [MIT]", "https://github.com/PolyMeilex/rfd"),
-            self.library("num_enum [MIT]", "https://github.com/illicitonion/num_enum"),
-            self.library("thiserror [MIT]", "https://github.com/dtolnay/thiserror"),
-            self.library("tokio [MIT]", "https://github.com/tokio-rs/tokio"),
-            self.library("strum [MIT]", "https://github.com/Peternator7/strum"),
-            self.library("num [MIT]", "https://github.com/rust-num/num")
+            library("rust-ini [MIT]", "https://github.com/zonyitoo/rust-ini"),
+            library("opener [MIT]", "https://github.com/Seeker14491/opener"),
+            library("rfd [MIT]", "https://github.com/PolyMeilex/rfd"),
+            library("num_enum [MIT]", "https://github.com/illicitonion/num_enum"),
+            library("thiserror [MIT]", "https://github.com/dtolnay/thiserror"),
+            library("tokio [MIT]", "https://github.com/tokio-rs/tokio"),
+            library("strum [MIT]", "https://github.com/Peternator7/strum"),
+            library("num [MIT]", "https://github.com/rust-num/num")
         ]
         .width(Length::Fill)
         .spacing(4)
