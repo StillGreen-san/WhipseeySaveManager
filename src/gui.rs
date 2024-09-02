@@ -1,6 +1,6 @@
 use crate::{data, util};
 use iced::widget::{column, text, tooltip, Tooltip};
-use iced::{theme, Application, Command, Element, Renderer};
+use iced::{font, theme, Application, Command, Element, Renderer};
 use iced_aw::{TabLabel, Tabs};
 use std::path::PathBuf;
 
@@ -44,6 +44,7 @@ pub enum Message {
     Cheats(cheats::Message),
     Options(options::Message),
     Files(files::Message),
+    FontLoaded(Result<(), font::Error>),
 }
 
 pub struct Gui {
@@ -147,7 +148,7 @@ impl Application for Gui {
                 options: Options::new(opt_strings),
                 files: Files::new(files_strings),
             },
-            Command::none(),
+            font::load(iced_aw::BOOTSTRAP_FONT_BYTES).map(Message::FontLoaded),
         )
     }
 
@@ -213,6 +214,10 @@ impl Application for Gui {
             Message::Cheats(message) => self.cheats.update(message),
             Message::Options(message) => self.options.update(message),
             Message::Files(message) => self.files.update(message),
+            Message::FontLoaded(result) => {
+                result.expect("loading font from const bytes should not be able to fail");
+                Command::none()
+            }
         }
     }
 
