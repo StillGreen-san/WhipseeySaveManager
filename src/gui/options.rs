@@ -1,9 +1,11 @@
 use crate::data;
 use crate::data::options;
 use crate::gui::{Tab, TabState, Theme};
-use iced::widget::{column, combo_box, row, text};
-use iced::{Command, Element, Renderer};
+use iced::alignment::Horizontal;
+use iced::widget::{column, combo_box, row, text, Space};
+use iced::{Alignment, Command, Element, Length, Renderer};
 use iced_aw::TabLabel;
+use std::fmt::Display;
 use strum::VariantArray;
 
 #[derive(Clone, Debug)]
@@ -87,6 +89,31 @@ impl Options {
     }
 }
 
+fn option<'a, T>(
+    state: &'a combo_box::State<T>,
+    placeholder: &str,
+    selection: &T,
+    on_selected: impl Fn(T) -> super::Message + 'static,
+) -> Element<'a, super::Message, Theme, Renderer>
+where
+    T: Clone + Display + 'static,
+{
+    row![
+        Space::with_width(Length::FillPortion(5)),
+        text(placeholder)
+            .width(Length::FillPortion(4))
+            .horizontal_alignment(Horizontal::Right),
+        combo_box(state, placeholder, Some(selection), on_selected)
+            .width(Length::FillPortion(6))
+            .padding(3),
+        Space::with_width(Length::FillPortion(6)),
+    ]
+    .spacing(8)
+    .align_items(Alignment::Center)
+    .width(Length::Fill)
+    .into()
+}
+
 impl Tab for Options {
     type InMessage = Message;
 
@@ -137,79 +164,58 @@ impl Tab for Options {
 
     fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
         column![
-            row![
-                text(self.display_strings.language),
-                combo_box(
-                    &self.language_state,
-                    self.display_strings.language,
-                    Some(&self.options_state.language),
-                    Message::super_language_selected,
-                ),
-            ],
-            row![
-                text(self.display_strings.scale),
-                combo_box(
-                    &self.scale_state,
-                    self.display_strings.scale,
-                    Some(&self.options_state.scale),
-                    Message::super_scale_selected,
-                ),
-            ],
-            row![
-                text(self.display_strings.fullscreen),
-                combo_box(
-                    &self.fullscreen_state,
-                    self.display_strings.fullscreen,
-                    Some(&self.options_state.fullscreen),
-                    Message::super_fullscreen_selected,
-                ),
-            ],
-            row![
-                text(self.display_strings.left_handed),
-                combo_box(
-                    &self.left_handed_state,
-                    self.display_strings.left_handed,
-                    Some(&self.options_state.left_handed),
-                    Message::super_left_handed_selected,
-                ),
-            ],
-            row![
-                text(self.display_strings.sound_volume),
-                combo_box(
-                    &self.sound_volume_state,
-                    self.display_strings.sound_volume,
-                    Some(&self.options_state.sound_volume),
-                    Message::super_sound_volume_selected,
-                ),
-            ],
-            row![
-                text(self.display_strings.sound_toggle),
-                combo_box(
-                    &self.sound_toggle_state,
-                    self.display_strings.sound_toggle,
-                    Some(&self.options_state.sound_toggle),
-                    Message::super_sound_toggle_selected,
-                ),
-            ],
-            row![
-                text(self.display_strings.music_volume),
-                combo_box(
-                    &self.music_volume_state,
-                    self.display_strings.music_volume,
-                    Some(&self.options_state.music_volume),
-                    Message::super_music_volume_selected,
-                ),
-            ],
-            row![
-                text(self.display_strings.music_toggle),
-                combo_box(
-                    &self.music_toggle_state,
-                    self.display_strings.music_toggle,
-                    Some(&self.options_state.music_toggle),
-                    Message::super_music_toggle_selected,
-                ),
-            ]
+            option(
+                &self.language_state,
+                self.display_strings.language,
+                &self.options_state.language,
+                Message::super_language_selected,
+            ),
+            option(
+                &self.scale_state,
+                self.display_strings.scale,
+                &self.options_state.scale,
+                Message::super_scale_selected,
+            ),
+            option(
+                &self.fullscreen_state,
+                self.display_strings.fullscreen,
+                &self.options_state.fullscreen,
+                Message::super_fullscreen_selected,
+            ),
+            option(
+                &self.left_handed_state,
+                self.display_strings.left_handed,
+                &self.options_state.left_handed,
+                Message::super_left_handed_selected,
+            ),
+            option(
+                &self.sound_volume_state,
+                self.display_strings.sound_volume,
+                &self.options_state.sound_volume,
+                Message::super_sound_volume_selected,
+            ),
+            option(
+                &self.sound_toggle_state,
+                self.display_strings.sound_toggle,
+                &self.options_state.sound_toggle,
+                Message::super_sound_toggle_selected,
+            ),
+            option(
+                &self.music_volume_state,
+                self.display_strings.music_volume,
+                &self.options_state.music_volume, // TODO volume as slider? (change enum to f32?)
+                Message::super_music_volume_selected,
+            ),
+            option(
+                &self.music_toggle_state,
+                self.display_strings.music_toggle,
+                &self.options_state.music_toggle,
+                Message::super_music_toggle_selected,
+            ),
         ]
+        .spacing(4)
+        .padding([6, 0, 0, 0])
+        .align_items(Alignment::Center)
         .into()
     }
 }
