@@ -80,7 +80,8 @@ impl Files {
                     .map(Element::from),
             ),
         )
-        .style(CardStyles::Secondary);
+        .style(CardStyles::Secondary)
+        .width(Length::FillPortion(36));
         let intro = column![
             with_tooltip(
                 checkbox(
@@ -88,7 +89,8 @@ impl Files {
                     self.files_state[idx].intro == Intro::Watched,
                 )
                 .on_toggle(move |toggled| super::Message::Files(Message::Intro(idx, toggled)))
-                .size(18),
+                .size(18)
+                .spacing(4),
                 self.display_strings.intro_tooltip,
                 Position::Top
             ),
@@ -137,7 +139,8 @@ impl Files {
                 Position::Top
             )
         ]
-        .spacing(4);
+        .spacing(4)
+        .width(Length::FillPortion(28));
         let ending = column![
             with_tooltip(
                 checkbox(
@@ -145,7 +148,8 @@ impl Files {
                     self.files_state[idx].ending == Ending::Watched,
                 )
                 .on_toggle(move |toggled| super::Message::Files(Message::Ending(idx, toggled)))
-                .size(18),
+                .size(18)
+                .spacing(4),
                 self.display_strings.ending_tooltip,
                 Position::Top
             ),
@@ -196,7 +200,8 @@ impl Files {
                 Position::Top
             )
         ]
-        .spacing(4);
+        .spacing(4)
+        .width(Length::FillPortion(36));
         let title = format!(
             "{}{} {} - {}",
             self.display_strings.file_titel,

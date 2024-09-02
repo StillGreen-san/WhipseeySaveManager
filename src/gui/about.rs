@@ -1,6 +1,6 @@
 use crate::gui::{Tab, Theme};
 use iced::alignment::Horizontal;
-use iced::widget::{button, column, row, scrollable, text};
+use iced::widget::{button, column, row, scrollable, text, Space};
 use iced::{Alignment, Color, Command, Element, Length, Renderer};
 use iced_aw::TabLabel;
 
@@ -29,8 +29,9 @@ fn library(
     link: &'static str,
 ) -> Element<'static, super::Message, Theme, Renderer> {
     row![
+        Space::with_width(Length::FillPortion(15)),
         text(label)
-            .width(Length::FillPortion(1))
+            .width(Length::FillPortion(20))
             .horizontal_alignment(Horizontal::Right),
         button(
             text(link)
@@ -39,9 +40,11 @@ fn library(
         )
         .on_press(super::Message::About(Message::Link(link)))
         .style(iced::theme::Button::Text)
-        .width(Length::FillPortion(2))
-        .height(Length::Shrink),
+        .width(Length::FillPortion(50))
+        .padding(0),
+        Space::with_width(Length::FillPortion(15)),
     ]
+    .spacing(4)
     .align_items(Alignment::Center)
     .width(Length::Fill)
     .into()
@@ -86,7 +89,7 @@ impl Tab for About {
             library("num [MIT]", "https://github.com/rust-num/num")
         ]
         .width(Length::Fill)
-        .spacing(4)
+        .spacing(12)
         .align_items(Alignment::Center);
         column![
             text(self.display_strings.description),

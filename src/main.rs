@@ -6,7 +6,7 @@ mod util;
 
 fn main() -> Result<(), iced::Error> {
     let window = window::Settings {
-        size: Size::from([840, 370]),
+        size: Size::from([775, 370]),
         position: Default::default(),
         min_size: None,
         max_size: None,
