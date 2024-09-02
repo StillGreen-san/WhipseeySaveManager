@@ -1,8 +1,8 @@
 use crate::data;
 use crate::data::cheats::CheatsEnabled;
 use crate::gui::{Tab, TabState, Theme};
-use iced::widget::{checkbox, column, text};
-use iced::{Command, Element, Renderer};
+use iced::widget::{checkbox, column, container, text};
+use iced::{Command, Element, Length, Renderer};
 use iced_aw::TabLabel;
 
 #[derive(Debug, Clone)]
@@ -51,15 +51,21 @@ impl Tab for Cheats {
     }
 
     fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
-        column![
-            checkbox(
-                self.display_strings.checkbox,
-                self.cheats_state.cheats_enabled == CheatsEnabled::Enabled,
-            )
-            .on_toggle(|state| super::Message::Cheats(Message::CheatsToggled(state))),
-            text(self.display_strings.description)
-        ]
-        .spacing(16)
+        container(
+            column![
+                checkbox(
+                    self.display_strings.checkbox,
+                    self.cheats_state.cheats_enabled == CheatsEnabled::Enabled,
+                )
+                .on_toggle(|state| super::Message::Cheats(Message::CheatsToggled(state))),
+                text(self.display_strings.description)
+            ]
+            .spacing(16),
+        )
+        .center_x()
+        .center_y()
+        .width(Length::Fill)
+        .height(Length::Fill)
         .into()
     }
 }
