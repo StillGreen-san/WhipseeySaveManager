@@ -8,40 +8,40 @@ use strum::VariantArray;
 
 #[derive(Clone, Debug)]
 pub enum Message {
-    LanguageSelected(options::Language),
-    ScaleSelected(options::Scale),
-    FullscreenSelected(options::Fullscreen),
-    LeftHandedSelected(options::LeftHanded),
-    SoundVolumeSelected(options::SoundVolume),
-    SoundToggleSelected(options::SoundToggle),
-    MusicVolumeSelected(options::MusicVolume),
-    MusicToggleSelected(options::MusicToggle),
+    Language(options::Language),
+    Scale(options::Scale),
+    Fullscreen(options::Fullscreen),
+    LeftHanded(options::LeftHanded),
+    SoundVolume(options::SoundVolume),
+    SoundToggle(options::SoundToggle),
+    MusicVolume(options::MusicVolume),
+    MusicToggle(options::MusicToggle),
 }
 
 impl Message {
     fn super_language_selected(language: options::Language) -> super::Message {
-        super::Message::Options(Message::LanguageSelected(language))
+        super::Message::Options(Message::Language(language))
     }
     fn super_scale_selected(scale: options::Scale) -> super::Message {
-        super::Message::Options(Message::ScaleSelected(scale))
+        super::Message::Options(Message::Scale(scale))
     }
     fn super_fullscreen_selected(fullscreen: options::Fullscreen) -> super::Message {
-        super::Message::Options(Message::FullscreenSelected(fullscreen))
+        super::Message::Options(Message::Fullscreen(fullscreen))
     }
     fn super_left_handed_selected(left_handed: options::LeftHanded) -> super::Message {
-        super::Message::Options(Message::LeftHandedSelected(left_handed))
+        super::Message::Options(Message::LeftHanded(left_handed))
     }
     fn super_sound_volume_selected(sound_volume: options::SoundVolume) -> super::Message {
-        super::Message::Options(Message::SoundVolumeSelected(sound_volume))
+        super::Message::Options(Message::SoundVolume(sound_volume))
     }
     fn super_sound_toggle_selected(sound_toggle: options::SoundToggle) -> super::Message {
-        super::Message::Options(Message::SoundToggleSelected(sound_toggle))
+        super::Message::Options(Message::SoundToggle(sound_toggle))
     }
     fn super_music_volume_selected(music_volume: options::MusicVolume) -> super::Message {
-        super::Message::Options(Message::MusicVolumeSelected(music_volume))
+        super::Message::Options(Message::MusicVolume(music_volume))
     }
     fn super_music_toggle_selected(music_toggle: options::MusicToggle) -> super::Message {
-        super::Message::Options(Message::MusicToggleSelected(music_toggle))
+        super::Message::Options(Message::MusicToggle(music_toggle))
     }
 }
 
@@ -100,35 +100,35 @@ impl Tab for Options {
 
     fn update(&mut self, message: Self::InMessage) -> Command<super::Message> {
         match message {
-            Message::LanguageSelected(language) => {
+            Message::Language(language) => {
                 self.options_state.language = language;
                 Command::none()
             }
-            Message::ScaleSelected(scale) => {
+            Message::Scale(scale) => {
                 self.options_state.scale = scale;
                 Command::none()
             }
-            Message::FullscreenSelected(fullscreen) => {
+            Message::Fullscreen(fullscreen) => {
                 self.options_state.fullscreen = fullscreen;
                 Command::none()
             }
-            Message::LeftHandedSelected(left_handed) => {
+            Message::LeftHanded(left_handed) => {
                 self.options_state.left_handed = left_handed;
                 Command::none()
             }
-            Message::SoundVolumeSelected(sound_volume) => {
+            Message::SoundVolume(sound_volume) => {
                 self.options_state.sound_volume = sound_volume;
                 Command::none()
             }
-            Message::SoundToggleSelected(sound_toggle) => {
+            Message::SoundToggle(sound_toggle) => {
                 self.options_state.sound_toggle = sound_toggle;
                 Command::none()
             }
-            Message::MusicVolumeSelected(music_volume) => {
+            Message::MusicVolume(music_volume) => {
                 self.options_state.music_volume = music_volume;
                 Command::none()
             }
-            Message::MusicToggleSelected(music_toggle) => {
+            Message::MusicToggle(music_toggle) => {
                 self.options_state.music_toggle = music_toggle;
                 Command::none()
             }
