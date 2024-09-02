@@ -1,8 +1,7 @@
 use crate::{data, util};
-use iced::widget::{tooltip, Column, Text, Tooltip};
+use iced::widget::{column, text, tooltip, Tooltip};
 use iced::{theme, Application, Command, Element, Renderer};
 use iced_aw::{TabLabel, Tabs};
-use std::borrow::Cow;
 use std::path::PathBuf;
 
 mod about;
@@ -218,27 +217,22 @@ impl Application for Gui {
     }
 
     fn view(&self) -> Element<'_, Self::Message, Self::Theme, Renderer> {
-        Column::new()
-            .push(
-                Column::new()
-                    .push(self.save.view())
-                    .push(self.bfs.view())
-                    .spacing(4)
-                    .padding(4),
-            )
-            .push(
-                Tabs::new(Message::TabSelected)
-                    .push(TabId::Files, self.files.tab_label(), self.files.view())
-                    .push(
-                        TabId::Options,
-                        self.options.tab_label(),
-                        self.options.view(),
-                    )
-                    .push(TabId::Cheats, self.cheats.tab_label(), self.cheats.view())
-                    .push(TabId::About, self.about.tab_label(), self.about.view())
-                    .set_active_tab(&self.active_tab),
-            )
-            .into()
+        column![
+            column![self.save.view(), self.bfs.view()]
+                .spacing(4)
+                .padding(4),
+            Tabs::new(Message::TabSelected)
+                .push(TabId::Files, self.files.tab_label(), self.files.view())
+                .push(
+                    TabId::Options,
+                    self.options.tab_label(),
+                    self.options.view(),
+                )
+                .push(TabId::Cheats, self.cheats.tab_label(), self.cheats.view())
+                .push(TabId::About, self.about.tab_label(), self.about.view())
+                .set_active_tab(&self.active_tab)
+        ]
+        .into()
     }
 }
 
@@ -264,8 +258,8 @@ trait TabState {
 
 pub fn with_tooltip<'a>(
     content: impl Into<Element<'a, Message, Theme, Renderer>>,
-    text: impl Into<Cow<'a, str>>,
+    tooltip_text: impl ToString,
     position: tooltip::Position,
 ) -> Tooltip<'a, Message, Theme, Renderer> {
-    tooltip(content, Text::new(text), position).style(theme::Container::Box)
+    tooltip(content, text(tooltip_text), position).style(theme::Container::Box)
 }

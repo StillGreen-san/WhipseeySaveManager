@@ -258,11 +258,11 @@ impl Tab for Files {
     }
 
     fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
-        row([
+        row![
             self.file_view(File1),
             self.file_view(File2),
             self.file_view(File3),
-        ])
+        ]
         .spacing(4)
         .padding(4)
         .into()

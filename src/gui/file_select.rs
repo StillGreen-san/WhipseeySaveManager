@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use crate::gui::with_tooltip;
 use iced::widget::tooltip::Position;
-use iced::widget::{Button, Row, Text, TextInput};
+use iced::widget::{button, row, text, text_input};
 use iced::{Command, Element, Renderer};
 use rfd::AsyncFileDialog;
 
@@ -91,34 +91,33 @@ impl FileSelect {
     }
 
     pub fn view(&self) -> Element<'_, super::Message, super::Theme, Renderer> {
-        Row::new()
-            .push(
-                TextInput::new(
-                    self.display_strings.placeholder,
-                    self.path.to_str().unwrap(),
-                )
-                .on_input(|string| self.pack_message(Message::PathChanged(string))),
+        row![
+            text_input(
+                self.display_strings.placeholder,
+                self.path.to_str().unwrap(),
             )
-            .push(with_tooltip(
-                Button::new(Text::new(self.display_strings.open_label))
+            .on_input(|string| self.pack_message(Message::PathChanged(string))),
+            with_tooltip(
+                button(text(self.display_strings.open_label))
                     .on_press(self.pack_message(Message::Open)),
                 self.display_strings.open_tooltip,
                 Position::Bottom,
-            ))
-            .push(with_tooltip(
-                Button::new(Text::new(self.display_strings.save_label))
+            ),
+            with_tooltip(
+                button(text(self.display_strings.save_label))
                     .on_press(self.pack_message(Message::Save)),
                 self.display_strings.save_tooltip,
                 Position::Bottom,
-            ))
-            .push(with_tooltip(
-                Button::new(Text::new(self.display_strings.reload_label))
+            ),
+            with_tooltip(
+                button(text(self.display_strings.reload_label))
                     .on_press(self.pack_message(Message::Reload)),
                 self.display_strings.reload_tooltip,
                 Position::Bottom,
-            ))
-            .spacing(4)
-            .into()
+            )
+        ]
+        .spacing(4)
+        .into()
     }
 }
 
