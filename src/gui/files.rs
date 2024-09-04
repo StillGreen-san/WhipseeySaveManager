@@ -97,9 +97,11 @@ impl Files {
             column![
                 text(self.display_strings.gems_label),
                 with_tooltip(
-                    number_input(self.files_state[idx].gems.value(), Gems::MAX, move |gems| {
-                        super::Message::Files(Message::Gems(idx, gems))
-                    })
+                    number_input(
+                        self.files_state[idx].gems.value(),
+                        Gems::MAX_PRIMITIV,
+                        move |gems| { super::Message::Files(Message::Gems(idx, gems)) }
+                    )
                     .width(Length::Fill),
                     self.display_strings.gems_tooltip,
                     Position::Top
@@ -158,7 +160,7 @@ impl Files {
                 with_tooltip(
                     number_input(
                         self.files_state[idx].lives.value(),
-                        Lives::MAX,
+                        Lives::MAX_PRIMITIV,
                         move |lives| { super::Message::Files(Message::Lives(idx, lives)) }
                     )
                     .width(Length::Fill),

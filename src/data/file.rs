@@ -20,9 +20,9 @@ pub enum BossNoDamageProgress {
 }
 ini_impl_quoted!(BossNoDamageProgress, "boss_no_damage_progress");
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct EnemiesDefeated(u32);
-primitive_impl!(EnemiesDefeated, 0, 1677215, u32);
+primitive_impl!(EnemiesDefeated, 0, 0, 1677215, u32);
 ini_impl_quoted!(EnemiesDefeated, "enemies_defeated", u32);
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Ord, PartialOrd)]
@@ -144,18 +144,12 @@ ini_impl_quoted!(Intro, "intro");
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Lives(u32);
-primitive_impl!(Lives, 1, 16777215, u32);
+primitive_impl!(Lives, 1, 5, 16777215, u32);
 ini_impl_quoted!(Lives, "lives", u32);
 
-impl Default for Lives {
-    fn default() -> Self {
-        Self(5)
-    }
-}
-
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Gems(u8);
-primitive_impl!(Gems, 0, 99, u8);
+primitive_impl!(Gems, 0, 0, 99, u8);
 ini_impl_quoted!(Gems, "gems");
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]

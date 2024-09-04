@@ -270,16 +270,13 @@ macro_rules! ini_impl_quoted {
 
 #[macro_export]
 macro_rules! primitive_impl {
-    ($self:ty, $min:literal, $max:expr, $typ:ty) => {
+    ($self:ty, $min:literal, $default:literal, $max:expr, $typ:ty) => {
         impl $self {
-            pub const MIN: $typ = $min;
-            pub const MAX: $typ = $max as $typ;
-            pub fn min(&self) -> $typ {
-                Self::MIN
-            }
-            pub fn max(&self) -> $typ {
-                Self::MAX
-            }
+            pub const MIN_PRIMITIV: $typ = $min;
+            pub const MAX_PRIMITIV: $typ = $max as $typ;
+            pub const MIN: Self = Self($min);
+            pub const MAX: Self = Self($max as $typ);
+            pub const DEFAULT: Self = Self($default);
         }
         impl ::num_enum::TryFromPrimitive for $self {
             type Primitive = $typ;
@@ -290,7 +287,9 @@ macro_rules! primitive_impl {
             ) -> ::core::result::Result<Self, ::num_enum::TryFromPrimitiveError<Self>> {
                 #[deny(unreachable_patterns)]
                 match number {
-                    Self::MIN..=Self::MAX => ::core::result::Result::Ok(Self(number)),
+                    Self::MIN_PRIMITIV..=Self::MAX_PRIMITIV => {
+                        ::core::result::Result::Ok(Self(number))
+                    }
                     #[allow(unreachable_patterns)]
                     _ => ::core::result::Result::Err(
                         ::num_enum::TryFromPrimitiveError::<Self>::new(number),
@@ -312,6 +311,16 @@ macro_rules! primitive_impl {
         impl From<$self> for $typ {
             fn from(value: $self) -> Self {
                 value.0
+            }
+        }
+        impl Default for $self {
+            fn default() -> Self {
+                Self::DEFAULT
+            }
+        }
+        impl PartialEq<$typ> for $self {
+            fn eq(&self, other: &$typ) -> bool {
+                self.0 == *other
             }
         }
     };
