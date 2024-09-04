@@ -250,9 +250,28 @@ impl Tab for Files {
                 self.files_state[idx].gems = gems.try_into().unwrap();
                 Command::none()
             }
-            Message::CycleGems(_idx) => todo!(),
-            Message::CycleLives(_idx) => todo!(),
-            Message::Max(_idx) => todo!(),
+            Message::CycleGems(idx) => {
+                self.files_state[idx].gems = match self.files_state[idx].gems {
+                    Gems::DEFAULT => Gems::MAX,
+                    _ => Gems::DEFAULT,
+                };
+                Command::none()
+            }
+            Message::CycleLives(idx) => {
+                self.files_state[idx].lives = match self.files_state[idx].lives {
+                    Lives::DEFAULT => Lives::MAX,
+                    _ => Lives::DEFAULT,
+                };
+                Command::none()
+            }
+            Message::Max(idx) => {
+                self.files_state[idx].lives = Lives::MAX;
+                self.files_state[idx].gems = Gems::MAX;
+                self.files_state[idx].level = Level::Castle;
+                self.files_state[idx].intro = Intro::Watched;
+                self.files_state[idx].ending = Ending::Watched;
+                Command::none()
+            }
             Message::Lives(idx, lives) => {
                 self.files_state[idx].lives = lives.try_into().unwrap();
                 Command::none()

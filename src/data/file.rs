@@ -144,7 +144,7 @@ ini_impl_quoted!(Intro, "intro");
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Lives(u32);
-primitive_impl!(Lives, 1, 5, 16777215, u32);
+primitive_impl!(Lives, 1, 5, 99999, u32);
 ini_impl_quoted!(Lives, "lives", u32);
 
 #[derive(Clone, Debug, Eq, PartialEq)]
