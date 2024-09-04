@@ -290,7 +290,6 @@ impl Tab for Files {
             self.file_view(File3),
         ]
         .spacing(4)
-        .padding(4)
         .into()
     }
 }

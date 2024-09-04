@@ -214,7 +214,6 @@ impl Tab for Options {
             ),
         ]
         .spacing(4)
-        .padding([6, 0, 0, 0])
         .align_items(Alignment::Center)
         .into()
     }

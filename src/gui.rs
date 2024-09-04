@@ -222,22 +222,31 @@ impl Application for Gui {
     }
 
     fn view(&self) -> Element<'_, Self::Message, Self::Theme, Renderer> {
-        column![
-            column![self.save.view(), self.bfs.view()]
-                .spacing(4)
-                .padding(4),
-            Tabs::new(Message::TabSelected)
-                .push(TabId::Files, self.files.tab_label(), self.files.view())
-                .push(
-                    TabId::Options,
-                    self.options.tab_label(),
-                    self.options.view(),
-                )
-                .push(TabId::Cheats, self.cheats.tab_label(), self.cheats.view())
-                .push(TabId::About, self.about.tab_label(), self.about.view())
-                .set_active_tab(&self.active_tab)
-        ]
-        .into()
+        Tabs::new(Message::TabSelected)
+            .push(
+                TabId::Files,
+                self.files.tab_label(),
+                column![self.save.view(), self.files.view()]
+                    .spacing(6)
+                    .padding(4),
+            )
+            .push(
+                TabId::Options,
+                self.options.tab_label(),
+                column![self.save.view(), self.options.view()]
+                    .spacing(7)
+                    .padding(4),
+            )
+            .push(
+                TabId::Cheats,
+                self.cheats.tab_label(),
+                column![self.bfs.view(), self.cheats.view()]
+                    .spacing(6)
+                    .padding(4),
+            )
+            .push(TabId::About, self.about.tab_label(), self.about.view())
+            .set_active_tab(&self.active_tab)
+            .into()
     }
 }
 
