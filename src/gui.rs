@@ -124,15 +124,15 @@ impl Application for Gui {
             cycle_gems_label: "Cycle",
             cycle_gems_tooltip: "Set Gems to 0 or 99",
             max_label: "Max",
-            max_tooltip: "100% File with 9999 Lives",
+            max_tooltip: "100% File with 99999 Lives",
             save_label: "Save",
             save_tooltip: "Save current Values to File for this Group",
             ending_label: "Ending",
             ending_tooltip: "Only used to calculate %Progress",
             lives_label: "Lives",
-            lives_tooltip: "1 - 16777215", // TODO vals from struct
+            lives_tooltip: "1 - 99999", // TODO vals from struct
             cycle_lives_label: "Cycle",
-            cycle_lives_tooltip: "Set Lives to 5, 99 or 9999",
+            cycle_lives_tooltip: "Set Lives to 5 or 99999",
             reset_label: "Reset",
             reset_tooltip: "New File",
             reload_label: "Reload",

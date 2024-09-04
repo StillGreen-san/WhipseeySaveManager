@@ -99,14 +99,14 @@ where
     T: Clone + Display + 'static,
 {
     row![
-        Space::with_width(Length::FillPortion(30)),
+        Space::with_width(Length::FillPortion(20)),
         text(placeholder)
-            .width(Length::FillPortion(15))
+            .width(Length::FillPortion(23))
             .horizontal_alignment(Horizontal::Right),
         combo_box(state, placeholder, Some(selection), on_selected)
-            .width(Length::FillPortion(25))
+            .width(Length::FillPortion(37))
             .padding(3),
-        Space::with_width(Length::FillPortion(30)),
+        Space::with_width(Length::FillPortion(20)),
     ]
     .spacing(8)
     .align_items(Alignment::Center)

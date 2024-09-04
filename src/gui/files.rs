@@ -75,12 +75,14 @@ impl Files {
                             |level| super::Message::Files(Message::Progress(idx, level)),
                         )
                         .size(14)
-                        .spacing(4)
+                        .spacing(5)
                     })
                     .map(Element::from),
             ),
         )
         .style(CardStyles::Secondary)
+        .padding_head([10, 7].into())
+        .padding_body([10, 6].into())
         .width(Length::FillPortion(36));
         let intro = column![
             with_tooltip(
@@ -142,7 +144,7 @@ impl Files {
             )
         ]
         .spacing(4)
-        .width(Length::FillPortion(28));
+        .width(Length::FillPortion(29));
         let ending = column![
             with_tooltip(
                 checkbox(
@@ -165,7 +167,7 @@ impl Files {
                     )
                     .width(Length::Fill),
                     self.display_strings.lives_tooltip,
-                    Position::Right
+                    Position::Left
                 )
             ],
             with_tooltip(
@@ -203,7 +205,7 @@ impl Files {
             )
         ]
         .spacing(4)
-        .width(Length::FillPortion(36));
+        .width(Length::FillPortion(35));
         let title = format!(
             "{}{} {} - {}",
             self.display_strings.file_titel,
@@ -217,6 +219,7 @@ impl Files {
                 .spacing(4)
                 .align_items(Alignment::Center),
         )
+        .padding_body([10, 8].into())
         .into()
     }
 }
