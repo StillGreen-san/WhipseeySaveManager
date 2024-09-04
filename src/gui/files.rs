@@ -104,7 +104,7 @@ impl Files {
                     )
                     .width(Length::Fill),
                     self.display_strings.gems_tooltip,
-                    Position::Top
+                    Position::Left
                 )
             ],
             with_tooltip(
@@ -116,7 +116,7 @@ impl Files {
                 .on_press(super::Message::Files(Message::CycleGems(idx)))
                 .width(Length::Fill),
                 self.display_strings.cycle_gems_tooltip,
-                Position::Top
+                Position::Left
             ),
             with_tooltip(
                 button(
@@ -127,7 +127,7 @@ impl Files {
                 .on_press(super::Message::Files(Message::Max(idx)))
                 .width(Length::Fill),
                 self.display_strings.max_tooltip,
-                Position::Top
+                Position::Left
             ),
             with_tooltip(
                 button(
@@ -138,7 +138,7 @@ impl Files {
                 .on_press(super::Message::Saved(super::FileId::Save))
                 .width(Length::Fill), // TODO per file saving
                 self.display_strings.save_tooltip,
-                Position::Top
+                Position::Left
             )
         ]
         .spacing(4)
@@ -165,7 +165,7 @@ impl Files {
                     )
                     .width(Length::Fill),
                     self.display_strings.lives_tooltip,
-                    Position::Top
+                    Position::Right
                 )
             ],
             with_tooltip(
@@ -177,7 +177,7 @@ impl Files {
                 .on_press(super::Message::Files(Message::CycleLives(idx)))
                 .width(Length::Fill),
                 self.display_strings.cycle_lives_tooltip,
-                Position::Top
+                Position::Right
             ),
             with_tooltip(
                 button(
@@ -188,7 +188,7 @@ impl Files {
                 .on_press(super::Message::Files(Message::Reset(idx)))
                 .width(Length::Fill),
                 self.display_strings.reset_tooltip,
-                Position::Top
+                Position::Right
             ),
             with_tooltip(
                 button(
@@ -199,7 +199,7 @@ impl Files {
                 .on_press(super::Message::Saved(super::FileId::Save))
                 .width(Length::Fill), // TODO per file reload
                 self.display_strings.reload_tooltip,
-                Position::Top
+                Position::Right
             )
         ]
         .spacing(4)
