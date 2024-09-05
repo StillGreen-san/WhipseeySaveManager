@@ -194,6 +194,12 @@ impl From<ini::Error> for Error {
     }
 }
 
+impl From<std::io::Error> for Error {
+    fn from(value: std::io::Error) -> Self {
+        Error::Io(value.to_string())
+    }
+}
+
 #[macro_export]
 macro_rules! ini_impl_common {
     ($self:ty, $section:ident, $key:literal, $scale:literal, $typ:ty) => {

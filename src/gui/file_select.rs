@@ -68,25 +68,12 @@ impl FileSelect {
             Message::Opened(opt_path) => match opt_path {
                 None => Command::none(),
                 Some(path) => {
-                    let id = self.id;
                     self.path = path;
-                    Command::perform(ready(self.path.clone()), move |path| {
-                        super::Message::Load(id, path)
-                    })
+                    Command::perform(ready(self.id), |id| super::Message::Load(id))
                 }
             },
-            Message::Save => {
-                let id = self.id;
-                Command::perform(ready(self.path.clone()), move |path| {
-                    super::Message::Save(id, path)
-                })
-            }
-            Message::Reload => {
-                let id = self.id;
-                Command::perform(ready(self.path.clone()), move |path| {
-                    super::Message::Load(id, path)
-                })
-            }
+            Message::Save => Command::perform(ready(self.id), |id| super::Message::Save(id)),
+            Message::Reload => Command::perform(ready(self.id), |id| super::Message::Load(id)),
         }
     }
 

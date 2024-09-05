@@ -137,9 +137,11 @@ impl Files {
                         .horizontal_alignment(Horizontal::Center)
                         .width(Length::Fill)
                 )
-                .on_press(super::Message::Saved(super::FileId::Save(
-                    super::SaveId::All
-                )))
+                .on_press(super::Message::Save(super::FileId::Save(match idx {
+                    File1 => super::SaveId::File1,
+                    File2 => super::SaveId::File2,
+                    File3 => super::SaveId::File3,
+                })))
                 .width(Length::Fill), // TODO per file saving
                 self.display_strings.save_tooltip,
                 Position::Left
@@ -200,9 +202,11 @@ impl Files {
                         .horizontal_alignment(Horizontal::Center)
                         .width(Length::Fill)
                 )
-                .on_press(super::Message::Saved(super::FileId::Save(
-                    super::SaveId::All
-                )))
+                .on_press(super::Message::Load(super::FileId::Save(match idx {
+                    File1 => super::SaveId::File1,
+                    File2 => super::SaveId::File2,
+                    File3 => super::SaveId::File3,
+                })))
                 .width(Length::Fill), // TODO per file reload
                 self.display_strings.reload_tooltip,
                 Position::Right

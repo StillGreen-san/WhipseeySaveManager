@@ -3,7 +3,6 @@ use data::file::{File1, File2, File3};
 use iced::widget::{column, text, tooltip, Tooltip};
 use iced::{font, theme, Application, Command, Element, Renderer};
 use iced_aw::{TabLabel, Tabs};
-use std::path::PathBuf;
 
 mod about;
 mod cheats;
@@ -26,10 +25,10 @@ pub enum TabId {
     Files,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum SaveId {
     All,
-    Options,
+    Options, // TODO
     File1,
     File2,
     File3,
@@ -46,11 +45,11 @@ pub enum Message {
     TabSelected(TabId),
     About(about::Message),
     FileSelect(FileId, file_select::Message),
-    Save(FileId, PathBuf),
-    Load(FileId, PathBuf),
+    Save(FileId),
+    Load(FileId),
     LoadedBfs(data::Result<data::BfsSettings>),
     LoadedSave(SaveId, data::Result<data::WhipseeySaveData>),
-    Saved(FileId),
+    Saved(FileId, data::Result<()>),
     Cheats(cheats::Message),
     Options(options::Message),
     Files(files::Message),
@@ -177,17 +176,37 @@ impl Application for Gui {
                 FileId::Save(_) => self.save.update(message),
                 FileId::Bfs => self.bfs.update(message),
             },
-            Message::Save(id, path) => match id {
+            Message::Save(id) => match id {
                 FileId::Save(save_id) => {
-                    // TODO partial save
-                    let save = data::WhipseeySaveData {
+                    let mut save_new = data::WhipseeySaveData {
                         options: self.options.get_state(),
                         files: self.files.get_state(),
                     };
-                    let ini = save.into();
+                    let path = self.save.get_state();
                     Command::perform(
-                        async move { util::write_ini_file_padded(path, &ini).await },
-                        move |_| Message::Saved(id),
+                        async move {
+                            if save_id != SaveId::All {
+                                let mut save_current: data::WhipseeySaveData =
+                                    util::load_ini_file(path.clone()).await?.try_into()?;
+                                match save_id {
+                                    SaveId::All => {}
+                                    SaveId::Options => save_current.options = save_new.options,
+                                    SaveId::File1 => {
+                                        save_current.files[File1] = save_new.files[File1]
+                                    }
+                                    SaveId::File2 => {
+                                        save_current.files[File2] = save_new.files[File2]
+                                    }
+                                    SaveId::File3 => {
+                                        save_current.files[File3] = save_new.files[File3]
+                                    }
+                                }
+                                save_new = save_current;
+                            }
+                            let ini = save_new.into();
+                            Ok(util::write_ini_file_padded(path, &ini).await?)
+                        },
+                        move |result| Message::Saved(id, result),
                     )
                 }
                 FileId::Bfs => {
@@ -195,22 +214,32 @@ impl Application for Gui {
                         cheats: self.cheats.get_state(),
                     };
                     let ini = bfs.into();
+                    let path = self.cheats_path.get_state();
                     Command::perform(
-                        async move { util::write_ini_file(path, &ini).await },
-                        |_| Message::Saved(FileId::Bfs),
+                        async move { Ok(util::write_ini_file(path, &ini).await?) },
+                        |result| Message::Saved(FileId::Bfs, result),
                     )
                 }
             },
-            Message::Saved(_id) => Command::none(), // TODO?
-            Message::Load(id, path) => match id {
-                FileId::Save(save_id) => Command::perform(
-                    async { util::load_ini_file(path).await?.try_into() },
-                    move |result| Message::LoadedSave(save_id, result),
-                ),
-                FileId::Bfs => Command::perform(
-                    async { util::load_ini_file(path).await?.try_into() },
-                    Message::LoadedBfs,
-                ),
+            Message::Saved(_id, result) => {
+                result.unwrap(); // TODO error handling
+                Command::none()
+            }
+            Message::Load(id) => match id {
+                FileId::Save(save_id) => {
+                    let path = self.save_path.get_state();
+                    Command::perform(
+                        async { util::load_ini_file(path).await?.try_into() },
+                        move |result| Message::LoadedSave(save_id, result),
+                    )
+                }
+                FileId::Bfs => {
+                    let path = self.cheats_path.get_state();
+                    Command::perform(
+                        async { util::load_ini_file(path).await?.try_into() },
+                        Message::LoadedBfs,
+                    )
+                }
             },
             Message::LoadedBfs(result) => {
                 self.cheats.set_state(result.unwrap().cheats); // TODO error handling (all unwraps)
@@ -218,7 +247,7 @@ impl Application for Gui {
             }
             Message::LoadedSave(id, result) => {
                 let save = result.unwrap();
-                let mut files_old = self.files.get_state();
+                let files_old = self.files.get_state();
                 match id {
                     SaveId::All => {
                         self.options.set_state(save.options);
