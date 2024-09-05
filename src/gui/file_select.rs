@@ -36,6 +36,10 @@ impl FileSelect {
         }
     }
 
+    pub fn set_id(&mut self, id: super::FileId) {
+        self.id = id;
+    }
+
     fn pack_message(&self, message: Message) -> super::Message {
         message.pack(self.id)
     }

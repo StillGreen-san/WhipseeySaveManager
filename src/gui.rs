@@ -27,8 +27,8 @@ pub enum TabId {
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum SaveId {
-    All,
-    Options, // TODO
+    Files,
+    Options,
     File1,
     File2,
     File3,
@@ -57,8 +57,8 @@ pub enum Message {
 }
 
 pub struct Gui {
-    save: FileSelect,
-    bfs: FileSelect,
+    save_path: FileSelect,
+    cheats_path: FileSelect,
     active_tab: TabId,
     about: About,
     cheats: Cheats,
@@ -151,8 +151,8 @@ impl Application for Gui {
             Self {
                 active_tab: Default::default(),
                 about: About::new(about_strings),
-                save: FileSelect::new(FileId::Save(SaveId::All), save_strings),
-                bfs: FileSelect::new(FileId::Bfs, bfs_strings),
+                save_path: FileSelect::new(FileId::Save(SaveId::Files), save_strings),
+                cheats_path: FileSelect::new(FileId::Bfs, bfs_strings),
                 cheats: Cheats::new(cheats_strings),
                 options: Options::new(opt_strings),
                 files: Files::new(files_strings),
@@ -169,41 +169,37 @@ impl Application for Gui {
         match message {
             Message::TabSelected(id) => {
                 self.active_tab = id;
+                match id {
+                    TabId::Files => self.save_path.set_id(FileId::Save(SaveId::Files)),
+                    TabId::Options => self.save_path.set_id(FileId::Save(SaveId::Options)),
+                    _ => {}
+                }
                 Command::none()
             }
             Message::About(message) => self.about.update(message),
             Message::FileSelect(id, message) => match id {
-                FileId::Save(_) => self.save.update(message),
-                FileId::Bfs => self.bfs.update(message),
+                FileId::Save(_) => self.save_path.update(message),
+                FileId::Bfs => self.cheats_path.update(message),
             },
             Message::Save(id) => match id {
                 FileId::Save(save_id) => {
-                    let mut save_new = data::WhipseeySaveData {
+                    let save_now = data::WhipseeySaveData {
                         options: self.options.get_state(),
                         files: self.files.get_state(),
                     };
-                    let path = self.save.get_state();
+                    let path = self.save_path.get_state();
                     Command::perform(
                         async move {
-                            if save_id != SaveId::All {
-                                let mut save_current: data::WhipseeySaveData =
-                                    util::load_ini_file(path.clone()).await?.try_into()?;
-                                match save_id {
-                                    SaveId::All => {}
-                                    SaveId::Options => save_current.options = save_new.options,
-                                    SaveId::File1 => {
-                                        save_current.files[File1] = save_new.files[File1]
-                                    }
-                                    SaveId::File2 => {
-                                        save_current.files[File2] = save_new.files[File2]
-                                    }
-                                    SaveId::File3 => {
-                                        save_current.files[File3] = save_new.files[File3]
-                                    }
-                                }
-                                save_new = save_current;
+                            let mut save_next: data::WhipseeySaveData =
+                                util::load_ini_file(path.clone()).await?.try_into()?;
+                            match save_id {
+                                SaveId::Files => save_next.files = save_now.files,
+                                SaveId::Options => save_next.options = save_now.options,
+                                SaveId::File1 => save_next.files[File1] = save_now.files[File1],
+                                SaveId::File2 => save_next.files[File2] = save_now.files[File2],
+                                SaveId::File3 => save_next.files[File3] = save_now.files[File3],
                             }
-                            let ini = save_new.into();
+                            let ini = save_next.into();
                             Ok(util::write_ini_file_padded(path, &ini).await?)
                         },
                         move |result| Message::Saved(id, result),
@@ -247,26 +243,21 @@ impl Application for Gui {
             }
             Message::LoadedSave(id, result) => {
                 let save = result.unwrap();
-                let files_old = self.files.get_state();
+                let mut files = self.files.get_state();
                 match id {
-                    SaveId::All => {
-                        self.options.set_state(save.options);
-                        self.files.set_state(save.files);
-                    }
-                    SaveId::Options => {
-                        self.options.set_state(save.options);
-                    }
+                    SaveId::Files => self.files.set_state(save.files),
+                    SaveId::Options => self.options.set_state(save.options),
                     SaveId::File1 => {
-                        let files_new = [save.files[File1], files_old[File2], files_old[File3]];
-                        self.files.set_state(files_new);
+                        files[File1] = save.files[File1];
+                        self.files.set_state(files);
                     }
                     SaveId::File2 => {
-                        let files_new = [files_old[File1], save.files[File2], files_old[File3]];
-                        self.files.set_state(files_new);
+                        files[File2] = save.files[File2];
+                        self.files.set_state(files);
                     }
                     SaveId::File3 => {
-                        let files_new = [files_old[File1], files_old[File2], save.files[File3]];
-                        self.files.set_state(files_new);
+                        files[File3] = save.files[File3];
+                        self.files.set_state(files);
                     }
                 }
                 Command::none()
@@ -286,21 +277,21 @@ impl Application for Gui {
             .push(
                 TabId::Files,
                 self.files.tab_label(),
-                column![self.save.view(), self.files.view()]
+                column![self.save_path.view(), self.files.view()]
                     .spacing(6)
                     .padding(4),
             )
             .push(
                 TabId::Options,
                 self.options.tab_label(),
-                column![self.save.view(), self.options.view()]
+                column![self.save_path.view(), self.options.view()]
                     .spacing(7)
                     .padding(4),
             )
             .push(
                 TabId::Cheats,
                 self.cheats.tab_label(),
-                column![self.bfs.view(), self.cheats.view()]
+                column![self.cheats_path.view(), self.cheats.view()]
                     .spacing(6)
                     .padding(4),
             )

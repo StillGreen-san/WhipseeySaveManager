@@ -142,7 +142,7 @@ impl Files {
                     File2 => super::SaveId::File2,
                     File3 => super::SaveId::File3,
                 })))
-                .width(Length::Fill), // TODO per file saving
+                .width(Length::Fill),
                 self.display_strings.save_tooltip,
                 Position::Left
             )
@@ -207,7 +207,7 @@ impl Files {
                     File2 => super::SaveId::File2,
                     File3 => super::SaveId::File3,
                 })))
-                .width(Length::Fill), // TODO per file reload
+                .width(Length::Fill),
                 self.display_strings.reload_tooltip,
                 Position::Right
             )
