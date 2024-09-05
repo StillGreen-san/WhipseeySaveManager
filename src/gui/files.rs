@@ -1,6 +1,6 @@
 use crate::data::file::{Ending, File1, File2, File3, FileIndex, Gems, Intro, Level, Lives};
 use crate::data::File;
-use crate::gui::{with_tooltip, Tab, TabState, Theme};
+use crate::gui::{with_tooltip, ElementState, Tab, Theme};
 use iced::alignment::Horizontal;
 use iced::widget::tooltip::Position;
 use iced::widget::{button, checkbox, column, radio, row, text};
@@ -301,7 +301,7 @@ impl Tab for Files {
     }
 }
 
-impl TabState for Files {
+impl ElementState for Files {
     type State = [File; 3];
 
     fn get_state(&self) -> Self::State {

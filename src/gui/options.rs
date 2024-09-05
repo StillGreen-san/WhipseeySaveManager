@@ -1,6 +1,6 @@
 use crate::data;
 use crate::data::options;
-use crate::gui::{Tab, TabState, Theme};
+use crate::gui::{ElementState, Tab, Theme};
 use iced::alignment::Horizontal;
 use iced::widget::{column, combo_box, row, text, Space};
 use iced::{Alignment, Command, Element, Length, Renderer};
@@ -219,7 +219,7 @@ impl Tab for Options {
     }
 }
 
-impl TabState for Options {
+impl ElementState for Options {
     type State = data::Options;
 
     fn get_state(&self) -> Self::State {

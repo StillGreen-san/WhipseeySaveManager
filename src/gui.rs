@@ -293,7 +293,7 @@ trait Tab {
     fn view(&self) -> Element<'_, Message, Theme, Renderer>;
 }
 
-trait TabState {
+trait ElementState {
     type State;
 
     fn get_state(&self) -> Self::State;

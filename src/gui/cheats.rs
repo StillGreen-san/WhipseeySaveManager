@@ -1,6 +1,6 @@
 use crate::data;
 use crate::data::cheats::CheatsEnabled;
-use crate::gui::{Tab, TabState, Theme};
+use crate::gui::{ElementState, Tab, Theme};
 use iced::widget::{checkbox, column, container, text};
 use iced::{Command, Element, Length, Renderer};
 use iced_aw::TabLabel;
@@ -70,7 +70,7 @@ impl Tab for Cheats {
     }
 }
 
-impl TabState for Cheats {
+impl ElementState for Cheats {
     type State = data::Cheats;
 
     fn get_state(&self) -> Self::State {
