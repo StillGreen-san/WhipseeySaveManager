@@ -1,4 +1,5 @@
 use crate::{data, util};
+use data::file::{File1, File2, File3};
 use iced::widget::{column, text, tooltip, Tooltip};
 use iced::{font, theme, Application, Command, Element, Renderer};
 use iced_aw::{TabLabel, Tabs};
@@ -26,8 +27,17 @@ pub enum TabId {
 }
 
 #[derive(Debug, Clone, Copy)]
+pub enum SaveId {
+    All,
+    Options,
+    File1,
+    File2,
+    File3,
+}
+
+#[derive(Debug, Clone, Copy)]
 pub enum FileId {
-    Save,
+    Save(SaveId),
     Bfs,
 }
 
@@ -39,7 +49,7 @@ pub enum Message {
     Save(FileId, PathBuf),
     Load(FileId, PathBuf),
     LoadedBfs(data::Result<data::BfsSettings>),
-    LoadedSave(data::Result<data::WhipseeySaveData>),
+    LoadedSave(SaveId, data::Result<data::WhipseeySaveData>),
     Saved(FileId),
     Cheats(cheats::Message),
     Options(options::Message),
@@ -142,7 +152,7 @@ impl Application for Gui {
             Self {
                 active_tab: Default::default(),
                 about: About::new(about_strings),
-                save: FileSelect::new(FileId::Save, save_strings),
+                save: FileSelect::new(FileId::Save(SaveId::All), save_strings),
                 bfs: FileSelect::new(FileId::Bfs, bfs_strings),
                 cheats: Cheats::new(cheats_strings),
                 options: Options::new(opt_strings),
@@ -164,11 +174,12 @@ impl Application for Gui {
             }
             Message::About(message) => self.about.update(message),
             Message::FileSelect(id, message) => match id {
-                FileId::Save => self.save.update(message),
+                FileId::Save(_) => self.save.update(message),
                 FileId::Bfs => self.bfs.update(message),
             },
             Message::Save(id, path) => match id {
-                FileId::Save => {
+                FileId::Save(save_id) => {
+                    // TODO partial save
                     let save = data::WhipseeySaveData {
                         options: self.options.get_state(),
                         files: self.files.get_state(),
@@ -176,7 +187,7 @@ impl Application for Gui {
                     let ini = save.into();
                     Command::perform(
                         async move { util::write_ini_file_padded(path, &ini).await },
-                        |_| Message::Saved(FileId::Save),
+                        move |_| Message::Saved(id),
                     )
                 }
                 FileId::Bfs => {
@@ -192,9 +203,9 @@ impl Application for Gui {
             },
             Message::Saved(_id) => Command::none(), // TODO?
             Message::Load(id, path) => match id {
-                FileId::Save => Command::perform(
+                FileId::Save(save_id) => Command::perform(
                     async { util::load_ini_file(path).await?.try_into() },
-                    Message::LoadedSave,
+                    move |result| Message::LoadedSave(save_id, result),
                 ),
                 FileId::Bfs => Command::perform(
                     async { util::load_ini_file(path).await?.try_into() },
@@ -205,10 +216,30 @@ impl Application for Gui {
                 self.cheats.set_state(result.unwrap().cheats); // TODO error handling (all unwraps)
                 Command::none()
             }
-            Message::LoadedSave(result) => {
+            Message::LoadedSave(id, result) => {
                 let save = result.unwrap();
-                self.options.set_state(save.options);
-                self.files.set_state(save.files);
+                let mut files_old = self.files.get_state();
+                match id {
+                    SaveId::All => {
+                        self.options.set_state(save.options);
+                        self.files.set_state(save.files);
+                    }
+                    SaveId::Options => {
+                        self.options.set_state(save.options);
+                    }
+                    SaveId::File1 => {
+                        let files_new = [save.files[File1], files_old[File2], files_old[File3]];
+                        self.files.set_state(files_new);
+                    }
+                    SaveId::File2 => {
+                        let files_new = [files_old[File1], save.files[File2], files_old[File3]];
+                        self.files.set_state(files_new);
+                    }
+                    SaveId::File3 => {
+                        let files_new = [files_old[File1], files_old[File2], save.files[File3]];
+                        self.files.set_state(files_new);
+                    }
+                }
                 Command::none()
             }
             Message::Cheats(message) => self.cheats.update(message),
