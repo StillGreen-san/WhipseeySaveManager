@@ -15,7 +15,7 @@ pub use cheats::Cheats;
 pub use file::File;
 pub use options::Options;
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct WhipseeySaveData {
     pub options: Options,
     pub files: [File; 3],
@@ -41,18 +41,17 @@ impl From<WhipseeySaveData> for Ini {
         let mut ini = Ini::new();
         ini.entry(Some(value.options.ini_section_str().into()))
             .or_insert(value.options.into());
-        let [file1, file2, file3] = value.files;
         ini.entry(Some(File3.ini_section_str().into()))
-            .or_insert(file3.into());
+            .or_insert(value.files[File3].into());
         ini.entry(Some(File2.ini_section_str().into()))
-            .or_insert(file2.into());
+            .or_insert(value.files[File2].into());
         ini.entry(Some(File1.ini_section_str().into()))
-            .or_insert(file1.into());
+            .or_insert(value.files[File1].into());
         ini
     }
 }
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct BfsSettings {
     pub cheats: Cheats,
 }
@@ -346,7 +345,7 @@ mod test {
                 cheats_enabled: CheatsEnabled::Disabled,
             },
         };
-        let value: String = settings.cheats.cheats_enabled.clone().into();
+        let value: String = settings.cheats.cheats_enabled.into();
         let ini: Ini = settings.into();
         assert_eq!(
             ini.get_from(Some(Cheats::INI_SECTION_STR), CheatsEnabled::INI_KEY_STR),
@@ -429,9 +428,9 @@ mod test {
                 music_volume: MusicVolume::V50,
                 music_toggle: MusicToggle::Enabled,
             },
-            files: [file.clone(), file.clone(), file],
+            files: [file, file, file],
         };
-        let ini: Ini = data.clone().into();
+        let ini: Ini = data.into();
         assert_eq!(
             ini.get_from(Some(Language::INI_SECTION_STR), Language::INI_KEY_STR),
             Some(String::from(data.options.language).as_str())
@@ -464,21 +463,20 @@ mod test {
             ini.get_from(Some(MusicToggle::INI_SECTION_STR), MusicToggle::INI_KEY_STR),
             Some(String::from(data.options.music_toggle).as_str())
         );
-        let [file1, file2, file3] = data.files;
         assert_eq!(
             ini.get_from(
                 Some(File1.ini_section_str()),
                 BossNoDamageProgress::INI_KEY_STR
             ),
-            Some(String::from(file1.boss_no_damage_progress).as_str())
+            Some(String::from(data.files[File1].boss_no_damage_progress).as_str())
         );
         assert_eq!(
             ini.get_from(Some(File2.ini_section_str()), EnemiesDefeated::INI_KEY_STR),
-            Some(String::from(file2.enemies_defeated).as_str())
+            Some(String::from(data.files[File2].enemies_defeated).as_str())
         );
-        let (_, file1_moon, _, _, file1_forest) = file1.level.into_parts();
-        let (_, _, file2_snow, _, _) = file2.level.into_parts();
-        let (file3_castle, _, _, file3_desert, _) = file3.level.into_parts();
+        let (_, file1_moon, _, _, file1_forest) = data.files[File1].level.into_parts();
+        let (_, _, file2_snow, _, _) = data.files[File2].level.into_parts();
+        let (file3_castle, _, _, file3_desert, _) = data.files[File3].level.into_parts();
         assert_eq!(
             ini.get_from(Some(File3.ini_section_str()), Castle::INI_KEY_STR),
             Some(String::from(file3_castle).as_str())
@@ -501,19 +499,19 @@ mod test {
         );
         assert_eq!(
             ini.get_from(Some(File2.ini_section_str()), Ending::INI_KEY_STR),
-            Some(String::from(file2.ending).as_str())
+            Some(String::from(data.files[File2].ending).as_str())
         );
         assert_eq!(
             ini.get_from(Some(File3.ini_section_str()), Intro::INI_KEY_STR),
-            Some(String::from(file3.intro).as_str())
+            Some(String::from(data.files[File3].intro).as_str())
         );
         assert_eq!(
             ini.get_from(Some(File1.ini_section_str()), Lives::INI_KEY_STR),
-            Some(String::from(file1.lives).as_str())
+            Some(String::from(data.files[File1].lives).as_str())
         );
         assert_eq!(
             ini.get_from(Some(File2.ini_section_str()), Gems::INI_KEY_STR),
-            Some(String::from(file2.gems).as_str())
+            Some(String::from(data.files[File2].gems).as_str())
         );
     }
 

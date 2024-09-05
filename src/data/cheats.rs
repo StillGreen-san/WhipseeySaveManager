@@ -3,7 +3,7 @@ use crate::{data, ini_impl_common};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
-#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum CheatsEnabled {
     #[default]
@@ -17,7 +17,7 @@ impl From<CheatsEnabled> for String {
     }
 }
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct Cheats {
     pub cheats_enabled: CheatsEnabled,
 }
@@ -55,7 +55,7 @@ mod tests {
         let cheats = Cheats {
             cheats_enabled: CheatsEnabled::Enabled,
         };
-        let props: Properties = cheats.clone().into();
+        let props: Properties = cheats.into();
         assert_eq!(
             props.get(CheatsEnabled::INI_KEY_STR),
             Some(String::from(cheats.cheats_enabled).as_str())

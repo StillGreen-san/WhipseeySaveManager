@@ -4,7 +4,7 @@ use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{Display, VariantArray};
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum Language {
@@ -22,7 +22,7 @@ pub enum Language {
 }
 ini_impl_quoted!(Language, Options, "language");
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum Scale {
@@ -33,7 +33,7 @@ pub enum Scale {
 }
 ini_impl_quoted!(Scale, Options, "scale");
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum Fullscreen {
@@ -43,7 +43,7 @@ pub enum Fullscreen {
 }
 ini_impl_quoted!(Fullscreen, Options, "fullscreen");
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum LeftHanded {
@@ -53,7 +53,7 @@ pub enum LeftHanded {
 }
 ini_impl_quoted!(LeftHanded, Options, "left_handed");
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum SoundVolume {
@@ -72,7 +72,7 @@ pub enum SoundVolume {
 }
 ini_impl_quoted!(SoundVolume, Options, "sound_volume", 100.0);
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum SoundToggle {
@@ -82,7 +82,7 @@ pub enum SoundToggle {
 }
 ini_impl_quoted!(SoundToggle, Options, "sound_toggle");
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum MusicVolume {
@@ -101,7 +101,7 @@ pub enum MusicVolume {
 }
 ini_impl_quoted!(MusicVolume, Options, "music_volume", 100.0);
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
 pub enum MusicToggle {
@@ -111,7 +111,7 @@ pub enum MusicToggle {
 }
 ini_impl_quoted!(MusicToggle, Options, "music_toggle");
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct Options {
     pub language: Language,
     pub scale: Scale,
@@ -177,7 +177,7 @@ mod tests {
             music_volume: MusicVolume::V0,
             music_toggle: MusicToggle::Disabled,
         };
-        let props: Properties = options.clone().into();
+        let props: Properties = options.into();
         assert_eq!(
             props.get(Language::INI_KEY_STR),
             Some(String::from(options.language).as_str())

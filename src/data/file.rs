@@ -6,7 +6,7 @@ use std::ops::{Index, IndexMut};
 use strum::{Display, VariantArray};
 
 #[repr(u8)]
-#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 pub enum BossNoDamageProgress {
     #[default]
     None = 0,
@@ -20,7 +20,7 @@ pub enum BossNoDamageProgress {
 }
 ini_impl_quoted!(BossNoDamageProgress, "boss_no_damage_progress");
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct EnemiesDefeated(u32);
 primitive_impl!(EnemiesDefeated, 0, 0, 1677215, u32);
 ini_impl_quoted!(EnemiesDefeated, "enemies_defeated", u32);
@@ -79,7 +79,7 @@ impl Level {
     }
 }
 
-#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Castle {
     #[default]
@@ -88,7 +88,7 @@ pub enum Castle {
 }
 ini_impl_quoted!(Castle, "castle");
 
-#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Moon {
     #[default]
@@ -97,7 +97,7 @@ pub enum Moon {
 }
 ini_impl_quoted!(Moon, "moon");
 
-#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Snow {
     #[default]
@@ -106,7 +106,7 @@ pub enum Snow {
 }
 ini_impl_quoted!(Snow, "snow");
 
-#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Desert {
     #[default]
@@ -124,7 +124,7 @@ pub enum Forest {
 }
 ini_impl_quoted!(Forest, "forest");
 
-#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Ending {
     #[default]
@@ -133,7 +133,7 @@ pub enum Ending {
 }
 ini_impl_quoted!(Ending, "ending");
 
-#[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Intro {
     #[default]
@@ -142,17 +142,17 @@ pub enum Intro {
 }
 ini_impl_quoted!(Intro, "intro");
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Lives(u32);
 primitive_impl!(Lives, 1, 5, 99999, u32);
 ini_impl_quoted!(Lives, "lives", u32);
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Gems(u8);
 primitive_impl!(Gems, 0, 0, 99, u8);
 ini_impl_quoted!(Gems, "gems");
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct File {
     pub boss_no_damage_progress: BossNoDamageProgress,
     pub enemies_defeated: EnemiesDefeated,
@@ -254,7 +254,7 @@ mod tests {
             lives: Lives::try_from(5).unwrap(),
             gems: Gems::try_from(99).unwrap(),
         };
-        let props: Properties = file.clone().into();
+        let props: Properties = file.into();
         assert_eq!(
             props.get(BossNoDamageProgress::INI_KEY_STR),
             Some(String::from(file.boss_no_damage_progress).as_str())
