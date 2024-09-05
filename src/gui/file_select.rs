@@ -1,7 +1,7 @@
 use std::future::ready;
 use std::path::PathBuf;
 
-use crate::gui::with_tooltip;
+use crate::gui::{with_tooltip, ElementState};
 use iced::widget::tooltip::Position;
 use iced::widget::{button, row, text, text_input};
 use iced::{Command, Element, Renderer};
@@ -118,6 +118,18 @@ impl FileSelect {
         ]
         .spacing(4)
         .into()
+    }
+}
+
+impl ElementState for FileSelect {
+    type State = PathBuf;
+
+    fn get_state(&self) -> Self::State {
+        self.path.clone()
+    }
+
+    fn set_state(&mut self, state: Self::State) {
+        self.path = state;
     }
 }
 
