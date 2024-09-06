@@ -11,6 +11,7 @@ pub mod options;
 
 use crate::data;
 use crate::data::file::{File1, File2, File3};
+use crate::util::LocateError;
 pub use cheats::Cheats;
 pub use file::File;
 pub use options::Options;
@@ -177,7 +178,9 @@ pub enum Error {
     Io(String),
     #[error("{0}")]
     TryFromPrimitive(String),
-}
+    #[error(transparent)]
+    LocateError(#[from] LocateError),
+} // TODO refactor
 
 impl<Enum: TryFromPrimitive> From<TryFromPrimitiveError<Enum>> for Error {
     fn from(value: TryFromPrimitiveError<Enum>) -> Self {

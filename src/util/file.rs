@@ -2,6 +2,10 @@ use crate::util::for_each_window_mut;
 use ini::Ini;
 use std::cmp::max;
 use std::path::Path;
+use std::path::PathBuf;
+use steamlocate::error::ParseErrorKind;
+use steamlocate::Error;
+use thiserror::Error;
 
 pub async fn load_ini_file(path: impl AsRef<Path>) -> Result<Ini, ini::Error> {
     tokio::fs::read_to_string(path)
@@ -38,4 +42,48 @@ pub async fn write_ini_file_padded(path: impl AsRef<Path>, ini: &Ini) -> std::io
     content.retain(|&c| c != 0);
     content.resize(max(1024, content.len()), 0); // not expected to be > 1kb
     tokio::fs::write(path, &content).await
+}
+
+#[derive(Error, Debug, Clone)]
+pub enum LocateError {
+    #[error("{0}")]
+    FailedLocate(steamlocate::error::LocateError),
+    #[error("{0}")]
+    InvalidSteamDir(steamlocate::error::ValidationError),
+    #[error("Encountered an I/O error: {inner} at {}", path.display())]
+    Io { inner: String, path: PathBuf },
+    #[error("Failed parsing VDF file. File kind: {kind:?}, Error: {error} at {}", path.display())]
+    Parse {
+        kind: ParseErrorKind,
+        error: String,
+        path: PathBuf,
+    },
+    #[error("Missing expected app with id: {app_id}")]
+    MissingExpectedApp { app_id: u32 },
+}
+
+impl From<steamlocate::Error> for LocateError {
+    fn from(value: steamlocate::Error) -> Self {
+        match value {
+            steamlocate::Error::FailedLocate(locate_error) => {
+                LocateError::FailedLocate(locate_error)
+            }
+            steamlocate::Error::InvalidSteamDir(validation_error) => {
+                LocateError::InvalidSteamDir(validation_error)
+            }
+            steamlocate::Error::Io { inner, path } => LocateError::Io {
+                inner: inner.to_string(),
+                path,
+            },
+            steamlocate::Error::Parse { kind, error, path } => LocateError::Parse {
+                kind,
+                error: error.to_string(),
+                path,
+            },
+            steamlocate::Error::MissingExpectedApp { app_id } => {
+                LocateError::MissingExpectedApp { app_id }
+            }
+            _ => unimplemented!(),
+        }
+    }
 }
