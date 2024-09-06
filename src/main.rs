@@ -5,7 +5,7 @@ mod gui;
 mod util;
 
 const WHIPSEEY_APP_ID: u32 = 1034920;
-const SETTINGS_FILE_NAME: &'static str = "bfs_settings.ini";
+const BFS_SETTINGS_FILE_NAME: &'static str = "bfs_settings.ini";
 const SAVEGAME_FILE_NAME: &'static str = "whipseey.sav";
 
 fn main() -> Result<(), iced::Error> {

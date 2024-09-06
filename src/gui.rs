@@ -162,7 +162,7 @@ impl Application for Gui {
             },
             Command::batch([
                 font::load(iced_aw::BOOTSTRAP_FONT_BYTES).map(Message::LoadedFont),
-                Command::perform(util::find_settings_path(), Message::LoadedSettingsPath),
+                Command::perform(util::find_bfs_settings_path(), Message::LoadedSettingsPath),
             ]),
         )
     }

@@ -1,5 +1,5 @@
 use crate::util::for_each_window_mut;
-use crate::{SETTINGS_FILE_NAME, WHIPSEEY_APP_ID};
+use crate::{BFS_SETTINGS_FILE_NAME, WHIPSEEY_APP_ID};
 use ini::Ini;
 use std::cmp::max;
 use std::path::Path;
@@ -45,12 +45,12 @@ pub async fn write_ini_file_padded(path: impl AsRef<Path>, ini: &Ini) -> std::io
     tokio::fs::write(path, &content).await
 }
 
-pub async fn find_settings_path() -> Result<Option<PathBuf>, LocateError> {
+pub async fn find_bfs_settings_path() -> Result<Option<PathBuf>, LocateError> {
     Ok(SteamDir::locate()?
         .find_app(WHIPSEEY_APP_ID)?
         .map(|(app, lib)| {
             let mut path = lib.resolve_app_dir(&app);
-            path.push(SETTINGS_FILE_NAME);
+            path.push(BFS_SETTINGS_FILE_NAME);
             path
         }))
 }
