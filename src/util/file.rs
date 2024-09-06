@@ -55,6 +55,23 @@ pub async fn find_bfs_settings_path() -> Result<Option<PathBuf>, LocateError> {
         }))
 }
 
+pub fn trim_to_existing_path(path: &Path) -> &Path {
+    let mut path = if path.is_file() {
+        path.parent().unwrap_or(path)
+    } else {
+        path
+    };
+    while !path.exists() {
+        if let Some(parent) = path.parent() {
+            path = parent;
+        } else {
+            path = path.strip_prefix(path).unwrap_or(path);
+            break;
+        };
+    }
+    path
+}
+
 #[derive(Error, Debug, Clone)]
 pub enum LocateError {
     #[error("{0}")]

@@ -5,6 +5,7 @@ pub mod test;
 
 pub use file::find_bfs_settings_path;
 pub use file::load_ini_file;
+pub use file::trim_to_existing_path;
 pub use file::write_ini_file;
 pub use file::write_ini_file_padded;
 pub use file::LocateError;
