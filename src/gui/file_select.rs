@@ -45,7 +45,7 @@ impl FileSelect {
     }
 
     async fn run_file_dialog(dialog: AsyncFileDialog) -> Message {
-        Message::Opened(dialog.pick_file().await.map(|path_buf| path_buf.into()))
+        Message::Selected(dialog.pick_file().await.map(|path_buf| path_buf.into()))
     }
 
     fn build_file_dialog(display_strings: &DisplayStrings) -> AsyncFileDialog {
@@ -69,7 +69,7 @@ impl FileSelect {
                 let dialog = Self::build_file_dialog(&self.display_strings);
                 Command::perform(Self::run_file_dialog(dialog), move |msg| msg.pack(id))
             }
-            Message::Opened(opt_path) => match opt_path {
+            Message::Selected(opt_path) => match opt_path {
                 None => Command::none(),
                 Some(path) => {
                     self.path = path;
@@ -128,7 +128,7 @@ impl ElementState for FileSelect {
 pub enum Message {
     PathChanged(String),
     Open,
-    Opened(Option<PathBuf>),
+    Selected(Option<PathBuf>),
     Save,
     Reload,
 }
