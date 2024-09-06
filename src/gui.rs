@@ -1,4 +1,4 @@
-use crate::{data, util};
+use crate::{data, util, BFS_SETTINGS_FILE_NAME, SAVEGAME_FILE_NAME};
 use data::file::{File1, File2, File3};
 use iced::widget::{column, text, tooltip, Tooltip};
 use iced::{font, theme, Application, Command, Element, Renderer};
@@ -91,6 +91,7 @@ impl Application for Gui {
             reload_label: "reload",
             reload_tooltip: "Reload Values from File",
             dialog_title: "save game",
+            dialog_file_name: SAVEGAME_FILE_NAME,
             dialog_filter_file: "save",
             dialog_filter_ext: "sav",
             dialog_filter_all: "all",
@@ -98,6 +99,7 @@ impl Application for Gui {
         let bfs_strings = file_select::DisplayStrings {
             placeholder: "bfs settings",
             dialog_title: "bfs settings",
+            dialog_file_name: BFS_SETTINGS_FILE_NAME,
             dialog_filter_file: "ini",
             dialog_filter_ext: "ini",
             ..save_strings

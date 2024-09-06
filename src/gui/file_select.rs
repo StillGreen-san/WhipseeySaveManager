@@ -22,6 +22,7 @@ pub struct DisplayStrings {
     pub reload_label: &'static str,
     pub reload_tooltip: &'static str,
     pub dialog_title: &'static str,
+    pub dialog_file_name: &'static str,
     pub dialog_filter_file: &'static str,
     pub dialog_filter_ext: &'static str,
     pub dialog_filter_all: &'static str,
@@ -51,6 +52,7 @@ impl FileSelect {
     fn build_file_dialog(display_strings: &DisplayStrings) -> AsyncFileDialog {
         AsyncFileDialog::new()
             .set_title(display_strings.dialog_title)
+            .set_file_name(display_strings.dialog_file_name)
             .add_filter(
                 display_strings.dialog_filter_file,
                 &[display_strings.dialog_filter_ext],
