@@ -3,6 +3,7 @@ use data::file::{File1, File2, File3};
 use iced::widget::{column, text, tooltip, Tooltip};
 use iced::{font, theme, Application, Command, Element, Renderer};
 use iced_aw::{TabLabel, Tabs};
+use std::env::VarError;
 use std::path::PathBuf;
 
 mod about;
@@ -56,7 +57,8 @@ pub enum Message {
     Options(options::Message),
     Files(files::Message),
     LoadedFont(Result<(), font::Error>),
-    LoadedSettingsPath(Result<Option<PathBuf>, LocateError>),
+    LoadedBfsSettingsPath(Result<Option<PathBuf>, LocateError>),
+    LoadedSavegamePath(Result<Option<PathBuf>, VarError>),
 }
 
 pub struct Gui {
@@ -164,7 +166,11 @@ impl Application for Gui {
             },
             Command::batch([
                 font::load(iced_aw::BOOTSTRAP_FONT_BYTES).map(Message::LoadedFont),
-                Command::perform(util::find_bfs_settings_path(), Message::LoadedSettingsPath),
+                Command::perform(
+                    util::find_bfs_settings_path(),
+                    Message::LoadedBfsSettingsPath,
+                ),
+                Command::perform(util::find_savegame_path(), Message::LoadedSavegamePath),
             ]),
         )
     }
@@ -277,10 +283,18 @@ impl Application for Gui {
                 result.expect("loading font from const bytes should not be able to fail");
                 Command::none()
             }
-            Message::LoadedSettingsPath(path) => {
+            Message::LoadedBfsSettingsPath(path) => {
                 match path {
                     Ok(Some(path)) => self
                         .cheats_path
+                        .update(file_select::Message::Selected(Some(path))),
+                    _ => Command::none(), // TODO error handling
+                }
+            }
+            Message::LoadedSavegamePath(path) => {
+                match path {
+                    Ok(Some(path)) => self
+                        .save_path
                         .update(file_select::Message::Selected(Some(path))),
                     _ => Command::none(), // TODO error handling
                 }

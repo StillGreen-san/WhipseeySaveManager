@@ -1,7 +1,8 @@
 use crate::util::for_each_window_mut;
-use crate::{BFS_SETTINGS_FILE_NAME, WHIPSEEY_APP_ID};
+use crate::{BFS_SETTINGS_FILE_NAME, SAVEGAME_FILE_NAME, WHIPSEEY_APP_ID};
 use ini::Ini;
 use std::cmp::max;
+use std::env::VarError;
 use std::path::Path;
 use std::path::PathBuf;
 use steamlocate::error::ParseErrorKind;
@@ -43,6 +44,15 @@ pub async fn write_ini_file_padded(path: impl AsRef<Path>, ini: &Ini) -> std::io
     content.retain(|&c| c != 0);
     content.resize(max(1024, content.len()), 0); // not expected to be > 1kb
     tokio::fs::write(path, &content).await
+}
+
+pub async fn find_savegame_path() -> Result<Option<PathBuf>, VarError> {
+    let local_appdata = std::env::var("LOCALAPPDATA")?;
+    let mut path = PathBuf::from(local_appdata);
+    path.push("Whipseey");
+    path.push("savedata");
+    path.push(SAVEGAME_FILE_NAME);
+    Ok(path.exists().then_some(path)) // TODO non windows support
 }
 
 pub async fn find_bfs_settings_path() -> Result<Option<PathBuf>, LocateError> {

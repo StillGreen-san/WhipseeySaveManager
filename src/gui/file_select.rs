@@ -70,7 +70,7 @@ impl FileSelect {
             }
             Message::Open => {
                 let id = self.id;
-                let dialog = self.build_file_dialog();
+                let dialog = self.build_file_dialog(); // TODO lock ui?
                 Command::perform(Self::run_file_dialog(dialog), move |msg| msg.pack(id))
             }
             Message::Selected(opt_path) => match opt_path {
