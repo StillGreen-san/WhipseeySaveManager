@@ -3,6 +3,7 @@ use data::file::{File1, File2, File3};
 use iced::widget::{column, text, tooltip, Tooltip};
 use iced::{font, theme, Application, Command, Element, Renderer};
 use iced_aw::{TabLabel, Tabs};
+use std::path::PathBuf;
 
 mod about;
 mod cheats;
@@ -10,6 +11,7 @@ mod file_select;
 mod files;
 mod options;
 
+use crate::util::LocateError;
 use about::About;
 use cheats::Cheats;
 use file_select::FileSelect;
@@ -53,7 +55,8 @@ pub enum Message {
     Cheats(cheats::Message),
     Options(options::Message),
     Files(files::Message),
-    FontLoaded(Result<(), font::Error>),
+    LoadedFont(Result<(), font::Error>),
+    LoadedSettingsPath(Result<Option<PathBuf>, LocateError>),
 }
 
 pub struct Gui {
@@ -157,7 +160,10 @@ impl Application for Gui {
                 options: Options::new(opt_strings),
                 files: Files::new(files_strings),
             },
-            font::load(iced_aw::BOOTSTRAP_FONT_BYTES).map(Message::FontLoaded),
+            Command::batch([
+                font::load(iced_aw::BOOTSTRAP_FONT_BYTES).map(Message::LoadedFont),
+                Command::perform(util::find_settings_path(), Message::LoadedSettingsPath),
+            ]),
         )
     }
 
@@ -265,9 +271,17 @@ impl Application for Gui {
             Message::Cheats(message) => self.cheats.update(message),
             Message::Options(message) => self.options.update(message),
             Message::Files(message) => self.files.update(message),
-            Message::FontLoaded(result) => {
+            Message::LoadedFont(result) => {
                 result.expect("loading font from const bytes should not be able to fail");
                 Command::none()
+            }
+            Message::LoadedSettingsPath(path) => {
+                match path {
+                    Ok(Some(path)) => self
+                        .cheats_path
+                        .update(file_select::Message::Selected(Some(path))),
+                    _ => Command::none(), // TODO error handling
+                }
             }
         }
     }
