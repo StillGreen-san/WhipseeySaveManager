@@ -2,6 +2,7 @@ use std::future::ready;
 use std::path::PathBuf;
 
 use crate::gui::{with_tooltip, ElementState};
+use crate::util;
 use iced::widget::tooltip::Position;
 use iced::widget::{button, row, text, text_input};
 use iced::{Command, Element, Renderer};
@@ -49,15 +50,16 @@ impl FileSelect {
         Message::Selected(dialog.pick_file().await.map(|path_buf| path_buf.into()))
     }
 
-    fn build_file_dialog(display_strings: &DisplayStrings) -> AsyncFileDialog {
+    fn build_file_dialog(&self) -> AsyncFileDialog {
         AsyncFileDialog::new()
-            .set_title(display_strings.dialog_title)
-            .set_file_name(display_strings.dialog_file_name)
+            .set_title(self.display_strings.dialog_title)
+            .set_directory(util::trim_to_existing_path(&self.path))
+            .set_file_name(self.display_strings.dialog_file_name)
             .add_filter(
-                display_strings.dialog_filter_file,
-                &[display_strings.dialog_filter_ext],
+                self.display_strings.dialog_filter_file,
+                &[self.display_strings.dialog_filter_ext],
             )
-            .add_filter(display_strings.dialog_filter_all, &["*"])
+            .add_filter(self.display_strings.dialog_filter_all, &["*"])
     }
 
     pub fn update(&mut self, message: Message) -> Command<super::Message> {
@@ -68,7 +70,7 @@ impl FileSelect {
             }
             Message::Open => {
                 let id = self.id;
-                let dialog = Self::build_file_dialog(&self.display_strings);
+                let dialog = self.build_file_dialog();
                 Command::perform(Self::run_file_dialog(dialog), move |msg| msg.pack(id))
             }
             Message::Selected(opt_path) => match opt_path {
