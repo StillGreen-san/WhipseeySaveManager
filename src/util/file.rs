@@ -1,10 +1,11 @@
 use crate::util::for_each_window_mut;
+use crate::{SETTINGS_FILE_NAME, WHIPSEEY_APP_ID};
 use ini::Ini;
 use std::cmp::max;
 use std::path::Path;
 use std::path::PathBuf;
 use steamlocate::error::ParseErrorKind;
-use steamlocate::Error;
+use steamlocate::SteamDir;
 use thiserror::Error;
 
 pub async fn load_ini_file(path: impl AsRef<Path>) -> Result<Ini, ini::Error> {
@@ -42,6 +43,16 @@ pub async fn write_ini_file_padded(path: impl AsRef<Path>, ini: &Ini) -> std::io
     content.retain(|&c| c != 0);
     content.resize(max(1024, content.len()), 0); // not expected to be > 1kb
     tokio::fs::write(path, &content).await
+}
+
+pub async fn find_settings_path() -> Result<Option<PathBuf>, LocateError> {
+    Ok(SteamDir::locate()?
+        .find_app(WHIPSEEY_APP_ID)?
+        .map(|(app, lib)| {
+            let mut path = lib.resolve_app_dir(&app);
+            path.push(SETTINGS_FILE_NAME);
+            path
+        }))
 }
 
 #[derive(Error, Debug, Clone)]
