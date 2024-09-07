@@ -86,7 +86,11 @@ impl Tab for About {
             library("thiserror [MIT]", "https://github.com/dtolnay/thiserror"),
             library("tokio [MIT]", "https://github.com/tokio-rs/tokio"),
             library("strum [MIT]", "https://github.com/Peternator7/strum"),
-            library("num [MIT]", "https://github.com/rust-num/num")
+            library("num [MIT]", "https://github.com/rust-num/num"),
+            library(
+                "dark-light [MIT]",
+                "https://github.com/frewsxcv/rust-dark-light"
+            ),
         ]
         .width(Length::Fill)
         .spacing(12)

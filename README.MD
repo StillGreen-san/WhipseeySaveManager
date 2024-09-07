@@ -40,6 +40,7 @@ Savegame.
 - [tokio](https://github.com/tokio-rs/tokio) [MIT]
 - [strum](https://github.com/Peternator7/strum) [MIT]
 - [num](https://github.com/rust-num/num) [MIT]
+- [dark-light](https://github.com/frewsxcv/rust-dark-light) [MIT]
 
 ### Tests
 
