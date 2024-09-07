@@ -166,15 +166,21 @@ impl text_input::StyleSheet for Theme {
     type Style = theme::TextInput;
 
     fn active(&self, style: &Self::Style) -> text_input::Appearance {
-        match self {
-            Light(theme) | Dark(theme) => theme.active(style),
-        }
+        let theme = match self {
+            Light(theme) | Dark(theme) => theme,
+        };
+        let mut appearance = theme.active(style);
+        appearance.border.color = theme.extended_palette().primary.weak.color;
+        appearance
     }
 
     fn focused(&self, style: &Self::Style) -> text_input::Appearance {
-        match self {
-            Light(theme) | Dark(theme) => theme.focused(style),
-        }
+        let theme = match self {
+            Light(theme) | Dark(theme) => theme,
+        };
+        let mut appearance = theme.focused(style);
+        appearance.border.width = 2.0;
+        appearance
     }
 
     fn placeholder_color(&self, style: &Self::Style) -> Color {
@@ -202,9 +208,12 @@ impl text_input::StyleSheet for Theme {
     }
 
     fn hovered(&self, style: &Self::Style) -> text_input::Appearance {
-        match self {
-            Light(theme) | Dark(theme) => theme.hovered(style),
-        }
+        let theme = match self {
+            Light(theme) | Dark(theme) => theme,
+        };
+        let mut appearance = theme.hovered(style);
+        appearance.border.color = theme.extended_palette().primary.base.color;
+        appearance
     }
 
     fn disabled(&self, style: &Self::Style) -> text_input::Appearance {
