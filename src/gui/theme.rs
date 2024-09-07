@@ -2,7 +2,7 @@ use iced::theme::{palette, Palette};
 use iced::widget::{
     button, checkbox, container, overlay::menu, radio, scrollable, text, text_input,
 };
-use iced::{application, color, theme, Background, Color};
+use iced::{application, color, theme, Background, Border, Color, Vector};
 use iced_aw::{card, number_input, style, tab_bar, CardStyles, TabBarStyles};
 
 #[derive(Debug, Clone, PartialEq)]
@@ -229,26 +229,124 @@ impl button::StyleSheet for Theme {
     type Style = theme::Button;
 
     fn active(&self, style: &Self::Style) -> button::Appearance {
-        match self {
-            Light(theme) | Dark(theme) => theme.active(style),
+        let theme = match self {
+            Light(theme) | Dark(theme) => theme,
+        };
+        let palette = theme.extended_palette();
+        let appearance = button::Appearance {
+            border: Border::with_radius(2),
+            ..button::Appearance::default()
+        };
+        let from_pair = |pair: palette::Pair| button::Appearance {
+            background: Some(pair.color.into()),
+            text_color: pair.text,
+            ..appearance
+        };
+
+        match style {
+            theme::Button::Primary => from_pair(palette.primary.strong),
+            theme::Button::Secondary => from_pair(palette.secondary.base),
+            theme::Button::Positive => from_pair(palette.success.base),
+            theme::Button::Destructive => from_pair(palette.danger.base),
+            theme::Button::Text => button::Appearance {
+                text_color: palette.primary.strong.color,
+                ..appearance
+            },
+            theme::Button::Custom(custom) => custom.active(theme),
         }
     }
 
     fn hovered(&self, style: &Self::Style) -> button::Appearance {
-        match self {
-            Light(theme) | Dark(theme) => theme.hovered(style),
+        let theme = match self {
+            Light(theme) | Dark(theme) => theme,
+        };
+
+        if let theme::Button::Custom(custom) = style {
+            return custom.hovered(theme);
+        }
+
+        let palette = theme.extended_palette();
+        let active = theme.active(style);
+        let pair = match style {
+            theme::Button::Primary => palette.primary.base,
+            theme::Button::Secondary => palette.background.strong,
+            theme::Button::Positive => palette.success.strong,
+            theme::Button::Destructive => palette.danger.strong,
+            theme::Button::Text => {
+                return button::Appearance {
+                    background: None,
+                    text_color: palette.primary.base.color,
+                    ..active
+                }
+            }
+            theme::Button::Custom(_) => unreachable!(),
+        };
+
+        button::Appearance {
+            background: Some(pair.color.into()),
+            text_color: pair.text,
+            ..active
         }
     }
 
     fn pressed(&self, style: &Self::Style) -> button::Appearance {
-        match self {
-            Light(theme) | Dark(theme) => theme.pressed(style),
+        let theme = match self {
+            Light(theme) | Dark(theme) => theme,
+        };
+
+        if let theme::Button::Custom(custom) = style {
+            return custom.pressed(theme);
+        }
+
+        let palette = theme.extended_palette();
+        let pair = match style {
+            theme::Button::Primary => palette.primary.weak,
+            theme::Button::Secondary => palette.secondary.weak,
+            theme::Button::Positive => palette.success.weak,
+            theme::Button::Destructive => palette.danger.weak,
+            theme::Button::Text => {
+                return button::Appearance {
+                    shadow_offset: Vector::default(),
+                    background: None,
+                    text_color: palette.primary.weak.color,
+                    ..self.active(style)
+                }
+            }
+            theme::Button::Custom(_) => unreachable!(),
+        };
+
+        button::Appearance {
+            shadow_offset: Vector::default(),
+            background: Some(pair.color.into()),
+            text_color: pair.text,
+            ..self.active(style)
         }
     }
 
     fn disabled(&self, style: &Self::Style) -> button::Appearance {
-        match self {
-            Light(theme) | Dark(theme) => theme.disabled(style),
+        let theme = match self {
+            Light(theme) | Dark(theme) => theme,
+        };
+        if let theme::Button::Custom(custom) = style {
+            return custom.disabled(theme);
+        }
+
+        let active = theme.active(style);
+
+        button::Appearance {
+            shadow_offset: Vector::default(),
+            background: active.background.map(|background| match background {
+                Background::Color(color) => Background::Color(Color {
+                    a: color.a * 0.5,
+                    ..color
+                }),
+                Background::Gradient(gradient) => Background::Gradient(gradient.mul_alpha(0.5)),
+            }),
+            text_color: Color {
+                a: active.text_color.a * 0.5,
+                ..active.text_color
+            },
+            ..active
         }
     }
 }

@@ -1,7 +1,7 @@
 use crate::gui::{Tab, Theme};
 use iced::alignment::Horizontal;
 use iced::widget::{button, column, row, scrollable, text, Space};
-use iced::{Alignment, Color, Command, Element, Length, Renderer};
+use iced::{Alignment, Command, Element, Length, Renderer};
 use iced_aw::TabLabel;
 
 #[derive(Debug, Clone)]
@@ -33,15 +33,11 @@ fn library(
         text(label)
             .width(Length::FillPortion(20))
             .horizontal_alignment(Horizontal::Right),
-        button(
-            text(link)
-                .horizontal_alignment(Horizontal::Left)
-                .style(Color::from_rgb8(50, 90, 220)),
-        )
-        .on_press(super::Message::About(Message::Link(link)))
-        .style(iced::theme::Button::Text)
-        .width(Length::FillPortion(50))
-        .padding(0),
+        button(text(link).horizontal_alignment(Horizontal::Left))
+            .on_press(super::Message::About(Message::Link(link)))
+            .style(iced::theme::Button::Text)
+            .width(Length::FillPortion(50))
+            .padding(0),
         Space::with_width(Length::FillPortion(15)),
     ]
     .spacing(4)
