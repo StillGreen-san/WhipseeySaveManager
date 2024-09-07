@@ -2,7 +2,7 @@ use crate::{data, util, BFS_SETTINGS_FILE_NAME, SAVEGAME_FILE_NAME};
 use dark_light::Mode;
 use data::file::{File1, File2, File3};
 use iced::widget::{column, text, tooltip, Tooltip};
-use iced::{font, theme, Application, Command, Element, Renderer};
+use iced::{font, Application, Command, Element, Renderer};
 use iced_aw::{TabBarStyles, TabLabel, Tabs};
 use std::env::VarError;
 use std::path::PathBuf;
@@ -12,13 +12,16 @@ mod cheats;
 mod file_select;
 mod files;
 mod options;
+mod theme;
 
+use crate::gui::theme::ThemeStore;
 use crate::util::LocateError;
 use about::About;
 use cheats::Cheats;
 use file_select::FileSelect;
 use files::Files;
 use options::Options;
+use theme::Theme;
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub enum TabId {
@@ -60,7 +63,7 @@ pub enum Message {
     LoadedFont(Result<(), font::Error>),
     LoadedBfsSettingsPath(Result<Option<PathBuf>, LocateError>),
     LoadedSavegamePath(Result<Option<PathBuf>, VarError>),
-    UpdatedTheme(Theme),
+    UpdatedTheme(ThemeStore),
 }
 
 pub struct Gui {
@@ -71,10 +74,8 @@ pub struct Gui {
     cheats: Cheats,
     options: Options,
     files: Files,
-    theme: Theme,
+    theme: ThemeStore,
 }
-
-type Theme = iced::Theme;
 
 impl Application for Gui {
     type Executor = iced::executor::Default;
@@ -166,7 +167,7 @@ impl Application for Gui {
                 cheats: Cheats::new(cheats_strings),
                 options: Options::new(opt_strings),
                 files: Files::new(files_strings),
-                theme: Theme::default(),
+                theme: theme::light(),
             },
             Command::batch([
                 font::load(iced_aw::BOOTSTRAP_FONT_BYTES).map(Message::LoadedFont),
@@ -178,8 +179,8 @@ impl Application for Gui {
                 Command::perform(
                     async {
                         match dark_light::detect() {
-                            Mode::Dark => Theme::Dark,
-                            Mode::Light | Mode::Default => Theme::Light,
+                            Mode::Dark => theme::dark(),
+                            Mode::Light | Mode::Default => theme::light(),
                         }
                     },
                     Message::UpdatedTheme,
@@ -345,15 +346,17 @@ impl Application for Gui {
             .push(TabId::About, self.about.tab_label(), self.about.view())
             .set_active_tab(&self.active_tab)
             .tab_bar_style(match self.theme {
-                Theme::Light => TabBarStyles::Default,
-                Theme::Dark => TabBarStyles::Dark,
-                _ => unimplemented!(),
+                ThemeStore::Light(_) => TabBarStyles::Default,
+                ThemeStore::Dark(_) => TabBarStyles::Dark,
             })
             .into()
     }
 
     fn theme(&self) -> Self::Theme {
-        self.theme.clone()
+        match &self.theme {
+            ThemeStore::Light(theme) => theme.clone(),
+            ThemeStore::Dark(theme) => theme.clone(),
+        }
     }
 }
 
@@ -382,5 +385,5 @@ pub fn with_tooltip<'a>(
     tooltip_text: impl ToString,
     position: tooltip::Position,
 ) -> Tooltip<'a, Message, Theme, Renderer> {
-    tooltip(content, text(tooltip_text), position).style(theme::Container::Box)
+    tooltip(content, text(tooltip_text), position).style(iced::theme::Container::Box)
 }
