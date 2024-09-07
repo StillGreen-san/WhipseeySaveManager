@@ -78,14 +78,15 @@ impl tab_bar::StyleSheet for Theme {
             Light(theme) | Dark(theme) => theme,
         };
         let palette = theme.extended_palette();
+        let pair = if is_active {
+            palette.primary.strong
+        } else {
+            palette.background.weak
+        };
         match style {
             TabBarStyles::Default => tab_bar::Appearance {
-                tab_label_background: if is_active {
-                    Background::Color(palette.primary.strong.color)
-                } else {
-                    Background::Color(palette.background.weak.color)
-                },
-                text_color: palette.background.base.text,
+                tab_label_background: Background::Color(pair.color),
+                text_color: pair.text,
                 ..Default::default()
             },
             _ => theme.active(style, is_active),
@@ -101,6 +102,7 @@ impl tab_bar::StyleSheet for Theme {
         match style {
             TabBarStyles::Default => tab_bar::Appearance {
                 tab_label_background: Background::Color(palette.primary.base.color),
+                text_color: palette.primary.base.text,
                 ..self.active(style, is_active)
             },
             _ => theme.hovered(style, is_active),
