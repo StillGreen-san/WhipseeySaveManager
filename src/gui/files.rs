@@ -228,6 +228,7 @@ impl Files {
                 .align_items(Alignment::Center),
         )
         .padding_body([10, 8].into())
+        .style(CardStyles::Primary)
         .into()
     }
 }

@@ -1,8 +1,9 @@
 use crate::{data, util, BFS_SETTINGS_FILE_NAME, SAVEGAME_FILE_NAME};
+use dark_light::Mode;
 use data::file::{File1, File2, File3};
 use iced::widget::{column, text, tooltip, Tooltip};
 use iced::{font, theme, Application, Command, Element, Renderer};
-use iced_aw::{TabLabel, Tabs};
+use iced_aw::{TabBarStyles, TabLabel, Tabs};
 use std::env::VarError;
 use std::path::PathBuf;
 
@@ -59,6 +60,7 @@ pub enum Message {
     LoadedFont(Result<(), font::Error>),
     LoadedBfsSettingsPath(Result<Option<PathBuf>, LocateError>),
     LoadedSavegamePath(Result<Option<PathBuf>, VarError>),
+    UpdatedTheme(Theme),
 }
 
 pub struct Gui {
@@ -69,6 +71,7 @@ pub struct Gui {
     cheats: Cheats,
     options: Options,
     files: Files,
+    theme: Theme,
 }
 
 type Theme = iced::Theme;
@@ -163,6 +166,7 @@ impl Application for Gui {
                 cheats: Cheats::new(cheats_strings),
                 options: Options::new(opt_strings),
                 files: Files::new(files_strings),
+                theme: Theme::default(),
             },
             Command::batch([
                 font::load(iced_aw::BOOTSTRAP_FONT_BYTES).map(Message::LoadedFont),
@@ -171,6 +175,15 @@ impl Application for Gui {
                     Message::LoadedBfsSettingsPath,
                 ),
                 Command::perform(util::find_savegame_path(), Message::LoadedSavegamePath),
+                Command::perform(
+                    async {
+                        match dark_light::detect() {
+                            Mode::Dark => Theme::Dark,
+                            Mode::Light | Mode::Default => Theme::Light,
+                        }
+                    },
+                    Message::UpdatedTheme,
+                ),
             ]),
         )
     }
@@ -299,6 +312,10 @@ impl Application for Gui {
                     _ => Command::none(), // TODO error handling
                 }
             }
+            Message::UpdatedTheme(theme) => {
+                self.theme = theme;
+                Command::none()
+            }
         }
     }
 
@@ -327,7 +344,16 @@ impl Application for Gui {
             )
             .push(TabId::About, self.about.tab_label(), self.about.view())
             .set_active_tab(&self.active_tab)
+            .tab_bar_style(match self.theme {
+                Theme::Light => TabBarStyles::Default,
+                Theme::Dark => TabBarStyles::Dark,
+                _ => unimplemented!(),
+            })
             .into()
+    }
+
+    fn theme(&self) -> Self::Theme {
+        self.theme.clone()
     }
 }
 
