@@ -29,6 +29,8 @@ pub enum TabId {
     Options,
     #[default]
     Files,
+    #[cfg(debug_assertions)]
+    TestButton,
 }
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
@@ -195,7 +197,16 @@ impl Application for Gui {
     fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
         match message {
             Message::TabSelected(id) => {
-                self.active_tab = id;
+                match id {
+                    #[cfg(debug_assertions)]
+                    TabId::TestButton => {
+                        self.theme = match self.theme {
+                            Theme::Light(_) => theme::dark(),
+                            _ => theme::light(),
+                        }
+                    }
+                    _ => self.active_tab = id,
+                }
                 match id {
                     TabId::Files => self.save_path.set_id(FileId::Save(SaveId::Files)),
                     TabId::Options => self.save_path.set_id(FileId::Save(SaveId::Options)),
@@ -320,35 +331,37 @@ impl Application for Gui {
     }
 
     fn view(&self) -> Element<'_, Self::Message, Self::Theme, Renderer> {
-        Tabs::new(Message::TabSelected)
-            .push(
-                TabId::Files,
-                self.files.tab_label(),
-                column![self.save_path.view(), self.files.view()]
-                    .spacing(6)
-                    .padding(4),
-            )
-            .push(
-                TabId::Options,
-                self.options.tab_label(),
-                column![self.save_path.view(), self.options.view()]
-                    .spacing(7)
-                    .padding(4),
-            )
-            .push(
-                TabId::Cheats,
-                self.cheats.tab_label(),
-                column![self.cheats_path.view(), self.cheats.view()]
-                    .spacing(6)
-                    .padding(4),
-            )
-            .push(TabId::About, self.about.tab_label(), self.about.view())
-            .set_active_tab(&self.active_tab)
-            .tab_bar_style(match self.theme {
-                Theme::Light(_) => TabBarStyles::Default,
-                Theme::Dark(_) => TabBarStyles::Dark,
-            })
-            .into()
+        let tabs = Tabs::new(Message::TabSelected);
+        #[cfg(debug_assertions)]
+        let tabs = tabs.push(TabId::TestButton, TabLabel::Text("Theme".into()), column![]);
+        tabs.push(
+            TabId::Files,
+            self.files.tab_label(),
+            column![self.save_path.view(), self.files.view()]
+                .spacing(6)
+                .padding(4),
+        )
+        .push(
+            TabId::Options,
+            self.options.tab_label(),
+            column![self.save_path.view(), self.options.view()]
+                .spacing(7)
+                .padding(4),
+        )
+        .push(
+            TabId::Cheats,
+            self.cheats.tab_label(),
+            column![self.cheats_path.view(), self.cheats.view()]
+                .spacing(6)
+                .padding(4),
+        )
+        .push(TabId::About, self.about.tab_label(), self.about.view())
+        .set_active_tab(&self.active_tab)
+        .tab_bar_style(match self.theme {
+            Theme::Light(_) => TabBarStyles::Default,
+            Theme::Dark(_) => TabBarStyles::Dark,
+        })
+        .into()
     }
 
     fn theme(&self) -> Self::Theme {
