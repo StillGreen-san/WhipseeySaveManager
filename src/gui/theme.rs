@@ -1,4 +1,4 @@
-use iced::theme::Palette;
+use iced::theme::{palette, Palette};
 use iced::widget::{
     button, checkbox, container, overlay::menu, radio, scrollable, text, text_input,
 };
@@ -262,8 +262,29 @@ impl card::StyleSheet for Theme {
     type Style = style::CardStyles;
 
     fn active(&self, style: &Self::Style) -> card::Appearance {
-        match self {
-            Light(theme) | Dark(theme) => theme.active(style),
+        // adapted from iced_aw-0.9.3/src/style/card.rs:81
+        let theme = match self {
+            Light(theme) | Dark(theme) => theme,
+        };
+        let palette = theme.extended_palette();
+        let foreground = theme.palette();
+
+        let backing_with_text = |pair: palette::Pair| card::Appearance {
+            border_color: pair.color,
+            head_background: pair.color.into(),
+            head_text_color: pair.text,
+            close_color: pair.text,
+            background: palette.background.base.color.into(),
+            body_text_color: foreground.text,
+            foot_text_color: foreground.text,
+            ..card::Appearance::default()
+        };
+
+        match style {
+            CardStyles::Primary => backing_with_text(palette.primary.strong),
+            CardStyles::Secondary => backing_with_text(palette.primary.weak),
+            CardStyles::Default => backing_with_text(palette.background.weak),
+            _ => theme.active(style),
         }
     }
 }
