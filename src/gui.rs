@@ -14,7 +14,6 @@ mod files;
 mod options;
 mod theme;
 
-use crate::gui::theme::ThemeStore;
 use crate::util::LocateError;
 use about::About;
 use cheats::Cheats;
@@ -63,7 +62,7 @@ pub enum Message {
     LoadedFont(Result<(), font::Error>),
     LoadedBfsSettingsPath(Result<Option<PathBuf>, LocateError>),
     LoadedSavegamePath(Result<Option<PathBuf>, VarError>),
-    UpdatedTheme(ThemeStore),
+    UpdatedTheme(Theme),
 }
 
 pub struct Gui {
@@ -74,7 +73,7 @@ pub struct Gui {
     cheats: Cheats,
     options: Options,
     files: Files,
-    theme: ThemeStore,
+    theme: Theme,
 }
 
 impl Application for Gui {
@@ -346,17 +345,14 @@ impl Application for Gui {
             .push(TabId::About, self.about.tab_label(), self.about.view())
             .set_active_tab(&self.active_tab)
             .tab_bar_style(match self.theme {
-                ThemeStore::Light(_) => TabBarStyles::Default,
-                ThemeStore::Dark(_) => TabBarStyles::Dark,
+                Theme::Light(_) => TabBarStyles::Default,
+                Theme::Dark(_) => TabBarStyles::Dark,
             })
             .into()
     }
 
     fn theme(&self) -> Self::Theme {
-        match &self.theme {
-            ThemeStore::Light(theme) => theme.clone(),
-            ThemeStore::Dark(theme) => theme.clone(),
-        }
+        self.theme.clone()
     }
 }
 
