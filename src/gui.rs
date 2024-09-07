@@ -3,7 +3,7 @@ use dark_light::Mode;
 use data::file::{File1, File2, File3};
 use iced::widget::{column, text, tooltip, Tooltip};
 use iced::{font, Application, Command, Element, Renderer};
-use iced_aw::{TabBarStyles, TabLabel, Tabs};
+use iced_aw::{TabLabel, Tabs};
 use std::env::VarError;
 use std::path::PathBuf;
 
@@ -357,10 +357,6 @@ impl Application for Gui {
         )
         .push(TabId::About, self.about.tab_label(), self.about.view())
         .set_active_tab(&self.active_tab)
-        .tab_bar_style(match self.theme {
-            Theme::Light(_) => TabBarStyles::Default,
-            Theme::Dark(_) => TabBarStyles::Dark,
-        })
         .into()
     }
 

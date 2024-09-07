@@ -2,9 +2,8 @@ use iced::theme::Palette;
 use iced::widget::{
     button, checkbox, container, overlay::menu, radio, scrollable, text, text_input,
 };
-use iced::Color;
-use iced::{application, theme};
-use iced_aw::{card, number_input, style, tab_bar};
+use iced::{application, color, theme, Background, Color};
+use iced_aw::{card, number_input, style, tab_bar, CardStyles, TabBarStyles};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Theme {
@@ -20,22 +19,18 @@ impl Default for Theme {
     }
 }
 
-const WHIPSEEY_LOGO_PINK: Color = Color::from_rgb(
-    0xE9 as f32 / 255.0,
-    0x77 as f32 / 255.0,
-    0xA8 as f32 / 255.0,
-);
+const WHIPSEEY_LOGO_PINK: Color = iced::color!(0xE977A8);
 const WHIPSEEY_LIGHT_PALETTE: Palette = Palette {
     background: Palette::LIGHT.background,
     text: Palette::LIGHT.text,
-    primary: Palette::LIGHT.primary,
+    primary: WHIPSEEY_LOGO_PINK,
     success: Palette::LIGHT.success,
     danger: Palette::LIGHT.danger,
 };
 const WHIPSEEY_DARK_PALETTE: Palette = Palette {
     background: Palette::DARK.background,
     text: Palette::DARK.text,
-    primary: Palette::DARK.primary,
+    primary: WHIPSEEY_LOGO_PINK,
     success: Palette::DARK.success,
     danger: Palette::DARK.danger,
 };
@@ -78,14 +73,37 @@ impl tab_bar::StyleSheet for Theme {
     type Style = style::TabBarStyles;
 
     fn active(&self, style: &Self::Style, is_active: bool) -> tab_bar::Appearance {
-        match self {
-            Light(theme) | Dark(theme) => theme.active(style, is_active),
+        // adapted from iced_aw-0.9.3/src/style/tab_bar.rs:104
+        let theme = match self {
+            Light(theme) | Dark(theme) => theme,
+        };
+        let palette = theme.extended_palette();
+        match style {
+            TabBarStyles::Default => tab_bar::Appearance {
+                tab_label_background: if is_active {
+                    Background::Color(palette.primary.strong.color)
+                } else {
+                    Background::Color(palette.background.weak.color)
+                },
+                text_color: palette.background.base.text,
+                ..Default::default()
+            },
+            _ => theme.active(style, is_active),
         }
     }
 
     fn hovered(&self, style: &Self::Style, is_active: bool) -> tab_bar::Appearance {
-        match self {
-            Light(theme) | Dark(theme) => theme.hovered(style, is_active),
+        // adapted from iced_aw-0.9.3/src/style/tab_bar.rs:190
+        let theme = match self {
+            Light(theme) | Dark(theme) => theme,
+        };
+        let palette = theme.extended_palette();
+        match style {
+            TabBarStyles::Default => tab_bar::Appearance {
+                tab_label_background: Background::Color(palette.primary.base.color),
+                ..self.active(style, is_active)
+            },
+            _ => theme.hovered(style, is_active),
         }
     }
 }
