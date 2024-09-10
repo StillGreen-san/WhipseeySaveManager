@@ -1,12 +1,6 @@
 use iced::{window, Application, Pixels, Settings, Size};
 
-pub mod data;
-mod gui;
-mod util;
-
-const WHIPSEEY_APP_ID: u32 = 1034920;
-const BFS_SETTINGS_FILE_NAME: &'static str = "bfs_settings.ini";
-const SAVEGAME_FILE_NAME: &'static str = "whipseey.sav";
+use whipseey_save_manager::gui;
 
 fn main() -> Result<(), iced::Error> {
     let window = window::Settings {

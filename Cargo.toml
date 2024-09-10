@@ -2,6 +2,11 @@
 name = "WhipseeySaveManager"
 version = "0.12.0-dev"
 edition = "2021"
+publish = false
+
+[lib]
+name = "whipseey_save_manager"
+doctest = true
 
 [dependencies]
 iced = { version = "0.12.1", features = ["tokio"] }
