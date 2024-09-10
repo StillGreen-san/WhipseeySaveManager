@@ -68,13 +68,20 @@ fn ini_to_vec_padded_no_spacing(ini: &Ini, padded_size: usize) -> std::io::Resul
     Ok(content)
 }
 
+/// tries to find the savegame path
+///
+/// returns the full absolute path including the filename, or [None] if no valid path was found
+///
+/// **Windows**: uses `LOCALAPPDATA` environment variable
+///
+/// TODO non windows support
 pub async fn find_savegame_path() -> Result<Option<PathBuf>, VarError> {
     let local_appdata = std::env::var("LOCALAPPDATA")?;
     let mut path = PathBuf::from(local_appdata);
     path.push("Whipseey");
     path.push("savedata");
     path.push(SAVEGAME_FILE_NAME);
-    Ok(path.exists().then_some(path)) // TODO non windows support
+    Ok(path.exists().then_some(path))
 }
 
 pub async fn find_bfs_settings_path() -> Result<Option<PathBuf>, LocateError> {
@@ -192,5 +199,12 @@ mod tests {
         let ini = Ini::load_from_str(content).unwrap();
         let vec = ini_to_vec_padded_no_spacing(&ini, 8).unwrap();
         assert_eq!(content, std::str::from_utf8(&vec).unwrap());
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn find_savegame_path_test() {
+        let path = find_savegame_path().await;
+        println!("find_savegame_path_test: {:?}", path);
     }
 }
