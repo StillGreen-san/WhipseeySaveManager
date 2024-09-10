@@ -11,15 +11,23 @@ use steamlocate::error::ParseErrorKind;
 use steamlocate::SteamDir;
 use thiserror::Error;
 
+/// tries to load an INI file at `path` and tries to parse it into an [Ini] struct
+///
+/// trailing null bytes are removed before parsing
 pub async fn load_ini_file(path: impl AsRef<Path>) -> Result<Ini, ini::Error> {
-    tokio::fs::read_to_string(path)
-        .await
-        .map(|mut content| {
-            content.truncate(content.find('\0').unwrap_or(content.len()));
-            content
-        })
-        .map_err(ini::Error::Io)
-        .and_then(|content| Ini::load_from_str(&content).map_err(ini::Error::Parse))
+    parse_ini_file(tokio::fs::read_to_string(path).await?)
+}
+
+/// tries to parse `content` into an [Ini] struct
+///
+/// trailing null bytes are removed before parsing
+fn parse_ini_file(mut content: String) -> Result<Ini, ini::Error> {
+    content.truncate(content.find('\0').unwrap_or(content.len()));
+    let opt = ini::ParseOption {
+        enabled_quote: true,
+        ..Default::default()
+    };
+    Ini::load_from_str_opt(&content, opt).map_err(ini::Error::Parse)
 }
 
 pub async fn write_ini_file(path: impl AsRef<Path>, ini: &Ini) -> std::io::Result<()> {
@@ -125,5 +133,35 @@ impl From<steamlocate::Error> for LocateError {
             }
             _ => unimplemented!(),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::assert_matches;
+
+    #[test]
+    fn parse_ini_file_valid() {
+        let content = "[section]\nkey = \"value\"".to_string();
+        let ini = parse_ini_file(content).unwrap();
+        assert_eq!(
+            ini.section(Some("section")).unwrap().get("key").unwrap(),
+            "value"
+        );
+    }
+
+    #[test]
+    fn parse_ini_file_padded() {
+        let content = "\nkey = \"value\"\0\0\0".to_string();
+        let ini = parse_ini_file(content).unwrap();
+        assert_eq!(ini.general_section().get("key").unwrap(), "value");
+    }
+
+    #[test]
+    fn parse_ini_file_invalid() {
+        let content = "just a sentence".to_string();
+        let result = parse_ini_file(content);
+        assert_matches!(result, Err(ini::Error::Parse { .. }));
     }
 }
