@@ -238,7 +238,7 @@ impl Application for Gui {
                                 SaveId::File3 => save_next.files[File3] = save_now.files[File3],
                             }
                             let ini = save_next.into();
-                            Ok(util::write_ini_file_padded(path, &ini).await?)
+                            Ok(util::write_ini_file_padded_no_spacing(path, &ini).await?)
                         },
                         move |result| Message::Saved(id, result),
                     )

@@ -30,15 +30,27 @@ fn parse_ini_file(mut content: String) -> Result<Ini, ini::Error> {
     Ini::load_from_str_opt(&content, opt).map_err(ini::Error::Parse)
 }
 
+/// tries to write an [Ini] struct to the file at `path`
 pub async fn write_ini_file(path: impl AsRef<Path>, ini: &Ini) -> std::io::Result<()> {
     let mut content = Vec::new();
     ini.write_to(&mut content)?;
     tokio::fs::write(path, &content).await
 }
 
-pub async fn write_ini_file_padded(path: impl AsRef<Path>, ini: &Ini) -> std::io::Result<()> {
+/// tries to write an [Ini] struct to `path`, padded with null bytes to 1024 bytes, without spacing
+pub async fn write_ini_file_padded_no_spacing(
+    path: impl AsRef<Path>,
+    ini: &Ini,
+) -> std::io::Result<()> {
+    tokio::fs::write(path, &ini_to_vec_padded_no_spacing(ini, 1024)?).await
+}
+
+/// tries to write an [Ini] struct to a [Vec], padded with null bytes to `padded_size`, without spacing
+///
+/// if `padded_size` is less than the content length, no padding is performed
+fn ini_to_vec_padded_no_spacing(ini: &Ini, padded_size: usize) -> std::io::Result<Vec<u8>> {
     let mut content = Vec::new();
-    content.reserve_exact(1024);
+    content.reserve_exact(padded_size);
     let opt = ini::WriteOption {
         line_separator: ini::LineSeparator::CRLF,
         kv_separator: "=",
@@ -52,8 +64,8 @@ pub async fn write_ini_file_padded(path: impl AsRef<Path>, ini: &Ini) -> std::io
         }
     });
     content.retain(|&c| c != 0);
-    content.resize(max(1024, content.len()), 0); // not expected to be > 1kb
-    tokio::fs::write(path, &content).await
+    content.resize(max(padded_size, content.len()), 0);
+    Ok(content)
 }
 
 pub async fn find_savegame_path() -> Result<Option<PathBuf>, VarError> {
@@ -163,5 +175,22 @@ mod tests {
         let content = "just a sentence".to_string();
         let result = parse_ini_file(content);
         assert_matches!(result, Err(ini::Error::Parse { .. }));
+    }
+
+    #[test]
+    fn ini_to_vec_padded_no_spacing_valid() {
+        let content_padded = "[section]\r\nkey=value\r\n\0\0\0";
+        let content = content_padded.trim_end_matches('\0');
+        let ini = Ini::load_from_str(content).unwrap();
+        let vec = ini_to_vec_padded_no_spacing(&ini, content_padded.len()).unwrap();
+        assert_eq!(content_padded, std::str::from_utf8(&vec).unwrap());
+    }
+
+    #[test]
+    fn ini_to_vec_padded_no_spacing_long() {
+        let content = "[section]\r\nkey=value\r\n";
+        let ini = Ini::load_from_str(content).unwrap();
+        let vec = ini_to_vec_padded_no_spacing(&ini, 8).unwrap();
+        assert_eq!(content, std::str::from_utf8(&vec).unwrap());
     }
 }

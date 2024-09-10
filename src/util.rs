@@ -10,7 +10,7 @@ pub use file::find_savegame_path;
 pub use file::load_ini_file;
 pub use file::trim_to_existing_path;
 pub use file::write_ini_file;
-pub use file::write_ini_file_padded;
+pub use file::write_ini_file_padded_no_spacing;
 pub use file::LocateError;
 
 /// Executes `function` for all contiguous windows of length `size` in `slice`. The windows overlap.
