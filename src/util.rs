@@ -1,3 +1,5 @@
+//! Various utilities and helpers.
+
 pub mod file;
 
 #[cfg(test)]
@@ -17,7 +19,7 @@ pub use file::LocateError;
 /// free function alternative to the [std::slice::Windows] iterator,
 /// taken from `kpreid` https://internals.rust-lang.org/t/a-windows-mut-method-on-slice/16941/11
 ///
-/// # Examples
+/// # Example
 ///
 /// ```
 /// # use whipseey_save_manager::util::for_each_window_mut;

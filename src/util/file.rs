@@ -1,3 +1,5 @@
+//! utilities to work with the file system and paths
+
 use crate::util::for_each_window_mut;
 use crate::{BFS_SETTINGS_FILE_NAME, SAVEGAME_FILE_NAME, WHIPSEEY_APP_ID};
 use ini::Ini;

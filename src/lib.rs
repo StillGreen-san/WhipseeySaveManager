@@ -1,3 +1,5 @@
+//! WhipseeySaveManager implementation
+
 pub mod data;
 pub mod gui;
 pub mod util;
