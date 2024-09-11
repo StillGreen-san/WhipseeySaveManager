@@ -3,6 +3,7 @@ use crate::{data, ini_impl_common};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
+/// represents the `cheats_enabled` Ini property in the `Cheats` section in `bfs_settings.ini`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum CheatsEnabled {
@@ -17,6 +18,7 @@ impl From<CheatsEnabled> for String {
     }
 }
 
+/// represents the `Cheats` Ini section in `bfs_settings.ini`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct Cheats {
     pub cheats_enabled: CheatsEnabled,

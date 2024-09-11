@@ -4,6 +4,7 @@ use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{Display, VariantArray};
 
+/// represents the `language` Ini property in a `options` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
@@ -22,6 +23,7 @@ pub enum Language {
 }
 ini_impl_quoted!(Language, Options, "language");
 
+/// represents the `scale` Ini property in a `options` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
@@ -33,6 +35,7 @@ pub enum Scale {
 }
 ini_impl_quoted!(Scale, Options, "scale");
 
+/// represents the `fullscreen` Ini property in a `options` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
@@ -43,6 +46,7 @@ pub enum Fullscreen {
 }
 ini_impl_quoted!(Fullscreen, Options, "fullscreen");
 
+/// represents the `left_handed` Ini property in a `options` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
@@ -53,6 +57,7 @@ pub enum LeftHanded {
 }
 ini_impl_quoted!(LeftHanded, Options, "left_handed");
 
+/// represents the `sound_volume` Ini property in a `options` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
@@ -72,6 +77,7 @@ pub enum SoundVolume {
 }
 ini_impl_quoted!(SoundVolume, Options, "sound_volume", 100.0);
 
+/// represents the `sound_toggle` Ini property in a `options` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
@@ -82,6 +88,7 @@ pub enum SoundToggle {
 }
 ini_impl_quoted!(SoundToggle, Options, "sound_toggle");
 
+/// represents the `music_volume` Ini property in a `options` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
@@ -101,6 +108,7 @@ pub enum MusicVolume {
 }
 ini_impl_quoted!(MusicVolume, Options, "music_volume", 100.0);
 
+/// represents the `music_toggle` Ini property in a `options` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
@@ -111,6 +119,7 @@ pub enum MusicToggle {
 }
 ini_impl_quoted!(MusicToggle, Options, "music_toggle");
 
+/// represents the `options` Ini section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct Options {
     pub language: Language,

@@ -5,6 +5,7 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 use std::ops::{Index, IndexMut};
 use strum::{Display, VariantArray};
 
+/// represents the `boss_no_damage_progress` Ini property in a `File` section in `whipseey.sav`
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 pub enum BossNoDamageProgress {
@@ -20,11 +21,13 @@ pub enum BossNoDamageProgress {
 }
 ini_impl_quoted!(BossNoDamageProgress, "boss_no_damage_progress");
 
+/// represents the `enemies_defeated` Ini property in a `File` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct EnemiesDefeated(u32);
 primitive_impl!(EnemiesDefeated, 0, 0, 1677215, u32);
 ini_impl_quoted!(EnemiesDefeated, "enemies_defeated", u32);
 
+/// combines the level Ini properties in a `File` section in `whipseey.sav` into a single enum
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Ord, PartialOrd)]
 #[repr(u8)]
 #[derive(Display, VariantArray, TryFromPrimitive, IntoPrimitive)]
@@ -36,7 +39,7 @@ pub enum Level {
     Forest = 2,
     #[default]
     Beach = 1,
-}
+} // TODO make individual levels private?
 
 impl Level {
     pub fn into_parts(self) -> (Castle, Moon, Snow, Desert, Forest) {
@@ -57,7 +60,7 @@ impl Level {
             parts.4 = Forest::Unlocked;
         }
         parts
-    }
+    } // TODO into/from impls?
 
     pub fn from_parts(parts: (Castle, Moon, Snow, Desert, Forest)) -> Self {
         if parts.0 == Castle::Unlocked {
@@ -79,6 +82,9 @@ impl Level {
     }
 }
 
+/// represents the `castle` Ini property in a `File` section in `whipseey.sav`
+///
+/// this is an intermediate representation, convert to [Level] for actual use
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Castle {
@@ -88,6 +94,9 @@ pub enum Castle {
 }
 ini_impl_quoted!(Castle, "castle");
 
+/// represents the `moon` Ini property in a `File` section in `whipseey.sav`
+///
+/// this is an intermediate representation, convert to [Level] for actual use
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Moon {
@@ -97,6 +106,9 @@ pub enum Moon {
 }
 ini_impl_quoted!(Moon, "moon");
 
+/// represents the `snow` Ini property in a `File` section in `whipseey.sav`
+///
+/// this is an intermediate representation, convert to [Level] for actual use
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Snow {
@@ -106,6 +118,9 @@ pub enum Snow {
 }
 ini_impl_quoted!(Snow, "snow");
 
+/// represents the `desert` Ini property in a `File` section in `whipseey.sav`
+///
+/// this is an intermediate representation, convert to [Level] for actual use
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Desert {
@@ -115,6 +130,9 @@ pub enum Desert {
 }
 ini_impl_quoted!(Desert, "desert");
 
+/// represents the `forest` Ini property in a `File` section in `whipseey.sav`
+///
+/// this is an intermediate representation, convert to [Level] for actual use
 #[derive(Clone, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Forest {
@@ -124,6 +142,7 @@ pub enum Forest {
 }
 ini_impl_quoted!(Forest, "forest");
 
+/// represents the `ending` Ini property in a `File` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Ending {
@@ -133,6 +152,7 @@ pub enum Ending {
 }
 ini_impl_quoted!(Ending, "ending");
 
+/// represents the `intro` Ini property in a `File` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u8)]
 pub enum Intro {
@@ -142,16 +162,19 @@ pub enum Intro {
 }
 ini_impl_quoted!(Intro, "intro");
 
+/// represents the `lives` Ini property in a `File` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Lives(u32);
 primitive_impl!(Lives, 1, 5, 99999, u32);
 ini_impl_quoted!(Lives, "lives", u32);
 
+/// represents the `gems` Ini property in a `File` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Gems(u8);
 primitive_impl!(Gems, 0, 0, 99, u8);
 ini_impl_quoted!(Gems, "gems");
 
+/// represents a `File` Ini section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct File {
     pub boss_no_damage_progress: BossNoDamageProgress,
@@ -206,11 +229,17 @@ impl From<File> for Properties {
     }
 }
 
+/// array index to access the `file1`, `file2`, and `file3` Ini sections of a `File` section in `whipseey.sav`
+///
+/// implements [Index] and [IndexMut]
 #[derive(Clone, Copy, Debug)]
 #[repr(u8)]
 pub enum FileIndex {
+    /// index for `file1` Ini section in `whipseey.sav`
     File1 = 0,
+    /// index for `file2` Ini section in `whipseey.sav`
     File2 = 1,
+    /// index for `file3` Ini section in `whipseey.sav`
     File3 = 2,
 }
 pub use FileIndex::*;
