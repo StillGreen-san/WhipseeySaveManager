@@ -165,6 +165,13 @@ impl From<steamlocate::Error> for LocateError {
 mod tests {
     use super::*;
     use crate::assert_matches;
+    use crate::fn_name;
+
+    macro_rules! print_test_result {
+        ($result:ident) => {
+            println!("[{}]: {:?}", fn_name!(), $result);
+        };
+    }
 
     #[test]
     fn parse_ini_file_valid() {
@@ -211,13 +218,13 @@ mod tests {
     #[ignore]
     async fn find_savegame_path_test() {
         let path = find_savegame_path().await;
-        println!("find_savegame_path_test: {:?}", path);
+        print_test_result!(path);
     }
 
     #[tokio::test]
     #[ignore]
     async fn find_bfs_settings_path_test() {
         let path = find_bfs_settings_path().await;
-        println!("find_bfs_settings_path_test: {:?}", path);
+        print_test_result!(path);
     }
 }

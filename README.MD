@@ -44,7 +44,8 @@ Savegame.
 
 ### Tests
 
-some tests are ignored by default and need to be run explicitly. see tags below
+some tests are ignored by default and need to be run explicitly. see names below
+*(filter output with "^\[.+\]: ")*
 
 - **find_savegame_path_test**: output varies depending on if a savegame is available in the default location
 - **find_bfs_settings_path_test:** output varies depending on if the game is installed (with steam)
