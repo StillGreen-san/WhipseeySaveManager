@@ -13,18 +13,21 @@ Savegame.
 
 ## Features
 
-### planned
-
 - Set Save-Slot values
     - Level-Progress, Lives, etc
 - Change Options
     - Language, Volume, etc
 - Enable Cheats
+- Auto Locate of relevant files
+    - _savegame only on windows_
 
 ## Warnings
 
+- only tested on Windows 10
+
 ## Code
 
+- rewrite of the C++ version in Rust, to have darkmode support and general exercise
 - see other branches for older versions in other languages
 
 ### Dependencies
