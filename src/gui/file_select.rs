@@ -53,7 +53,7 @@ impl FileSelect {
     fn build_file_dialog(&self) -> AsyncFileDialog {
         AsyncFileDialog::new()
             .set_title(self.display_strings.dialog_title)
-            .set_directory(util::trim_to_existing_path(&self.path))
+            .set_directory(util::trim_to_existing_dir(&self.path))
             .set_file_name(self.display_strings.dialog_file_name)
             .add_filter(
                 self.display_strings.dialog_filter_file,

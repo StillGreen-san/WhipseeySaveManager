@@ -100,7 +100,10 @@ pub async fn find_bfs_settings_path() -> Result<Option<PathBuf>, LocateError> {
         .filter(|path| path.exists()))
 }
 
-pub fn trim_to_existing_path(path: &Path) -> &Path {
+/// trims the last component of `path` until it exists, or it is empty
+///
+/// if `path` is a file, that component is ignored
+pub fn trim_to_existing_dir(path: &Path) -> &Path {
     let mut path = if path.is_file() {
         path.parent().unwrap_or(path)
     } else {
@@ -110,7 +113,7 @@ pub fn trim_to_existing_path(path: &Path) -> &Path {
         if let Some(parent) = path.parent() {
             path = parent;
         } else {
-            path = path.strip_prefix(path).unwrap_or(path);
+            path = Path::new("");
             break;
         };
     }
@@ -226,5 +229,44 @@ mod tests {
     async fn find_bfs_settings_path_test() {
         let path = find_bfs_settings_path().await;
         print_test_result!(path);
+    }
+
+    #[test]
+    fn trim_to_existing_path_remove_file() {
+        let exe_path = std::env::current_exe().unwrap();
+        assert_eq!(trim_to_existing_dir(&exe_path), exe_path.parent().unwrap());
+    }
+
+    #[test]
+    fn trim_to_existing_path_remove_folders() {
+        let exe_path = std::env::current_dir().unwrap();
+        let mut test_path = exe_path.clone();
+        test_path.push("F6D5c9miV47srhZ_WSM_TEST");
+        test_path.push("1wSXqWR967mG9mp_WSM_TEST");
+        test_path.push("XvNWNBuXxBidRut_WSM_TEST");
+        assert_eq!(trim_to_existing_dir(&test_path), exe_path);
+    }
+
+    #[test]
+    fn trim_to_existing_path_file_only() {
+        let file_path = PathBuf::from("file.txt");
+        let result_path = PathBuf::new();
+        assert_eq!(trim_to_existing_dir(&file_path), result_path);
+    }
+
+    #[test]
+    fn trim_to_existing_path_invalid() {
+        let mut test_path = PathBuf::from(r"\\?\");
+        test_path.push("msk5JIu3ykdVQTI_WSM_TEST");
+        test_path.push("gWqzCcfTQz56Fi8_WSM_TEST");
+        test_path.push("xT8iG5h7k7j9LpC_WSM_TEST");
+        let result_path = PathBuf::new();
+        assert_eq!(trim_to_existing_dir(&test_path), result_path);
+    }
+
+    #[test]
+    fn trim_to_existing_path_keep_valid() {
+        let exe_path = std::env::current_dir().unwrap();
+        assert_eq!(trim_to_existing_dir(&exe_path), exe_path);
     }
 }

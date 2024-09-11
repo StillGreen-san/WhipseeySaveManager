@@ -8,7 +8,7 @@ pub mod test;
 pub use file::find_bfs_settings_path;
 pub use file::find_savegame_path;
 pub use file::load_ini_file;
-pub use file::trim_to_existing_path;
+pub use file::trim_to_existing_dir;
 pub use file::write_ini_file;
 pub use file::write_ini_file_padded_no_spacing;
 pub use file::LocateError;
