@@ -16,6 +16,7 @@ pub use cheats::Cheats;
 pub use file::File;
 pub use options::Options;
 
+/// representation of whipseey.sav savegame data
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct WhipseeySaveData {
     pub options: Options,
@@ -52,6 +53,7 @@ impl From<WhipseeySaveData> for Ini {
     }
 }
 
+/// representation of bfs_settings.ini data
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct BfsSettings {
     pub cheats: Cheats,
@@ -76,6 +78,9 @@ impl From<BfsSettings> for Ini {
     }
 }
 
+/// tries to convert from &[Properties] to `T`
+///
+/// returns [T::default()] if the key is missing
 fn try_from_opt_key<'a, T>(value: &'a Properties) -> Result<T>
 where
     T: Default + TryFrom<&'a Properties, Error = data::Error>,
@@ -87,6 +92,7 @@ where
     }
 }
 
+/// tries to convert from &[Ini] to `T`
 fn try_from<'a, T>(value: &'a Ini) -> Result<T>
 where
     T: IniSectionStrVal + TryFrom<&'a Properties, Error = Error>,
@@ -96,6 +102,8 @@ where
         .ok_or_else(|| Error::SectionMissing(T::INI_SECTION_STR.into()))?
         .try_into()
 }
+
+/// tries to convert from &[Ini] to `T` with a specific `section`
 fn try_from_with_section_from<'a, S, T>(value: &'a Ini, section: S) -> Result<T>
 where
     T: TryFrom<&'a Properties, Error = Error>,
@@ -107,6 +115,9 @@ where
         .try_into()
 }
 
+/// tries to convert from &[Properties] to `T`
+///
+/// reads a potentially quoted [f64] from `value` and multiplies it by `scale` before converting it to `T`
 fn try_from_scaled<T, P>(value: &Properties, scale: f64) -> Result<T>
 where
     T: IniKeyStr + TryFromPrimitive + TryFrom<P, Error = TryFromPrimitiveError<T>>,
@@ -128,6 +139,9 @@ where
     Ok(cheats_enabled)
 }
 
+/// converts `value` to [f64] and multiplies it by `scale` before converting it to a quoted [String]
+///
+/// precision is set to 6 decimal places
 fn into_quoted_scaled_float_string<T, P>(value: T, scale: f64) -> String
 where
     T: Into<P>,
@@ -139,9 +153,16 @@ where
     format!("\"{:.6}\"", scaled)
 }
 
+/// trait for getting the section string of an object
+///
+/// a blanked implementation for [IniSectionStrFn] is provided
 trait IniSectionStrVal {
     const INI_SECTION_STR: &'static str;
 }
+
+/// trait for getting the section string of an object
+///
+/// prefer to use [IniSectionStrVal] if possible, it provides a blanked implementation for this trait
 trait IniSectionStrFn {
     fn ini_section_str(&self) -> &'static str;
 }
@@ -150,6 +171,11 @@ impl<T: IniSectionStrVal> IniSectionStrFn for T {
         Self::INI_SECTION_STR
     }
 }
+/// trait for getting the key string of an object
+///
+/// only [IniKeyStr::INI_KEY_STR] needs to be provided
+///
+/// overrides of [IniKeyStr::ini_key_str] are expected to return [IniKeyStr::INI_KEY_STR]  
 trait IniKeyStr {
     const INI_KEY_STR: &'static str;
 
@@ -160,6 +186,9 @@ trait IniKeyStr {
 
 pub type Result<T> = std::result::Result<T, Error>;
 
+/// catch all error type
+///
+/// provides clone ability for various error types that would otherwise not be
 #[derive(Error, Debug, Clone)]
 pub enum Error {
     #[error("Section {0} not found")]
@@ -203,6 +232,9 @@ impl From<std::io::Error> for Error {
     }
 }
 
+/// common implementation for Ini types
+///
+/// provides [IniSectionStrVal], [IniKeyStr], [TryFrom<&Properties>] and `.value()`
 #[macro_export]
 macro_rules! ini_impl_common {
     ($self:ty, $section:ident, $key:literal, $scale:literal, $typ:ty) => {
@@ -235,6 +267,9 @@ macro_rules! ini_impl_common {
     };
 }
 
+/// quoted *(float)* implementation for Ini types
+///
+/// provides [IniSectionStrVal], [IniKeyStr], [TryFrom<&Properties>], `.value()` and [From<Self>]`<Self>` for [String]
 #[macro_export]
 macro_rules! ini_impl_quoted {
     ($self:ty, $section:ident, $key:literal, $scale:literal, $typ:ty) => {
@@ -276,6 +311,9 @@ macro_rules! ini_impl_quoted {
     };
 }
 
+/// primitive implementation for Ini types
+///
+/// provides [TryFromPrimitive], [IntoPrimitive], [Default], [PartialEq] as well as min/max constants
 #[macro_export]
 macro_rules! primitive_impl {
     ($self:ty, $min:literal, $default:literal, $max:expr, $typ:ty) => {

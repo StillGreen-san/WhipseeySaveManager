@@ -120,6 +120,7 @@ pub fn trim_to_existing_dir(path: &Path) -> &Path {
     path
 }
 
+/// cloneable alternative to [steamlocate::Error]
 #[derive(Error, Debug, Clone)]
 pub enum LocateError {
     #[error("{0}")]
