@@ -24,6 +24,7 @@ impl About {
     }
 }
 
+/// build a library entry
 fn library(
     label: &'static str,
     link: &'static str,

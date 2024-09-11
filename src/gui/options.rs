@@ -209,7 +209,7 @@ impl Tab for Options {
             option(
                 &self.music_toggle_state,
                 self.display_strings.music_toggle,
-                &self.options_state.music_toggle,
+                &self.options_state.music_toggle, // TODO remove from gui, instead infer from volume?
                 Message::super_music_toggle_selected,
             ),
         ]

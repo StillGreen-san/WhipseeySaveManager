@@ -11,7 +11,7 @@ use rfd::AsyncFileDialog;
 pub struct FileSelect {
     path: PathBuf,
     display_strings: DisplayStrings,
-    id: super::FileId,
+    id: super::FileSelectId,
 }
 
 pub struct DisplayStrings {
@@ -30,7 +30,7 @@ pub struct DisplayStrings {
 }
 
 impl FileSelect {
-    pub fn new(id: super::FileId, display_strings: DisplayStrings) -> Self {
+    pub fn new(id: super::FileSelectId, display_strings: DisplayStrings) -> Self {
         Self {
             path: Default::default(),
             display_strings,
@@ -38,10 +38,11 @@ impl FileSelect {
         }
     }
 
-    pub fn set_id(&mut self, id: super::FileId) {
+    pub fn set_id(&mut self, id: super::FileSelectId) {
         self.id = id;
     }
 
+    /// wraps message in super::Message with `self.id`
     fn pack_message(&self, message: Message) -> super::Message {
         message.pack(self.id)
     }
@@ -70,18 +71,18 @@ impl FileSelect {
             }
             Message::Open => {
                 let id = self.id;
-                let dialog = self.build_file_dialog(); // TODO lock ui?
+                let dialog = self.build_file_dialog(); // TODO lock relevant buttons
                 Command::perform(Self::run_file_dialog(dialog), move |msg| msg.pack(id))
             }
             Message::Selected(opt_path) => match opt_path {
                 None => Command::none(),
                 Some(path) => {
                     self.path = path;
-                    Command::perform(ready(self.id), |id| super::Message::Load(id))
+                    Command::perform(ready(self.id), super::Message::Load)
                 }
             },
-            Message::Save => Command::perform(ready(self.id), |id| super::Message::Save(id)),
-            Message::Reload => Command::perform(ready(self.id), |id| super::Message::Load(id)),
+            Message::Save => Command::perform(ready(self.id), super::Message::Save),
+            Message::Reload => Command::perform(ready(self.id), super::Message::Load),
         }
     }
 
@@ -138,7 +139,8 @@ pub enum Message {
 }
 
 impl Message {
-    fn pack(self, id: super::FileId) -> super::Message {
+    /// wraps message in super::Message with `self.id`
+    fn pack(self, id: super::FileSelectId) -> super::Message {
         super::Message::FileSelect(id, self)
-    }
+    } // TODO remove?
 }

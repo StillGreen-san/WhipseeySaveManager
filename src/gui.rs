@@ -34,7 +34,7 @@ pub enum TabId {
 }
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
-pub enum SaveId {
+pub enum SaveSection {
     Files,
     Options,
     File1,
@@ -43,8 +43,8 @@ pub enum SaveId {
 }
 
 #[derive(Debug, Clone, Copy)]
-pub enum FileId {
-    Save(SaveId),
+pub enum FileSelectId {
+    Save(SaveSection),
     Bfs,
 }
 
@@ -52,12 +52,12 @@ pub enum FileId {
 pub enum Message {
     TabSelected(TabId),
     About(about::Message),
-    FileSelect(FileId, file_select::Message),
-    Save(FileId),
-    Load(FileId),
+    FileSelect(FileSelectId, file_select::Message),
+    Save(FileSelectId),
+    Load(FileSelectId),
     LoadedBfs(data::Result<data::BfsSettings>),
-    LoadedSave(SaveId, data::Result<data::WhipseeySaveData>),
-    Saved(FileId, data::Result<()>),
+    LoadedSave(SaveSection, data::Result<data::WhipseeySaveData>),
+    Saved(FileSelectId, data::Result<()>),
     Cheats(cheats::Message),
     Options(options::Message),
     Files(files::Message),
@@ -163,8 +163,8 @@ impl Application for Gui {
             Self {
                 active_tab: Default::default(),
                 about: About::new(about_strings),
-                save_path: FileSelect::new(FileId::Save(SaveId::Files), save_strings),
-                cheats_path: FileSelect::new(FileId::Bfs, bfs_strings),
+                save_path: FileSelect::new(FileSelectId::Save(SaveSection::Files), save_strings),
+                cheats_path: FileSelect::new(FileSelectId::Bfs, bfs_strings),
                 cheats: Cheats::new(cheats_strings),
                 options: Options::new(opt_strings),
                 files: Files::new(files_strings),
@@ -208,19 +208,23 @@ impl Application for Gui {
                     _ => self.active_tab = id,
                 }
                 match id {
-                    TabId::Files => self.save_path.set_id(FileId::Save(SaveId::Files)),
-                    TabId::Options => self.save_path.set_id(FileId::Save(SaveId::Options)),
+                    TabId::Files => self
+                        .save_path
+                        .set_id(FileSelectId::Save(SaveSection::Files)),
+                    TabId::Options => self
+                        .save_path
+                        .set_id(FileSelectId::Save(SaveSection::Options)),
                     _ => {}
                 }
                 Command::none()
             }
             Message::About(message) => self.about.update(message),
             Message::FileSelect(id, message) => match id {
-                FileId::Save(_) => self.save_path.update(message),
-                FileId::Bfs => self.cheats_path.update(message),
+                FileSelectId::Save(_) => self.save_path.update(message),
+                FileSelectId::Bfs => self.cheats_path.update(message),
             },
             Message::Save(id) => match id {
-                FileId::Save(save_id) => {
+                FileSelectId::Save(save_id) => {
                     let save_now = data::WhipseeySaveData {
                         options: self.options.get_state(),
                         files: self.files.get_state(),
@@ -231,11 +235,17 @@ impl Application for Gui {
                             let mut save_next: data::WhipseeySaveData =
                                 util::load_ini_file(path.clone()).await?.try_into()?;
                             match save_id {
-                                SaveId::Files => save_next.files = save_now.files,
-                                SaveId::Options => save_next.options = save_now.options,
-                                SaveId::File1 => save_next.files[File1] = save_now.files[File1],
-                                SaveId::File2 => save_next.files[File2] = save_now.files[File2],
-                                SaveId::File3 => save_next.files[File3] = save_now.files[File3],
+                                SaveSection::Files => save_next.files = save_now.files,
+                                SaveSection::Options => save_next.options = save_now.options,
+                                SaveSection::File1 => {
+                                    save_next.files[File1] = save_now.files[File1]
+                                }
+                                SaveSection::File2 => {
+                                    save_next.files[File2] = save_now.files[File2]
+                                }
+                                SaveSection::File3 => {
+                                    save_next.files[File3] = save_now.files[File3]
+                                }
                             }
                             let ini = save_next.into();
                             Ok(util::write_ini_file_padded_no_spacing(path, &ini).await?)
@@ -243,7 +253,7 @@ impl Application for Gui {
                         move |result| Message::Saved(id, result),
                     )
                 }
-                FileId::Bfs => {
+                FileSelectId::Bfs => {
                     let bfs = data::BfsSettings {
                         cheats: self.cheats.get_state(),
                     };
@@ -251,7 +261,7 @@ impl Application for Gui {
                     let path = self.cheats_path.get_state();
                     Command::perform(
                         async move { Ok(util::write_ini_file(path, &ini).await?) },
-                        |result| Message::Saved(FileId::Bfs, result),
+                        |result| Message::Saved(FileSelectId::Bfs, result),
                     )
                 }
             },
@@ -260,14 +270,14 @@ impl Application for Gui {
                 Command::none()
             }
             Message::Load(id) => match id {
-                FileId::Save(save_id) => {
+                FileSelectId::Save(save_id) => {
                     let path = self.save_path.get_state();
                     Command::perform(
                         async { util::load_ini_file(path).await?.try_into() },
                         move |result| Message::LoadedSave(save_id, result),
                     )
                 }
-                FileId::Bfs => {
+                FileSelectId::Bfs => {
                     let path = self.cheats_path.get_state();
                     Command::perform(
                         async { util::load_ini_file(path).await?.try_into() },
@@ -283,17 +293,17 @@ impl Application for Gui {
                 let save = result.unwrap();
                 let mut files = self.files.get_state();
                 match id {
-                    SaveId::Files => self.files.set_state(save.files),
-                    SaveId::Options => self.options.set_state(save.options),
-                    SaveId::File1 => {
+                    SaveSection::Files => self.files.set_state(save.files),
+                    SaveSection::Options => self.options.set_state(save.options),
+                    SaveSection::File1 => {
                         files[File1] = save.files[File1];
                         self.files.set_state(files);
                     }
-                    SaveId::File2 => {
+                    SaveSection::File2 => {
                         files[File2] = save.files[File2];
                         self.files.set_state(files);
                     }
-                    SaveId::File3 => {
+                    SaveSection::File3 => {
                         files[File3] = save.files[File3];
                         self.files.set_state(files);
                     }
@@ -365,18 +375,27 @@ impl Application for Gui {
     }
 }
 
+/// A single tab in the [Tabs] widget.
 trait Tab {
     type InMessage;
 
-    fn title(&self) -> String;
+    fn title(&self) -> String; // TODO remove
 
+    /// Returns the (title) label of the [Tabs] tab.
     fn tab_label(&self) -> TabLabel;
 
+    /// Handles a message and updates the state of the [Tabs] tab.
+    ///
+    /// Any Command returned will be executed immediately in the background.
     fn update(&mut self, message: Self::InMessage) -> Command<Message>;
 
+    /// Returns the widgets to display in the [Tabs] tab.
+    ///
+    /// These widgets can produce messages based on user interaction.
     fn view(&self) -> Element<'_, Message, Theme, Renderer>;
 }
 
+/// allows to query and set the 'state' of an Element
 trait ElementState {
     type State;
 

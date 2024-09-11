@@ -60,6 +60,7 @@ impl Files {
         }
     }
 
+    /// build a new file element for the given `idx`
     fn file_view(&self, idx: FileIndex) -> Element<'_, super::Message, Theme, Renderer> {
         let progress = card(
             text(self.display_strings.progress),
@@ -137,10 +138,10 @@ impl Files {
                         .horizontal_alignment(Horizontal::Center)
                         .width(Length::Fill)
                 )
-                .on_press(super::Message::Save(super::FileId::Save(match idx {
-                    File1 => super::SaveId::File1,
-                    File2 => super::SaveId::File2,
-                    File3 => super::SaveId::File3,
+                .on_press(super::Message::Save(super::FileSelectId::Save(match idx {
+                    File1 => super::SaveSection::File1,
+                    File2 => super::SaveSection::File2,
+                    File3 => super::SaveSection::File3,
                 })))
                 .width(Length::Fill),
                 self.display_strings.save_tooltip,
@@ -202,10 +203,10 @@ impl Files {
                         .horizontal_alignment(Horizontal::Center)
                         .width(Length::Fill)
                 )
-                .on_press(super::Message::Load(super::FileId::Save(match idx {
-                    File1 => super::SaveId::File1,
-                    File2 => super::SaveId::File2,
-                    File3 => super::SaveId::File3,
+                .on_press(super::Message::Load(super::FileSelectId::Save(match idx {
+                    File1 => super::SaveSection::File1,
+                    File2 => super::SaveSection::File2,
+                    File3 => super::SaveSection::File3,
                 })))
                 .width(Length::Fill),
                 self.display_strings.reload_tooltip,
