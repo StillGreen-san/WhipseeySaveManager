@@ -41,7 +41,7 @@ where
     }
 }
 
-/// Returns the function name
+/// Returns the function name, ignoring closures
 ///
 /// # Example
 ///
@@ -60,7 +60,9 @@ macro_rules! fn_name {
         fn type_name_of() -> &'static str {
             std::any::type_name_of_val(&type_name_of)
         }
-        let full_name = type_name_of().trim_end_matches("::type_name_of");
+        let full_name = type_name_of();
+        let full_name =
+            full_name[..full_name.len() - "::type_name_of".len()].trim_end_matches("::{{closure}}");
         &full_name[full_name.rfind(':').map(|i| i + 1).unwrap_or(0)..]
     }};
 }
@@ -70,8 +72,26 @@ mod tests {
     use super::*;
 
     #[test]
-    fn fn_name_test() {
-        assert_eq!(fn_name!(), "fn_name_test");
+    fn fn_name_function() {
+        assert_eq!(fn_name!(), "fn_name_function");
+    }
+
+    #[allow(clippy::redundant_closure_call)]
+    #[test]
+    fn fn_name_closure() {
+        (|| {
+            (|| {
+                assert_eq!(fn_name!(), "fn_name_closure");
+            })();
+        })();
+    }
+
+    #[test]
+    fn fn_name_internal_name() {
+        fn type_name_of() {
+            assert_eq!(fn_name!(), "type_name_of");
+        }
+        type_name_of();
     }
 
     #[test]
