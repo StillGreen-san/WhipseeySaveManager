@@ -72,7 +72,7 @@ fn ini_to_vec_padded_no_spacing(ini: &Ini, padded_size: usize) -> std::io::Resul
 ///
 /// returns the full absolute path including the filename, or [None] if no valid path was found
 ///
-/// **Windows**: uses `LOCALAPPDATA` environment variable
+/// **Windows**: uses `LOCALAPPDATA` environment variable for locating
 ///
 /// TODO non windows support
 pub async fn find_savegame_path() -> Result<Option<PathBuf>, VarError> {
@@ -84,6 +84,11 @@ pub async fn find_savegame_path() -> Result<Option<PathBuf>, VarError> {
     Ok(path.exists().then_some(path))
 }
 
+/// tries to find the bfs settings path
+///
+/// returns the full absolute path including the filename, or [None] if no valid path was found
+///
+/// uses [SteamDir] for locating
 pub async fn find_bfs_settings_path() -> Result<Option<PathBuf>, LocateError> {
     Ok(SteamDir::locate()?
         .find_app(WHIPSEEY_APP_ID)?
@@ -91,7 +96,8 @@ pub async fn find_bfs_settings_path() -> Result<Option<PathBuf>, LocateError> {
             let mut path = lib.resolve_app_dir(&app);
             path.push(BFS_SETTINGS_FILE_NAME);
             path
-        }))
+        })
+        .filter(|path| path.exists()))
 }
 
 pub fn trim_to_existing_path(path: &Path) -> &Path {
@@ -206,5 +212,12 @@ mod tests {
     async fn find_savegame_path_test() {
         let path = find_savegame_path().await;
         println!("find_savegame_path_test: {:?}", path);
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn find_bfs_settings_path_test() {
+        let path = find_bfs_settings_path().await;
+        println!("find_bfs_settings_path_test: {:?}", path);
     }
 }
