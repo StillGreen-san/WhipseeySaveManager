@@ -29,9 +29,9 @@ impl TryFrom<Ini> for WhipseeySaveData {
         Ok(WhipseeySaveData {
             options: try_from(&value)?,
             files: [
-                try_from_as(&value, File1)?,
-                try_from_as(&value, File2)?,
-                try_from_as(&value, File3)?,
+                try_from_with_section_from(&value, File1)?,
+                try_from_with_section_from(&value, File2)?,
+                try_from_with_section_from(&value, File3)?,
             ],
         })
     }
@@ -64,7 +64,7 @@ impl TryFrom<Ini> for BfsSettings {
         Ok(BfsSettings {
             cheats: try_from(&value)?,
         })
-    }
+    } // TODO review try_from setup
 }
 
 impl From<BfsSettings> for Ini {
@@ -76,13 +76,13 @@ impl From<BfsSettings> for Ini {
     }
 }
 
-fn try_from_opt_key<'a, R>(value: &'a Properties) -> Result<R>
+fn try_from_opt_key<'a, T>(value: &'a Properties) -> Result<T>
 where
-    R: Default + TryFrom<&'a Properties, Error = data::Error>,
+    T: Default + TryFrom<&'a Properties, Error = data::Error>,
 {
     match value.try_into() {
         Ok(boss_no_damage_progress) => Ok(boss_no_damage_progress),
-        Err(Error::KeyMissing(_)) => Ok(R::default()),
+        Err(Error::KeyMissing(_)) => Ok(T::default()),
         Err(err) => Err(err),
     }
 }
@@ -96,9 +96,9 @@ where
         .ok_or_else(|| Error::SectionMissing(T::INI_SECTION_STR.into()))?
         .try_into()
 }
-fn try_from_as<'a, S, R>(value: &'a Ini, section: S) -> Result<R>
+fn try_from_with_section_from<'a, S, T>(value: &'a Ini, section: S) -> Result<T>
 where
-    R: TryFrom<&'a Properties, Error = Error>,
+    T: TryFrom<&'a Properties, Error = Error>,
     S: IniSectionStrFn,
 {
     value
@@ -128,7 +128,7 @@ where
     Ok(cheats_enabled)
 }
 
-fn into_quoted_scaled_float<T, P>(value: T, scale: f64) -> String
+fn into_quoted_scaled_float_string<T, P>(value: T, scale: f64) -> String
 where
     T: Into<P>,
     P: AsPrimitive<f64>,
@@ -241,7 +241,7 @@ macro_rules! ini_impl_quoted {
         $crate::ini_impl_common!($self, $section, $key, $scale, $typ);
         impl From<$self> for String {
             fn from(value: $self) -> Self {
-                $crate::data::into_quoted_scaled_float::<$self, $typ>(value, $scale)
+                $crate::data::into_quoted_scaled_float_string::<$self, $typ>(value, $scale)
             }
         }
     };
@@ -250,7 +250,7 @@ macro_rules! ini_impl_quoted {
         $crate::ini_impl_common!($self, $key, $scale, $typ);
         impl From<$self> for String {
             fn from(value: $self) -> Self {
-                $crate::data::into_quoted_scaled_float::<$self, $typ>(value, $scale)
+                $crate::data::into_quoted_scaled_float_string::<$self, $typ>(value, $scale)
             }
         }
     };
@@ -348,7 +348,7 @@ mod test {
     };
 
     #[test]
-    fn bfs_settings_into() {
+    fn bfs_settings_into_ini() {
         let settings = BfsSettings {
             cheats: Cheats {
                 cheats_enabled: CheatsEnabled::Disabled,
@@ -371,42 +371,42 @@ mod test {
     }
 
     #[test]
-    fn bfs_settings_try_from_valid() {
+    fn bfs_settings_try_from_ini_valid() {
         let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
         let settings = BfsSettings::try_from(ini).unwrap();
         assert_eq!(settings.cheats.cheats_enabled, CheatsEnabled::Enabled);
     }
 
     #[test]
-    fn bfs_settings_try_from_lenient() {
+    fn bfs_settings_try_from_ini_lenient() {
         let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
         let settings = BfsSettings::try_from(ini).unwrap();
         assert_eq!(settings.cheats.cheats_enabled, CheatsEnabled::Enabled);
     }
 
     #[test]
-    fn bfs_settings_try_from_invalid_sections() {
+    fn bfs_settings_try_from_ini_invalid_sections() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_SECTIONS).unwrap();
         let error = BfsSettings::try_from(ini).unwrap_err();
         assert_matches!(error, Error::SectionMissing(section) if section == Cheats::INI_SECTION_STR);
     }
 
     #[test]
-    fn bfs_settings_try_from_invalid_keys() {
+    fn bfs_settings_try_from_ini_invalid_keys() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).unwrap();
         let error = BfsSettings::try_from(ini).unwrap_err();
         assert_matches!(error, Error::KeyMissing(key) if key == CheatsEnabled::INI_KEY_STR);
     }
 
     #[test]
-    fn bfs_settings_try_from_invalid_value_ranges() {
+    fn bfs_settings_try_from_ini_invalid_value_ranges() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).unwrap();
         let error = BfsSettings::try_from(ini).unwrap_err();
         assert_matches!(error, Error::TryFromPrimitive(_));
     }
 
     #[test]
-    fn bfs_settings_try_from_invalid_value_types() {
+    fn bfs_settings_try_from_ini_invalid_value_types() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
         let error = BfsSettings::try_from(ini).unwrap_err();
         assert_matches!(
@@ -416,7 +416,7 @@ mod test {
     }
 
     #[test]
-    fn whipseey_save_data_into() {
+    fn whipseey_save_data_into_ini() {
         let file = File {
             boss_no_damage_progress: BossNoDamageProgress::Desert,
             enemies_defeated: EnemiesDefeated::try_from(0).unwrap(),
@@ -533,7 +533,7 @@ mod test {
     }
 
     #[test]
-    fn whipseey_save_data_try_from_valid() {
+    fn whipseey_save_data_try_from_ini_valid() {
         let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
         let save = WhipseeySaveData::try_from(ini).unwrap();
         assert_eq!(save.options.sound_volume, SoundVolume::V30);
@@ -549,7 +549,7 @@ mod test {
     }
 
     #[test]
-    fn whipseey_save_data_try_from_lenient() {
+    fn whipseey_save_data_try_from_ini_lenient() {
         let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
         let save = WhipseeySaveData::try_from(ini).unwrap();
         assert_eq!(save.options.scale, Scale::R1536x864);
@@ -559,7 +559,7 @@ mod test {
     }
 
     #[test]
-    fn whipseey_save_data_try_from_invalid_sections() {
+    fn whipseey_save_data_try_from_ini_invalid_sections() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_SECTIONS).unwrap();
         let error = WhipseeySaveData::try_from(ini).unwrap_err();
         assert_matches!(
@@ -572,7 +572,7 @@ mod test {
     }
 
     #[test]
-    fn whipseey_save_data_try_from_invalid_keys() {
+    fn whipseey_save_data_try_from_ini_invalid_keys() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).unwrap();
         let error = WhipseeySaveData::try_from(ini).unwrap_err();
         assert_matches!(
@@ -600,14 +600,14 @@ mod test {
     }
 
     #[test]
-    fn whipseey_save_data_try_from_invalid_value_ranges() {
+    fn whipseey_save_data_try_from_ini_invalid_value_ranges() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).unwrap();
         let error = WhipseeySaveData::try_from(ini).unwrap_err();
         assert_matches!(error, Error::TryFromPrimitive(_));
     }
 
     #[test]
-    fn whipseey_save_data_try_from_invalid_value_types() {
+    fn whipseey_save_data_try_from_ini_invalid_value_types() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
         let error = WhipseeySaveData::try_from(ini).unwrap_err();
         assert_matches!(
