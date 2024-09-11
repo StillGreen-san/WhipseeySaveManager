@@ -53,7 +53,7 @@ mod tests {
     use ini::Ini;
 
     #[test]
-    fn cheats_into() {
+    fn cheats_into_properties() {
         let cheats = Cheats {
             cheats_enabled: CheatsEnabled::Enabled,
         };
@@ -74,7 +74,7 @@ mod tests {
     }
 
     #[test]
-    fn cheats_try_from_valid() {
+    fn cheats_try_from_properties_valid() {
         let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
         let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
         let cheats = Cheats::try_from(section).unwrap();
@@ -82,7 +82,7 @@ mod tests {
     }
 
     #[test]
-    fn cheats_trx_from_lenient() {
+    fn cheats_try_from_properties_lenient() {
         let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
         let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
         let cheats = Cheats::try_from(section).unwrap();
@@ -90,7 +90,7 @@ mod tests {
     }
 
     #[test]
-    fn cheats_try_from_invalid_keys() {
+    fn cheats_try_from_properties_invalid_keys() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).unwrap();
         let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
         let error = Cheats::try_from(section).unwrap_err();
@@ -101,7 +101,7 @@ mod tests {
     }
 
     #[test]
-    fn cheats_try_from_invalid_value_ranges() {
+    fn cheats_try_from_properties_invalid_value_ranges() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).unwrap();
         let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
         let error = Cheats::try_from(section).unwrap_err();
@@ -109,7 +109,7 @@ mod tests {
     }
 
     #[test]
-    fn cheats_try_from_invalid_value_types() {
+    fn cheats_try_from_properties_invalid_value_types() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
         let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
         let error = Cheats::try_from(section).unwrap_err();

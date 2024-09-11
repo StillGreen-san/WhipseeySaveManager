@@ -273,7 +273,7 @@ mod tests {
     use ini::Ini;
 
     #[test]
-    fn file_into() {
+    fn file_into_properties() {
         let file = File {
             boss_no_damage_progress: BossNoDamageProgress::ForestCastle,
             enemies_defeated: EnemiesDefeated::try_from(1337).unwrap(),
@@ -341,7 +341,7 @@ mod tests {
     }
 
     #[test]
-    fn file_try_from_valid_complete() {
+    fn file_try_from_properties_valid_complete() {
         let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
         let section = ini.section(Some(File1.ini_section_str())).unwrap();
         let file = File::try_from(section).unwrap();
@@ -361,7 +361,7 @@ mod tests {
     }
 
     #[test]
-    fn file_try_from_valid_missing() {
+    fn file_try_from_properties_valid_missing() {
         let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
         let section = ini.section(Some(File3.ini_section_str())).unwrap();
         let file = File::try_from(section).unwrap();
@@ -378,7 +378,7 @@ mod tests {
     }
 
     #[test]
-    fn file_try_from_lenient_values() {
+    fn file_try_from_properties_lenient_values() {
         let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
         let section = ini.section(Some(File2.ini_section_str())).unwrap();
         let file = File::try_from(section).unwrap();
@@ -398,7 +398,7 @@ mod tests {
     }
 
     #[test]
-    fn file_try_from_invalid_keys() {
+    fn file_try_from_properties_invalid_keys() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).unwrap();
         let section = ini.section(Some(File1.ini_section_str())).unwrap();
         let error = File::try_from(section).unwrap_err();
@@ -419,7 +419,7 @@ mod tests {
     }
 
     #[test]
-    fn file_try_from_invalid_value_ranges() {
+    fn file_try_from_properties_invalid_value_ranges() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).unwrap();
         let section = ini.section(Some(File1.ini_section_str())).unwrap();
         let error = File::try_from(section).unwrap_err();
@@ -430,7 +430,7 @@ mod tests {
     }
 
     #[test]
-    fn file_try_from_invalid_value_types() {
+    fn file_try_from_properties_invalid_value_types() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
         let section = ini.section(Some(File1.ini_section_str())).unwrap();
         let error = File::try_from(section).unwrap_err();
