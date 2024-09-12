@@ -50,12 +50,8 @@ fn library(
 impl Tab for About {
     type InMessage = Message;
 
-    fn title(&self) -> String {
-        self.display_strings.title.into()
-    }
-
     fn tab_label(&self) -> TabLabel {
-        TabLabel::Text(self.title())
+        TabLabel::Text(self.display_strings.title.into())
     }
 
     fn update(&mut self, message: Self::InMessage) -> Command<super::Message> {

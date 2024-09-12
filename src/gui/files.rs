@@ -22,7 +22,7 @@ pub enum Message {
 }
 
 pub struct DisplayStrings {
-    pub titel: &'static str,
+    pub title: &'static str,
     pub progress: &'static str,
     pub file_titel: &'static str,
     pub intro_label: &'static str,
@@ -237,12 +237,8 @@ impl Files {
 impl Tab for Files {
     type InMessage = Message;
 
-    fn title(&self) -> String {
-        self.display_strings.titel.into()
-    }
-
     fn tab_label(&self) -> TabLabel {
-        TabLabel::Text(self.title())
+        TabLabel::Text(self.display_strings.title.into())
     }
 
     fn update(&mut self, message: Self::InMessage) -> Command<super::Message> {

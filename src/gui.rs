@@ -135,7 +135,7 @@ impl Application for Gui {
             music_toggle: "Music Toggle",
         };
         let files_strings = files::DisplayStrings {
-            titel: "Files",
+            title: "Files",
             progress: "progress",
             file_titel: "file",
             intro_label: "Intro",
@@ -378,8 +378,6 @@ impl Application for Gui {
 /// A single tab in the [Tabs] widget.
 trait Tab {
     type InMessage;
-
-    fn title(&self) -> String; // TODO remove
 
     /// Returns the (title) label of the [Tabs] tab.
     fn tab_label(&self) -> TabLabel;
