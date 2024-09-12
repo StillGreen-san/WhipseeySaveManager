@@ -13,7 +13,7 @@ fn main() -> Result<(), iced::Error> {
         decorations: true,
         transparent: false,
         level: Default::default(),
-        icon: None,
+        icon: window::icon::from_file_data(include_bytes!("../res/icon.ico"), None).ok(),
         exit_on_close_request: true,
         platform_specific: Default::default(),
     };
