@@ -4,7 +4,7 @@
 
 **GUI for modifying *some* Values in 'Whipseey and the Lost Atlas' Savegames and Settings**
 
-![Picture](WhipseeySaveManager.gif)
+![Picture](res/preview.gif)
 
 Intended to aid with Speedrun practice. Can modify *most* values present in the Savegame.
 
