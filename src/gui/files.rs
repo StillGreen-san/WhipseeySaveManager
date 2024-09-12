@@ -248,11 +248,15 @@ impl Tab for Files {
                 Command::none()
             }
             Message::Intro(idx, toggled) => {
-                self.files_state[idx].intro = (toggled as u8).try_into().unwrap();
+                self.files_state[idx].intro = (toggled as u8)
+                    .try_into()
+                    .expect("bool should always be convertible to Intro");
                 Command::none()
             }
             Message::Ending(idx, toggled) => {
-                self.files_state[idx].ending = (toggled as u8).try_into().unwrap();
+                self.files_state[idx].ending = (toggled as u8)
+                    .try_into()
+                    .expect("bool should always be convertible to Ending");
                 Command::none()
             }
             Message::Gems(idx, gems) => {

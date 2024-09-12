@@ -15,5 +15,5 @@ fn windows() {
         .set_language(LID_ENGLISH_US)
         .set_version_info(winres::VersionInfo::FILEFLAGS, VS_FF_PRERELEASE)
         .compile()
-        .unwrap();
+        .expect("resource compiler failure");
 }

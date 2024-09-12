@@ -61,7 +61,7 @@ pub enum Message {
     Cheats(cheats::Message),
     Options(options::Message),
     Files(files::Message),
-    LoadedFont(Result<(), font::Error>),
+    LoadedFont,
     LoadedBfsSettingsPath(Result<Option<PathBuf>, LocateError>),
     LoadedSavegamePath(Result<Option<PathBuf>, VarError>),
     UpdatedTheme(Theme),
@@ -171,7 +171,10 @@ impl Application for Gui {
                 theme: theme::light(),
             },
             Command::batch([
-                font::load(iced_aw::BOOTSTRAP_FONT_BYTES).map(Message::LoadedFont),
+                font::load(iced_aw::BOOTSTRAP_FONT_BYTES).map(|result| {
+                    result.expect("loading font from const bytes should never fail");
+                    Message::LoadedFont
+                }),
                 Command::perform(
                     util::find_bfs_settings_path(),
                     Message::LoadedBfsSettingsPath,
@@ -313,10 +316,7 @@ impl Application for Gui {
             Message::Cheats(message) => self.cheats.update(message),
             Message::Options(message) => self.options.update(message),
             Message::Files(message) => self.files.update(message),
-            Message::LoadedFont(result) => {
-                result.expect("loading font from const bytes should not be able to fail");
-                Command::none()
-            }
+            Message::LoadedFont => Command::none(),
             Message::LoadedBfsSettingsPath(path) => {
                 match path {
                     Ok(Some(path)) => self

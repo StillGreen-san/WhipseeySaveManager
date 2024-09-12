@@ -40,7 +40,8 @@ impl Tab for Cheats {
     fn update(&mut self, message: Self::InMessage) -> Command<super::Message> {
         match message {
             Message::CheatsToggled(state) => {
-                self.cheats_state.cheats_enabled = CheatsEnabled::try_from(state as u8).unwrap();
+                self.cheats_state.cheats_enabled = CheatsEnabled::try_from(state as u8)
+                    .expect("bool should always be convertible to CheatsEnabled");
                 Command::none()
             }
         }

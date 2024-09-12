@@ -243,17 +243,19 @@ pub enum FileIndex {
     File3 = 2,
 }
 pub use FileIndex::*;
-impl Index<FileIndex> for [File] {
+impl Index<FileIndex> for [File; 3] {
     type Output = File;
     #[inline]
     fn index(&self, val: FileIndex) -> &Self::Output {
-        self.get(val as usize).unwrap()
+        self.get(val as usize)
+            .expect("a valid index should have been defined in the FileIndex enum")
     }
 }
-impl IndexMut<FileIndex> for [File] {
+impl IndexMut<FileIndex> for [File; 3] {
     #[inline]
     fn index_mut(&mut self, val: FileIndex) -> &mut Self::Output {
-        self.get_mut(val as usize).unwrap()
+        self.get_mut(val as usize)
+            .expect("a valid index should have been defined in the FileIndex enum")
     }
 }
 impl IniSectionStrFn for FileIndex {
