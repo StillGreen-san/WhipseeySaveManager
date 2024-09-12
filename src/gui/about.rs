@@ -88,6 +88,7 @@ impl Tab for About {
                 "dark-light [MIT]",
                 "https://github.com/frewsxcv/rust-dark-light"
             ),
+            library("winres [MIT]", "https://github.com/mxre/winres"),
         ]
         .width(Length::Fill)
         .spacing(12)

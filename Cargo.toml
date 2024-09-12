@@ -21,3 +21,6 @@ thiserror = "1.0.63"
 strum = { version = "0.26.3", features = ["derive"] }
 num = "0.4.3"
 dark-light = "1.1.1"
+
+[target.'cfg(windows)'.build-dependencies]
+winres = "0.1.12"
