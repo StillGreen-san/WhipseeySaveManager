@@ -269,19 +269,19 @@ impl IniSectionStrFn for FileIndex {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{assert_matches, util};
+    use crate::{assert_matches, util, TEST_FAIL_STR};
     use ini::Ini;
 
     #[test]
     fn file_into_properties() {
         let file = File {
             boss_no_damage_progress: BossNoDamageProgress::ForestCastle,
-            enemies_defeated: EnemiesDefeated::try_from(1337).unwrap(),
+            enemies_defeated: EnemiesDefeated::try_from(1337).expect(TEST_FAIL_STR),
             level: Level::Moon,
             ending: Ending::Watched,
             intro: Intro::Watched,
-            lives: Lives::try_from(5).unwrap(),
-            gems: Gems::try_from(99).unwrap(),
+            lives: Lives::try_from(5).expect(TEST_FAIL_STR),
+            gems: Gems::try_from(99).expect(TEST_FAIL_STR),
         };
         let props: Properties = file.into();
         assert_eq!(
@@ -333,74 +333,84 @@ mod tests {
 
     #[test]
     fn file_default() {
-        let ini = Ini::load_from_str(util::test::ini::DEFAULT).unwrap();
-        let section = ini.section(Some(File1.ini_section_str())).unwrap();
-        let file_loaded = File::try_from(section).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::DEFAULT).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(File1.ini_section_str()))
+            .expect(TEST_FAIL_STR);
+        let file_loaded = File::try_from(section).expect(TEST_FAIL_STR);
         let file_default = File::default();
         assert_eq!(file_loaded, file_default);
     }
 
     #[test]
     fn file_try_from_properties_valid_complete() {
-        let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
-        let section = ini.section(Some(File1.ini_section_str())).unwrap();
-        let file = File::try_from(section).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::VALID).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(File1.ini_section_str()))
+            .expect(TEST_FAIL_STR);
+        let file = File::try_from(section).expect(TEST_FAIL_STR);
         assert_eq!(
             file.boss_no_damage_progress,
             BossNoDamageProgress::ForestDesert
         );
         assert_eq!(
             file.enemies_defeated,
-            EnemiesDefeated::try_from(2442).unwrap()
+            EnemiesDefeated::try_from(2442).expect(TEST_FAIL_STR)
         );
         assert_eq!(file.level, Level::Castle);
         assert_eq!(file.ending, Ending::Watched);
         assert_eq!(file.intro, Intro::Watched);
-        assert_eq!(file.lives, Lives::try_from(9118).unwrap());
-        assert_eq!(file.gems, Gems::try_from(40).unwrap());
+        assert_eq!(file.lives, Lives::try_from(9118).expect(TEST_FAIL_STR));
+        assert_eq!(file.gems, Gems::try_from(40).expect(TEST_FAIL_STR));
     }
 
     #[test]
     fn file_try_from_properties_valid_missing() {
-        let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
-        let section = ini.section(Some(File3.ini_section_str())).unwrap();
-        let file = File::try_from(section).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::VALID).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(File3.ini_section_str()))
+            .expect(TEST_FAIL_STR);
+        let file = File::try_from(section).expect(TEST_FAIL_STR);
         assert_eq!(file.boss_no_damage_progress, BossNoDamageProgress::None);
         assert_eq!(
             file.enemies_defeated,
-            EnemiesDefeated::try_from(2442).unwrap()
+            EnemiesDefeated::try_from(2442).expect(TEST_FAIL_STR)
         );
         assert_eq!(file.level, Level::Castle);
         assert_eq!(file.ending, Ending::Watched);
         assert_eq!(file.intro, Intro::Watched);
-        assert_eq!(file.lives, Lives::try_from(9118).unwrap());
-        assert_eq!(file.gems, Gems::try_from(40).unwrap());
+        assert_eq!(file.lives, Lives::try_from(9118).expect(TEST_FAIL_STR));
+        assert_eq!(file.gems, Gems::try_from(40).expect(TEST_FAIL_STR));
     }
 
     #[test]
     fn file_try_from_properties_lenient_values() {
-        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
-        let section = ini.section(Some(File2.ini_section_str())).unwrap();
-        let file = File::try_from(section).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(File2.ini_section_str()))
+            .expect(TEST_FAIL_STR);
+        let file = File::try_from(section).expect(TEST_FAIL_STR);
         assert_eq!(
             file.boss_no_damage_progress,
             BossNoDamageProgress::ForestDesert
         );
         assert_eq!(
             file.enemies_defeated,
-            EnemiesDefeated::try_from(2442).unwrap()
+            EnemiesDefeated::try_from(2442).expect(TEST_FAIL_STR)
         );
         assert_eq!(file.level, Level::Castle);
         assert_eq!(file.ending, Ending::Watched);
         assert_eq!(file.intro, Intro::Watched);
-        assert_eq!(file.lives, Lives::try_from(9118).unwrap());
-        assert_eq!(file.gems, Gems::try_from(40).unwrap());
+        assert_eq!(file.lives, Lives::try_from(9118).expect(TEST_FAIL_STR));
+        assert_eq!(file.gems, Gems::try_from(40).expect(TEST_FAIL_STR));
     }
 
     #[test]
     fn file_try_from_properties_invalid_keys() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).unwrap();
-        let section = ini.section(Some(File1.ini_section_str())).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(File1.ini_section_str()))
+            .expect(TEST_FAIL_STR);
         let error = File::try_from(section).unwrap_err();
         assert_matches!(
             error,
@@ -420,8 +430,10 @@ mod tests {
 
     #[test]
     fn file_try_from_properties_invalid_value_ranges() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).unwrap();
-        let section = ini.section(Some(File1.ini_section_str())).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(File1.ini_section_str()))
+            .expect(TEST_FAIL_STR);
         let error = File::try_from(section).unwrap_err();
         assert_matches!(
             error,
@@ -431,8 +443,10 @@ mod tests {
 
     #[test]
     fn file_try_from_properties_invalid_value_types() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
-        let section = ini.section(Some(File1.ini_section_str())).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(File1.ini_section_str()))
+            .expect(TEST_FAIL_STR);
         let error = File::try_from(section).unwrap_err();
         assert_matches!(
             error,

@@ -49,7 +49,7 @@ impl From<Cheats> for Properties {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{assert_matches, util};
+    use crate::{assert_matches, util, TEST_FAIL_STR};
     use ini::Ini;
 
     #[test]
@@ -66,33 +66,41 @@ mod tests {
 
     #[test]
     fn cheats_default() {
-        let ini = Ini::load_from_str(util::test::ini::DEFAULT).unwrap();
-        let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
-        let cheats_loaded = Cheats::try_from(section).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::DEFAULT).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Cheats::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
+        let cheats_loaded = Cheats::try_from(section).expect(TEST_FAIL_STR);
         let cheats_default = Cheats::default();
         assert_eq!(cheats_loaded, cheats_default);
     }
 
     #[test]
     fn cheats_try_from_properties_valid() {
-        let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
-        let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
-        let cheats = Cheats::try_from(section).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::VALID).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Cheats::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
+        let cheats = Cheats::try_from(section).expect(TEST_FAIL_STR);
         assert_eq!(cheats.cheats_enabled, CheatsEnabled::Enabled);
     }
 
     #[test]
     fn cheats_try_from_properties_lenient() {
-        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
-        let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
-        let cheats = Cheats::try_from(section).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Cheats::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
+        let cheats = Cheats::try_from(section).expect(TEST_FAIL_STR);
         assert_eq!(cheats.cheats_enabled, CheatsEnabled::Enabled);
     }
 
     #[test]
     fn cheats_try_from_properties_invalid_keys() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).unwrap();
-        let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Cheats::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
         let error = Cheats::try_from(section).unwrap_err();
         assert_matches!(
             error,
@@ -102,16 +110,20 @@ mod tests {
 
     #[test]
     fn cheats_try_from_properties_invalid_value_ranges() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).unwrap();
-        let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Cheats::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
         let error = Cheats::try_from(section).unwrap_err();
         assert_matches!(error, data::Error::TryFromPrimitive(_));
     }
 
     #[test]
     fn cheats_try_from_properties_invalid_value_types() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
-        let section = ini.section(Some(Cheats::INI_SECTION_STR)).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Cheats::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
         let error = Cheats::try_from(section).unwrap_err();
         assert_matches!(
             error,

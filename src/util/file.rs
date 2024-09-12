@@ -168,8 +168,8 @@ impl From<steamlocate::Error> for LocateError {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::assert_matches;
     use crate::fn_name;
+    use crate::{assert_matches, TEST_FAIL_STR};
 
     macro_rules! print_test_result {
         ($result:ident) => {
@@ -180,9 +180,12 @@ mod tests {
     #[test]
     fn parse_ini_file_valid() {
         let content = "[section]\nkey = \"value\"".to_string();
-        let ini = parse_ini_file(content).unwrap();
+        let ini = parse_ini_file(content).expect(TEST_FAIL_STR);
         assert_eq!(
-            ini.section(Some("section")).unwrap().get("key").unwrap(),
+            ini.section(Some("section"))
+                .expect(TEST_FAIL_STR)
+                .get("key")
+                .expect(TEST_FAIL_STR),
             "value"
         );
     }
@@ -190,8 +193,11 @@ mod tests {
     #[test]
     fn parse_ini_file_padded() {
         let content = "\nkey = \"value\"\0\0\0".to_string();
-        let ini = parse_ini_file(content).unwrap();
-        assert_eq!(ini.general_section().get("key").unwrap(), "value");
+        let ini = parse_ini_file(content).expect(TEST_FAIL_STR);
+        assert_eq!(
+            ini.general_section().get("key").expect(TEST_FAIL_STR),
+            "value"
+        );
     }
 
     #[test]
@@ -205,17 +211,20 @@ mod tests {
     fn ini_to_vec_padded_no_spacing_valid() {
         let content_padded = "[section]\r\nkey=value\r\n\0\0\0";
         let content = content_padded.trim_end_matches('\0');
-        let ini = Ini::load_from_str(content).unwrap();
-        let vec = ini_to_vec_padded_no_spacing(&ini, content_padded.len()).unwrap();
-        assert_eq!(content_padded, std::str::from_utf8(&vec).unwrap());
+        let ini = Ini::load_from_str(content).expect(TEST_FAIL_STR);
+        let vec = ini_to_vec_padded_no_spacing(&ini, content_padded.len()).expect(TEST_FAIL_STR);
+        assert_eq!(
+            content_padded,
+            std::str::from_utf8(&vec).expect(TEST_FAIL_STR)
+        );
     }
 
     #[test]
     fn ini_to_vec_padded_no_spacing_long() {
         let content = "[section]\r\nkey=value\r\n";
-        let ini = Ini::load_from_str(content).unwrap();
-        let vec = ini_to_vec_padded_no_spacing(&ini, 8).unwrap();
-        assert_eq!(content, std::str::from_utf8(&vec).unwrap());
+        let ini = Ini::load_from_str(content).expect(TEST_FAIL_STR);
+        let vec = ini_to_vec_padded_no_spacing(&ini, 8).expect(TEST_FAIL_STR);
+        assert_eq!(content, std::str::from_utf8(&vec).expect(TEST_FAIL_STR));
     }
 
     #[tokio::test]
@@ -234,13 +243,16 @@ mod tests {
 
     #[test]
     fn trim_to_existing_path_remove_file() {
-        let exe_path = std::env::current_exe().unwrap();
-        assert_eq!(trim_to_existing_dir(&exe_path), exe_path.parent().unwrap());
+        let exe_path = std::env::current_exe().expect(TEST_FAIL_STR);
+        assert_eq!(
+            trim_to_existing_dir(&exe_path),
+            exe_path.parent().expect(TEST_FAIL_STR)
+        );
     }
 
     #[test]
     fn trim_to_existing_path_remove_folders() {
-        let exe_path = std::env::current_dir().unwrap();
+        let exe_path = std::env::current_dir().expect(TEST_FAIL_STR);
         let mut test_path = exe_path.clone();
         test_path.push("F6D5c9miV47srhZ_WSM_TEST");
         test_path.push("1wSXqWR967mG9mp_WSM_TEST");
@@ -267,7 +279,7 @@ mod tests {
 
     #[test]
     fn trim_to_existing_path_keep_valid() {
-        let exe_path = std::env::current_dir().unwrap();
+        let exe_path = std::env::current_dir().expect(TEST_FAIL_STR);
         assert_eq!(trim_to_existing_dir(&exe_path), exe_path);
     }
 }

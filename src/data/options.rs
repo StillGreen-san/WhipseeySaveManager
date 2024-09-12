@@ -171,7 +171,7 @@ impl From<Options> for Properties {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{assert_matches, util};
+    use crate::{assert_matches, util, TEST_FAIL_STR};
     use ini::Ini;
 
     #[test]
@@ -223,18 +223,22 @@ mod tests {
 
     #[test]
     fn options_default() {
-        let ini = Ini::load_from_str(util::test::ini::DEFAULT).unwrap();
-        let section = ini.section(Some(Options::INI_SECTION_STR)).unwrap();
-        let options_loaded = Options::try_from(section).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::DEFAULT).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Options::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
+        let options_loaded = Options::try_from(section).expect(TEST_FAIL_STR);
         let options_default = Options::default();
         assert_eq!(options_loaded, options_default);
     }
 
     #[test]
     fn options_try_from_properties_valid() {
-        let ini = Ini::load_from_str(util::test::ini::VALID).unwrap();
-        let section = ini.section(Some(Options::INI_SECTION_STR)).unwrap();
-        let options = Options::try_from(section).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::VALID).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Options::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
+        let options = Options::try_from(section).expect(TEST_FAIL_STR);
         assert_eq!(options.language, Language::Japanese);
         assert_eq!(options.scale, Scale::R1536x864);
         assert_eq!(options.fullscreen, Fullscreen::Disabled);
@@ -247,9 +251,11 @@ mod tests {
 
     #[test]
     fn options_try_from_properties_lenient_values() {
-        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).unwrap();
-        let section = ini.section(Some(Options::INI_SECTION_STR)).unwrap();
-        let options = Options::try_from(section).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Options::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
+        let options = Options::try_from(section).expect(TEST_FAIL_STR);
         assert_eq!(options.language, Language::Japanese);
         assert_eq!(options.scale, Scale::R1536x864);
         assert_eq!(options.fullscreen, Fullscreen::Disabled);
@@ -262,8 +268,10 @@ mod tests {
 
     #[test]
     fn options_try_from_properties_invalid_keys() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).unwrap();
-        let section = ini.section(Some(Options::INI_SECTION_STR)).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Options::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
         let error = Options::try_from(section).unwrap_err();
         assert_matches!(
             error,
@@ -280,16 +288,20 @@ mod tests {
 
     #[test]
     fn options_try_from_properties_invalid_value_ranges() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).unwrap();
-        let section = ini.section(Some(Options::INI_SECTION_STR)).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Options::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
         let error = Options::try_from(section).unwrap_err();
         assert_matches!(error, data::Error::TryFromPrimitive(_));
     }
 
     #[test]
     fn options_try_from_properties_invalid_value_types() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).unwrap();
-        let section = ini.section(Some(Options::INI_SECTION_STR)).unwrap();
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Options::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
         let error = Options::try_from(section).unwrap_err();
         assert_matches!(
             error,
