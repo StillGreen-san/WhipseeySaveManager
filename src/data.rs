@@ -2,6 +2,7 @@ use ini::{Ini, Properties};
 use num::cast::AsPrimitive;
 use num::NumCast;
 use num_enum::{TryFromPrimitive, TryFromPrimitiveError};
+use std::env::VarError;
 use std::num::{ParseFloatError, ParseIntError};
 use thiserror::Error;
 
@@ -209,7 +210,9 @@ pub enum Error {
     TryFromPrimitive(String),
     #[error(transparent)]
     LocateError(#[from] LocateError),
-} // TODO refactor
+    #[error(transparent)]
+    VarError(#[from] VarError),
+} // TODO refactor & improve user facing messages
 
 impl<Enum: TryFromPrimitive> From<TryFromPrimitiveError<Enum>> for Error {
     fn from(value: TryFromPrimitiveError<Enum>) -> Self {
