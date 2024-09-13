@@ -1,18 +1,16 @@
+use crate::util;
+use file::{File1, File2, File3};
 use ini::{Ini, Properties};
 use num::cast::AsPrimitive;
 use num::NumCast;
 use num_enum::{TryFromPrimitive, TryFromPrimitiveError};
-use std::env::VarError;
-use std::num::{ParseFloatError, ParseIntError};
-use thiserror::Error;
+use util::Error;
+use util::Result;
 
 pub mod cheats;
 pub mod file;
 pub mod options;
 
-use crate::data;
-use crate::data::file::{File1, File2, File3};
-use crate::util::LocateError;
 pub use cheats::Cheats;
 pub use file::File;
 pub use options::Options;
@@ -84,7 +82,7 @@ impl From<BfsSettings> for Ini {
 /// returns [T::default()] if the key is missing
 fn try_from_opt_key<'a, T>(value: &'a Properties) -> Result<T>
 where
-    T: Default + TryFrom<&'a Properties, Error = data::Error>,
+    T: Default + TryFrom<&'a Properties, Error = Error>,
 {
     match value.try_into() {
         Ok(boss_no_damage_progress) => Ok(boss_no_damage_progress),
@@ -182,56 +180,6 @@ trait IniKeyStr {
 
     fn ini_key_str(&self) -> &'static str {
         Self::INI_KEY_STR
-    }
-}
-
-pub type Result<T> = std::result::Result<T, Error>;
-
-/// catch all error type
-///
-/// provides clone ability for various error types that would otherwise not be
-#[derive(Error, Debug, Clone)]
-pub enum Error {
-    #[error("Section {0} not found")]
-    SectionMissing(String),
-    #[error("Key {0} not found")]
-    KeyMissing(String),
-    #[error(transparent)]
-    ParseInt(#[from] ParseIntError),
-    #[error(transparent)]
-    ParseFloat(#[from] ParseFloatError),
-    #[error("{0}")]
-    NumCast(String),
-    #[error("{0}")]
-    IniParse(String),
-    #[error("{0}")]
-    Io(String),
-    #[error("{0}")]
-    TryFromPrimitive(String),
-    #[error(transparent)]
-    LocateError(#[from] LocateError),
-    #[error(transparent)]
-    VarError(#[from] VarError),
-} // TODO refactor & improve user facing messages
-
-impl<Enum: TryFromPrimitive> From<TryFromPrimitiveError<Enum>> for Error {
-    fn from(value: TryFromPrimitiveError<Enum>) -> Self {
-        Self::TryFromPrimitive(value.to_string())
-    }
-}
-
-impl From<ini::Error> for Error {
-    fn from(value: ini::Error) -> Self {
-        match value {
-            ini::Error::Io(err) => Error::Io(err.to_string()),
-            ini::Error::Parse(err) => Error::IniParse(err.to_string()),
-        }
-    }
-}
-
-impl From<std::io::Error> for Error {
-    fn from(value: std::io::Error) -> Self {
-        Error::Io(value.to_string())
     }
 }
 

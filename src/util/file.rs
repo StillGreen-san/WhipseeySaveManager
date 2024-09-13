@@ -1,5 +1,6 @@
 //! utilities to work with the file system and paths
 
+use crate::util::error::LocateError;
 use crate::util::for_each_window_mut;
 use crate::{BFS_SETTINGS_FILE_NAME, SAVEGAME_FILE_NAME, WHIPSEEY_APP_ID};
 use ini::Ini;
@@ -7,9 +8,7 @@ use std::cmp::max;
 use std::env::VarError;
 use std::path::Path;
 use std::path::PathBuf;
-use steamlocate::error::ParseErrorKind;
 use steamlocate::SteamDir;
-use thiserror::Error;
 
 /// tries to load an INI file at `path` and tries to parse it into an [Ini] struct
 ///
@@ -118,51 +117,6 @@ pub fn trim_to_existing_dir(path: &Path) -> &Path {
         };
     }
     path
-}
-
-/// cloneable alternative to [steamlocate::Error]
-#[derive(Error, Debug, Clone)]
-pub enum LocateError {
-    #[error("{0}")]
-    FailedLocate(steamlocate::error::LocateError),
-    #[error("{0}")]
-    InvalidSteamDir(steamlocate::error::ValidationError),
-    #[error("Encountered an I/O error: {inner} at {}", path.display())]
-    Io { inner: String, path: PathBuf },
-    #[error("Failed parsing VDF file. File kind: {kind:?}, Error: {error} at {}", path.display())]
-    Parse {
-        kind: ParseErrorKind,
-        error: String,
-        path: PathBuf,
-    },
-    #[error("Missing expected app with id: {app_id}")]
-    MissingExpectedApp { app_id: u32 },
-}
-
-impl From<steamlocate::Error> for LocateError {
-    fn from(value: steamlocate::Error) -> Self {
-        match value {
-            steamlocate::Error::FailedLocate(locate_error) => {
-                LocateError::FailedLocate(locate_error)
-            }
-            steamlocate::Error::InvalidSteamDir(validation_error) => {
-                LocateError::InvalidSteamDir(validation_error)
-            }
-            steamlocate::Error::Io { inner, path } => LocateError::Io {
-                inner: inner.to_string(),
-                path,
-            },
-            steamlocate::Error::Parse { kind, error, path } => LocateError::Parse {
-                kind,
-                error: error.to_string(),
-                path,
-            },
-            steamlocate::Error::MissingExpectedApp { app_id } => {
-                LocateError::MissingExpectedApp { app_id }
-            }
-            _ => unimplemented!(),
-        }
-    }
 }
 
 #[cfg(test)]

@@ -7,6 +7,7 @@ use iced::{font, Application, Command, Element, Length, Renderer};
 use iced_aw::{card, modal, TabLabel, Tabs};
 use std::env::VarError;
 use std::path::PathBuf;
+use util::error::LocateError;
 
 mod about;
 mod cheats;
@@ -15,7 +16,6 @@ mod files;
 mod options;
 mod theme;
 
-use crate::util::LocateError;
 use about::About;
 use cheats::Cheats;
 use file_select::FileSelect;
@@ -56,9 +56,9 @@ pub enum Message {
     FileSelect(FileSelectId, file_select::Message),
     Save(FileSelectId),
     Load(FileSelectId),
-    LoadedBfs(data::Result<data::BfsSettings>),
-    LoadedSave(SaveSection, data::Result<data::WhipseeySaveData>),
-    Saved(FileSelectId, data::Result<()>),
+    LoadedBfs(util::Result<data::BfsSettings>),
+    LoadedSave(SaveSection, util::Result<data::WhipseeySaveData>),
+    Saved(FileSelectId, util::Result<()>),
     Cheats(cheats::Message),
     Options(options::Message),
     Files(files::Message),
@@ -78,7 +78,7 @@ pub struct Gui {
     options: Options,
     files: Files,
     theme: Theme,
-    errors: Vec<(data::Error, String)>,
+    errors: Vec<(util::Error, String)>,
 }
 
 impl Application for Gui {

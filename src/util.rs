@@ -1,17 +1,19 @@
 //! Various utilities and helpers.
 
+pub mod error;
 pub mod file;
 
 #[cfg(test)]
 pub mod test;
 
+pub use error::Error;
+pub use error::Result;
 pub use file::find_bfs_settings_path;
 pub use file::find_savegame_path;
 pub use file::load_ini_file;
 pub use file::trim_to_existing_dir;
 pub use file::write_ini_file;
 pub use file::write_ini_file_padded_no_spacing;
-pub use file::LocateError;
 
 /// Executes `function` for all contiguous windows of length `size` in `slice`. The windows overlap.
 /// If the slice is shorter than `size`, the function is not called.
