@@ -160,6 +160,7 @@ impl Application for Gui {
             reload_tooltip: "Reload Values from File for this Group",
         };
         (
+            // TODO pass Message into constructors instead of using super::Message in elements
             Self {
                 active_tab: Default::default(),
                 about: About::new(about_strings),

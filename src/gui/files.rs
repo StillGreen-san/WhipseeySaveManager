@@ -103,7 +103,12 @@ impl Files {
                     number_input(
                         self.files_state[idx].gems.value(),
                         Gems::MAX_PRIMITIV,
-                        move |gems| { super::Message::Files(Message::Gems(idx, gems)) }
+                        move |gems| {
+                            super::Message::Files(Message::Gems(
+                                idx,
+                                gems.clamp(Gems::MIN_PRIMITIV, Gems::MAX_PRIMITIV), // necessary because min cannot be set for number_input
+                            ))
+                        }
                     )
                     .width(Length::Fill),
                     self.display_strings.gems_tooltip,
@@ -168,7 +173,12 @@ impl Files {
                     number_input(
                         self.files_state[idx].lives.value(),
                         Lives::MAX_PRIMITIV,
-                        move |lives| { super::Message::Files(Message::Lives(idx, lives)) }
+                        move |lives| {
+                            super::Message::Files(Message::Lives(
+                                idx,
+                                lives.clamp(Lives::MIN_PRIMITIV, Lives::MAX_PRIMITIV), // necessary because min cannot be set for number_input
+                            ))
+                        }
                     )
                     .width(Length::Fill),
                     self.display_strings.lives_tooltip,
@@ -260,7 +270,9 @@ impl Tab for Files {
                 Command::none()
             }
             Message::Gems(idx, gems) => {
-                self.files_state[idx].gems = gems.try_into().unwrap();
+                self.files_state[idx].gems = gems
+                    .try_into()
+                    .expect("number should have been clamped by number_input");
                 Command::none()
             }
             Message::CycleGems(idx) => {
@@ -286,7 +298,9 @@ impl Tab for Files {
                 Command::none()
             }
             Message::Lives(idx, lives) => {
-                self.files_state[idx].lives = lives.try_into().unwrap();
+                self.files_state[idx].lives = lives
+                    .try_into()
+                    .expect("number should have been clamped by number_input");
                 Command::none()
             }
             Message::Reset(idx) => {
