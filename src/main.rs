@@ -1,3 +1,5 @@
+#![windows_subsystem = "windows"]
+
 use iced::{window, Application, Pixels, Settings, Size};
 
 use whipseey_save_manager::gui;
