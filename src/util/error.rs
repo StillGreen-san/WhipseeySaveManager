@@ -2,6 +2,7 @@ use num_enum::{TryFromPrimitive, TryFromPrimitiveError};
 use std::env::VarError;
 use std::num::{ParseFloatError, ParseIntError};
 use std::path::PathBuf;
+use std::process::ExitStatus;
 use steamlocate::error::ParseErrorKind;
 use thiserror::Error;
 
@@ -32,6 +33,8 @@ pub enum Error {
     LocateError(#[from] LocateError),
     #[error(transparent)]
     VarError(#[from] VarError),
+    #[error(transparent)]
+    OpenError(#[from] OpenError),
 } // TODO refactor & improve user facing messages
 
 impl<Enum: TryFromPrimitive> From<TryFromPrimitiveError<Enum>> for Error {
@@ -52,6 +55,12 @@ impl From<ini::Error> for Error {
 impl From<std::io::Error> for Error {
     fn from(value: std::io::Error) -> Self {
         Error::Io(value.to_string())
+    }
+}
+
+impl From<opener::OpenError> for Error {
+    fn from(value: opener::OpenError) -> Self {
+        Error::OpenError(value.into())
     }
 }
 
@@ -95,6 +104,43 @@ impl From<steamlocate::Error> for LocateError {
             steamlocate::Error::MissingExpectedApp { app_id } => {
                 LocateError::MissingExpectedApp { app_id }
             }
+            _ => unimplemented!(),
+        }
+    }
+}
+
+/// cloneable alternative to [opener::OpenError]
+#[derive(Error, Debug, Clone)]
+pub enum OpenError {
+    #[error("IO error: {0}")]
+    Io(String),
+    #[error("error spawning command(s) '{cmds}' from {inner}")]
+    Spawn { cmds: String, inner: String },
+    #[error("command '{cmd}' did not execute successfully; {status}\ncommand stderr:\n{stderr}")]
+    ExitStatus {
+        cmd: &'static str,
+        status: ExitStatus,
+        stderr: String,
+    },
+}
+
+impl From<opener::OpenError> for OpenError {
+    fn from(value: opener::OpenError) -> Self {
+        match value {
+            opener::OpenError::Io(err) => OpenError::Io(err.to_string()),
+            opener::OpenError::Spawn { cmds, source } => OpenError::Spawn {
+                cmds,
+                inner: source.to_string(),
+            },
+            opener::OpenError::ExitStatus {
+                cmd,
+                status,
+                stderr,
+            } => OpenError::ExitStatus {
+                cmd,
+                status,
+                stderr,
+            },
             _ => unimplemented!(),
         }
     }
