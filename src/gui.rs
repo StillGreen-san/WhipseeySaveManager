@@ -67,6 +67,7 @@ pub enum Message {
     LoadedSavegamePath(Result<Option<PathBuf>, VarError>),
     UpdatedTheme(Theme),
     CloseError,
+    Error((util::Error, String)),
 }
 
 pub struct Gui {
@@ -363,6 +364,10 @@ impl Application for Gui {
             }
             Message::CloseError => {
                 self.errors.pop();
+                Command::none()
+            }
+            Message::Error(error) => {
+                self.errors.push(error);
                 Command::none()
             }
         }
