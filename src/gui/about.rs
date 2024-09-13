@@ -3,6 +3,7 @@ use iced::alignment::Horizontal;
 use iced::widget::{button, column, row, scrollable, text, Space};
 use iced::{Alignment, Command, Element, Length, Renderer};
 use iced_aw::TabLabel;
+use std::future::ready;
 
 #[derive(Debug, Clone)]
 pub enum Message {
@@ -56,11 +57,14 @@ impl Tab for About {
 
     fn update(&mut self, message: Self::InMessage) -> Command<super::Message> {
         match message {
-            Message::Link(link) => {
-                opener::open(link).unwrap(); // TODO error handling
-            }
+            Message::Link(link) => match opener::open(link) {
+                Ok(()) => Command::none(),
+                Err(error) => Command::perform(
+                    ready((error.into(), "trying to open a link".into())),
+                    super::Message::Error,
+                ),
+            },
         }
-        Command::none()
     }
 
     // TODO dynamic loading
