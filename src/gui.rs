@@ -273,8 +273,11 @@ impl Application for Gui {
                     )
                 }
             },
-            Message::Saved(_id, result) => {
-                result.unwrap(); // TODO error handling
+            Message::Saved(id, result) => {
+                match result {
+                    Ok(()) => {}
+                    Err(err) => self.errors.push((err, format!("saving {id:?}"))),
+                }
                 Command::none()
             }
             Message::Load(id) => match id {
@@ -294,11 +297,21 @@ impl Application for Gui {
                 }
             },
             Message::LoadedBfs(result) => {
-                self.cheats.set_state(result.unwrap().cheats); // TODO error handling (all unwraps)
+                match result {
+                    Ok(bfs) => self.cheats.set_state(bfs.cheats),
+                    Err(err) => self.errors.push((err, "loading bfs_settings ini".into())),
+                }
                 Command::none()
             }
             Message::LoadedSave(id, result) => {
-                let save = result.unwrap();
+                let save = match result {
+                    Ok(save) => save,
+                    Err(err) => {
+                        self.errors
+                            .push((err, format!("loading {id:?} in savegame")));
+                        return Command::none();
+                    }
+                };
                 let mut files = self.files.get_state();
                 match id {
                     SaveSection::Files => self.files.set_state(save.files),
@@ -322,22 +335,28 @@ impl Application for Gui {
             Message::Options(message) => self.options.update(message),
             Message::Files(message) => self.files.update(message),
             Message::LoadedFont => Command::none(),
-            Message::LoadedBfsSettingsPath(path) => {
-                match path {
-                    Ok(Some(path)) => self
-                        .cheats_path
-                        .update(file_select::Message::Selected(Some(path))),
-                    _ => Command::none(), // TODO error handling
+            Message::LoadedBfsSettingsPath(path) => match path {
+                Ok(path) => path.map_or_else(Command::none, |path| {
+                    self.cheats_path
+                        .update(file_select::Message::Selected(Some(path)))
+                }),
+                Err(error) => {
+                    self.errors
+                        .push((error.into(), "loading bfs_settings path".into()));
+                    Command::none()
                 }
-            }
-            Message::LoadedSavegamePath(path) => {
-                match path {
-                    Ok(Some(path)) => self
-                        .save_path
-                        .update(file_select::Message::Selected(Some(path))),
-                    _ => Command::none(), // TODO error handling
+            },
+            Message::LoadedSavegamePath(path) => match path {
+                Ok(path) => path.map_or_else(Command::none, |path| {
+                    self.save_path
+                        .update(file_select::Message::Selected(Some(path)))
+                }),
+                Err(error) => {
+                    self.errors
+                        .push((error.into(), "loading savegame path".into()));
+                    Command::none()
                 }
-            }
+            },
             Message::UpdatedTheme(theme) => {
                 self.theme = theme;
                 Command::none()
