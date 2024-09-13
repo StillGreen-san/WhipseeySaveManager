@@ -3,7 +3,7 @@ use iced::widget::{
     button, checkbox, container, overlay::menu, radio, scrollable, text, text_input,
 };
 use iced::{application, color, theme, Background, Border, Color, Vector};
-use iced_aw::{card, number_input, style, tab_bar, CardStyles, TabBarStyles};
+use iced_aw::{card, modal, number_input, style, tab_bar};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Theme {
@@ -19,7 +19,7 @@ impl Default for Theme {
     }
 }
 
-const WHIPSEEY_LOGO_PINK: Color = iced::color!(0xE977A8);
+const WHIPSEEY_LOGO_PINK: Color = color!(0xE977A8);
 const WHIPSEEY_LIGHT_PALETTE: Palette = Palette {
     background: Palette::LIGHT.background,
     text: Palette::LIGHT.text,
@@ -84,7 +84,7 @@ impl tab_bar::StyleSheet for Theme {
             palette.background.weak
         };
         match style {
-            TabBarStyles::Default => tab_bar::Appearance {
+            Self::Style::Default => tab_bar::Appearance {
                 tab_label_background: Background::Color(pair.color),
                 text_color: pair.text,
                 ..Default::default()
@@ -100,7 +100,7 @@ impl tab_bar::StyleSheet for Theme {
         };
         let palette = theme.extended_palette();
         match style {
-            TabBarStyles::Default => tab_bar::Appearance {
+            Self::Style::Default => tab_bar::Appearance {
                 tab_label_background: Background::Color(palette.primary.base.color),
                 text_color: palette.primary.base.text,
                 ..self.active(style, is_active)
@@ -390,9 +390,9 @@ impl card::StyleSheet for Theme {
         };
 
         match style {
-            CardStyles::Primary => backing_with_text(palette.primary.strong),
-            CardStyles::Secondary => backing_with_text(palette.primary.weak),
-            CardStyles::Default => backing_with_text(palette.background.weak),
+            Self::Style::Primary => backing_with_text(palette.primary.strong),
+            Self::Style::Secondary => backing_with_text(palette.primary.weak),
+            Self::Style::Default => backing_with_text(palette.background.weak),
             _ => theme.active(style),
         }
     }
@@ -430,6 +430,16 @@ impl menu::StyleSheet for Theme {
     fn appearance(&self, style: &Self::Style) -> menu::Appearance {
         match self {
             Light(theme) | Dark(theme) => theme.appearance(style),
+        }
+    }
+}
+
+impl modal::StyleSheet for Theme {
+    type Style = style::ModalStyles;
+
+    fn active(&self, style: &Self::Style) -> style::modal::Appearance {
+        match self {
+            Light(theme) | Dark(theme) => theme.active(style),
         }
     }
 }
