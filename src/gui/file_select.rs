@@ -3,13 +3,14 @@ use std::path::PathBuf;
 
 use crate::gui::{with_tooltip, ElementState};
 use crate::util;
+use crate::util::Error;
 use iced::widget::tooltip::Position;
 use iced::widget::{button, row, text, text_input};
 use iced::{Command, Element, Renderer};
 use rfd::AsyncFileDialog;
 
 pub struct FileSelect {
-    path: PathBuf,
+    path: String,
     display_strings: DisplayStrings,
     id: super::FileSelectId,
 }
@@ -54,7 +55,7 @@ impl FileSelect {
     fn build_file_dialog(&self) -> AsyncFileDialog {
         AsyncFileDialog::new()
             .set_title(self.display_strings.dialog_title)
-            .set_directory(util::trim_to_existing_dir(&self.path))
+            .set_directory(util::trim_to_existing_dir(self.path.as_ref()))
             .set_file_name(self.display_strings.dialog_file_name)
             .add_filter(
                 self.display_strings.dialog_filter_file,
@@ -66,7 +67,7 @@ impl FileSelect {
     pub fn update(&mut self, message: Message) -> Command<super::Message> {
         match message {
             Message::PathChanged(str_path) => {
-                self.path = PathBuf::from(str_path);
+                self.path = str_path;
                 Command::none()
             }
             Message::Open => {
@@ -77,8 +78,20 @@ impl FileSelect {
             Message::Selected(opt_path) => match opt_path {
                 None => Command::none(),
                 Some(path) => {
-                    self.path = path;
-                    Command::perform(ready(self.id), super::Message::Load)
+                    let lossy = path.to_string_lossy();
+                    match lossy.contains(char::REPLACEMENT_CHARACTER) {
+                        true => Command::perform(
+                            ready((
+                                Error::Io("cannot represent path as String".into()),
+                                "selecting new path".into(),
+                            )),
+                            super::Message::Error,
+                        ),
+                        false => {
+                            self.path = lossy.to_string();
+                            Command::perform(ready(self.id), super::Message::Load)
+                        }
+                    }
                 }
             },
             Message::Save => Command::perform(ready(self.id), super::Message::Save),
@@ -88,11 +101,8 @@ impl FileSelect {
 
     pub fn view(&self) -> Element<'_, super::Message, super::Theme, Renderer> {
         row![
-            text_input(
-                self.display_strings.placeholder,
-                self.path.to_str().unwrap(),
-            )
-            .on_input(|string| self.pack_message(Message::PathChanged(string))),
+            text_input(self.display_strings.placeholder, &self.path)
+                .on_input(|string| self.pack_message(Message::PathChanged(string))),
             with_tooltip(
                 button(text(self.display_strings.open_label))
                     .on_press(self.pack_message(Message::Open)),
@@ -118,7 +128,7 @@ impl FileSelect {
 }
 
 impl ElementState for FileSelect {
-    type State = PathBuf;
+    type State = String;
 
     fn get_state(&self) -> Self::State {
         self.path.clone()
