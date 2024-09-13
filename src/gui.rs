@@ -1,9 +1,10 @@
 use crate::{data, util, BFS_SETTINGS_FILE_NAME, SAVEGAME_FILE_NAME};
 use dark_light::Mode;
 use data::file::{File1, File2, File3};
-use iced::widget::{column, text, tooltip, Tooltip};
-use iced::{font, Application, Command, Element, Renderer};
-use iced_aw::{TabLabel, Tabs};
+use iced::widget::scrollable::Direction;
+use iced::widget::{column, container, scrollable, text, tooltip, Tooltip};
+use iced::{font, Application, Command, Element, Length, Renderer};
+use iced_aw::{card, modal, TabLabel, Tabs};
 use std::env::VarError;
 use std::path::PathBuf;
 
@@ -65,6 +66,7 @@ pub enum Message {
     LoadedBfsSettingsPath(Result<Option<PathBuf>, LocateError>),
     LoadedSavegamePath(Result<Option<PathBuf>, VarError>),
     UpdatedTheme(Theme),
+    CloseError,
 }
 
 pub struct Gui {
@@ -76,6 +78,7 @@ pub struct Gui {
     options: Options,
     files: Files,
     theme: Theme,
+    errors: Vec<(data::Error, String)>,
 }
 
 impl Application for Gui {
@@ -170,6 +173,7 @@ impl Application for Gui {
                 options: Options::new(opt_strings),
                 files: Files::new(files_strings),
                 theme: theme::light(),
+                errors: Vec::with_capacity(3),
             },
             Command::batch([
                 font::load(iced_aw::BOOTSTRAP_FONT_BYTES).map(|result| {
@@ -338,6 +342,10 @@ impl Application for Gui {
                 self.theme = theme;
                 Command::none()
             }
+            Message::CloseError => {
+                self.errors.pop();
+                Command::none()
+            }
         }
     }
 
@@ -345,34 +353,74 @@ impl Application for Gui {
         let tabs = Tabs::new(Message::TabSelected);
         #[cfg(debug_assertions)]
         let tabs = tabs.push(TabId::TestButton, TabLabel::Text("Theme".into()), column![]);
-        tabs.push(
-            TabId::Files,
-            self.files.tab_label(),
-            column![self.save_path.view(), self.files.view()]
-                .spacing(6)
-                .padding(4),
-        )
-        .push(
-            TabId::Options,
-            self.options.tab_label(),
-            column![self.save_path.view(), self.options.view()]
-                .spacing(7)
-                .padding(4),
-        )
-        .push(
-            TabId::Cheats,
-            self.cheats.tab_label(),
-            column![self.cheats_path.view(), self.cheats.view()]
-                .spacing(6)
-                .padding(4),
-        )
-        .push(TabId::About, self.about.tab_label(), self.about.view())
-        .set_active_tab(&self.active_tab)
-        .into()
+        let tabs = tabs
+            .push(
+                TabId::Files,
+                self.files.tab_label(),
+                column![self.save_path.view(), self.files.view()]
+                    .spacing(6)
+                    .padding(4),
+            )
+            .push(
+                TabId::Options,
+                self.options.tab_label(),
+                column![self.save_path.view(), self.options.view()]
+                    .spacing(7)
+                    .padding(4),
+            )
+            .push(
+                TabId::Cheats,
+                self.cheats.tab_label(),
+                column![self.cheats_path.view(), self.cheats.view()]
+                    .spacing(6)
+                    .padding(4),
+            )
+            .push(TabId::About, self.about.tab_label(), self.about.view())
+            .set_active_tab(&self.active_tab);
+        modal(tabs, self.error_overlay())
+            .backdrop(Message::CloseError)
+            .on_esc(Message::CloseError)
+            .into()
     }
 
     fn theme(&self) -> Self::Theme {
         self.theme.clone()
+    }
+}
+
+impl Gui {
+    fn error_overlay(&self) -> Option<Element<'_, Message, Theme, Renderer>> {
+        let (error, origin) = match self.errors.last() {
+            Some(error) => error,
+            None => {
+                return None;
+            }
+        };
+        let elem = container(
+            card(
+                text(format!("ERROR while {}", origin)),
+                scrollable(
+                    container(
+                        text(format!("{:#?}", error))
+                            .width(Length::Shrink)
+                            .height(Length::Shrink),
+                    )
+                    .padding([0, 0, 12, 0]),
+                )
+                .direction(Direction::Both {
+                    horizontal: Default::default(),
+                    vertical: Default::default(),
+                }),
+            )
+            .on_close(Message::CloseError)
+            .max_width(450.0)
+            .max_height(230.0)
+            .style(iced_aw::style::CardStyles::Danger),
+        )
+        .center_x()
+        .center_y()
+        .width(Length::Shrink);
+        Some(elem.into())
     }
 }
 
