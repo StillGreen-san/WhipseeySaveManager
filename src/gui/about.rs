@@ -89,6 +89,10 @@ impl Tab for About {
                 "https://github.com/frewsxcv/rust-dark-light"
             ),
             library("winres [MIT]", "https://github.com/mxre/winres"),
+            library(
+                "const_format [ZLIB]",
+                "https://github.com/rodrimati1992/const_format_crates/"
+            ),
         ]
         .width(Length::Fill)
         .spacing(12)
