@@ -271,6 +271,7 @@ macro_rules! primitive_impl {
         impl $self {
             pub const MIN_PRIMITIV: $typ = $min;
             pub const MAX_PRIMITIV: $typ = $max as $typ;
+            pub const DEFAULT_PRIMITIV: $typ = $default as $typ;
             pub const MIN: Self = Self($min);
             pub const MAX: Self = Self($max as $typ);
             pub const DEFAULT: Self = Self($default);
