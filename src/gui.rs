@@ -1,6 +1,7 @@
 use crate::{data, util, BFS_SETTINGS_FILE_NAME, SAVEGAME_FILE_NAME};
+use const_format::formatcp;
 use dark_light::Mode;
-use data::file::{File1, File2, File3};
+use data::file::{File1, File2, File3, Gems, Lives};
 use iced::widget::scrollable::Direction;
 use iced::widget::{column, container, scrollable, text, tooltip, Tooltip};
 use iced::{font, Application, Command, Element, Length, Renderer};
@@ -145,19 +146,35 @@ impl Application for Gui {
             intro_label: "Intro",
             intro_tooltip: "Will mark Slot as active, skipping Intro",
             gems_label: "Gems",
-            gems_tooltip: "0 - 99",
+            gems_tooltip: formatcp!(
+                "{min} - {max}",
+                min = Gems::MIN_PRIMITIV,
+                max = Gems::MAX_PRIMITIV
+            ),
             cycle_gems_label: "Cycle",
-            cycle_gems_tooltip: "Set Gems to 0 or 99",
+            cycle_gems_tooltip: formatcp!(
+                "Set Gems to {min} or {max}",
+                min = Gems::MIN_PRIMITIV,
+                max = Gems::MAX_PRIMITIV
+            ),
             max_label: "Max",
-            max_tooltip: "100% File with 99999 Lives",
+            max_tooltip: formatcp!("100% File with {max} Lives", max = Lives::MAX_PRIMITIV),
             save_label: "Save",
             save_tooltip: "Save current Values to File for this Group",
             ending_label: "Ending",
             ending_tooltip: "Only used to calculate %Progress",
             lives_label: "Lives",
-            lives_tooltip: "1 - 99999", // TODO vals from struct
+            lives_tooltip: formatcp!(
+                "{min} - {max}",
+                min = Lives::MIN_PRIMITIV,
+                max = Lives::MAX_PRIMITIV
+            ),
             cycle_lives_label: "Cycle",
-            cycle_lives_tooltip: "Set Lives to 5 or 99999",
+            cycle_lives_tooltip: formatcp!(
+                "Set Lives to {def} or {max}",
+                def = Lives::DEFAULT_PRIMITIV,
+                max = Lives::MAX_PRIMITIV
+            ),
             reset_label: "Reset",
             reset_tooltip: "New File",
             reload_label: "Reload",
