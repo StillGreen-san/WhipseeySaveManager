@@ -196,11 +196,6 @@ macro_rules! ini_impl_common {
     };
 
     ($self:ty, $key:literal, $scale:literal, $typ:ty) => {
-        impl $self {
-            pub fn value(&self) -> $typ {
-                self.clone().into()
-            }
-        }
         impl $crate::data::IniKeyStr for $self {
             const INI_KEY_STR: &'static str = $key;
         }
@@ -275,6 +270,9 @@ macro_rules! primitive_impl {
             pub const MIN: Self = Self($min);
             pub const MAX: Self = Self($max as $typ);
             pub const DEFAULT: Self = Self($default);
+            pub fn value(&self) -> $typ {
+                self.0
+            }
         }
         impl ::num_enum::TryFromPrimitive for $self {
             type Primitive = $typ;

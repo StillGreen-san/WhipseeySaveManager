@@ -20,6 +20,11 @@ pub enum BossNoDamageProgress {
     ForestDesertCastle = 7,
 }
 ini_impl_quoted!(BossNoDamageProgress, "boss_no_damage_progress");
+impl BossNoDamageProgress {
+    pub fn value(&self) -> u8 {
+        (*self).into()
+    }
+}
 
 /// represents the `enemies_defeated` Ini property in a `File` section in `whipseey.sav`
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]

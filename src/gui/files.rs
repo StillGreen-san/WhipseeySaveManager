@@ -325,7 +325,7 @@ impl ElementState for Files {
     type State = [File; 3];
 
     fn get_state(&self) -> Self::State {
-        self.files_state.clone()
+        self.files_state
     }
 
     fn set_state(&mut self, state: Self::State) {
