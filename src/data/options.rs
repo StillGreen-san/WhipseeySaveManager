@@ -1,4 +1,4 @@
-use crate::data::{IniKeyStr, IniSectionStrVal};
+use crate::data::{IniKeyStrFn, IniSectionStrVal};
 use crate::{data, ini_impl_quoted};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
@@ -171,6 +171,7 @@ impl From<Options> for Properties {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::data::IniKeyStrVal;
     use crate::{assert_matches, util, TEST_FAIL_STR};
     use ini::Ini;
 

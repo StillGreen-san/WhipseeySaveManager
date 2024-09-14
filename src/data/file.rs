@@ -1,4 +1,4 @@
-use crate::data::{try_from_opt_key, IniKeyStr, IniSectionStrFn};
+use crate::data::{try_from_opt_key, IniKeyStrFn, IniSectionStrFn};
 use crate::{data, ini_impl_quoted, primitive_impl};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
@@ -278,6 +278,7 @@ mod tests {
     use super::*;
     use crate::{assert_matches, util, TEST_FAIL_STR};
     use ini::Ini;
+    use crate::data::IniKeyStrVal;
 
     #[test]
     fn file_into_properties() {

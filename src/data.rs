@@ -119,7 +119,7 @@ where
 /// reads a potentially quoted [f64] from `value` and multiplies it by `scale` before converting it to `T`
 fn try_from_scaled<T, P>(value: &Properties, scale: f64) -> Result<T>
 where
-    T: IniKeyStr + TryFromPrimitive + TryFrom<P, Error = TryFromPrimitiveError<T>>,
+    T: IniKeyStrVal + TryFromPrimitive + TryFrom<P, Error = TryFromPrimitiveError<T>>,
     P: NumCast,
 {
     let val_str = value
@@ -152,14 +152,14 @@ where
     format!("\"{:.6}\"", scaled)
 }
 
-/// trait for getting the section string of an object
+/// trait for getting the section string of an ini object
 ///
 /// a blanked implementation for [IniSectionStrFn] is provided
 trait IniSectionStrVal {
     const INI_SECTION_STR: &'static str;
 }
 
-/// trait for getting the section string of an object
+/// trait for getting the section string of an ini object
 ///
 /// prefer to use [IniSectionStrVal] if possible, it provides a blanked implementation for this trait
 trait IniSectionStrFn {
@@ -170,14 +170,21 @@ impl<T: IniSectionStrVal> IniSectionStrFn for T {
         Self::INI_SECTION_STR
     }
 }
-/// trait for getting the key string of an object
-///
-/// only [IniKeyStr::INI_KEY_STR] needs to be provided
-///
-/// overrides of [IniKeyStr::ini_key_str] are expected to return [IniKeyStr::INI_KEY_STR]  
-trait IniKeyStr {
-    const INI_KEY_STR: &'static str;
 
+/// trait for getting the key string of an ini object
+///
+/// a blanked implementation for [IniKeyStrFn] is provided
+trait IniKeyStrVal {
+    const INI_KEY_STR: &'static str;
+}
+
+/// trait for getting the key string of an ini object
+///
+/// prefer to use [IniKeyStrVal] if possible, it provides a blanked implementation for this trait
+trait IniKeyStrFn {
+    fn ini_key_str(&self) -> &'static str;
+}
+impl<T: IniKeyStrVal> IniKeyStrFn for T {
     fn ini_key_str(&self) -> &'static str {
         Self::INI_KEY_STR
     }
@@ -196,7 +203,7 @@ macro_rules! ini_impl_common {
     };
 
     ($self:ty, $key:literal, $scale:literal, $typ:ty) => {
-        impl $crate::data::IniKeyStr for $self {
+        impl $crate::data::IniKeyStrVal for $self {
             const INI_KEY_STR: &'static str = $key;
         }
         impl TryFrom<&ini::Properties> for $self {
