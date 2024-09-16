@@ -44,7 +44,7 @@ pub enum Level {
     Forest = 2,
     #[default]
     Beach = 1,
-} // TODO make individual levels private?
+}
 
 impl Level {
     pub fn into_parts(self) -> (Castle, Moon, Snow, Desert, Forest) {
@@ -276,9 +276,9 @@ impl IniSectionStrFn for FileIndex {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::data::IniKeyStrVal;
     use crate::{assert_matches, util, TEST_FAIL_STR};
     use ini::Ini;
-    use crate::data::IniKeyStrVal;
 
     #[test]
     fn file_into_properties() {

@@ -412,7 +412,7 @@ mod tests {
 
     #[test]
     fn whipseey_save_data_into_ini() {
-        let file = File {
+        let file1 = File {
             boss_no_damage_progress: BossNoDamageProgress::Desert,
             enemies_defeated: EnemiesDefeated::try_from(0).expect(TEST_FAIL_STR),
             level: Level::Beach,
@@ -420,6 +420,15 @@ mod tests {
             intro: Intro::Unwatched,
             lives: Lives::try_from(1).expect(TEST_FAIL_STR),
             gems: Gems::try_from(12).expect(TEST_FAIL_STR),
+        };
+        let file2 = File {
+            level: Level::Snow,
+            ending: Ending::Watched,
+            ..file1
+        };
+        let file3 = File {
+            level: Level::Castle,
+            ..file1
         };
         let data = WhipseeySaveData {
             options: Options {
@@ -432,7 +441,7 @@ mod tests {
                 music_volume: MusicVolume::V50,
                 music_toggle: MusicToggle::Enabled,
             },
-            files: [file, file, file],
+            files: [file1, file2, file3],
         };
         let ini: Ini = data.into();
         assert_eq!(
