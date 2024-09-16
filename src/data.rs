@@ -487,9 +487,9 @@ mod tests {
             ini.get_from(Some(File2.ini_section_str()), EnemiesDefeated::INI_KEY_STR),
             Some(String::from(data.files[File2].enemies_defeated).as_str())
         );
-        let (_, file1_moon, _, _, file1_forest) = data.files[File1].level.into_parts();
-        let (_, _, file2_snow, _, _) = data.files[File2].level.into_parts();
-        let (file3_castle, _, _, file3_desert, _) = data.files[File3].level.into_parts();
+        let (_, file1_moon, _, _, file1_forest) = data.files[File1].level.into();
+        let (_, _, file2_snow, _, _) = data.files[File2].level.into();
+        let (file3_castle, _, _, file3_desert, _) = data.files[File3].level.into();
         assert_eq!(
             ini.get_from(Some(File3.ini_section_str()), Castle::INI_KEY_STR),
             Some(String::from(file3_castle).as_str())

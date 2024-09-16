@@ -46,28 +46,30 @@ pub enum Level {
     Beach = 1,
 }
 
-impl Level {
-    pub fn into_parts(self) -> (Castle, Moon, Snow, Desert, Forest) {
-        let mut parts: (Castle, Moon, Snow, Desert, Forest) = Default::default();
-        if self == Level::Castle {
+impl From<Level> for (Castle, Moon, Snow, Desert, Forest) {
+    fn from(level: Level) -> Self {
+        let mut parts: Self = Default::default();
+        if level == Level::Castle {
             parts.0 = Castle::Unlocked;
         }
-        if self >= Level::Moon {
+        if level >= Level::Moon {
             parts.1 = Moon::Unlocked;
         }
-        if self >= Level::Snow {
+        if level >= Level::Snow {
             parts.2 = Snow::Unlocked;
         }
-        if self >= Level::Desert {
+        if level >= Level::Desert {
             parts.3 = Desert::Unlocked;
         }
-        if self >= Level::Forest {
+        if level >= Level::Forest {
             parts.4 = Forest::Unlocked;
         }
         parts
-    } // TODO into/from impls?
+    }
+}
 
-    pub fn from_parts(parts: (Castle, Moon, Snow, Desert, Forest)) -> Self {
+impl From<(Castle, Moon, Snow, Desert, Forest)> for Level {
+    fn from(parts: (Castle, Moon, Snow, Desert, Forest)) -> Self {
         if parts.0 == Castle::Unlocked {
             return Self::Castle;
         }
@@ -203,7 +205,7 @@ impl TryFrom<&Properties> for File {
         Ok(Self {
             boss_no_damage_progress: try_from_opt_key(value)?,
             enemies_defeated: value.try_into()?,
-            level: Level::from_parts((castle, moon, snow, desert, forest)),
+            level: Level::from((castle, moon, snow, desert, forest)),
             ending: value.try_into()?,
             intro: value.try_into()?,
             lives: value.try_into()?,
@@ -220,7 +222,7 @@ impl From<File> for Properties {
             value.boss_no_damage_progress,
         );
         properties.insert(value.enemies_defeated.ini_key_str(), value.enemies_defeated);
-        let (castle, moon, snow, desert, forest) = value.level.into_parts();
+        let (castle, moon, snow, desert, forest) = value.level.into();
         properties.insert(castle.ini_key_str(), castle);
         properties.insert(moon.ini_key_str(), moon);
         properties.insert(snow.ini_key_str(), snow);
@@ -300,7 +302,7 @@ mod tests {
             props.get(EnemiesDefeated::INI_KEY_STR),
             Some(String::from(file.enemies_defeated).as_str())
         );
-        let (castle, moon, snow, desert, forest) = file.level.into_parts();
+        let (castle, moon, snow, desert, forest) = file.level.into();
         assert_eq!(
             props.get(Castle::INI_KEY_STR),
             Some(String::from(castle).as_str())
