@@ -445,12 +445,16 @@ impl Application for Gui {
 }
 
 impl Gui {
+    /// calls [FileSelect::update] on save_path and updates other elements
+    ///
+    /// sets [Files::can_reload] from [FileSelect::does_path_exist]
     fn save_path_update(&mut self, message: file_select::Message) -> Command<Message> {
         let command = self.save_path.update(message);
         self.files.can_reload = self.save_path.does_path_exist();
         command
     }
 
+    /// creates an error overlay [Element] when there are any errors
     fn error_overlay(&self) -> Option<Element<'_, Message, Theme, Renderer>> {
         let (error, origin) = match self.errors.last() {
             Some(error) => error,
@@ -469,6 +473,7 @@ impl Gui {
         Some(elem.into())
     }
 
+    /// creates an informational overlay [Element] when a modal is active
     fn modal_overlay(&self) -> Option<Element<'_, Message, Theme, Renderer>> {
         self.modal.map(|(title, body)| {
             container(self.modal_card(title.into(), body.into()))
@@ -478,6 +483,7 @@ impl Gui {
         })
     }
 
+    /// creates a fixed sized [Card] with the given title and scrollable body
     fn modal_card(&self, head: String, body: String) -> Card<'_, Message, Theme, Renderer> {
         card(
             text(head),
