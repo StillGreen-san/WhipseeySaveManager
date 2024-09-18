@@ -273,7 +273,7 @@ mod tests {
         let section = ini
             .section(Some(Options::INI_SECTION_STR))
             .expect(TEST_FAIL_STR);
-        let error = Options::try_from(section).unwrap_err();
+        let error = Options::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
             data::Error::KeyMissing(key) if key == Language::INI_KEY_STR
@@ -293,7 +293,7 @@ mod tests {
         let section = ini
             .section(Some(Options::INI_SECTION_STR))
             .expect(TEST_FAIL_STR);
-        let error = Options::try_from(section).unwrap_err();
+        let error = Options::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(error, data::Error::TryFromPrimitive(_));
     }
 
@@ -303,7 +303,7 @@ mod tests {
         let section = ini
             .section(Some(Options::INI_SECTION_STR))
             .expect(TEST_FAIL_STR);
-        let error = Options::try_from(section).unwrap_err();
+        let error = Options::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
             data::Error::NumCast(_) | data::Error::ParseInt(_) | data::Error::ParseFloat(_)

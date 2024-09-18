@@ -382,28 +382,28 @@ mod tests {
     #[test]
     fn bfs_settings_try_from_ini_invalid_sections() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_SECTIONS).expect(TEST_FAIL_STR);
-        let error = BfsSettings::try_from(ini).unwrap_err();
+        let error = BfsSettings::try_from(ini).expect_err(TEST_FAIL_STR);
         assert_matches!(error, Error::SectionMissing(section) if section == Cheats::INI_SECTION_STR);
     }
 
     #[test]
     fn bfs_settings_try_from_ini_invalid_keys() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
-        let error = BfsSettings::try_from(ini).unwrap_err();
+        let error = BfsSettings::try_from(ini).expect_err(TEST_FAIL_STR);
         assert_matches!(error, Error::KeyMissing(key) if key == CheatsEnabled::INI_KEY_STR);
     }
 
     #[test]
     fn bfs_settings_try_from_ini_invalid_value_ranges() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
-        let error = BfsSettings::try_from(ini).unwrap_err();
+        let error = BfsSettings::try_from(ini).expect_err(TEST_FAIL_STR);
         assert_matches!(error, Error::TryFromPrimitive(_));
     }
 
     #[test]
     fn bfs_settings_try_from_ini_invalid_value_types() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).expect(TEST_FAIL_STR);
-        let error = BfsSettings::try_from(ini).unwrap_err();
+        let error = BfsSettings::try_from(ini).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
             Error::NumCast(_) | Error::ParseInt(_) | Error::ParseFloat(_)
@@ -568,7 +568,7 @@ mod tests {
     #[test]
     fn whipseey_save_data_try_from_ini_invalid_sections() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_SECTIONS).expect(TEST_FAIL_STR);
-        let error = WhipseeySaveData::try_from(ini).unwrap_err();
+        let error = WhipseeySaveData::try_from(ini).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
             Error::SectionMissing(section) if section == Options::INI_SECTION_STR
@@ -581,7 +581,7 @@ mod tests {
     #[test]
     fn whipseey_save_data_try_from_ini_invalid_keys() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
-        let error = WhipseeySaveData::try_from(ini).unwrap_err();
+        let error = WhipseeySaveData::try_from(ini).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
             Error::KeyMissing(key) if key == Language::INI_KEY_STR
@@ -609,14 +609,14 @@ mod tests {
     #[test]
     fn whipseey_save_data_try_from_ini_invalid_value_ranges() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
-        let error = WhipseeySaveData::try_from(ini).unwrap_err();
+        let error = WhipseeySaveData::try_from(ini).expect_err(TEST_FAIL_STR);
         assert_matches!(error, Error::TryFromPrimitive(_));
     }
 
     #[test]
     fn whipseey_save_data_try_from_ini_invalid_value_types() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).expect(TEST_FAIL_STR);
-        let error = WhipseeySaveData::try_from(ini).unwrap_err();
+        let error = WhipseeySaveData::try_from(ini).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
             Error::NumCast(_) | Error::ParseInt(_) | Error::ParseFloat(_)

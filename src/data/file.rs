@@ -421,7 +421,7 @@ mod tests {
         let section = ini
             .section(Some(File1.ini_section_str()))
             .expect(TEST_FAIL_STR);
-        let error = File::try_from(section).unwrap_err();
+        let error = File::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
             data::Error::KeyMissing(key) if key == BossNoDamageProgress::INI_KEY_STR
@@ -444,7 +444,7 @@ mod tests {
         let section = ini
             .section(Some(File1.ini_section_str()))
             .expect(TEST_FAIL_STR);
-        let error = File::try_from(section).unwrap_err();
+        let error = File::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
             data::Error::TryFromPrimitive(_) | data::Error::NumCast(_)
@@ -457,7 +457,7 @@ mod tests {
         let section = ini
             .section(Some(File1.ini_section_str()))
             .expect(TEST_FAIL_STR);
-        let error = File::try_from(section).unwrap_err();
+        let error = File::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
             data::Error::NumCast(_) | data::Error::ParseInt(_) | data::Error::ParseFloat(_)
