@@ -105,15 +105,16 @@ impl Application for Gui {
             save_tooltip: "Save current Values to File",
             reload_label: "reload",
             reload_tooltip: "Reload Values from File",
-            dialog_title: "save game",
+            dialog_title: "open save game",
             dialog_file_name: SAVEGAME_FILE_NAME,
             dialog_filter_file: "save",
             dialog_filter_ext: "sav",
             dialog_filter_all: "all",
+            modal_description: "waiting for a file to be chosen...",
         }; // TODO localize (these and in general)
         let bfs_strings = file_select::DisplayStrings {
             placeholder: "bfs settings",
-            dialog_title: "bfs settings",
+            dialog_title: "open bfs settings",
             dialog_file_name: BFS_SETTINGS_FILE_NAME,
             dialog_filter_file: "ini",
             dialog_filter_ext: "ini",

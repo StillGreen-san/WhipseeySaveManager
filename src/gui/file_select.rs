@@ -28,6 +28,7 @@ pub struct DisplayStrings {
     pub dialog_filter_file: &'static str,
     pub dialog_filter_ext: &'static str,
     pub dialog_filter_all: &'static str,
+    pub modal_description: &'static str,
 }
 
 impl FileSelect {
@@ -72,11 +73,20 @@ impl FileSelect {
             }
             Message::Open => {
                 let id = self.id;
-                let dialog = self.build_file_dialog(); // TODO lock relevant buttons
-                Command::perform(Self::run_file_dialog(dialog), move |msg| msg.pack(id))
+                let dialog = self.build_file_dialog();
+                let modal_strings = (
+                    self.display_strings.dialog_title,
+                    self.display_strings.modal_description,
+                );
+                Command::batch([
+                    Command::perform(ready(()), move |()| {
+                        super::Message::OpenModal(modal_strings)
+                    }),
+                    Command::perform(Self::run_file_dialog(dialog), move |msg| msg.pack(id)),
+                ])
             }
             Message::Selected(opt_path) => match opt_path {
-                None => Command::none(),
+                None => Command::perform(ready(()), |()| super::Message::CloseModal),
                 Some(path) => {
                     let lossy = path.to_string_lossy();
                     match lossy.contains(char::REPLACEMENT_CHARACTER) {
@@ -89,7 +99,10 @@ impl FileSelect {
                         ),
                         false => {
                             self.path = lossy.to_string();
-                            Command::perform(ready(self.id), super::Message::Load)
+                            Command::batch([
+                                Command::perform(ready(()), |()| super::Message::CloseModal),
+                                Command::perform(ready(self.id), super::Message::Load),
+                            ])
                         }
                     }
                 }
