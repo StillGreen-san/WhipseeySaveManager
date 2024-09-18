@@ -251,7 +251,7 @@ impl Application for Gui {
             }
             Message::About(message) => self.about.update(message),
             Message::FileSelect(id, message) => match id {
-                FileSelectId::Save(_) => self.save_path.update(message),
+                FileSelectId::Save(_) => self.save_path_update(message),
                 FileSelectId::Bfs => self.cheats_path.update(message),
             },
             Message::Save(id) => match id {
@@ -371,8 +371,7 @@ impl Application for Gui {
             },
             Message::LoadedSavegamePath(path) => match path {
                 Ok(path) => path.map_or_else(Command::none, |path| {
-                    self.save_path
-                        .update(file_select::Message::Selected(Some(path)))
+                    self.save_path_update(file_select::Message::Selected(Some(path)))
                 }),
                 Err(error) => {
                     self.errors
@@ -446,6 +445,12 @@ impl Application for Gui {
 }
 
 impl Gui {
+    fn save_path_update(&mut self, message: file_select::Message) -> Command<Message> {
+        let command = self.save_path.update(message);
+        self.files.can_reload = self.save_path.does_path_exist();
+        command
+    }
+
     fn error_overlay(&self) -> Option<Element<'_, Message, Theme, Renderer>> {
         let (error, origin) = match self.errors.last() {
             Some(error) => error,
