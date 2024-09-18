@@ -72,7 +72,7 @@ impl FileSelect {
     pub fn update(&mut self, message: Message) -> Command<super::Message> {
         match message {
             Message::PathChanged(str_path) => {
-                self.path = str_path;
+                self.path = util::string_trim(str_path);
                 Command::none()
             }
             Message::Open => {
