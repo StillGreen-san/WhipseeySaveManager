@@ -1,5 +1,5 @@
 use crate::data::{IniKeyStrFn, IniSectionStrVal};
-use crate::{data, ini_impl_common};
+use crate::{ini_impl_common, util};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
@@ -29,7 +29,7 @@ impl IniSectionStrVal for Cheats {
 }
 
 impl TryFrom<&Properties> for Cheats {
-    type Error = data::Error;
+    type Error = util::Error;
 
     fn try_from(value: &Properties) -> Result<Self, Self::Error> {
         Ok(Self {
@@ -50,7 +50,7 @@ impl From<Cheats> for Properties {
 mod tests {
     use super::*;
     use crate::data::IniKeyStrVal;
-    use crate::{assert_matches, util, TEST_FAIL_STR};
+    use crate::{assert_matches, TEST_FAIL_STR};
     use ini::Ini;
 
     #[test]
@@ -105,7 +105,7 @@ mod tests {
         let error = Cheats::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
-            data::Error::KeyMissing(key) if key == CheatsEnabled::INI_KEY_STR
+            util::Error::KeyMissing(key) if key == CheatsEnabled::INI_KEY_STR
         );
     }
 
@@ -116,7 +116,7 @@ mod tests {
             .section(Some(Cheats::INI_SECTION_STR))
             .expect(TEST_FAIL_STR);
         let error = Cheats::try_from(section).expect_err(TEST_FAIL_STR);
-        assert_matches!(error, data::Error::TryFromPrimitive(_));
+        assert_matches!(error, util::Error::TryFromPrimitive(_));
     }
 
     #[test]
@@ -128,7 +128,7 @@ mod tests {
         let error = Cheats::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
-            data::Error::NumCast(_) | data::Error::ParseInt(_) | data::Error::ParseFloat(_)
+            util::Error::NumCast(_) | util::Error::ParseInt(_) | util::Error::ParseFloat(_)
         );
     }
 }

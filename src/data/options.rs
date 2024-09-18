@@ -1,5 +1,5 @@
 use crate::data::{IniKeyStrFn, IniSectionStrVal};
-use crate::{data, ini_impl_quoted};
+use crate::{ini_impl_quoted, util};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{Display, VariantArray};
@@ -137,7 +137,7 @@ impl IniSectionStrVal for Options {
 }
 
 impl TryFrom<&Properties> for Options {
-    type Error = data::Error;
+    type Error = util::Error;
 
     fn try_from(value: &Properties) -> Result<Self, Self::Error> {
         Ok(Self {
@@ -172,7 +172,7 @@ impl From<Options> for Properties {
 mod tests {
     use super::*;
     use crate::data::IniKeyStrVal;
-    use crate::{assert_matches, util, TEST_FAIL_STR};
+    use crate::{assert_matches, TEST_FAIL_STR};
     use ini::Ini;
 
     #[test]
@@ -276,7 +276,7 @@ mod tests {
         let error = Options::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
-            data::Error::KeyMissing(key) if key == Language::INI_KEY_STR
+            util::Error::KeyMissing(key) if key == Language::INI_KEY_STR
                                         || key == Scale::INI_KEY_STR
                                         || key == Fullscreen::INI_KEY_STR
                                         || key == LeftHanded::INI_KEY_STR
@@ -294,7 +294,7 @@ mod tests {
             .section(Some(Options::INI_SECTION_STR))
             .expect(TEST_FAIL_STR);
         let error = Options::try_from(section).expect_err(TEST_FAIL_STR);
-        assert_matches!(error, data::Error::TryFromPrimitive(_));
+        assert_matches!(error, util::Error::TryFromPrimitive(_));
     }
 
     #[test]
@@ -306,7 +306,7 @@ mod tests {
         let error = Options::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
-            data::Error::NumCast(_) | data::Error::ParseInt(_) | data::Error::ParseFloat(_)
+            util::Error::NumCast(_) | util::Error::ParseInt(_) | util::Error::ParseFloat(_)
         );
     }
 }

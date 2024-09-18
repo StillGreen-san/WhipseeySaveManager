@@ -1,5 +1,5 @@
 use crate::data::{try_from_opt_key, IniKeyStrFn, IniSectionStrFn};
-use crate::{data, ini_impl_quoted, primitive_impl};
+use crate::{ini_impl_quoted, primitive_impl, util};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use std::ops::{Index, IndexMut};
@@ -194,7 +194,7 @@ pub struct File {
 }
 
 impl TryFrom<&Properties> for File {
-    type Error = data::Error;
+    type Error = util::Error;
 
     fn try_from(value: &Properties) -> Result<Self, Self::Error> {
         let castle = value.try_into()?;
@@ -279,7 +279,7 @@ impl IniSectionStrFn for FileIndex {
 mod tests {
     use super::*;
     use crate::data::IniKeyStrVal;
-    use crate::{assert_matches, util, TEST_FAIL_STR};
+    use crate::{assert_matches, TEST_FAIL_STR};
     use ini::Ini;
 
     #[test]
@@ -424,7 +424,7 @@ mod tests {
         let error = File::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
-            data::Error::KeyMissing(key) if key == BossNoDamageProgress::INI_KEY_STR
+            util::Error::KeyMissing(key) if key == BossNoDamageProgress::INI_KEY_STR
                                         || key == EnemiesDefeated::INI_KEY_STR
                                         || key == Castle::INI_KEY_STR
                                         || key == Moon::INI_KEY_STR
@@ -447,7 +447,7 @@ mod tests {
         let error = File::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
-            data::Error::TryFromPrimitive(_) | data::Error::NumCast(_)
+            util::Error::TryFromPrimitive(_) | util::Error::NumCast(_)
         );
     }
 
@@ -460,7 +460,7 @@ mod tests {
         let error = File::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(
             error,
-            data::Error::NumCast(_) | data::Error::ParseInt(_) | data::Error::ParseFloat(_)
+            util::Error::NumCast(_) | util::Error::ParseInt(_) | util::Error::ParseFloat(_)
         );
     }
 }

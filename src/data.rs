@@ -207,7 +207,7 @@ macro_rules! ini_impl_common {
             const INI_KEY_STR: &'static str = $key;
         }
         impl TryFrom<&ini::Properties> for $self {
-            type Error = $crate::data::Error;
+            type Error = $crate::util::Error;
 
             fn try_from(value: &ini::Properties) -> Result<Self, Self::Error> {
                 $crate::data::try_from_scaled::<$self, $typ>(value, $scale)
@@ -332,7 +332,7 @@ macro_rules! primitive_impl {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{assert_matches, util, TEST_FAIL_STR};
+    use crate::{assert_matches, TEST_FAIL_STR};
     use cheats::CheatsEnabled;
     use file::{
         BossNoDamageProgress, Castle, Desert, Ending, EnemiesDefeated, Forest, Gems, Intro, Level,
