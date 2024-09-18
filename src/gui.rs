@@ -5,7 +5,7 @@ use data::file::{File1, File2, File3, Gems, Lives};
 use iced::widget::scrollable::Direction;
 use iced::widget::{column, container, scrollable, text, tooltip, Tooltip};
 use iced::{font, Application, Command, Element, Length, Renderer};
-use iced_aw::{card, modal, TabLabel, Tabs};
+use iced_aw::{card, modal, Card, CardStyles, TabLabel, Tabs};
 use std::env::VarError;
 use std::path::PathBuf;
 use util::error::LocateError;
@@ -69,6 +69,8 @@ pub enum Message {
     UpdatedTheme(Theme),
     CloseError,
     Error((util::Error, String)),
+    OpenModal((&'static str, &'static str)),
+    CloseModal,
 }
 
 pub struct Gui {
@@ -81,6 +83,7 @@ pub struct Gui {
     files: Files,
     theme: Theme,
     errors: Vec<(util::Error, String)>,
+    modal: Option<(&'static str, &'static str)>,
 }
 
 impl Application for Gui {
@@ -192,6 +195,7 @@ impl Application for Gui {
                 files: Files::new(files_strings),
                 theme: theme::light(),
                 errors: Vec::with_capacity(3),
+                modal: None,
             },
             Command::batch([
                 font::load(iced_aw::BOOTSTRAP_FONT_BYTES).map(|result| {
@@ -387,6 +391,14 @@ impl Application for Gui {
                 self.errors.push(error);
                 Command::none()
             }
+            Message::OpenModal(messages) => {
+                self.modal = Some(messages);
+                Command::none()
+            }
+            Message::CloseModal => {
+                self.modal = None;
+                Command::none()
+            }
         }
     }
 
@@ -418,10 +430,13 @@ impl Application for Gui {
             )
             .push(TabId::About, self.about.tab_label(), self.about.view())
             .set_active_tab(&self.active_tab);
-        modal(tabs, self.error_overlay())
-            .backdrop(Message::CloseError)
-            .on_esc(Message::CloseError)
-            .into()
+        match self.modal_overlay() {
+            Some(elm) => modal(tabs, Some(elm)),
+            None => modal(tabs, self.error_overlay())
+                .backdrop(Message::CloseError)
+                .on_esc(Message::CloseError),
+        }
+        .into()
     }
 
     fn theme(&self) -> Self::Theme {
@@ -438,30 +453,39 @@ impl Gui {
             }
         };
         let elem = container(
-            card(
-                text(format!("ERROR while {}", origin)),
-                scrollable(
-                    container(
-                        text(format!("{:#?}", error))
-                            .width(Length::Shrink)
-                            .height(Length::Shrink),
-                    )
-                    .padding([0, 0, 12, 0]),
-                )
-                .direction(Direction::Both {
-                    horizontal: Default::default(),
-                    vertical: Default::default(),
-                }),
-            )
-            .on_close(Message::CloseError)
-            .max_width(450.0)
-            .max_height(230.0)
-            .style(iced_aw::style::CardStyles::Danger),
+            self.modal_card(format!("ERROR while {}", origin), format!("{:#?}", error))
+                .on_close(Message::CloseError)
+                .style(CardStyles::Danger),
         )
         .center_x()
         .center_y()
         .width(Length::Shrink);
         Some(elem.into())
+    }
+
+    fn modal_overlay(&self) -> Option<Element<'_, Message, Theme, Renderer>> {
+        self.modal.map(|(title, body)| {
+            container(self.modal_card(title.into(), body.into()))
+                .center_x()
+                .center_y()
+                .into()
+        })
+    }
+
+    fn modal_card(&self, head: String, body: String) -> Card<'_, Message, Theme, Renderer> {
+        card(
+            text(head),
+            scrollable(
+                container(text(body).width(Length::Shrink).height(Length::Shrink))
+                    .padding([0, 0, 12, 0]),
+            )
+            .direction(Direction::Both {
+                horizontal: Default::default(),
+                vertical: Default::default(),
+            }),
+        )
+        .max_width(450.0)
+        .max_height(230.0)
     }
 }
 
@@ -498,4 +522,4 @@ pub fn with_tooltip<'a>(
     position: tooltip::Position,
 ) -> Tooltip<'a, Message, Theme, Renderer> {
     tooltip(content, text(tooltip_text), position).style(iced::theme::Container::Box)
-}
+} // TODO disable tooltips during active modal
