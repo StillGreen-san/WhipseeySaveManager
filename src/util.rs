@@ -69,9 +69,25 @@ macro_rules! fn_name {
     }};
 }
 
+/// in place [str::trim] for [String]
+///
+/// Modifies the string so that leading and trailing whitespace is removed.
+/// 'Whitespace' is defined according to the terms of the Unicode Derived Core Property `White_Space`, which includes newlines.
+pub fn string_trim(mut s: String) -> String {
+    s.truncate(s.trim_end().len());
+    s.replace_range(..(s.len() - s.trim_start().len()), "");
+    s
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn trim_in_place_test() {
+        let s = string_trim(" \ta test  ".into());
+        assert_eq!(s, "a test");
+    }
 
     #[test]
     fn fn_name_function() {
