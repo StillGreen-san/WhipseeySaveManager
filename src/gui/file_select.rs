@@ -1,5 +1,5 @@
 use std::future::ready;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use crate::gui::{with_tooltip, ElementState};
 use crate::util;
@@ -42,6 +42,10 @@ impl FileSelect {
 
     pub fn set_id(&mut self, id: super::FileSelectId) {
         self.id = id;
+    }
+
+    pub fn does_path_exist(&self) -> bool {
+        Path::exists(self.path.as_ref())
     }
 
     /// wraps message in super::Message with `self.id`
@@ -129,8 +133,10 @@ impl FileSelect {
                 Position::Bottom,
             ),
             with_tooltip(
-                button(text(self.display_strings.reload_label))
-                    .on_press(self.pack_message(Message::Reload)),
+                button(text(self.display_strings.reload_label)).on_press_maybe(
+                    self.does_path_exist()
+                        .then(|| self.pack_message(Message::Reload))
+                ),
                 self.display_strings.reload_tooltip,
                 Position::Bottom,
             )
