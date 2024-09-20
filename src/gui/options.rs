@@ -219,7 +219,7 @@ impl ElementState for Options {
     type State = data::Options;
 
     fn get_state(&self) -> Self::State {
-        self.options_state.clone()
+        self.options_state
     }
 
     fn set_state(&mut self, state: Self::State) {
