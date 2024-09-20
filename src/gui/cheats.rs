@@ -68,13 +68,15 @@ impl Tab for Cheats {
 }
 
 impl ElementState for Cheats {
-    type State = data::Cheats; // TODO change state to BfsSettings
+    type State = data::BfsSettings;
 
     fn get_state(&self) -> Self::State {
-        self.cheats_state.clone()
+        Self::State {
+            cheats: self.cheats_state,
+        }
     }
 
     fn set_state(&mut self, state: Self::State) {
-        self.cheats_state = state;
+        self.cheats_state = state.cheats;
     }
 }

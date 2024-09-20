@@ -275,7 +275,7 @@ impl Application for Gui {
                         for err in errors {
                             self.errors.push((err, err_msg.clone()));
                         }
-                        self.cheats.set_state(bfs.cheats)
+                        self.cheats.set_state(bfs)
                     }
                     Err(err) => self.errors.push((err, err_msg)),
                 }
@@ -478,10 +478,7 @@ impl Gui {
                 )
             }
             FileSelectId::Bfs => {
-                let bfs = data::BfsSettings {
-                    cheats: self.cheats.get_state(),
-                };
-                let ini = bfs.into();
+                let ini = self.cheats.get_state().into();
                 let path = self.cheats_path.get_state();
                 Command::perform(
                     async move { Ok(util::write_ini_file(path, &ini).await?) },
