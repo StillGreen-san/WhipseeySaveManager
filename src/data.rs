@@ -22,6 +22,23 @@ pub struct WhipseeySaveData {
     pub files: [File; 3], // TODO array creation not tied to File{X} index types
 }
 
+impl WhipseeySaveData {
+    pub fn from_ini(value: Ini) -> (Self, Vec<Error>) {
+        let mut errors = Vec::new();
+        (
+            Self {
+                options: from_ini_or_default_and_collect(&value, &mut errors),
+                files: [
+                    from_ini_or_default_and_collect_with_section(&value, &mut errors, File1),
+                    from_ini_or_default_and_collect_with_section(&value, &mut errors, File2),
+                    from_ini_or_default_and_collect_with_section(&value, &mut errors, File3),
+                ],
+            },
+            errors,
+        )
+    }
+}
+
 impl TryFrom<Ini> for WhipseeySaveData {
     type Error = Error;
 
@@ -58,6 +75,18 @@ pub struct BfsSettings {
     pub cheats: Cheats,
 }
 
+impl BfsSettings {
+    pub fn from_ini(value: Ini) -> (Self, Vec<Error>) {
+        let mut errors = Vec::new();
+        (
+            Self {
+                cheats: from_ini_or_default_and_collect(&value, &mut errors),
+            },
+            errors,
+        )
+    }
+}
+
 impl TryFrom<Ini> for BfsSettings {
     type Error = Error;
 
@@ -77,7 +106,31 @@ impl From<BfsSettings> for Ini {
     }
 }
 
-/// tries to convert from &[Properties] to `T`
+/// tries to create [T] from [Properties], on error it returns [T::default] and pushed the error to `errors`
+fn try_into_or_default_and_collect<'a, 'b, T, E>(value: &'a Properties, errors: &'b mut Vec<E>) -> T
+where
+    T: Default + TryFrom<&'a Properties, Error = E>,
+{
+    match value.try_into() {
+        Ok(value) => value,
+        Err(err) => {
+            errors.push(err);
+            Default::default()
+        }
+    }
+}
+
+/// Trait for creating [Self] from [Properties] defaulting any parts that failed
+trait FromPropsOrDefaulted: Sized {
+    type Error;
+
+    /// creates [Self] from [Properties] defaulting any parts that failed
+    ///
+    /// returns [Self] and any errors that occurred
+    fn from_props_or_defaulted(value: &Properties) -> (Self, Vec<Self::Error>);
+}
+
+/// tries to convert from &[Properties] to [T]
 ///
 /// returns [T::default()] if the key is missing
 fn try_from_opt_key<'a, T>(value: &'a Properties) -> Result<T>
@@ -91,7 +144,27 @@ where
     }
 }
 
-/// tries to convert from &[Ini] to `T`
+/// creates [T] from &[Ini] defaulting any parts that failed, pushing errors to `errors`
+fn from_ini_or_default_and_collect<T>(value: &Ini, errors: &mut Vec<Error>) -> T
+where
+    T: Default + FromPropsOrDefaulted<Error = Error> + IniSectionStrVal,
+{
+    let (item, mut errs) = value.section(Some(T::INI_SECTION_STR)).map_or_else(
+        || {
+            (
+                Default::default(),
+                vec![Error::SectionMissing(T::INI_SECTION_STR.into())],
+            )
+        },
+        T::from_props_or_defaulted,
+    );
+    if !errs.is_empty() {
+        errors.append(&mut errs);
+    }
+    item
+}
+
+/// tries to convert from &[Ini] to [T]
 fn try_from<'a, T>(value: &'a Ini) -> Result<T>
 where
     T: IniSectionStrVal + TryFrom<&'a Properties, Error = Error>,
@@ -102,7 +175,32 @@ where
         .try_into()
 }
 
-/// tries to convert from &[Ini] to `T` with a specific `section`
+/// creates [T] from &[Ini] with a specific `section` defaulting any parts that failed, pushing errors to `errors`
+fn from_ini_or_default_and_collect_with_section<S, T>(
+    value: &Ini,
+    errors: &mut Vec<Error>,
+    section: S,
+) -> T
+where
+    T: Default + FromPropsOrDefaulted<Error = Error>,
+    S: IniSectionStrFn,
+{
+    let (item, mut errs) = value.section(Some(section.ini_section_str())).map_or_else(
+        || {
+            (
+                Default::default(),
+                vec![Error::SectionMissing(section.ini_section_str().into())],
+            )
+        },
+        T::from_props_or_defaulted,
+    );
+    if !errs.is_empty() {
+        errors.append(&mut errs);
+    }
+    item
+}
+
+/// tries to convert from &[Ini] to [T]
 fn try_from_with_section_from<'a, S, T>(value: &'a Ini, section: S) -> Result<T>
 where
     T: TryFrom<&'a Properties, Error = Error>,
@@ -114,9 +212,9 @@ where
         .try_into()
 }
 
-/// tries to convert from &[Properties] to `T`
+/// tries to convert from &[Properties] to [T]
 ///
-/// reads a potentially quoted [f64] from `value` and multiplies it by `scale` before converting it to `T`
+/// reads a potentially quoted [f64] from `value` and multiplies it by `scale` before converting it to [T]
 fn try_from_scaled<T, P>(value: &Properties, scale: f64) -> Result<T>
 where
     T: IniKeyStrVal + TryFromPrimitive + TryFrom<P, Error = TryFromPrimitiveError<T>>,
@@ -553,9 +651,40 @@ mod tests {
     }
 
     #[test]
+    fn whipseey_save_data_from_ini_valid() {
+        let ini = Ini::load_from_str(util::test::ini::VALID).expect(TEST_FAIL_STR);
+        let (save, errors) = WhipseeySaveData::from_ini(ini);
+        assert!(errors.is_empty());
+        assert_eq!(save.options.sound_volume, SoundVolume::V30);
+        assert_eq!(
+            save.files[File1].boss_no_damage_progress,
+            BossNoDamageProgress::ForestDesert
+        );
+        assert_eq!(
+            save.files[File2].boss_no_damage_progress,
+            BossNoDamageProgress::None
+        );
+        assert_eq!(save.files[File3].ending, Ending::Watched);
+    }
+
+    #[test]
     fn whipseey_save_data_try_from_ini_lenient() {
         let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
         let save = WhipseeySaveData::try_from(ini).expect(TEST_FAIL_STR);
+        assert_eq!(save.options.scale, Scale::R1536x864);
+        assert_eq!(
+            save.files[File3].gems,
+            Gems::try_from(40).expect(TEST_FAIL_STR)
+        );
+        assert_eq!(save.files[File2].level, Level::Castle);
+        assert_eq!(save.files[File1].ending, Ending::Watched);
+    }
+
+    #[test]
+    fn whipseey_save_data_from_ini_lenient() {
+        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
+        let (save, errors) = WhipseeySaveData::from_ini(ini);
+        assert!(errors.is_empty());
         assert_eq!(save.options.scale, Scale::R1536x864);
         assert_eq!(
             save.files[File3].gems,
@@ -576,6 +705,23 @@ mod tests {
                                         || section == File2.ini_section_str()
                                         || section == File3.ini_section_str()
         );
+    }
+
+    #[test]
+    fn whipseey_save_data_from_ini_invalid_sections() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_SECTIONS).expect(TEST_FAIL_STR);
+        let (save, errors) = WhipseeySaveData::from_ini(ini);
+        assert_eq!(save, Default::default());
+        assert!(!errors.is_empty());
+        for error in errors {
+            assert_matches!(
+                error,
+                Error::SectionMissing(section) if section == Options::INI_SECTION_STR
+                                            || section == File1.ini_section_str()
+                                            || section == File2.ini_section_str()
+                                            || section == File3.ini_section_str()
+            );
+        }
     }
 
     #[test]
@@ -607,10 +753,53 @@ mod tests {
     }
 
     #[test]
+    fn whipseey_save_data_from_ini_invalid_keys() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
+        let (save, errors) = WhipseeySaveData::from_ini(ini);
+        assert_eq!(save, Default::default());
+        assert!(!errors.is_empty());
+        for error in errors {
+            assert_matches!(
+                error,
+                Error::KeyMissing(key) if key == Language::INI_KEY_STR
+                                    || key == Scale::INI_KEY_STR
+                                    || key == Fullscreen::INI_KEY_STR
+                                    || key == LeftHanded::INI_KEY_STR
+                                    || key == SoundVolume::INI_KEY_STR
+                                    || key == SoundToggle::INI_KEY_STR
+                                    || key == MusicVolume::INI_KEY_STR
+                                    || key == MusicToggle::INI_KEY_STR
+                                    || key == BossNoDamageProgress::INI_KEY_STR
+                                    || key == EnemiesDefeated::INI_KEY_STR
+                                    || key == Castle::INI_KEY_STR
+                                    || key == Moon::INI_KEY_STR
+                                    || key == Snow::INI_KEY_STR
+                                    || key == Desert::INI_KEY_STR
+                                    || key == Forest::INI_KEY_STR
+                                    || key == Ending::INI_KEY_STR
+                                    || key == Intro::INI_KEY_STR
+                                    || key == Lives::INI_KEY_STR
+                                    || key == Gems::INI_KEY_STR
+            );
+        }
+    }
+
+    #[test]
     fn whipseey_save_data_try_from_ini_invalid_value_ranges() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
         let error = WhipseeySaveData::try_from(ini).expect_err(TEST_FAIL_STR);
         assert_matches!(error, Error::TryFromPrimitive(_) | Error::NumCast(_));
+    }
+
+    #[test]
+    fn whipseey_save_data_from_ini_invalid_value_ranges() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
+        let (save, errors) = WhipseeySaveData::from_ini(ini);
+        assert_eq!(save, Default::default());
+        assert!(!errors.is_empty());
+        for error in errors {
+            assert_matches!(error, Error::TryFromPrimitive(_) | Error::NumCast(_));
+        }
     }
 
     #[test]
@@ -621,5 +810,19 @@ mod tests {
             error,
             Error::NumCast(_) | Error::ParseInt(_) | Error::ParseFloat(_)
         );
+    }
+
+    #[test]
+    fn whipseey_save_data_from_ini_invalid_value_types() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).expect(TEST_FAIL_STR);
+        let (save, errors) = WhipseeySaveData::from_ini(ini);
+        assert_eq!(save, Default::default());
+        assert!(!errors.is_empty());
+        for error in errors {
+            assert_matches!(
+                error,
+                Error::NumCast(_) | Error::ParseInt(_) | Error::ParseFloat(_)
+            );
+        }
     }
 }

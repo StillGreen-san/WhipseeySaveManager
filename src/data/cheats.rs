@@ -1,4 +1,6 @@
-use crate::data::{IniKeyStrFn, IniSectionStrVal};
+use crate::data::{
+    try_into_or_default_and_collect, FromPropsOrDefaulted, IniKeyStrFn, IniSectionStrVal,
+};
 use crate::{ini_impl_common, util};
 use ini::Properties;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
@@ -26,6 +28,20 @@ pub struct Cheats {
 
 impl IniSectionStrVal for Cheats {
     const INI_SECTION_STR: &'static str = "Cheats";
+}
+
+impl FromPropsOrDefaulted for Cheats {
+    type Error = util::Error;
+
+    fn from_props_or_defaulted(value: &Properties) -> (Self, Vec<Self::Error>) {
+        let mut errors = Vec::new();
+        (
+            Self {
+                cheats_enabled: try_into_or_default_and_collect(value, &mut errors),
+            },
+            errors,
+        )
+    }
 }
 
 impl TryFrom<&Properties> for Cheats {
@@ -87,12 +103,34 @@ mod tests {
     }
 
     #[test]
+    fn cheats_from_properties_valid() {
+        let ini = Ini::load_from_str(util::test::ini::VALID).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Cheats::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
+        let (cheats, errors) = Cheats::from_props_or_defaulted(section);
+        assert!(errors.is_empty());
+        assert_eq!(cheats.cheats_enabled, CheatsEnabled::Enabled);
+    }
+
+    #[test]
     fn cheats_try_from_properties_lenient() {
         let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
         let section = ini
             .section(Some(Cheats::INI_SECTION_STR))
             .expect(TEST_FAIL_STR);
         let cheats = Cheats::try_from(section).expect(TEST_FAIL_STR);
+        assert_eq!(cheats.cheats_enabled, CheatsEnabled::Enabled);
+    }
+
+    #[test]
+    fn cheats_from_properties_lenient() {
+        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Cheats::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
+        let (cheats, errors) = Cheats::from_props_or_defaulted(section);
+        assert!(errors.is_empty());
         assert_eq!(cheats.cheats_enabled, CheatsEnabled::Enabled);
     }
 
@@ -110,6 +148,22 @@ mod tests {
     }
 
     #[test]
+    fn cheats_from_properties_invalid_keys() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Cheats::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
+        let (cheats, errors) = Cheats::from_props_or_defaulted(section);
+        assert_eq!(cheats, Default::default());
+        for error in errors {
+            assert_matches!(
+                error,
+                util::Error::KeyMissing(key) if key == CheatsEnabled::INI_KEY_STR
+            );
+        }
+    }
+
+    #[test]
     fn cheats_try_from_properties_invalid_value_ranges() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
         let section = ini
@@ -117,6 +171,19 @@ mod tests {
             .expect(TEST_FAIL_STR);
         let error = Cheats::try_from(section).expect_err(TEST_FAIL_STR);
         assert_matches!(error, util::Error::TryFromPrimitive(_));
+    }
+
+    #[test]
+    fn cheats_from_properties_invalid_value_ranges() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Cheats::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
+        let (cheats, errors) = Cheats::from_props_or_defaulted(section);
+        assert_eq!(cheats, Default::default());
+        for error in errors {
+            assert_matches!(error, util::Error::TryFromPrimitive(_));
+        }
     }
 
     #[test]
@@ -130,5 +197,21 @@ mod tests {
             error,
             util::Error::NumCast(_) | util::Error::ParseInt(_) | util::Error::ParseFloat(_)
         );
+    }
+
+    #[test]
+    fn cheats_from_properties_invalid_value_types() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).expect(TEST_FAIL_STR);
+        let section = ini
+            .section(Some(Cheats::INI_SECTION_STR))
+            .expect(TEST_FAIL_STR);
+        let (cheats, errors) = Cheats::from_props_or_defaulted(section);
+        assert_eq!(cheats, Default::default());
+        for error in errors {
+            assert_matches!(
+                error,
+                util::Error::NumCast(_) | util::Error::ParseInt(_) | util::Error::ParseFloat(_)
+            );
+        }
     }
 }
