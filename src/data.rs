@@ -471,9 +471,25 @@ mod tests {
     }
 
     #[test]
+    fn bfs_settings_from_ini_valid() {
+        let ini = Ini::load_from_str(util::test::ini::VALID).expect(TEST_FAIL_STR);
+        let (settings, errors) = BfsSettings::from_ini(ini);
+        assert!(errors.is_empty());
+        assert_eq!(settings.cheats.cheats_enabled, CheatsEnabled::Enabled);
+    }
+
+    #[test]
     fn bfs_settings_try_from_ini_lenient() {
         let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
         let settings = BfsSettings::try_from(ini).expect(TEST_FAIL_STR);
+        assert_eq!(settings.cheats.cheats_enabled, CheatsEnabled::Enabled);
+    }
+
+    #[test]
+    fn bfs_settings_from_ini_lenient() {
+        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
+        let (settings, errors) = BfsSettings::from_ini(ini);
+        assert!(errors.is_empty());
         assert_eq!(settings.cheats.cheats_enabled, CheatsEnabled::Enabled);
     }
 
@@ -485,10 +501,30 @@ mod tests {
     }
 
     #[test]
+    fn bfs_settings_from_ini_invalid_sections() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_SECTIONS).expect(TEST_FAIL_STR);
+        let (settings, errors) = BfsSettings::from_ini(ini);
+        assert_eq!(settings, Default::default());
+        for error in errors {
+            assert_matches!(error, Error::SectionMissing(section) if section == Cheats::INI_SECTION_STR);
+        }
+    }
+
+    #[test]
     fn bfs_settings_try_from_ini_invalid_keys() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
         let error = BfsSettings::try_from(ini).expect_err(TEST_FAIL_STR);
         assert_matches!(error, Error::KeyMissing(key) if key == CheatsEnabled::INI_KEY_STR);
+    }
+
+    #[test]
+    fn bfs_settings_from_ini_invalid_keys() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
+        let (settings, errors) = BfsSettings::from_ini(ini);
+        assert_eq!(settings, Default::default());
+        for error in errors {
+            assert_matches!(error, Error::KeyMissing(key) if key == CheatsEnabled::INI_KEY_STR);
+        }
     }
 
     #[test]
@@ -499,6 +535,16 @@ mod tests {
     }
 
     #[test]
+    fn bfs_settings_from_ini_invalid_value_ranges() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
+        let (settings, errors) = BfsSettings::from_ini(ini);
+        assert_eq!(settings, Default::default());
+        for error in errors {
+            assert_matches!(error, Error::TryFromPrimitive(_));
+        }
+    }
+
+    #[test]
     fn bfs_settings_try_from_ini_invalid_value_types() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).expect(TEST_FAIL_STR);
         let error = BfsSettings::try_from(ini).expect_err(TEST_FAIL_STR);
@@ -506,6 +552,19 @@ mod tests {
             error,
             Error::NumCast(_) | Error::ParseInt(_) | Error::ParseFloat(_)
         );
+    }
+
+    #[test]
+    fn bfs_settings_from_ini_invalid_value_types() {
+        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).expect(TEST_FAIL_STR);
+        let (settings, errors) = BfsSettings::from_ini(ini);
+        assert_eq!(settings, Default::default());
+        for error in errors {
+            assert_matches!(
+                error,
+                Error::NumCast(_) | Error::ParseInt(_) | Error::ParseFloat(_)
+            );
+        }
     }
 
     #[test]
