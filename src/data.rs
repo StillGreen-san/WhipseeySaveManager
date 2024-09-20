@@ -39,21 +39,6 @@ impl WhipseeySaveData {
     }
 }
 
-impl TryFrom<Ini> for WhipseeySaveData {
-    type Error = Error;
-
-    fn try_from(value: Ini) -> Result<Self> {
-        Ok(WhipseeySaveData {
-            options: try_from(&value)?,
-            files: [
-                try_from_with_section_from(&value, File1)?,
-                try_from_with_section_from(&value, File2)?,
-                try_from_with_section_from(&value, File3)?,
-            ],
-        })
-    }
-}
-
 impl From<WhipseeySaveData> for Ini {
     fn from(value: WhipseeySaveData) -> Self {
         let mut ini = Ini::new();
@@ -84,16 +69,6 @@ impl BfsSettings {
             },
             errors,
         )
-    }
-}
-
-impl TryFrom<Ini> for BfsSettings {
-    type Error = Error;
-
-    fn try_from(value: Ini) -> Result<Self> {
-        Ok(BfsSettings {
-            cheats: try_from(&value)?,
-        })
     }
 }
 
@@ -130,20 +105,6 @@ trait FromPropsOrDefaulted: Sized {
     fn from_props_or_defaulted(value: &Properties) -> (Self, Vec<Self::Error>);
 }
 
-/// tries to convert from &[Properties] to [T]
-///
-/// returns [T::default()] if the key is missing
-fn try_from_opt_key<'a, T>(value: &'a Properties) -> Result<T>
-where
-    T: Default + TryFrom<&'a Properties, Error = Error>,
-{
-    match value.try_into() {
-        Ok(boss_no_damage_progress) => Ok(boss_no_damage_progress),
-        Err(Error::KeyMissing(_)) => Ok(T::default()),
-        Err(err) => Err(err),
-    }
-}
-
 /// creates [T] from &[Ini] defaulting any parts that failed, pushing errors to `errors`
 fn from_ini_or_default_and_collect<T>(value: &Ini, errors: &mut Vec<Error>) -> T
 where
@@ -162,17 +123,6 @@ where
         errors.append(&mut errs);
     }
     item
-}
-
-/// tries to convert from &[Ini] to [T]
-fn try_from<'a, T>(value: &'a Ini) -> Result<T>
-where
-    T: IniSectionStrVal + TryFrom<&'a Properties, Error = Error>,
-{
-    value
-        .section(Some(T::INI_SECTION_STR))
-        .ok_or_else(|| Error::SectionMissing(T::INI_SECTION_STR.into()))?
-        .try_into()
 }
 
 /// creates [T] from &[Ini] with a specific `section` defaulting any parts that failed, pushing errors to `errors`
@@ -198,18 +148,6 @@ where
         errors.append(&mut errs);
     }
     item
-}
-
-/// tries to convert from &[Ini] to [T]
-fn try_from_with_section_from<'a, S, T>(value: &'a Ini, section: S) -> Result<T>
-where
-    T: TryFrom<&'a Properties, Error = Error>,
-    S: IniSectionStrFn,
-{
-    value
-        .section(Some(section.ini_section_str()))
-        .ok_or_else(|| Error::SectionMissing(section.ini_section_str().into()))?
-        .try_into()
 }
 
 /// tries to convert from &[Properties] to [T]
@@ -458,16 +396,10 @@ mod tests {
     #[test]
     fn bfs_settings_default() {
         let ini = Ini::load_from_str(util::test::ini::DEFAULT).expect(TEST_FAIL_STR);
-        let settings_loaded = BfsSettings::try_from(ini).expect(TEST_FAIL_STR);
+        let (settings_loaded, errors) = BfsSettings::from_ini(ini);
+        assert!(errors.is_empty());
         let settings_default = BfsSettings::default();
         assert_eq!(settings_loaded, settings_default);
-    }
-
-    #[test]
-    fn bfs_settings_try_from_ini_valid() {
-        let ini = Ini::load_from_str(util::test::ini::VALID).expect(TEST_FAIL_STR);
-        let settings = BfsSettings::try_from(ini).expect(TEST_FAIL_STR);
-        assert_eq!(settings.cheats.cheats_enabled, CheatsEnabled::Enabled);
     }
 
     #[test]
@@ -479,25 +411,11 @@ mod tests {
     }
 
     #[test]
-    fn bfs_settings_try_from_ini_lenient() {
-        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
-        let settings = BfsSettings::try_from(ini).expect(TEST_FAIL_STR);
-        assert_eq!(settings.cheats.cheats_enabled, CheatsEnabled::Enabled);
-    }
-
-    #[test]
     fn bfs_settings_from_ini_lenient() {
         let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
         let (settings, errors) = BfsSettings::from_ini(ini);
         assert!(errors.is_empty());
         assert_eq!(settings.cheats.cheats_enabled, CheatsEnabled::Enabled);
-    }
-
-    #[test]
-    fn bfs_settings_try_from_ini_invalid_sections() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_SECTIONS).expect(TEST_FAIL_STR);
-        let error = BfsSettings::try_from(ini).expect_err(TEST_FAIL_STR);
-        assert_matches!(error, Error::SectionMissing(section) if section == Cheats::INI_SECTION_STR);
     }
 
     #[test]
@@ -511,13 +429,6 @@ mod tests {
     }
 
     #[test]
-    fn bfs_settings_try_from_ini_invalid_keys() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
-        let error = BfsSettings::try_from(ini).expect_err(TEST_FAIL_STR);
-        assert_matches!(error, Error::KeyMissing(key) if key == CheatsEnabled::INI_KEY_STR);
-    }
-
-    #[test]
     fn bfs_settings_from_ini_invalid_keys() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
         let (settings, errors) = BfsSettings::from_ini(ini);
@@ -528,13 +439,6 @@ mod tests {
     }
 
     #[test]
-    fn bfs_settings_try_from_ini_invalid_value_ranges() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
-        let error = BfsSettings::try_from(ini).expect_err(TEST_FAIL_STR);
-        assert_matches!(error, Error::TryFromPrimitive(_));
-    }
-
-    #[test]
     fn bfs_settings_from_ini_invalid_value_ranges() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
         let (settings, errors) = BfsSettings::from_ini(ini);
@@ -542,16 +446,6 @@ mod tests {
         for error in errors {
             assert_matches!(error, Error::TryFromPrimitive(_));
         }
-    }
-
-    #[test]
-    fn bfs_settings_try_from_ini_invalid_value_types() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).expect(TEST_FAIL_STR);
-        let error = BfsSettings::try_from(ini).expect_err(TEST_FAIL_STR);
-        assert_matches!(
-            error,
-            Error::NumCast(_) | Error::ParseInt(_) | Error::ParseFloat(_)
-        );
     }
 
     #[test]
@@ -688,25 +582,10 @@ mod tests {
     #[test]
     fn whipseey_save_data_default() {
         let ini = Ini::load_from_str(util::test::ini::DEFAULT).expect(TEST_FAIL_STR);
-        let save_loaded = WhipseeySaveData::try_from(ini).expect(TEST_FAIL_STR);
+        let (save_loaded, errors) = WhipseeySaveData::from_ini(ini);
+        assert!(errors.is_empty());
         let save_default = WhipseeySaveData::default();
         assert_eq!(save_loaded, save_default);
-    }
-
-    #[test]
-    fn whipseey_save_data_try_from_ini_valid() {
-        let ini = Ini::load_from_str(util::test::ini::VALID).expect(TEST_FAIL_STR);
-        let save = WhipseeySaveData::try_from(ini).expect(TEST_FAIL_STR);
-        assert_eq!(save.options.sound_volume, SoundVolume::V30);
-        assert_eq!(
-            save.files[File1].boss_no_damage_progress,
-            BossNoDamageProgress::ForestDesert
-        );
-        assert_eq!(
-            save.files[File2].boss_no_damage_progress,
-            BossNoDamageProgress::None
-        );
-        assert_eq!(save.files[File3].ending, Ending::Watched);
     }
 
     #[test]
@@ -727,19 +606,6 @@ mod tests {
     }
 
     #[test]
-    fn whipseey_save_data_try_from_ini_lenient() {
-        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
-        let save = WhipseeySaveData::try_from(ini).expect(TEST_FAIL_STR);
-        assert_eq!(save.options.scale, Scale::R1536x864);
-        assert_eq!(
-            save.files[File3].gems,
-            Gems::try_from(40).expect(TEST_FAIL_STR)
-        );
-        assert_eq!(save.files[File2].level, Level::Castle);
-        assert_eq!(save.files[File1].ending, Ending::Watched);
-    }
-
-    #[test]
     fn whipseey_save_data_from_ini_lenient() {
         let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
         let (save, errors) = WhipseeySaveData::from_ini(ini);
@@ -751,19 +617,6 @@ mod tests {
         );
         assert_eq!(save.files[File2].level, Level::Castle);
         assert_eq!(save.files[File1].ending, Ending::Watched);
-    }
-
-    #[test]
-    fn whipseey_save_data_try_from_ini_invalid_sections() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_SECTIONS).expect(TEST_FAIL_STR);
-        let error = WhipseeySaveData::try_from(ini).expect_err(TEST_FAIL_STR);
-        assert_matches!(
-            error,
-            Error::SectionMissing(section) if section == Options::INI_SECTION_STR
-                                        || section == File1.ini_section_str()
-                                        || section == File2.ini_section_str()
-                                        || section == File3.ini_section_str()
-        );
     }
 
     #[test]
@@ -781,34 +634,6 @@ mod tests {
                                             || section == File3.ini_section_str()
             );
         }
-    }
-
-    #[test]
-    fn whipseey_save_data_try_from_ini_invalid_keys() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
-        let error = WhipseeySaveData::try_from(ini).expect_err(TEST_FAIL_STR);
-        assert_matches!(
-            error,
-            Error::KeyMissing(key) if key == Language::INI_KEY_STR
-                                || key == Scale::INI_KEY_STR
-                                || key == Fullscreen::INI_KEY_STR
-                                || key == LeftHanded::INI_KEY_STR
-                                || key == SoundVolume::INI_KEY_STR
-                                || key == SoundToggle::INI_KEY_STR
-                                || key == MusicVolume::INI_KEY_STR
-                                || key == MusicToggle::INI_KEY_STR
-                                || key == BossNoDamageProgress::INI_KEY_STR
-                                || key == EnemiesDefeated::INI_KEY_STR
-                                || key == Castle::INI_KEY_STR
-                                || key == Moon::INI_KEY_STR
-                                || key == Snow::INI_KEY_STR
-                                || key == Desert::INI_KEY_STR
-                                || key == Forest::INI_KEY_STR
-                                || key == Ending::INI_KEY_STR
-                                || key == Intro::INI_KEY_STR
-                                || key == Lives::INI_KEY_STR
-                                || key == Gems::INI_KEY_STR
-        );
     }
 
     #[test]
@@ -844,13 +669,6 @@ mod tests {
     }
 
     #[test]
-    fn whipseey_save_data_try_from_ini_invalid_value_ranges() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
-        let error = WhipseeySaveData::try_from(ini).expect_err(TEST_FAIL_STR);
-        assert_matches!(error, Error::TryFromPrimitive(_) | Error::NumCast(_));
-    }
-
-    #[test]
     fn whipseey_save_data_from_ini_invalid_value_ranges() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
         let (save, errors) = WhipseeySaveData::from_ini(ini);
@@ -859,16 +677,6 @@ mod tests {
         for error in errors {
             assert_matches!(error, Error::TryFromPrimitive(_) | Error::NumCast(_));
         }
-    }
-
-    #[test]
-    fn whipseey_save_data_try_from_ini_invalid_value_types() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).expect(TEST_FAIL_STR);
-        let error = WhipseeySaveData::try_from(ini).expect_err(TEST_FAIL_STR);
-        assert_matches!(
-            error,
-            Error::NumCast(_) | Error::ParseInt(_) | Error::ParseFloat(_)
-        );
     }
 
     #[test]

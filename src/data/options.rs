@@ -158,23 +158,6 @@ impl FromPropsOrDefaulted for Options {
     }
 }
 
-impl TryFrom<&Properties> for Options {
-    type Error = util::Error;
-
-    fn try_from(value: &Properties) -> Result<Self, Self::Error> {
-        Ok(Self {
-            language: value.try_into()?,
-            scale: value.try_into()?,
-            fullscreen: value.try_into()?,
-            left_handed: value.try_into()?,
-            sound_volume: value.try_into()?,
-            sound_toggle: value.try_into()?,
-            music_volume: value.try_into()?,
-            music_toggle: value.try_into()?,
-        })
-    }
-}
-
 impl From<Options> for Properties {
     fn from(value: Options) -> Self {
         let mut props = Properties::new();
@@ -250,26 +233,10 @@ mod tests {
         let section = ini
             .section(Some(Options::INI_SECTION_STR))
             .expect(TEST_FAIL_STR);
-        let options_loaded = Options::try_from(section).expect(TEST_FAIL_STR);
+        let (options_loaded, errors) = Options::from_props_or_defaulted(section);
+        assert!(errors.is_empty());
         let options_default = Options::default();
         assert_eq!(options_loaded, options_default);
-    }
-
-    #[test]
-    fn options_try_from_properties_valid() {
-        let ini = Ini::load_from_str(util::test::ini::VALID).expect(TEST_FAIL_STR);
-        let section = ini
-            .section(Some(Options::INI_SECTION_STR))
-            .expect(TEST_FAIL_STR);
-        let options = Options::try_from(section).expect(TEST_FAIL_STR);
-        assert_eq!(options.language, Language::Japanese);
-        assert_eq!(options.scale, Scale::R1536x864);
-        assert_eq!(options.fullscreen, Fullscreen::Disabled);
-        assert_eq!(options.left_handed, LeftHanded::Enabled);
-        assert_eq!(options.sound_volume, SoundVolume::V30);
-        assert_eq!(options.sound_toggle, SoundToggle::Enabled);
-        assert_eq!(options.music_volume, MusicVolume::V0);
-        assert_eq!(options.music_toggle, MusicToggle::Disabled);
     }
 
     #[test]
@@ -280,23 +247,6 @@ mod tests {
             .expect(TEST_FAIL_STR);
         let (options, errors) = Options::from_props_or_defaulted(section);
         assert!(errors.is_empty());
-        assert_eq!(options.language, Language::Japanese);
-        assert_eq!(options.scale, Scale::R1536x864);
-        assert_eq!(options.fullscreen, Fullscreen::Disabled);
-        assert_eq!(options.left_handed, LeftHanded::Enabled);
-        assert_eq!(options.sound_volume, SoundVolume::V30);
-        assert_eq!(options.sound_toggle, SoundToggle::Enabled);
-        assert_eq!(options.music_volume, MusicVolume::V0);
-        assert_eq!(options.music_toggle, MusicToggle::Disabled);
-    }
-
-    #[test]
-    fn options_try_from_properties_lenient_values() {
-        let ini = Ini::load_from_str(util::test::ini::LENIENT_VALUES).expect(TEST_FAIL_STR);
-        let section = ini
-            .section(Some(Options::INI_SECTION_STR))
-            .expect(TEST_FAIL_STR);
-        let options = Options::try_from(section).expect(TEST_FAIL_STR);
         assert_eq!(options.language, Language::Japanese);
         assert_eq!(options.scale, Scale::R1536x864);
         assert_eq!(options.fullscreen, Fullscreen::Disabled);
@@ -327,26 +277,6 @@ mod tests {
     }
 
     #[test]
-    fn options_try_from_properties_invalid_keys() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
-        let section = ini
-            .section(Some(Options::INI_SECTION_STR))
-            .expect(TEST_FAIL_STR);
-        let error = Options::try_from(section).expect_err(TEST_FAIL_STR);
-        assert_matches!(
-            error,
-            util::Error::KeyMissing(key) if key == Language::INI_KEY_STR
-                                        || key == Scale::INI_KEY_STR
-                                        || key == Fullscreen::INI_KEY_STR
-                                        || key == LeftHanded::INI_KEY_STR
-                                        || key == SoundVolume::INI_KEY_STR
-                                        || key == SoundToggle::INI_KEY_STR
-                                        || key == MusicVolume::INI_KEY_STR
-                                        || key == MusicToggle::INI_KEY_STR
-        )
-    }
-
-    #[test]
     fn options_from_properties_invalid_keys() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_KEYS).expect(TEST_FAIL_STR);
         let section = ini
@@ -370,16 +300,6 @@ mod tests {
     }
 
     #[test]
-    fn options_try_from_properties_invalid_value_ranges() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
-        let section = ini
-            .section(Some(Options::INI_SECTION_STR))
-            .expect(TEST_FAIL_STR);
-        let error = Options::try_from(section).expect_err(TEST_FAIL_STR);
-        assert_matches!(error, util::Error::TryFromPrimitive(_));
-    }
-
-    #[test]
     fn options_from_properties_invalid_value_ranges() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
         let section = ini
@@ -390,19 +310,6 @@ mod tests {
         for error in errors {
             assert_matches!(error, util::Error::TryFromPrimitive(_));
         }
-    }
-
-    #[test]
-    fn options_try_from_properties_invalid_value_types() {
-        let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_TYPES).expect(TEST_FAIL_STR);
-        let section = ini
-            .section(Some(Options::INI_SECTION_STR))
-            .expect(TEST_FAIL_STR);
-        let error = Options::try_from(section).expect_err(TEST_FAIL_STR);
-        assert_matches!(
-            error,
-            util::Error::NumCast(_) | util::Error::ParseInt(_) | util::Error::ParseFloat(_)
-        );
     }
 
     #[test]
