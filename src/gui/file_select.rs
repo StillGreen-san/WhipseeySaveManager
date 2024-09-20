@@ -3,7 +3,6 @@ use std::path::{Path, PathBuf};
 
 use crate::gui::{with_tooltip, ElementState};
 use crate::util;
-use crate::util::Error;
 use iced::widget::tooltip::Position;
 use iced::widget::{button, row, text, text_input};
 use iced::{Command, Element, Renderer};
@@ -96,7 +95,7 @@ impl FileSelect {
                     match lossy.contains(char::REPLACEMENT_CHARACTER) {
                         true => Command::perform(
                             ready((
-                                Error::Io("cannot represent path as String".into()),
+                                util::Error::Io("cannot represent path as String".into()),
                                 "selecting new path".into(),
                             )),
                             super::Message::Error,

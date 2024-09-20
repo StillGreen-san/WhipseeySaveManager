@@ -4,8 +4,6 @@ use ini::{Ini, Properties};
 use num::cast::AsPrimitive;
 use num::NumCast;
 use num_enum::{TryFromPrimitive, TryFromPrimitiveError};
-use util::Error;
-use util::Result;
 
 pub mod cheats;
 pub mod file;
@@ -23,7 +21,7 @@ pub struct WhipseeySaveData {
 }
 
 impl WhipseeySaveData {
-    pub fn from_ini(value: Ini) -> (Self, Vec<Error>) {
+    pub fn from_ini(value: Ini) -> (Self, Vec<util::Error>) {
         let mut errors = Vec::new();
         (
             Self {
@@ -61,7 +59,7 @@ pub struct BfsSettings {
 }
 
 impl BfsSettings {
-    pub fn from_ini(value: Ini) -> (Self, Vec<Error>) {
+    pub fn from_ini(value: Ini) -> (Self, Vec<util::Error>) {
         let mut errors = Vec::new();
         (
             Self {
@@ -106,15 +104,15 @@ trait FromPropsOrDefaulted: Sized {
 }
 
 /// creates [T] from &[Ini] defaulting any parts that failed, pushing errors to `errors`
-fn from_ini_or_default_and_collect<T>(value: &Ini, errors: &mut Vec<Error>) -> T
+fn from_ini_or_default_and_collect<T>(value: &Ini, errors: &mut Vec<util::Error>) -> T
 where
-    T: Default + FromPropsOrDefaulted<Error = Error> + IniSectionStrVal,
+    T: Default + FromPropsOrDefaulted<Error = util::Error> + IniSectionStrVal,
 {
     let (item, mut errs) = value.section(Some(T::INI_SECTION_STR)).map_or_else(
         || {
             (
                 Default::default(),
-                vec![Error::SectionMissing(T::INI_SECTION_STR.into())],
+                vec![util::Error::SectionMissing(T::INI_SECTION_STR.into())],
             )
         },
         T::from_props_or_defaulted,
@@ -128,18 +126,20 @@ where
 /// creates [T] from &[Ini] with a specific `section` defaulting any parts that failed, pushing errors to `errors`
 fn from_ini_or_default_and_collect_with_section<S, T>(
     value: &Ini,
-    errors: &mut Vec<Error>,
+    errors: &mut Vec<util::Error>,
     section: S,
 ) -> T
 where
-    T: Default + FromPropsOrDefaulted<Error = Error>,
+    T: Default + FromPropsOrDefaulted<Error = util::Error>,
     S: IniSectionStrFn,
 {
     let (item, mut errs) = value.section(Some(section.ini_section_str())).map_or_else(
         || {
             (
                 Default::default(),
-                vec![Error::SectionMissing(section.ini_section_str().into())],
+                vec![util::Error::SectionMissing(
+                    section.ini_section_str().into(),
+                )],
             )
         },
         T::from_props_or_defaulted,
@@ -153,18 +153,18 @@ where
 /// tries to convert from &[Properties] to [T]
 ///
 /// reads a potentially quoted [f64] from `value` and multiplies it by `scale` before converting it to [T]
-fn try_from_scaled<T, P>(value: &Properties, scale: f64) -> Result<T>
+fn try_from_scaled<T, P>(value: &Properties, scale: f64) -> util::Result<T>
 where
     T: IniKeyStrVal + TryFromPrimitive + TryFrom<P, Error = TryFromPrimitiveError<T>>,
     P: NumCast,
 {
     let val_str = value
         .get(T::INI_KEY_STR)
-        .ok_or(Error::KeyMissing(T::INI_KEY_STR.into()))?;
+        .ok_or(util::Error::KeyMissing(T::INI_KEY_STR.into()))?;
     let val: f64 = val_str.trim_matches('"').parse()?;
     let scaled = val * scale;
     let primitiv: P = num::cast(scaled).ok_or_else(|| {
-        Error::NumCast(format!(
+        util::Error::NumCast(format!(
             "{} cannot be represented as {}",
             scaled,
             std::any::type_name::<P>()
@@ -424,7 +424,7 @@ mod tests {
         let (settings, errors) = BfsSettings::from_ini(ini);
         assert_eq!(settings, Default::default());
         for error in errors {
-            assert_matches!(error, Error::SectionMissing(section) if section == Cheats::INI_SECTION_STR);
+            assert_matches!(error, util::Error::SectionMissing(section) if section == Cheats::INI_SECTION_STR);
         }
     }
 
@@ -434,7 +434,7 @@ mod tests {
         let (settings, errors) = BfsSettings::from_ini(ini);
         assert_eq!(settings, Default::default());
         for error in errors {
-            assert_matches!(error, Error::KeyMissing(key) if key == CheatsEnabled::INI_KEY_STR);
+            assert_matches!(error, util::Error::KeyMissing(key) if key == CheatsEnabled::INI_KEY_STR);
         }
     }
 
@@ -444,7 +444,7 @@ mod tests {
         let (settings, errors) = BfsSettings::from_ini(ini);
         assert_eq!(settings, Default::default());
         for error in errors {
-            assert_matches!(error, Error::TryFromPrimitive(_));
+            assert_matches!(error, util::Error::TryFromPrimitive(_));
         }
     }
 
@@ -456,7 +456,7 @@ mod tests {
         for error in errors {
             assert_matches!(
                 error,
-                Error::NumCast(_) | Error::ParseInt(_) | Error::ParseFloat(_)
+                util::Error::NumCast(_) | util::Error::ParseInt(_) | util::Error::ParseFloat(_)
             );
         }
     }
@@ -628,7 +628,7 @@ mod tests {
         for error in errors {
             assert_matches!(
                 error,
-                Error::SectionMissing(section) if section == Options::INI_SECTION_STR
+                util::Error::SectionMissing(section) if section == Options::INI_SECTION_STR
                                             || section == File1.ini_section_str()
                                             || section == File2.ini_section_str()
                                             || section == File3.ini_section_str()
@@ -645,7 +645,7 @@ mod tests {
         for error in errors {
             assert_matches!(
                 error,
-                Error::KeyMissing(key) if key == Language::INI_KEY_STR
+                util::Error::KeyMissing(key) if key == Language::INI_KEY_STR
                                     || key == Scale::INI_KEY_STR
                                     || key == Fullscreen::INI_KEY_STR
                                     || key == LeftHanded::INI_KEY_STR
@@ -675,7 +675,10 @@ mod tests {
         assert_eq!(save, Default::default());
         assert!(!errors.is_empty());
         for error in errors {
-            assert_matches!(error, Error::TryFromPrimitive(_) | Error::NumCast(_));
+            assert_matches!(
+                error,
+                util::Error::TryFromPrimitive(_) | util::Error::NumCast(_)
+            );
         }
     }
 
@@ -688,7 +691,7 @@ mod tests {
         for error in errors {
             assert_matches!(
                 error,
-                Error::NumCast(_) | Error::ParseInt(_) | Error::ParseFloat(_)
+                util::Error::NumCast(_) | util::Error::ParseInt(_) | util::Error::ParseFloat(_)
             );
         }
     }
