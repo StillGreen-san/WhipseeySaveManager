@@ -269,14 +269,15 @@ impl Application for Gui {
                 }
             },
             Message::LoadedBfs(result) => {
+                let err_msg = "loading bfs_settings ini (using defaults)".to_string();
                 match result {
                     Ok((bfs, errors)) => {
                         for err in errors {
-                            self.errors.push((err, "loading bfs_settings ini".into()));
+                            self.errors.push((err, err_msg.clone()));
                         }
                         self.cheats.set_state(bfs.cheats)
                     }
-                    Err(err) => self.errors.push((err, "loading bfs_settings ini".into())),
+                    Err(err) => self.errors.push((err, err_msg)),
                 }
                 Command::none()
             }
@@ -495,17 +496,16 @@ impl Gui {
         id: SaveSection,
         result: util::Result<(data::WhipseeySaveData, Vec<util::Error>)>,
     ) -> Command<Message> {
+        let err_msg = format!("loading {id:?} in savegame (using defaults)");
         let save = match result {
             Ok((save, errors)) => {
                 for err in errors {
-                    self.errors
-                        .push((err, format!("loading {id:?} in savegame")));
+                    self.errors.push((err, err_msg.clone()));
                 }
                 save
             }
             Err(err) => {
-                self.errors
-                    .push((err, format!("loading {id:?} in savegame")));
+                self.errors.push((err, err_msg));
                 return Command::none();
             }
         };
