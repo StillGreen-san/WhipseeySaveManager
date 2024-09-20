@@ -94,7 +94,7 @@ impl TryFrom<Ini> for BfsSettings {
         Ok(BfsSettings {
             cheats: try_from(&value)?,
         })
-    } // TODO review try_from setup
+    }
 }
 
 impl From<BfsSettings> for Ini {

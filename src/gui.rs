@@ -57,8 +57,11 @@ pub enum Message {
     FileSelect(FileSelectId, file_select::Message),
     Save(FileSelectId),
     Load(FileSelectId),
-    LoadedBfs(util::Result<data::BfsSettings>),
-    LoadedSave(SaveSection, util::Result<data::WhipseeySaveData>),
+    LoadedBfs(util::Result<(data::BfsSettings, Vec<util::Error>)>),
+    LoadedSave(
+        SaveSection,
+        util::Result<(data::WhipseeySaveData, Vec<util::Error>)>,
+    ),
     Saved(FileSelectId, util::Result<()>),
     Cheats(cheats::Message),
     Options(options::Message),
@@ -263,8 +266,9 @@ impl Application for Gui {
                     let path = self.save_path.get_state();
                     Command::perform(
                         async move {
-                            let mut save_next: data::WhipseeySaveData =
-                                util::load_ini_file(path.clone()).await?.try_into()?;
+                            let (mut save_next, _) = data::WhipseeySaveData::from_ini(
+                                util::load_ini_file(path.clone()).await?,
+                            ); // TODO save directly into ini?
                             match save_id {
                                 SaveSection::Files => save_next.files = save_now.files,
                                 SaveSection::Options => save_next.options = save_now.options,
@@ -307,28 +311,47 @@ impl Application for Gui {
                 FileSelectId::Save(save_id) => {
                     let path = self.save_path.get_state();
                     Command::perform(
-                        async { util::load_ini_file(path).await?.try_into() },
+                        async {
+                            Ok(data::WhipseeySaveData::from_ini(
+                                util::load_ini_file(path).await?,
+                            ))
+                        },
                         move |result| Message::LoadedSave(save_id, result),
                     )
                 }
                 FileSelectId::Bfs => {
                     let path = self.cheats_path.get_state();
                     Command::perform(
-                        async { util::load_ini_file(path).await?.try_into() },
+                        async {
+                            Ok(data::BfsSettings::from_ini(
+                                util::load_ini_file(path).await?,
+                            ))
+                        },
                         Message::LoadedBfs,
                     )
                 }
             },
             Message::LoadedBfs(result) => {
                 match result {
-                    Ok(bfs) => self.cheats.set_state(bfs.cheats),
+                    Ok((bfs, errors)) => {
+                        for err in errors {
+                            self.errors.push((err, format!("loading bfs_settings ini")));
+                        }
+                        self.cheats.set_state(bfs.cheats)
+                    }
                     Err(err) => self.errors.push((err, "loading bfs_settings ini".into())),
                 }
                 Command::none()
             }
             Message::LoadedSave(id, result) => {
                 let save = match result {
-                    Ok(save) => save,
+                    Ok((save, errors)) => {
+                        for err in errors {
+                            self.errors
+                                .push((err, format!("loading {id:?} in savegame")));
+                        }
+                        save
+                    }
                     Err(err) => {
                         self.errors
                             .push((err, format!("loading {id:?} in savegame")));

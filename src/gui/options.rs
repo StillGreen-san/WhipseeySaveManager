@@ -212,7 +212,7 @@ impl Tab for Options {
         .spacing(4)
         .align_items(Alignment::Center)
         .into()
-    }
+    } // TODO add reset button
 }
 
 impl ElementState for Options {

@@ -68,7 +68,7 @@ impl Tab for Cheats {
 }
 
 impl ElementState for Cheats {
-    type State = data::Cheats;
+    type State = data::Cheats; // TODO change state to BfsSettings
 
     fn get_state(&self) -> Self::State {
         self.cheats_state.clone()

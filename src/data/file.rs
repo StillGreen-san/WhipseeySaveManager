@@ -246,7 +246,7 @@ impl TryFrom<&Properties> for File {
             lives: value.try_into()?,
             gems: value.try_into()?,
         })
-    } // TODO load defaults when try_into failed but still report error
+    }
 }
 
 impl From<File> for Properties {
