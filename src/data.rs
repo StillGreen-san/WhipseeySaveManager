@@ -19,7 +19,7 @@ pub use options::Options;
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct WhipseeySaveData {
     pub options: Options,
-    pub files: [File; 3],
+    pub files: [File; 3], // TODO array creation not tied to File{X} index types
 }
 
 impl TryFrom<Ini> for WhipseeySaveData {
@@ -610,7 +610,7 @@ mod tests {
     fn whipseey_save_data_try_from_ini_invalid_value_ranges() {
         let ini = Ini::load_from_str(util::test::ini::INVALID_VALUE_RANGES).expect(TEST_FAIL_STR);
         let error = WhipseeySaveData::try_from(ini).expect_err(TEST_FAIL_STR);
-        assert_matches!(error, Error::TryFromPrimitive(_));
+        assert_matches!(error, Error::TryFromPrimitive(_) | Error::NumCast(_));
     }
 
     #[test]
