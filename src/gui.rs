@@ -230,76 +230,13 @@ impl Application for Gui {
 
     fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
         match message {
-            Message::TabSelected(id) => {
-                match id {
-                    #[cfg(debug_assertions)]
-                    TabId::TestButton => {
-                        self.theme = match self.theme {
-                            Theme::Light(_) => theme::dark(),
-                            _ => theme::light(),
-                        }
-                    }
-                    _ => self.active_tab = id,
-                }
-                match id {
-                    TabId::Files => self
-                        .save_path
-                        .set_id(FileSelectId::Save(SaveSection::Files)),
-                    TabId::Options => self
-                        .save_path
-                        .set_id(FileSelectId::Save(SaveSection::Options)),
-                    _ => {}
-                }
-                Command::none()
-            }
+            Message::TabSelected(id) => self.update_tab_selected(id),
             Message::About(message) => self.about.update(message),
             Message::FileSelect(id, message) => match id {
                 FileSelectId::Save(_) => self.save_path_update(message),
                 FileSelectId::Bfs => self.cheats_path.update(message),
             },
-            Message::Save(id) => match id {
-                FileSelectId::Save(save_id) => {
-                    let save_now = data::WhipseeySaveData {
-                        options: self.options.get_state(),
-                        files: self.files.get_state(),
-                    };
-                    let path = self.save_path.get_state();
-                    Command::perform(
-                        async move {
-                            let (mut save_next, _) = data::WhipseeySaveData::from_ini(
-                                util::load_ini_file(path.clone()).await?,
-                            ); // TODO save directly into ini?
-                            match save_id {
-                                SaveSection::Files => save_next.files = save_now.files,
-                                SaveSection::Options => save_next.options = save_now.options,
-                                SaveSection::File1 => {
-                                    save_next.files[File1] = save_now.files[File1]
-                                }
-                                SaveSection::File2 => {
-                                    save_next.files[File2] = save_now.files[File2]
-                                }
-                                SaveSection::File3 => {
-                                    save_next.files[File3] = save_now.files[File3]
-                                }
-                            }
-                            let ini = save_next.into();
-                            Ok(util::write_ini_file_padded_no_spacing(path, &ini).await?)
-                        },
-                        move |result| Message::Saved(id, result),
-                    )
-                }
-                FileSelectId::Bfs => {
-                    let bfs = data::BfsSettings {
-                        cheats: self.cheats.get_state(),
-                    };
-                    let ini = bfs.into();
-                    let path = self.cheats_path.get_state();
-                    Command::perform(
-                        async move { Ok(util::write_ini_file(path, &ini).await?) },
-                        |result| Message::Saved(FileSelectId::Bfs, result),
-                    )
-                }
-            },
+            Message::Save(id) => self.update_save(id),
             Message::Saved(id, result) => {
                 match result {
                     Ok(()) => {}
@@ -335,7 +272,7 @@ impl Application for Gui {
                 match result {
                     Ok((bfs, errors)) => {
                         for err in errors {
-                            self.errors.push((err, format!("loading bfs_settings ini")));
+                            self.errors.push((err, "loading bfs_settings ini".into()));
                         }
                         self.cheats.set_state(bfs.cheats)
                     }
@@ -343,40 +280,7 @@ impl Application for Gui {
                 }
                 Command::none()
             }
-            Message::LoadedSave(id, result) => {
-                let save = match result {
-                    Ok((save, errors)) => {
-                        for err in errors {
-                            self.errors
-                                .push((err, format!("loading {id:?} in savegame")));
-                        }
-                        save
-                    }
-                    Err(err) => {
-                        self.errors
-                            .push((err, format!("loading {id:?} in savegame")));
-                        return Command::none();
-                    }
-                };
-                let mut files = self.files.get_state();
-                match id {
-                    SaveSection::Files => self.files.set_state(save.files),
-                    SaveSection::Options => self.options.set_state(save.options),
-                    SaveSection::File1 => {
-                        files[File1] = save.files[File1];
-                        self.files.set_state(files);
-                    }
-                    SaveSection::File2 => {
-                        files[File2] = save.files[File2];
-                        self.files.set_state(files);
-                    }
-                    SaveSection::File3 => {
-                        files[File3] = save.files[File3];
-                        self.files.set_state(files);
-                    }
-                }
-                Command::none()
-            }
+            Message::LoadedSave(id, result) => self.update_loaded_save(id, result),
             Message::Cheats(message) => self.cheats.update(message),
             Message::Options(message) => self.options.update(message),
             Message::Files(message) => self.files.update(message),
@@ -521,6 +425,108 @@ impl Gui {
         )
         .max_width(450.0)
         .max_height(230.0)
+    }
+
+    fn update_tab_selected(&mut self, id: TabId) -> Command<Message> {
+        match id {
+            #[cfg(debug_assertions)]
+            TabId::TestButton => {
+                self.theme = match self.theme {
+                    Theme::Light(_) => theme::dark(),
+                    _ => theme::light(),
+                }
+            }
+            _ => self.active_tab = id,
+        }
+        match id {
+            TabId::Files => self
+                .save_path
+                .set_id(FileSelectId::Save(SaveSection::Files)),
+            TabId::Options => self
+                .save_path
+                .set_id(FileSelectId::Save(SaveSection::Options)),
+            _ => {}
+        }
+        Command::none()
+    }
+
+    fn update_save(&mut self, id: FileSelectId) -> Command<Message> {
+        match id {
+            FileSelectId::Save(save_id) => {
+                let save_now = data::WhipseeySaveData {
+                    options: self.options.get_state(),
+                    files: self.files.get_state(),
+                };
+                let path = self.save_path.get_state();
+                Command::perform(
+                    async move {
+                        let (mut save_next, _) = data::WhipseeySaveData::from_ini(
+                            util::load_ini_file(path.clone()).await?,
+                        ); // TODO save directly into ini?
+                        match save_id {
+                            SaveSection::Files => save_next.files = save_now.files,
+                            SaveSection::Options => save_next.options = save_now.options,
+                            SaveSection::File1 => save_next.files[File1] = save_now.files[File1],
+                            SaveSection::File2 => save_next.files[File2] = save_now.files[File2],
+                            SaveSection::File3 => save_next.files[File3] = save_now.files[File3],
+                        }
+                        let ini = save_next.into();
+                        Ok(util::write_ini_file_padded_no_spacing(path, &ini).await?)
+                    },
+                    move |result| Message::Saved(id, result),
+                )
+            }
+            FileSelectId::Bfs => {
+                let bfs = data::BfsSettings {
+                    cheats: self.cheats.get_state(),
+                };
+                let ini = bfs.into();
+                let path = self.cheats_path.get_state();
+                Command::perform(
+                    async move { Ok(util::write_ini_file(path, &ini).await?) },
+                    |result| Message::Saved(FileSelectId::Bfs, result),
+                )
+            }
+        }
+    }
+
+    fn update_loaded_save(
+        &mut self,
+        id: SaveSection,
+        result: util::Result<(data::WhipseeySaveData, Vec<util::Error>)>,
+    ) -> Command<Message> {
+        let save = match result {
+            Ok((save, errors)) => {
+                for err in errors {
+                    self.errors
+                        .push((err, format!("loading {id:?} in savegame")));
+                }
+                save
+            }
+            Err(err) => {
+                self.errors
+                    .push((err, format!("loading {id:?} in savegame")));
+                return Command::none();
+            }
+        };
+        let mut files = self.files.get_state();
+        match id {
+            SaveSection::Files => self.files.set_state(save.files),
+            SaveSection::Options => self.options.set_state(save.options),
+            SaveSection::File1 => {
+                files[File1] = save.files[File1];
+                self.files.set_state(files);
+            }
+            SaveSection::File2 => {
+                files[File2] = save.files[File2];
+                self.files.set_state(files);
+            }
+            SaveSection::File3 => {
+                files[File3] = save.files[File3];
+                self.files.set_state(files);
+            }
+        }
+        Command::none()
     }
 }
 
