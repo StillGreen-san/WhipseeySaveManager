@@ -31,16 +31,17 @@ fn library(
     link: &'static str,
 ) -> Element<'static, super::Message, Theme, Renderer> {
     row![
-        Space::with_width(Length::FillPortion(15)),
         text(label)
-            .width(Length::FillPortion(20))
+            .width(Length::FillPortion(35))
             .horizontal_alignment(Horizontal::Right),
-        button(text(link).horizontal_alignment(Horizontal::Left))
-            .on_press(super::Message::About(Message::Link(link)))
-            .style(iced::theme::Button::Text)
-            .width(Length::FillPortion(50))
-            .padding(0),
-        Space::with_width(Length::FillPortion(15)),
+        row![
+            button(text(link).horizontal_alignment(Horizontal::Left))
+                .on_press(super::Message::About(Message::Link(link)))
+                .style(iced::theme::Button::Text)
+                .padding(0),
+            Space::with_width(Length::Fill)
+        ]
+        .width(Length::FillPortion(65))
     ]
     .spacing(4)
     .align_items(Alignment::Center)
