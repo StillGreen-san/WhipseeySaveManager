@@ -199,20 +199,20 @@ impl Tab for Options {
             option(
                 &self.music_volume_state,
                 self.display_strings.music_volume,
-                &self.options_state.music_volume, // TODO volume as slider? (change enum to f32?)
+                &self.options_state.music_volume,
                 Message::super_music_volume_selected,
             ),
             option(
                 &self.music_toggle_state,
                 self.display_strings.music_toggle,
-                &self.options_state.music_toggle, // TODO remove from gui, instead infer from volume?
+                &self.options_state.music_toggle,
                 Message::super_music_toggle_selected,
             ),
         ]
         .spacing(4)
         .align_items(Alignment::Center)
         .into()
-    } // TODO add reset button
+    }
 }
 
 impl ElementState for Options {

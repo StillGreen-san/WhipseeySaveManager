@@ -121,7 +121,7 @@ impl Files {
                 button(
                     text(self.display_strings.cycle_gems_label)
                         .horizontal_alignment(Horizontal::Center)
-                        .width(Length::Fill) // TODO abstract common layouting into functions
+                        .width(Length::Fill)
                 )
                 .on_press(super::Message::Files(Message::CycleGems(idx)))
                 .width(Length::Fill),

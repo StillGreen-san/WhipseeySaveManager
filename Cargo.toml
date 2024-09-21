@@ -11,7 +11,7 @@ name = "whipseey_save_manager"
 doctest = true
 
 [dependencies]
-iced = { version = "0.12.1", features = ["image", "tokio"] } # TODO update
+iced = { version = "0.12.1", features = ["image", "tokio"] }
 iced_aw = { git = "https://github.com/StillGreen-san/forked_iced_aw", branch = "0.9.3-additional-fixes" }
 steamlocate = "2.0.0-beta.2"
 rust-ini = "0.21.1"

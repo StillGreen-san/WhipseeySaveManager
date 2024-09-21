@@ -35,7 +35,7 @@ pub enum Error {
     VarError(#[from] VarError),
     #[error(transparent)]
     OpenError(#[from] OpenError),
-} // TODO refactor & improve user facing messages
+}
 
 impl<Enum: TryFromPrimitive> From<TryFromPrimitiveError<Enum>> for Error {
     fn from(value: TryFromPrimitiveError<Enum>) -> Self {

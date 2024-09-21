@@ -72,8 +72,6 @@ fn ini_to_vec_padded_no_spacing(ini: &Ini, padded_size: usize) -> std::io::Resul
 /// returns the full absolute path including the filename, or [None] if no valid path was found
 ///
 /// **Windows**: uses `LOCALAPPDATA` environment variable for locating
-///
-/// TODO non windows support
 pub async fn find_savegame_path() -> Result<Option<PathBuf>, VarError> {
     let local_appdata = std::env::var("LOCALAPPDATA")?;
     let mut path = PathBuf::from(local_appdata);

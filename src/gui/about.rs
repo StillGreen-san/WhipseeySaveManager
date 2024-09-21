@@ -68,7 +68,6 @@ impl Tab for About {
         }
     }
 
-    // TODO dynamic loading
     fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
         let libraries = column![
             library("iced [MIT]", "https://github.com/iced-rs/iced"),

@@ -114,7 +114,7 @@ impl Application for Gui {
             dialog_filter_ext: "sav",
             dialog_filter_all: "all",
             modal_description: "waiting for a file to be chosen...",
-        }; // TODO localize (these and in general)
+        };
         let bfs_strings = file_select::DisplayStrings {
             placeholder: "bfs settings",
             dialog_title: "open bfs settings",
@@ -188,7 +188,6 @@ impl Application for Gui {
             reload_tooltip: "Reload Values from File for this Group",
         };
         (
-            // TODO pass Message into constructors instead of using super::Message in elements
             Self {
                 active_tab: Default::default(),
                 about: About::new(about_strings),
@@ -463,7 +462,7 @@ impl Gui {
                     async move {
                         let (mut save_next, _) = data::WhipseeySaveData::from_ini(
                             util::load_ini_file(path.clone()).await?,
-                        ); // TODO save directly into ini?
+                        );
                         match save_id {
                             SaveSection::Files => save_next.files = save_now.files,
                             SaveSection::Options => save_next.options = save_now.options,
@@ -560,4 +559,4 @@ pub fn with_tooltip<'a>(
     position: tooltip::Position,
 ) -> Tooltip<'a, Message, Theme, Renderer> {
     tooltip(content, text(tooltip_text), position).style(iced::theme::Container::Box)
-} // TODO disable tooltips during active modal
+}

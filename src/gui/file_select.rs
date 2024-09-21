@@ -170,5 +170,5 @@ impl Message {
     /// wraps message in super::Message with `self.id`
     fn pack(self, id: super::FileSelectId) -> super::Message {
         super::Message::FileSelect(id, self)
-    } // TODO remove?
+    }
 }

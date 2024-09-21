@@ -17,7 +17,7 @@ pub use options::Options;
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct WhipseeySaveData {
     pub options: Options,
-    pub files: [File; 3], // TODO array creation not tied to File{X} index types
+    pub files: [File; 3],
 }
 
 impl WhipseeySaveData {
