@@ -84,10 +84,6 @@ impl Tab for About {
             library("tokio [MIT]", "https://github.com/tokio-rs/tokio"),
             library("strum [MIT]", "https://github.com/Peternator7/strum"),
             library("num [MIT]", "https://github.com/rust-num/num"),
-            library(
-                "dark-light [MIT]",
-                "https://github.com/frewsxcv/rust-dark-light"
-            ),
             library("winres [MIT]", "https://github.com/mxre/winres"),
             library(
                 "const_format [ZLIB]",

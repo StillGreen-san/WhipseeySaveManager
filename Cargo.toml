@@ -22,7 +22,6 @@ tokio = { version = "1.40.0", features = ["fs", "macros"] }
 thiserror = "1.0.63"
 strum = { version = "0.26.3", features = ["derive"] }
 num = "0.4.3"
-dark-light = "1.1.1"
 const_format = "0.2.33"
 
 [target.'cfg(windows)'.build-dependencies]
