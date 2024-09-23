@@ -140,6 +140,8 @@ impl Gui {
             sound_toggle: "Sound Toggle",
             music_volume: "Music Volume",
             music_toggle: "Music Toggle",
+            reset_label: "Reset",
+            reset_tooltip: "Set defaults",
         };
         let files_strings = files::DisplayStrings {
             title: "Files",

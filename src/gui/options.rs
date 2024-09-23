@@ -1,9 +1,9 @@
 use crate::data;
 use crate::data::options;
-use crate::gui::{theme, ElementState, Tab, Theme};
+use crate::gui::{theme, with_tooltip, ElementState, Tab, Theme};
 use iced::alignment::{Horizontal, Vertical};
-use iced::widget::{column, combo_box, row, text, Space};
-use iced::{Element, Length, Renderer, Task};
+use iced::widget::{button, column, combo_box, container, row, stack, text, tooltip, Space};
+use iced::{Element, Length, Padding, Renderer, Task};
 use iced_aw::TabLabel;
 use std::fmt::Display;
 use strum::VariantArray;
@@ -18,6 +18,7 @@ pub enum Message {
     SoundToggle(options::SoundToggle),
     MusicVolume(options::MusicVolume),
     MusicToggle(options::MusicToggle),
+    Reset,
 }
 
 impl Message {
@@ -47,6 +48,7 @@ impl Message {
     }
 }
 
+#[derive(Clone)]
 pub struct DisplayStrings {
     pub title: &'static str,
     pub language: &'static str,
@@ -57,6 +59,8 @@ pub struct DisplayStrings {
     pub sound_toggle: &'static str,
     pub music_volume: &'static str,
     pub music_toggle: &'static str,
+    pub reset_label: &'static str,
+    pub reset_tooltip: &'static str,
 }
 
 pub struct Options {
@@ -156,11 +160,15 @@ impl Tab for Options {
                 self.options_state.music_toggle = music_toggle;
                 Task::none()
             }
+            Message::Reset => {
+                self.options_state = Default::default();
+                Task::none()
+            }
         }
     }
 
     fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
-        column![
+        let options = column![
             option(
                 &self.language_state,
                 self.display_strings.language,
@@ -211,7 +219,19 @@ impl Tab for Options {
             ),
         ]
         .spacing(4)
-        .align_x(Horizontal::Center)
+        .align_x(Horizontal::Center);
+        stack!(
+            options,
+            container(with_tooltip(
+                button(text(self.display_strings.reset_label))
+                    .on_press(super::Message::Options(Message::Reset)),
+                self.display_strings.reset_tooltip,
+                tooltip::Position::Left
+            ))
+            .padding(Padding::new(2.0)) // would be cut off otherwise. iced bug?
+            .align_bottom(Length::Fill)
+            .align_right(Length::Fill)
+        )
         .into()
     }
 }
