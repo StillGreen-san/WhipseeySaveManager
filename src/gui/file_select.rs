@@ -86,7 +86,7 @@ impl FileSelect {
                 ])
             }
             Message::Selected(opt_path) => match opt_path {
-                None => Task::done(super::Message::CloseModal),
+                None => Task::done(super::Message::CloseModal(super::MessageSource::Task)),
                 Some(path) => {
                     let lossy = path.to_string_lossy();
                     match lossy.contains(char::REPLACEMENT_CHARACTER) {
@@ -97,7 +97,7 @@ impl FileSelect {
                         false => {
                             self.path = lossy.to_string();
                             Task::batch([
-                                Task::done(super::Message::CloseModal),
+                                Task::done(super::Message::CloseModal(super::MessageSource::Task)),
                                 Task::done(super::Message::Load(self.id)),
                             ])
                         }

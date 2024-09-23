@@ -52,6 +52,12 @@ pub enum FileSelectId {
 }
 
 #[derive(Debug, Clone)]
+pub enum MessageSource {
+    Click,
+    Task,
+}
+
+#[derive(Debug, Clone)]
 pub enum Message {
     TabSelected(TabId),
     About(about::Message),
@@ -73,7 +79,7 @@ pub enum Message {
     CloseError,
     Error((util::Error, String)),
     OpenModal((&'static str, &'static str)),
-    CloseModal,
+    CloseModal(MessageSource),
 }
 
 pub struct Gui {
@@ -86,7 +92,7 @@ pub struct Gui {
     files: Files,
     theme: Theme,
     errors: Vec<(util::Error, String)>,
-    modal: Option<(&'static str, &'static str)>,
+    info_modal_data: Option<(&'static str, &'static str)>,
 }
 
 impl Gui {
@@ -195,7 +201,7 @@ impl Gui {
                 files: Files::new(files_strings),
                 theme: theme::default(),
                 errors: Vec::with_capacity(3),
-                modal: None,
+                info_modal_data: None,
             },
             Task::batch([
                 Task::perform(
@@ -295,14 +301,14 @@ impl Gui {
                 Task::none()
             }
             Message::OpenModal(messages) => {
-                self.modal = Some(messages);
+                self.info_modal_data = Some(messages);
                 Task::none()
             }
-            Message::CloseModal => {
-                if self.modal.is_none() {
+            Message::CloseModal(source) => {
+                if self.info_modal_data.is_none() {
                     self.errors.pop();
-                } else {
-                    self.modal = None;
+                } else if let MessageSource::Task = source {
+                    self.info_modal_data = None;
                 }
                 Task::none()
             }
@@ -340,7 +346,7 @@ impl Gui {
         modal(
             tabs,
             self.info_overlay().or_else(|| self.error_overlay()),
-            Message::CloseModal,
+            Message::CloseModal(MessageSource::Click),
         )
     }
 
@@ -378,7 +384,7 @@ impl Gui {
 
     /// creates an informational overlay [Element] when a modal is active
     fn info_overlay(&self) -> Option<Element<'_, Message, Theme, Renderer>> {
-        self.modal.map(|(title, body)| {
+        self.info_modal_data.map(|(title, body)| {
             container(self.modal_card(title.into(), body.into()))
                 .center(Length::Shrink)
                 .into()
