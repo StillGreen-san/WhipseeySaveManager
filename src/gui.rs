@@ -401,9 +401,12 @@ impl Gui {
     /// creates an informational overlay [Element] when a modal is active
     fn info_overlay(&self) -> Option<Element<'_, Message, Theme, Renderer>> {
         self.info_modal_data.map(|(title, body)| {
-            container(self.modal_card(title.into(), body.into()))
-                .center(Length::Shrink)
-                .into()
+            container(
+                self.modal_card(title.into(), body.into())
+                    .style(style::card::secondary),
+            )
+            .center(Length::Shrink)
+            .into()
         })
     }
 

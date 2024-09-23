@@ -180,7 +180,11 @@ impl Files {
                     .input_style(theme::text_input)
                     .width(Length::Fill),
                     show_tooltips.then_some(self.display_strings.lives_tooltip),
-                    Position::Left
+                    if let File3 = idx {
+                        Position::Left
+                    } else {
+                        Position::Right
+                    }
                 )
             ],
             with_tooltip(
