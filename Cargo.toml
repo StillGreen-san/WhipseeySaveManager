@@ -1,7 +1,7 @@
 [package]
 name = "WhipseeySaveManager"
 description = "GUI for modifying most Values in Whipseey Savegames"
-version = "0.12.0-dev"
+version = "0.12.0"
 edition = "2021"
 publish = false
 build = "build.rs"
@@ -26,3 +26,9 @@ const_format = "0.2.33"
 
 [target.'cfg(windows)'.build-dependencies]
 winres = "0.1.12"
+
+[profile.release]
+strip = true
+lto = "fat"
+opt-level = "z"
+codegen-units = 1
