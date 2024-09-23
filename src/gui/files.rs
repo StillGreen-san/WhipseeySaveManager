@@ -63,7 +63,11 @@ impl Files {
     }
 
     /// build a new file element for the given `idx`
-    fn file_view(&self, idx: FileIndex) -> Element<'_, super::Message, Theme, Renderer> {
+    fn file_view(
+        &self,
+        idx: FileIndex,
+        show_tooltips: bool,
+    ) -> Element<'_, super::Message, Theme, Renderer> {
         let progress = card(
             text(self.display_strings.progress),
             column(
@@ -96,7 +100,7 @@ impl Files {
                 .on_toggle(move |toggled| super::Message::Files(Message::Intro(idx, toggled)))
                 .size(18)
                 .spacing(4),
-                self.display_strings.intro_tooltip,
+                show_tooltips.then_some(self.display_strings.intro_tooltip),
                 Position::Top
             ),
             column![
@@ -109,7 +113,7 @@ impl Files {
                     )
                     .input_style(theme::text_input)
                     .width(Length::Fill),
-                    self.display_strings.gems_tooltip,
+                    show_tooltips.then_some(self.display_strings.gems_tooltip),
                     Position::Left
                 )
             ],
@@ -121,7 +125,7 @@ impl Files {
                 )
                 .on_press(super::Message::Files(Message::CycleGems(idx)))
                 .width(Length::Fill),
-                self.display_strings.cycle_gems_tooltip,
+                show_tooltips.then_some(self.display_strings.cycle_gems_tooltip),
                 Position::Left
             ),
             with_tooltip(
@@ -132,7 +136,7 @@ impl Files {
                 )
                 .on_press(super::Message::Files(Message::Max(idx)))
                 .width(Length::Fill),
-                self.display_strings.max_tooltip,
+                show_tooltips.then_some(self.display_strings.max_tooltip),
                 Position::Left
             ),
             with_tooltip(
@@ -147,7 +151,7 @@ impl Files {
                     File3 => super::SaveSection::File3,
                 })))
                 .width(Length::Fill),
-                self.display_strings.save_tooltip,
+                show_tooltips.then_some(self.display_strings.save_tooltip),
                 Position::Left
             )
         ]
@@ -162,7 +166,7 @@ impl Files {
                 .on_toggle(move |toggled| super::Message::Files(Message::Ending(idx, toggled)))
                 .size(18)
                 .spacing(4),
-                self.display_strings.ending_tooltip,
+                show_tooltips.then_some(self.display_strings.ending_tooltip),
                 Position::Top
             ),
             column![
@@ -175,7 +179,7 @@ impl Files {
                     )
                     .input_style(theme::text_input)
                     .width(Length::Fill),
-                    self.display_strings.lives_tooltip,
+                    show_tooltips.then_some(self.display_strings.lives_tooltip),
                     Position::Left
                 )
             ],
@@ -187,7 +191,7 @@ impl Files {
                 )
                 .on_press(super::Message::Files(Message::CycleLives(idx)))
                 .width(Length::Fill),
-                self.display_strings.cycle_lives_tooltip,
+                show_tooltips.then_some(self.display_strings.cycle_lives_tooltip),
                 Position::Right
             ),
             with_tooltip(
@@ -198,7 +202,7 @@ impl Files {
                 )
                 .on_press(super::Message::Files(Message::Reset(idx)))
                 .width(Length::Fill),
-                self.display_strings.reset_tooltip,
+                show_tooltips.then_some(self.display_strings.reset_tooltip),
                 Position::Right
             ),
             with_tooltip(
@@ -215,7 +219,7 @@ impl Files {
                     })
                 )))
                 .width(Length::Fill),
-                self.display_strings.reload_tooltip,
+                show_tooltips.then_some(self.display_strings.reload_tooltip),
                 Position::Right
             )
         ]
@@ -306,11 +310,11 @@ impl Tab for Files {
         }
     }
 
-    fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
+    fn view(&self, show_tooltips: bool) -> Element<'_, super::Message, Theme, Renderer> {
         row![
-            self.file_view(File1),
-            self.file_view(File2),
-            self.file_view(File3),
+            self.file_view(File1, show_tooltips),
+            self.file_view(File2, show_tooltips),
+            self.file_view(File3, show_tooltips),
         ]
         .spacing(4)
         .into()

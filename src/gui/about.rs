@@ -67,7 +67,7 @@ impl Tab for About {
         }
     }
 
-    fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
+    fn view(&self, _show_tooltips: bool) -> Element<'_, super::Message, Theme, Renderer> {
         let libraries = column![
             library("iced [MIT]", "https://github.com/iced-rs/iced"),
             library("iced_aw [MIT]", "https://github.com/iced-rs/iced_aw"),

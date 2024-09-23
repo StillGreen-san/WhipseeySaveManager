@@ -3,7 +3,7 @@ use const_format::formatcp;
 use data::file::{File1, File2, File3, Gems, Lives};
 use iced::widget::scrollable::Direction;
 use iced::widget::{
-    center, column, container, mouse_area, opaque, scrollable, stack, text, tooltip, Tooltip,
+    center, column, container, mouse_area, opaque, scrollable, stack, text, tooltip,
 };
 use iced::{Color, Element, Length, Padding, Renderer, Task};
 use iced_aw::{card, style, Card, TabLabel, Tabs};
@@ -318,6 +318,7 @@ impl Gui {
     }
 
     pub fn view(&self) -> Element<'_, Message, Theme, Renderer> {
+        let show_tooltips = self.info_modal_data.is_none() && self.errors.is_empty();
         let tabs = Tabs::new(Message::TabSelected).tab_bar_style(theme::tab_bar);
         #[cfg(debug_assertions)]
         let tabs = tabs.push(TabId::TestButton, TabLabel::Text("Theme".into()), column![]);
@@ -325,25 +326,38 @@ impl Gui {
             .push(
                 TabId::Files,
                 self.files.tab_label(),
-                column![self.save_path.view(), self.files.view()]
-                    .spacing(6)
-                    .padding(4),
+                column![
+                    self.save_path.view(show_tooltips),
+                    self.files.view(show_tooltips)
+                ]
+                .spacing(6)
+                .padding(4),
             )
             .push(
                 TabId::Options,
                 self.options.tab_label(),
-                column![self.save_path.view(), self.options.view()]
-                    .spacing(7)
-                    .padding(4),
+                column![
+                    self.save_path.view(show_tooltips),
+                    self.options.view(show_tooltips)
+                ]
+                .spacing(7)
+                .padding(4),
             )
             .push(
                 TabId::Cheats,
                 self.cheats.tab_label(),
-                column![self.cheats_path.view(), self.cheats.view()]
-                    .spacing(6)
-                    .padding(4),
+                column![
+                    self.cheats_path.view(show_tooltips),
+                    self.cheats.view(show_tooltips)
+                ]
+                .spacing(6)
+                .padding(4),
             )
-            .push(TabId::About, self.about.tab_label(), self.about.view())
+            .push(
+                TabId::About,
+                self.about.tab_label(),
+                self.about.view(show_tooltips),
+            )
             .set_active_tab(&self.active_tab);
         modal(
             tabs,
@@ -526,7 +540,7 @@ trait Tab {
     /// Returns the widgets to display in the [Tabs] tab.
     ///
     /// These widgets can produce messages based on user interaction.
-    fn view(&self) -> Element<'_, Message, Theme, Renderer>;
+    fn view(&self, show_tooltips: bool) -> Element<'_, Message, Theme, Renderer>;
 }
 
 /// allows to query and set the 'state' of an Element
@@ -540,10 +554,15 @@ trait ElementState {
 
 pub fn with_tooltip<'a>(
     content: impl Into<Element<'a, Message, Theme, Renderer>>,
-    tooltip_text: impl text::IntoFragment<'a>,
+    tooltip_text: Option<impl text::IntoFragment<'a>>,
     position: tooltip::Position,
-) -> Tooltip<'a, Message, Theme, Renderer> {
-    tooltip(content, text(tooltip_text), position).style(container::bordered_box)
+) -> Element<'a, Message, Theme, Renderer> {
+    match tooltip_text {
+        None => content.into(),
+        Some(tooltip_text) => tooltip(content, text(tooltip_text), position)
+            .style(container::bordered_box)
+            .into(),
+    }
 }
 
 fn modal<'a, Message>(

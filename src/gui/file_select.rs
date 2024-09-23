@@ -109,7 +109,7 @@ impl FileSelect {
         }
     }
 
-    pub fn view(&self) -> Element<'_, super::Message, super::Theme, Renderer> {
+    pub fn view(&self, show_tooltips: bool) -> Element<'_, super::Message, super::Theme, Renderer> {
         row![
             text_input(self.display_strings.placeholder, &self.path)
                 .on_input(|string| self.pack_message(Message::PathChanged(string)))
@@ -117,13 +117,13 @@ impl FileSelect {
             with_tooltip(
                 button(text(self.display_strings.open_label))
                     .on_press(self.pack_message(Message::Open)),
-                self.display_strings.open_tooltip,
+                show_tooltips.then_some(self.display_strings.open_tooltip),
                 Position::Bottom,
             ),
             with_tooltip(
                 button(text(self.display_strings.save_label))
                     .on_press(self.pack_message(Message::Save)),
-                self.display_strings.save_tooltip,
+                show_tooltips.then_some(self.display_strings.save_tooltip),
                 Position::Bottom,
             ),
             with_tooltip(
@@ -131,7 +131,7 @@ impl FileSelect {
                     self.does_path_exist()
                         .then(|| self.pack_message(Message::Reload))
                 ),
-                self.display_strings.reload_tooltip,
+                show_tooltips.then_some(self.display_strings.reload_tooltip),
                 Position::Bottom,
             )
         ]

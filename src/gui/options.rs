@@ -167,7 +167,7 @@ impl Tab for Options {
         }
     }
 
-    fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
+    fn view(&self, show_tooltips: bool) -> Element<'_, super::Message, Theme, Renderer> {
         let options = column![
             option(
                 &self.language_state,
@@ -225,7 +225,7 @@ impl Tab for Options {
             container(with_tooltip(
                 button(text(self.display_strings.reset_label))
                     .on_press(super::Message::Options(Message::Reset)),
-                self.display_strings.reset_tooltip,
+                show_tooltips.then_some(self.display_strings.reset_tooltip),
                 tooltip::Position::Left
             ))
             .padding(Padding::new(2.0)) // would be cut off otherwise. iced bug?

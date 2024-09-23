@@ -47,7 +47,7 @@ impl Tab for Cheats {
         }
     }
 
-    fn view(&self) -> Element<'_, super::Message, Theme, Renderer> {
+    fn view(&self, _show_tooltips: bool) -> Element<'_, super::Message, Theme, Renderer> {
         container(
             column![
                 checkbox(
