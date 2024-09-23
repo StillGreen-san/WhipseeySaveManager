@@ -1,11 +1,11 @@
 use crate::data::file::{Ending, File1, File2, File3, FileIndex, Gems, Intro, Level, Lives};
 use crate::data::File;
-use crate::gui::{with_tooltip, ElementState, Tab, Theme};
-use iced::alignment::Horizontal;
+use crate::gui::{theme, with_tooltip, ElementState, Tab, Theme};
+use iced::alignment::{Horizontal, Vertical};
 use iced::widget::tooltip::Position;
 use iced::widget::{button, checkbox, column, radio, row, text};
-use iced::{Alignment, Command, Element, Length, Renderer};
-use iced_aw::{card, number_input, CardStyles, TabLabel};
+use iced::{Element, Length, Renderer, Task};
+use iced_aw::{card, number_input, TabLabel};
 use strum::VariantArray;
 
 #[derive(Clone, Debug)]
@@ -83,10 +83,10 @@ impl Files {
                     .map(Element::from),
             ),
         )
-        .style(CardStyles::Secondary)
+        .style(theme::card_secondary)
         .padding_head([10, 7].into())
         .padding_body([10, 6].into())
-        .width(Length::FillPortion(36));
+        .width(Length::FillPortion(37));
         let intro = column![
             with_tooltip(
                 checkbox(
@@ -104,14 +104,10 @@ impl Files {
                 with_tooltip(
                     number_input(
                         self.files_state[idx].gems.value(),
-                        Gems::MAX_PRIMITIV,
-                        move |gems| {
-                            super::Message::Files(Message::Gems(
-                                idx,
-                                gems.clamp(Gems::MIN_PRIMITIV, Gems::MAX_PRIMITIV), // necessary because min cannot be set for number_input
-                            ))
-                        }
+                        Gems::MIN_PRIMITIV..Gems::MAX_PRIMITIV,
+                        move |gems| { super::Message::Files(Message::Gems(idx, gems)) }
                     )
+                    .input_style(theme::text_input)
                     .width(Length::Fill),
                     self.display_strings.gems_tooltip,
                     Position::Left
@@ -120,7 +116,7 @@ impl Files {
             with_tooltip(
                 button(
                     text(self.display_strings.cycle_gems_label)
-                        .horizontal_alignment(Horizontal::Center)
+                        .align_x(Horizontal::Center)
                         .width(Length::Fill)
                 )
                 .on_press(super::Message::Files(Message::CycleGems(idx)))
@@ -131,7 +127,7 @@ impl Files {
             with_tooltip(
                 button(
                     text(self.display_strings.max_label)
-                        .horizontal_alignment(Horizontal::Center)
+                        .align_x(Horizontal::Center)
                         .width(Length::Fill)
                 )
                 .on_press(super::Message::Files(Message::Max(idx)))
@@ -142,7 +138,7 @@ impl Files {
             with_tooltip(
                 button(
                     text(self.display_strings.save_label)
-                        .horizontal_alignment(Horizontal::Center)
+                        .align_x(Horizontal::Center)
                         .width(Length::Fill)
                 )
                 .on_press(super::Message::Save(super::FileSelectId::Save(match idx {
@@ -174,14 +170,10 @@ impl Files {
                 with_tooltip(
                     number_input(
                         self.files_state[idx].lives.value(),
-                        Lives::MAX_PRIMITIV,
-                        move |lives| {
-                            super::Message::Files(Message::Lives(
-                                idx,
-                                lives.clamp(Lives::MIN_PRIMITIV, Lives::MAX_PRIMITIV), // necessary because min cannot be set for number_input
-                            ))
-                        }
+                        Lives::MIN_PRIMITIV..Lives::MAX_PRIMITIV,
+                        move |lives| { super::Message::Files(Message::Lives(idx, lives)) }
                     )
+                    .input_style(theme::text_input)
                     .width(Length::Fill),
                     self.display_strings.lives_tooltip,
                     Position::Left
@@ -190,7 +182,7 @@ impl Files {
             with_tooltip(
                 button(
                     text(self.display_strings.cycle_lives_label)
-                        .horizontal_alignment(Horizontal::Center)
+                        .align_x(Horizontal::Center)
                         .width(Length::Fill)
                 )
                 .on_press(super::Message::Files(Message::CycleLives(idx)))
@@ -201,7 +193,7 @@ impl Files {
             with_tooltip(
                 button(
                     text(self.display_strings.reset_label)
-                        .horizontal_alignment(Horizontal::Center)
+                        .align_x(Horizontal::Center)
                         .width(Length::Fill)
                 )
                 .on_press(super::Message::Files(Message::Reset(idx)))
@@ -212,7 +204,7 @@ impl Files {
             with_tooltip(
                 button(
                     text(self.display_strings.reload_label)
-                        .horizontal_alignment(Horizontal::Center)
+                        .align_x(Horizontal::Center)
                         .width(Length::Fill)
                 )
                 .on_press_maybe(self.can_reload.then_some(super::Message::Load(
@@ -228,7 +220,7 @@ impl Files {
             )
         ]
         .spacing(4)
-        .width(Length::FillPortion(35));
+        .width(Length::FillPortion(34));
         let title = format!(
             "{}{} {} - {}",
             self.display_strings.file_titel,
@@ -240,10 +232,10 @@ impl Files {
             text(title),
             row![progress, intro, ending]
                 .spacing(4)
-                .align_items(Alignment::Center),
+                .align_y(Vertical::Center),
         )
         .padding_body([10, 8].into())
-        .style(CardStyles::Primary)
+        .style(theme::card_primary)
         .into()
     }
 }
@@ -255,43 +247,43 @@ impl Tab for Files {
         TabLabel::Text(self.display_strings.title.into())
     }
 
-    fn update(&mut self, message: Self::InMessage) -> Command<super::Message> {
+    fn update(&mut self, message: Self::InMessage) -> Task<super::Message> {
         match message {
             Message::Progress(idx, level) => {
                 self.files_state[idx].level = level;
-                Command::none()
+                Task::none()
             }
             Message::Intro(idx, toggled) => {
                 self.files_state[idx].intro = (toggled as u8)
                     .try_into()
                     .expect("bool should always be convertible to Intro");
-                Command::none()
+                Task::none()
             }
             Message::Ending(idx, toggled) => {
                 self.files_state[idx].ending = (toggled as u8)
                     .try_into()
                     .expect("bool should always be convertible to Ending");
-                Command::none()
+                Task::none()
             }
             Message::Gems(idx, gems) => {
                 self.files_state[idx].gems = gems
                     .try_into()
                     .expect("number should have been clamped by number_input");
-                Command::none()
+                Task::none()
             }
             Message::CycleGems(idx) => {
                 self.files_state[idx].gems = match self.files_state[idx].gems {
                     Gems::DEFAULT => Gems::MAX,
                     _ => Gems::DEFAULT,
                 };
-                Command::none()
+                Task::none()
             }
             Message::CycleLives(idx) => {
                 self.files_state[idx].lives = match self.files_state[idx].lives {
                     Lives::DEFAULT => Lives::MAX,
                     _ => Lives::DEFAULT,
                 };
-                Command::none()
+                Task::none()
             }
             Message::Max(idx) => {
                 self.files_state[idx].lives = Lives::MAX;
@@ -299,17 +291,17 @@ impl Tab for Files {
                 self.files_state[idx].level = Level::Castle;
                 self.files_state[idx].intro = Intro::Watched;
                 self.files_state[idx].ending = Ending::Watched;
-                Command::none()
+                Task::none()
             }
             Message::Lives(idx, lives) => {
                 self.files_state[idx].lives = lives
                     .try_into()
                     .expect("number should have been clamped by number_input");
-                Command::none()
+                Task::none()
             }
             Message::Reset(idx) => {
                 self.files_state[idx] = File::default();
-                Command::none()
+                Task::none()
             }
         }
     }

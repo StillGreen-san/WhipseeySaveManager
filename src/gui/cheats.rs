@@ -2,7 +2,7 @@ use crate::data;
 use crate::data::cheats::CheatsEnabled;
 use crate::gui::{ElementState, Tab, Theme};
 use iced::widget::{checkbox, column, container, text};
-use iced::{Command, Element, Length, Renderer};
+use iced::{Element, Length, Renderer, Task};
 use iced_aw::TabLabel;
 
 #[derive(Debug, Clone)]
@@ -37,12 +37,12 @@ impl Tab for Cheats {
         TabLabel::Text(self.display_strings.title.into())
     }
 
-    fn update(&mut self, message: Self::InMessage) -> Command<super::Message> {
+    fn update(&mut self, message: Self::InMessage) -> Task<super::Message> {
         match message {
             Message::CheatsToggled(state) => {
                 self.cheats_state.cheats_enabled = CheatsEnabled::try_from(state as u8)
                     .expect("bool should always be convertible to CheatsEnabled");
-                Command::none()
+                Task::none()
             }
         }
     }
@@ -59,10 +59,7 @@ impl Tab for Cheats {
             ]
             .spacing(16),
         )
-        .center_x()
-        .center_y()
-        .width(Length::Fill)
-        .height(Length::Fill)
+        .center(Length::Fill)
         .into()
     }
 }

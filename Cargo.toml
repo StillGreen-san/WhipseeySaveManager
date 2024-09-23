@@ -11,14 +11,14 @@ name = "whipseey_save_manager"
 doctest = true
 
 [dependencies]
-iced = { version = "0.12.1", features = ["image", "tokio"] }
-iced_aw = { git = "https://github.com/StillGreen-san/forked_iced_aw", branch = "0.9.3-additional-fixes" }
+iced = { version = "0.13.1", features = ["image", "tokio"] }
+iced_aw = { version = "0.11.0", features = ["card", "number_input", "tabs"] }
 steamlocate = "2.0.0-beta.2"
 rust-ini = "0.21.1"
 opener = "0.7.2"
-rfd = "0.14.1"
+rfd = "0.15.0"
 num_enum = "0.7.3"
-tokio = { version = "1.39.3", features = ["fs", "macros"] }
+tokio = { version = "1.40.0", features = ["fs", "macros"] }
 thiserror = "1.0.63"
 strum = { version = "0.26.3", features = ["derive"] }
 num = "0.4.3"

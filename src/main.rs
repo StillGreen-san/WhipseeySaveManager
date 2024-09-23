@@ -1,12 +1,12 @@
 #![windows_subsystem = "windows"]
 
-use iced::{window, Application, Pixels, Settings, Size};
+use iced::{window, Pixels, Settings, Size};
 
 use whipseey_save_manager::gui;
 
 fn main() -> Result<(), iced::Error> {
     let window = window::Settings {
-        size: Size::from([720, 334]),
+        size: Size::from([720.0, 334.0]),
         position: Default::default(),
         min_size: None,
         max_size: None,
@@ -21,12 +21,15 @@ fn main() -> Result<(), iced::Error> {
     };
     let settings = Settings {
         id: Some("WhipseeySaveManager".into()),
-        window,
-        flags: Default::default(),
         fonts: Vec::new(),
         default_font: Default::default(),
         default_text_size: Pixels(16.0),
         antialiasing: false,
     };
-    gui::Gui::run(settings)
+    iced::application("Whipseey Save Manager", gui::Gui::update, gui::Gui::view)
+        .settings(settings)
+        .window(window)
+        .theme(gui::Gui::theme)
+        .font(iced_aw::iced_fonts::REQUIRED_FONT_BYTES)
+        .run_with(gui::Gui::new)
 }

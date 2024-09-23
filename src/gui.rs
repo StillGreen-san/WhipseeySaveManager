@@ -1,11 +1,12 @@
 use crate::{data, util, BFS_SETTINGS_FILE_NAME, SAVEGAME_FILE_NAME};
 use const_format::formatcp;
-use dark_light::Mode;
 use data::file::{File1, File2, File3, Gems, Lives};
 use iced::widget::scrollable::Direction;
-use iced::widget::{column, container, scrollable, text, tooltip, Tooltip};
-use iced::{font, Application, Command, Element, Length, Renderer};
-use iced_aw::{card, modal, Card, CardStyles, TabLabel, Tabs};
+use iced::widget::{
+    center, column, container, mouse_area, opaque, scrollable, stack, text, tooltip, Tooltip,
+};
+use iced::{Color, Element, Length, Padding, Renderer, Task};
+use iced_aw::{card, style, Card, TabLabel, Tabs};
 use std::env::VarError;
 use std::path::PathBuf;
 use util::error::LocateError;
@@ -69,7 +70,6 @@ pub enum Message {
     LoadedFont,
     LoadedBfsSettingsPath(Result<Option<PathBuf>, LocateError>),
     LoadedSavegamePath(Result<Option<PathBuf>, VarError>),
-    UpdatedTheme(Theme),
     CloseError,
     Error((util::Error, String)),
     OpenModal((&'static str, &'static str)),
@@ -89,13 +89,8 @@ pub struct Gui {
     modal: Option<(&'static str, &'static str)>,
 }
 
-impl Application for Gui {
-    type Executor = iced::executor::Default;
-    type Message = Message;
-    type Theme = Theme;
-    type Flags = ();
-
-    fn new(_flags: Self::Flags) -> (Self, Command<Self::Message>) {
+impl Gui {
+    pub fn new() -> (Self, Task<Message>) {
         let about_strings = about::DisplayStrings {
             title: "About",
             description: "this program uses the following libraries:",
@@ -196,38 +191,21 @@ impl Application for Gui {
                 cheats: Cheats::new(cheats_strings),
                 options: Options::new(opt_strings),
                 files: Files::new(files_strings),
-                theme: theme::light(),
+                theme: theme::default(),
                 errors: Vec::with_capacity(3),
                 modal: None,
             },
-            Command::batch([
-                font::load(iced_aw::BOOTSTRAP_FONT_BYTES).map(|result| {
-                    result.expect("loading font from const bytes should never fail");
-                    Message::LoadedFont
-                }),
-                Command::perform(
+            Task::batch([
+                Task::perform(
                     util::find_bfs_settings_path(),
                     Message::LoadedBfsSettingsPath,
                 ),
-                Command::perform(util::find_savegame_path(), Message::LoadedSavegamePath),
-                Command::perform(
-                    async {
-                        match dark_light::detect() {
-                            Mode::Dark => theme::dark(),
-                            Mode::Light | Mode::Default => theme::light(),
-                        }
-                    },
-                    Message::UpdatedTheme,
-                ),
+                Task::perform(util::find_savegame_path(), Message::LoadedSavegamePath),
             ]),
         )
     }
 
-    fn title(&self) -> String {
-        "Whipseey Save Manager".into()
-    }
-
-    fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
+    pub fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::TabSelected(id) => self.update_tab_selected(id),
             Message::About(message) => self.about.update(message),
@@ -241,12 +219,12 @@ impl Application for Gui {
                     Ok(()) => {}
                     Err(err) => self.errors.push((err, format!("saving {id:?}"))),
                 }
-                Command::none()
+                Task::none()
             }
             Message::Load(id) => match id {
                 FileSelectId::Save(save_id) => {
                     let path = self.save_path.get_state();
-                    Command::perform(
+                    Task::perform(
                         async {
                             Ok(data::WhipseeySaveData::from_ini(
                                 util::load_ini_file(path).await?,
@@ -257,7 +235,7 @@ impl Application for Gui {
                 }
                 FileSelectId::Bfs => {
                     let path = self.cheats_path.get_state();
-                    Command::perform(
+                    Task::perform(
                         async {
                             Ok(data::BfsSettings::from_ini(
                                 util::load_ini_file(path).await?,
@@ -278,59 +256,59 @@ impl Application for Gui {
                     }
                     Err(err) => self.errors.push((err, err_msg)),
                 }
-                Command::none()
+                Task::none()
             }
             Message::LoadedSave(id, result) => self.update_loaded_save(id, result),
             Message::Cheats(message) => self.cheats.update(message),
             Message::Options(message) => self.options.update(message),
             Message::Files(message) => self.files.update(message),
-            Message::LoadedFont => Command::none(),
+            Message::LoadedFont => Task::none(),
             Message::LoadedBfsSettingsPath(path) => match path {
-                Ok(path) => path.map_or_else(Command::none, |path| {
+                Ok(path) => path.map_or_else(Task::none, |path| {
                     self.cheats_path
                         .update(file_select::Message::Selected(Some(path)))
                 }),
                 Err(error) => {
                     self.errors
                         .push((error.into(), "loading bfs_settings path".into()));
-                    Command::none()
+                    Task::none()
                 }
             },
             Message::LoadedSavegamePath(path) => match path {
-                Ok(path) => path.map_or_else(Command::none, |path| {
+                Ok(path) => path.map_or_else(Task::none, |path| {
                     self.save_path_update(file_select::Message::Selected(Some(path)))
                 }),
                 Err(error) => {
                     self.errors
                         .push((error.into(), "loading savegame path".into()));
-                    Command::none()
+                    Task::none()
                 }
             },
-            Message::UpdatedTheme(theme) => {
-                self.theme = theme;
-                Command::none()
-            }
             Message::CloseError => {
                 self.errors.pop();
-                Command::none()
+                Task::none()
             }
             Message::Error(error) => {
                 self.errors.push(error);
-                Command::none()
+                Task::none()
             }
             Message::OpenModal(messages) => {
                 self.modal = Some(messages);
-                Command::none()
+                Task::none()
             }
             Message::CloseModal => {
-                self.modal = None;
-                Command::none()
+                if self.modal.is_none() {
+                    self.errors.pop();
+                } else {
+                    self.modal = None;
+                }
+                Task::none()
             }
         }
     }
 
-    fn view(&self) -> Element<'_, Self::Message, Self::Theme, Renderer> {
-        let tabs = Tabs::new(Message::TabSelected);
+    pub fn view(&self) -> Element<'_, Message, Theme, Renderer> {
+        let tabs = Tabs::new(Message::TabSelected).tab_bar_style(theme::tab_bar);
         #[cfg(debug_assertions)]
         let tabs = tabs.push(TabId::TestButton, TabLabel::Text("Theme".into()), column![]);
         let tabs = tabs
@@ -357,16 +335,14 @@ impl Application for Gui {
             )
             .push(TabId::About, self.about.tab_label(), self.about.view())
             .set_active_tab(&self.active_tab);
-        match self.modal_overlay() {
-            Some(elm) => modal(tabs, Some(elm)),
-            None => modal(tabs, self.error_overlay())
-                .backdrop(Message::CloseError)
-                .on_esc(Message::CloseError),
-        }
-        .into()
+        modal(
+            tabs,
+            self.info_overlay().or_else(|| self.error_overlay()),
+            Message::CloseModal,
+        )
     }
 
-    fn theme(&self) -> Self::Theme {
+    pub fn theme(&self) -> Theme {
         self.theme.clone()
     }
 }
@@ -375,10 +351,10 @@ impl Gui {
     /// calls [FileSelect::update] on save_path and updates other elements
     ///
     /// sets [Files::can_reload] from [FileSelect::does_path_exist]
-    fn save_path_update(&mut self, message: file_select::Message) -> Command<Message> {
-        let command = self.save_path.update(message);
+    fn save_path_update(&mut self, message: file_select::Message) -> Task<Message> {
+        let task = self.save_path.update(message);
         self.files.can_reload = self.save_path.does_path_exist();
-        command
+        task
     }
 
     /// creates an error overlay [Element] when there are any errors
@@ -392,20 +368,17 @@ impl Gui {
         let elem = container(
             self.modal_card(format!("ERROR while {}", origin), format!("{:#?}", error))
                 .on_close(Message::CloseError)
-                .style(CardStyles::Danger),
+                .style(style::card::danger),
         )
-        .center_x()
-        .center_y()
-        .width(Length::Shrink);
+        .center(Length::Shrink);
         Some(elem.into())
     }
 
     /// creates an informational overlay [Element] when a modal is active
-    fn modal_overlay(&self) -> Option<Element<'_, Message, Theme, Renderer>> {
+    fn info_overlay(&self) -> Option<Element<'_, Message, Theme, Renderer>> {
         self.modal.map(|(title, body)| {
             container(self.modal_card(title.into(), body.into()))
-                .center_x()
-                .center_y()
+                .center(Length::Shrink)
                 .into()
         })
     }
@@ -416,7 +389,7 @@ impl Gui {
             text(head),
             scrollable(
                 container(text(body).width(Length::Shrink).height(Length::Shrink))
-                    .padding([0, 0, 12, 0]),
+                    .padding(Padding::ZERO.bottom(12)),
             )
             .direction(Direction::Both {
                 horizontal: Default::default(),
@@ -427,14 +400,11 @@ impl Gui {
         .max_height(230.0)
     }
 
-    fn update_tab_selected(&mut self, id: TabId) -> Command<Message> {
+    fn update_tab_selected(&mut self, id: TabId) -> Task<Message> {
         match id {
             #[cfg(debug_assertions)]
             TabId::TestButton => {
-                self.theme = match self.theme {
-                    Theme::Light(_) => theme::dark(),
-                    _ => theme::light(),
-                }
+                self.theme = theme::cycle(&self.theme);
             }
             _ => self.active_tab = id,
         }
@@ -447,10 +417,10 @@ impl Gui {
                 .set_id(FileSelectId::Save(SaveSection::Options)),
             _ => {}
         }
-        Command::none()
+        Task::none()
     }
 
-    fn update_save(&mut self, id: FileSelectId) -> Command<Message> {
+    fn update_save(&mut self, id: FileSelectId) -> Task<Message> {
         match id {
             FileSelectId::Save(save_id) => {
                 let save_now = data::WhipseeySaveData {
@@ -458,7 +428,7 @@ impl Gui {
                     files: self.files.get_state(),
                 };
                 let path = self.save_path.get_state();
-                Command::perform(
+                Task::perform(
                     async move {
                         let (mut save_next, _) = data::WhipseeySaveData::from_ini(
                             util::load_ini_file(path.clone()).await?,
@@ -479,7 +449,7 @@ impl Gui {
             FileSelectId::Bfs => {
                 let ini = self.cheats.get_state().into();
                 let path = self.cheats_path.get_state();
-                Command::perform(
+                Task::perform(
                     async move { Ok(util::write_ini_file(path, &ini).await?) },
                     |result| Message::Saved(FileSelectId::Bfs, result),
                 )
@@ -491,7 +461,7 @@ impl Gui {
         &mut self,
         id: SaveSection,
         result: util::Result<(data::WhipseeySaveData, Vec<util::Error>)>,
-    ) -> Command<Message> {
+    ) -> Task<Message> {
         let err_msg = format!("loading {id:?} in savegame (using defaults)");
         let save = match result {
             Ok((save, errors)) => {
@@ -502,7 +472,7 @@ impl Gui {
             }
             Err(err) => {
                 self.errors.push((err, err_msg));
-                return Command::none();
+                return Task::none();
             }
         };
         let mut files = self.files.get_state();
@@ -522,7 +492,7 @@ impl Gui {
                 self.files.set_state(files);
             }
         }
-        Command::none()
+        Task::none()
     }
 }
 
@@ -535,8 +505,8 @@ trait Tab {
 
     /// Handles a message and updates the state of the [Tabs] tab.
     ///
-    /// Any Command returned will be executed immediately in the background.
-    fn update(&mut self, message: Self::InMessage) -> Command<Message>;
+    /// Any Task returned will be executed immediately in the background.
+    fn update(&mut self, message: Self::InMessage) -> Task<Message>;
 
     /// Returns the widgets to display in the [Tabs] tab.
     ///
@@ -555,8 +525,37 @@ trait ElementState {
 
 pub fn with_tooltip<'a>(
     content: impl Into<Element<'a, Message, Theme, Renderer>>,
-    tooltip_text: impl ToString,
+    tooltip_text: impl text::IntoFragment<'a>,
     position: tooltip::Position,
 ) -> Tooltip<'a, Message, Theme, Renderer> {
-    tooltip(content, text(tooltip_text), position).style(iced::theme::Container::Box)
+    tooltip(content, text(tooltip_text), position).style(container::bordered_box)
+}
+
+fn modal<'a, Message>(
+    base: impl Into<Element<'a, Message>>,
+    content: Option<impl Into<Element<'a, Message>>>,
+    on_background: Message,
+) -> Element<'a, Message>
+where
+    Message: Clone + 'a,
+{
+    stack([base.into()])
+        .push_maybe(content.map(move |content| {
+            opaque(
+                mouse_area(center(opaque(content)).style(|_theme| {
+                    container::Style {
+                        background: Some(
+                            Color {
+                                a: 0.6,
+                                ..Color::BLACK
+                            }
+                            .into(),
+                        ),
+                        ..container::Style::default()
+                    }
+                }))
+                .on_press(on_background),
+            )
+        }))
+        .into()
 }

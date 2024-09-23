@@ -1,11 +1,11 @@
 use std::future::ready;
 use std::path::{Path, PathBuf};
 
-use crate::gui::{with_tooltip, ElementState};
+use crate::gui::{theme, with_tooltip, ElementState};
 use crate::util;
 use iced::widget::tooltip::Position;
 use iced::widget::{button, row, text, text_input};
-use iced::{Command, Element, Renderer};
+use iced::{Element, Renderer, Task};
 use rfd::AsyncFileDialog;
 
 pub struct FileSelect {
@@ -68,11 +68,11 @@ impl FileSelect {
             .add_filter(self.display_strings.dialog_filter_all, &["*"])
     }
 
-    pub fn update(&mut self, message: Message) -> Command<super::Message> {
+    pub fn update(&mut self, message: Message) -> Task<super::Message> {
         match message {
             Message::PathChanged(str_path) => {
                 self.path = util::string_trim(str_path);
-                Command::none()
+                Task::none()
             }
             Message::Open => {
                 let id = self.id;
@@ -81,19 +81,19 @@ impl FileSelect {
                     self.display_strings.dialog_title,
                     self.display_strings.modal_description,
                 );
-                Command::batch([
-                    Command::perform(ready(()), move |()| {
+                Task::batch([
+                    Task::perform(ready(()), move |()| {
                         super::Message::OpenModal(modal_strings)
                     }),
-                    Command::perform(Self::run_file_dialog(dialog), move |msg| msg.pack(id)),
+                    Task::perform(Self::run_file_dialog(dialog), move |msg| msg.pack(id)),
                 ])
             }
             Message::Selected(opt_path) => match opt_path {
-                None => Command::perform(ready(()), |()| super::Message::CloseModal),
+                None => Task::perform(ready(()), |()| super::Message::CloseModal),
                 Some(path) => {
                     let lossy = path.to_string_lossy();
                     match lossy.contains(char::REPLACEMENT_CHARACTER) {
-                        true => Command::perform(
+                        true => Task::perform(
                             ready((
                                 util::Error::Io("cannot represent path as String".into()),
                                 "selecting new path".into(),
@@ -102,23 +102,24 @@ impl FileSelect {
                         ),
                         false => {
                             self.path = lossy.to_string();
-                            Command::batch([
-                                Command::perform(ready(()), |()| super::Message::CloseModal),
-                                Command::perform(ready(self.id), super::Message::Load),
+                            Task::batch([
+                                Task::perform(ready(()), |()| super::Message::CloseModal),
+                                Task::perform(ready(self.id), super::Message::Load),
                             ])
                         }
                     }
                 }
             },
-            Message::Save => Command::perform(ready(self.id), super::Message::Save),
-            Message::Reload => Command::perform(ready(self.id), super::Message::Load),
+            Message::Save => Task::perform(ready(self.id), super::Message::Save),
+            Message::Reload => Task::perform(ready(self.id), super::Message::Load),
         }
     }
 
     pub fn view(&self) -> Element<'_, super::Message, super::Theme, Renderer> {
         row![
             text_input(self.display_strings.placeholder, &self.path)
-                .on_input(|string| self.pack_message(Message::PathChanged(string))),
+                .on_input(|string| self.pack_message(Message::PathChanged(string)))
+                .style(theme::text_input),
             with_tooltip(
                 button(text(self.display_strings.open_label))
                     .on_press(self.pack_message(Message::Open)),

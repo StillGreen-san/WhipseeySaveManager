@@ -1,7 +1,7 @@
-use crate::gui::{Tab, Theme};
-use iced::alignment::Horizontal;
+use crate::gui::{theme, Tab, Theme};
+use iced::alignment::{Horizontal, Vertical};
 use iced::widget::{button, column, row, scrollable, text, Space};
-use iced::{Alignment, Command, Element, Length, Renderer};
+use iced::{Element, Length, Renderer, Task};
 use iced_aw::TabLabel;
 use std::future::ready;
 
@@ -33,18 +33,18 @@ fn library(
     row![
         text(label)
             .width(Length::FillPortion(35))
-            .horizontal_alignment(Horizontal::Right),
+            .align_x(Horizontal::Right),
         row![
-            button(text(link).horizontal_alignment(Horizontal::Left))
+            button(text(link).align_x(Horizontal::Left))
                 .on_press(super::Message::About(Message::Link(link)))
-                .style(iced::theme::Button::Text)
+                .style(theme::button_link)
                 .padding(0),
             Space::with_width(Length::Fill)
         ]
         .width(Length::FillPortion(65))
     ]
     .spacing(4)
-    .align_items(Alignment::Center)
+    .align_y(Vertical::Center)
     .width(Length::Fill)
     .into()
 }
@@ -56,11 +56,11 @@ impl Tab for About {
         TabLabel::Text(self.display_strings.title.into())
     }
 
-    fn update(&mut self, message: Self::InMessage) -> Command<super::Message> {
+    fn update(&mut self, message: Self::InMessage) -> Task<super::Message> {
         match message {
             Message::Link(link) => match opener::open(link) {
-                Ok(()) => Command::none(),
-                Err(error) => Command::perform(
+                Ok(()) => Task::none(),
+                Err(error) => Task::perform(
                     ready((error.into(), "trying to open a link".into())),
                     super::Message::Error,
                 ),
@@ -96,7 +96,7 @@ impl Tab for About {
         ]
         .width(Length::Fill)
         .spacing(12)
-        .align_items(Alignment::Center);
+        .align_x(Horizontal::Center);
         column![
             text(self.display_strings.description),
             scrollable(libraries)
@@ -104,7 +104,7 @@ impl Tab for About {
         .width(Length::Fill)
         .spacing(8)
         .padding([8, 0])
-        .align_items(Alignment::Center)
+        .align_x(Horizontal::Center)
         .into()
     }
 }

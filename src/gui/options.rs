@@ -1,9 +1,9 @@
 use crate::data;
 use crate::data::options;
-use crate::gui::{ElementState, Tab, Theme};
-use iced::alignment::Horizontal;
+use crate::gui::{theme, ElementState, Tab, Theme};
+use iced::alignment::{Horizontal, Vertical};
 use iced::widget::{column, combo_box, row, text, Space};
-use iced::{Alignment, Command, Element, Length, Renderer};
+use iced::{Element, Length, Renderer, Task};
 use iced_aw::TabLabel;
 use std::fmt::Display;
 use strum::VariantArray;
@@ -91,7 +91,7 @@ impl Options {
 
 fn option<'a, T>(
     state: &'a combo_box::State<T>,
-    placeholder: &str,
+    placeholder: &'static str,
     selection: &T,
     on_selected: impl Fn(T) -> super::Message + 'static,
 ) -> Element<'a, super::Message, Theme, Renderer>
@@ -102,14 +102,15 @@ where
         Space::with_width(Length::FillPortion(20)),
         text(placeholder)
             .width(Length::FillPortion(23))
-            .horizontal_alignment(Horizontal::Right),
+            .align_x(Horizontal::Right),
         combo_box(state, placeholder, Some(selection), on_selected)
+            .input_style(theme::text_input)
             .width(Length::FillPortion(37))
             .padding(3),
         Space::with_width(Length::FillPortion(20)),
     ]
     .spacing(8)
-    .align_items(Alignment::Center)
+    .align_y(Vertical::Center)
     .width(Length::Fill)
     .into()
 }
@@ -121,39 +122,39 @@ impl Tab for Options {
         TabLabel::Text(self.display_strings.title.into())
     }
 
-    fn update(&mut self, message: Self::InMessage) -> Command<super::Message> {
+    fn update(&mut self, message: Self::InMessage) -> Task<super::Message> {
         match message {
             Message::Language(language) => {
                 self.options_state.language = language;
-                Command::none()
+                Task::none()
             }
             Message::Scale(scale) => {
                 self.options_state.scale = scale;
-                Command::none()
+                Task::none()
             }
             Message::Fullscreen(fullscreen) => {
                 self.options_state.fullscreen = fullscreen;
-                Command::none()
+                Task::none()
             }
             Message::LeftHanded(left_handed) => {
                 self.options_state.left_handed = left_handed;
-                Command::none()
+                Task::none()
             }
             Message::SoundVolume(sound_volume) => {
                 self.options_state.sound_volume = sound_volume;
-                Command::none()
+                Task::none()
             }
             Message::SoundToggle(sound_toggle) => {
                 self.options_state.sound_toggle = sound_toggle;
-                Command::none()
+                Task::none()
             }
             Message::MusicVolume(music_volume) => {
                 self.options_state.music_volume = music_volume;
-                Command::none()
+                Task::none()
             }
             Message::MusicToggle(music_toggle) => {
                 self.options_state.music_toggle = music_toggle;
-                Command::none()
+                Task::none()
             }
         }
     }
@@ -210,7 +211,7 @@ impl Tab for Options {
             ),
         ]
         .spacing(4)
-        .align_items(Alignment::Center)
+        .align_x(Horizontal::Center)
         .into()
     }
 }
