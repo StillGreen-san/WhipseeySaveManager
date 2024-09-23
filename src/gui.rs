@@ -38,6 +38,7 @@ pub enum TabId {
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum SaveSection {
+    All,
     Files,
     Options,
     File1,
@@ -284,7 +285,8 @@ impl Gui {
             },
             Message::LoadedSavegamePath(path) => match path {
                 Ok(path) => path.map_or_else(Task::none, |path| {
-                    self.save_path_update(file_select::Message::Selected(Some(path)))
+                    let _ = self.save_path_update(file_select::Message::Selected(Some(path)));
+                    Task::done(Message::Load(FileSelectId::Save(SaveSection::All)))
                 }),
                 Err(error) => {
                     self.errors
@@ -442,6 +444,7 @@ impl Gui {
                             util::load_ini_file(path.clone()).await?,
                         );
                         match save_id {
+                            SaveSection::All => save_next = save_now,
                             SaveSection::Files => save_next.files = save_now.files,
                             SaveSection::Options => save_next.options = save_now.options,
                             SaveSection::File1 => save_next.files[File1] = save_now.files[File1],
@@ -485,6 +488,10 @@ impl Gui {
         };
         let mut files = self.files.get_state();
         match id {
+            SaveSection::All => {
+                self.files.set_state(save.files);
+                self.options.set_state(save.options);
+            }
             SaveSection::Files => self.files.set_state(save.files),
             SaveSection::Options => self.options.set_state(save.options),
             SaveSection::File1 => {
