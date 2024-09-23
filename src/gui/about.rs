@@ -3,7 +3,6 @@ use iced::alignment::{Horizontal, Vertical};
 use iced::widget::{button, column, row, scrollable, text, Space};
 use iced::{Element, Length, Renderer, Task};
 use iced_aw::TabLabel;
-use std::future::ready;
 
 #[derive(Debug, Clone)]
 pub enum Message {
@@ -60,10 +59,10 @@ impl Tab for About {
         match message {
             Message::Link(link) => match opener::open(link) {
                 Ok(()) => Task::none(),
-                Err(error) => Task::perform(
-                    ready((error.into(), "trying to open a link".into())),
-                    super::Message::Error,
-                ),
+                Err(error) => Task::done(super::Message::Error((
+                    error.into(),
+                    "trying to open a link".into(),
+                ))),
             },
         }
     }

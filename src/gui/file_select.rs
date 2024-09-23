@@ -1,4 +1,3 @@
-use std::future::ready;
 use std::path::{Path, PathBuf};
 
 use crate::gui::{theme, with_tooltip, ElementState};
@@ -82,36 +81,31 @@ impl FileSelect {
                     self.display_strings.modal_description,
                 );
                 Task::batch([
-                    Task::perform(ready(()), move |()| {
-                        super::Message::OpenModal(modal_strings)
-                    }),
+                    Task::done(super::Message::OpenModal(modal_strings)),
                     Task::perform(Self::run_file_dialog(dialog), move |msg| msg.pack(id)),
                 ])
             }
             Message::Selected(opt_path) => match opt_path {
-                None => Task::perform(ready(()), |()| super::Message::CloseModal),
+                None => Task::done(super::Message::CloseModal),
                 Some(path) => {
                     let lossy = path.to_string_lossy();
                     match lossy.contains(char::REPLACEMENT_CHARACTER) {
-                        true => Task::perform(
-                            ready((
-                                util::Error::Io("cannot represent path as String".into()),
-                                "selecting new path".into(),
-                            )),
-                            super::Message::Error,
-                        ),
+                        true => Task::done(super::Message::Error((
+                            util::Error::Io("cannot represent path as String".into()),
+                            "selecting new path".into(),
+                        ))),
                         false => {
                             self.path = lossy.to_string();
                             Task::batch([
-                                Task::perform(ready(()), |()| super::Message::CloseModal),
-                                Task::perform(ready(self.id), super::Message::Load),
+                                Task::done(super::Message::CloseModal),
+                                Task::done(super::Message::Load(self.id)),
                             ])
                         }
                     }
                 }
             },
-            Message::Save => Task::perform(ready(self.id), super::Message::Save),
-            Message::Reload => Task::perform(ready(self.id), super::Message::Load),
+            Message::Save => Task::done(super::Message::Save(self.id)),
+            Message::Reload => Task::done(super::Message::Load(self.id)),
         }
     }
 
